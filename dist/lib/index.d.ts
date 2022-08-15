@@ -1,0 +1,40 @@
+/// <reference types="node" />
+import EventEmitter from 'events';
+export declare class SpeechSynth extends EventEmitter {
+    textContainer: HTMLElement;
+    synth: SpeechSynthesis;
+    utterance: SpeechSynthesisUtterance;
+    timeoutRef: string | number | Timeout | undefined;
+    settings: ISettings;
+    events: Events;
+    options: IOptions;
+    state: IState;
+    constructor(textContainer: HTMLElement, { pitch, rate, language, voiceURI, volume, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, isHighlightTextOn, isPreserveHighlighting, isSSROn, }: Params);
+    init(): Promise<SpeechSynth>;
+    private initUtterance;
+    private scrollTo;
+    private startTimeCount;
+    private pauseTimeCount;
+    private resetTimeCount;
+    private handleBoundary;
+    private getVoices;
+    private highlightText;
+    private resetHighlight;
+    private addCustomEventListeners;
+    private attachEventListenersToWords;
+    private retrieveNumberOfWords;
+    private retrieveWholeText;
+    private retrieveWholeTextArray;
+    private getTextDuration;
+    private getAverageTextElapsedTime;
+    editUtterance(obj: Partial<ISettings>): void;
+    seekTo(index: number): void;
+    play(): Promise<null>;
+    pause(): void;
+    resume(): void;
+    reset(): void;
+    isPlaying(): boolean;
+    isPaused(): boolean;
+    static addHTMLHighlightTags(node: Element | string, options?: IHighlightOptions): string;
+}
+//# sourceMappingURL=index.d.ts.map
