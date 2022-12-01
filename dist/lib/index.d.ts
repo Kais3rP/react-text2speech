@@ -5,11 +5,12 @@ export declare class SpeechSynth extends EventEmitter {
     synth: SpeechSynthesis;
     utterance: SpeechSynthesisUtterance;
     timeoutRef: string | number | Timeout | undefined;
+    style: IStyle;
     settings: ISettings;
     events: Events;
     options: IOptions;
     state: IState;
-    constructor(textContainer: HTMLElement, { pitch, rate, language, voiceURI, volume, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, isHighlightTextOn, isPreserveHighlighting, isSSROn, }: Params);
+    constructor(textContainer: HTMLElement, { pitch, rate, language, voiceURI, volume, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, isHighlightTextOn, isPreserveHighlighting, isSSROn, }: Params);
     init(): Promise<SpeechSynth>;
     private initUtterance;
     private scrollTo;
@@ -25,6 +26,7 @@ export declare class SpeechSynth extends EventEmitter {
     private retrieveNumberOfWords;
     private retrieveWholeText;
     private retrieveWholeTextArray;
+    private applyBasicStyleToWords;
     private getTextDuration;
     private getAverageTextElapsedTime;
     editUtterance(obj: Partial<ISettings>): void;

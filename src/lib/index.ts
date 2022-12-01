@@ -7,6 +7,7 @@ export class SpeechSynth extends EventEmitter {
 	synth: SpeechSynthesis;
 	utterance: SpeechSynthesisUtterance;
 	timeoutRef: string | number | Timeout | undefined;
+	style: IStyle;
 
 	settings: ISettings;
 	events: Events;
@@ -22,6 +23,9 @@ export class SpeechSynth extends EventEmitter {
 			language = 'en-US',
 			voiceURI = 'Microsoft Aria Online (Natural) - English (United States)',
 			volume = 1,
+			/* Style */
+			color1 = '#DEE',
+			color2 = '#9DE',
 			/* Ev handlers */
 			onEnd = () => null,
 			onStart = () => null,
@@ -40,6 +44,7 @@ export class SpeechSynth extends EventEmitter {
 	) {
 		super();
 		this.textContainer = textContainer;
+		this.style = { color1, color2 };
 
 		/* Instances */
 
@@ -125,6 +130,10 @@ export class SpeechSynth extends EventEmitter {
 
 			if (this.options.isHighlightTextOn && !this.options.isSSROn)
 				SpeechSynth.addHTMLHighlightTags(this.textContainer);
+
+			/* Add basic style to the words that have just been tagged wit HTML tags */
+
+			this.applyBasicStyleToWords(this.textContainer, '[data-id]');
 
 			/* Init state properties */
 			/* Get the total number of words to highlight */
@@ -279,12 +288,14 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private highlightText(wordIndex: number): void {
-		const wordToHighlight = this.textContainer.querySelector(
-			`[data-id="${wordIndex}"]`
-		);
-		const previousWord = this.textContainer.querySelector(
-			`[data-id="${wordIndex - 1}"]`
-		);
+		// eslint-disable-next-line prettier/prettier
+		const wordToHighlight: HTMLElement | null =
+			this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
+
+		// eslint-disable-next-line prettier/prettier
+		const previousWord: HTMLElement | null =
+			this.textContainer.querySelector(`[data-id="${wordIndex - 1}"]`);
+
 		if (!wordToHighlight) return;
 
 		/* Update highlighted words array */
@@ -303,8 +314,9 @@ export class SpeechSynth extends EventEmitter {
 
 			if (!this.options.isPreserveHighlighting) {
 				this.state.highlightedWords.forEach((el) => {
-					el.classList.remove('highlight-word1');
-					el.classList.remove('highlight-word2');
+					/* el.classList.remove('highlight-word1');
+					el.classList.remove('highlight-word2'); */
+					el.style.backgroundColor = '';
 				});
 				this.state.highlightedWords = [wordToHighlight];
 			}
@@ -316,17 +328,25 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Apply highlight style */
 
-		wordToHighlight.classList.add('highlight-word2');
-		wordToHighlight.classList.add('highlight-word1');
+		/* wordToHighlight.classList.add('highlight-word2');
+		wordToHighlight.classList.add('highlight-word1'); */
+		wordToHighlight.style.backgroundColor = this.style.color1 as string;
+		wordToHighlight.style.boxShadow = `8px 0px 0px 0px ${this.style.color2}`;
+
 		// remove the current highlight class and leave the secondary highlight class to the previous word
-		if (previousWord) previousWord.classList.remove('highlight-word1');
+		if (previousWord) {
+			previousWord.style.backgroundColor = this.style.color2 as string;
+			previousWord.style.boxShadow = `8px 0px 0px 0px ${this.style.color2}`;
+		}
 	}
 
 	private resetHighlight() {
 		this.state.highlightedWords = [];
 		this.textContainer.querySelectorAll(`[data-id]`).forEach((n) => {
-			n.classList.remove('highlight-word1');
-			n.classList.remove('highlight-word2');
+			(n as HTMLElement).style.backgroundColor = '';
+			(n as HTMLElement).style.boxShadow = '';
+			/* n.classList.remove('highlight-word1');
+			n.classList.remove('highlight-word2'); */
 		});
 	}
 
@@ -361,6 +381,18 @@ export class SpeechSynth extends EventEmitter {
 		return [...node.querySelectorAll(selector)]
 			.map((el) => el.textContent)
 			.filter((el) => el && !Utils.isPunctuation(el)); // Exclude punctuation and "" empty string characters
+	}
+
+	private applyBasicStyleToWords(node: Element, selector: string) {
+		[...node.querySelectorAll(selector)]
+			.filter(
+				(el) => el && !Utils.isPunctuation(el.textContent as string)
+			)
+			.forEach((el) => {
+				if (!el) return;
+
+				(el as HTMLElement).style.transition = 'all 0.4s';
+			});
 	}
 
 	private getTextDuration(str: string, rate: number) {
@@ -653,8 +685,8 @@ export class SpeechSynth extends EventEmitter {
 				node.innerHTML = code;
 			}
 			return code;
-		} catch (e: any) {
-			throw new Error(e);
+		} catch (e) {
+			throw new Error(e as string);
 		}
 	}
 }

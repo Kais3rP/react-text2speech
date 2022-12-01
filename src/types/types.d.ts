@@ -2,7 +2,7 @@
 import { SpeechSynth } from '../lib';
 
 declare global {
-	type Params = ISettings & IEvents & IOptions;
+	type Params = IStyle & ISettings & IEvents & IOptions;
 
 	interface IEvents {
 		onEnd: (c: SpeechSynth, v?: any) => void;
@@ -42,7 +42,7 @@ declare global {
 		voices: SpeechSynthesisVoice[];
 		/* Highlight & Reading time */
 		currentWordIndex: number;
-		highlightedWords: Element[];
+		highlightedWords: HTMLElement[];
 		lastWordPosition: number;
 		numberOfWords: number;
 		wholeText: string;
@@ -53,6 +53,11 @@ declare global {
 		/* Controls  */
 		isPaused: boolean;
 		isPlaying: boolean;
+	}
+
+	interface IStyle {
+		color1?: string;
+		color2?: string;
 	}
 
 	type Interval = ReturnType<typeof setInterval>;

@@ -25,7 +25,7 @@ import styled from 'styled-components';
 
 interface IProps {
 	children?: JSX.Element | string;
-	options?: ISettings & IOptions;
+	options?: ISettings & IOptions & IStyle;
 	styleOptions: IStyleOptions;
 	textContainer: HTMLElement;
 }
@@ -36,7 +36,23 @@ interface IContainerProps {
 	styleOptions: IStyleOptions;
 }
 
-interface ICloseButtonProps {
+interface IWindowButton {
+	styleOptions: IStyleOptions;
+}
+
+interface ISeekbarContainer {
+	isMinimized: boolean;
+}
+
+interface ISeekBar {
+	styleOptions: IStyleOptions;
+}
+
+interface IControlsContainer {
+	isMinimized: boolean;
+}
+
+interface IControlButton {
 	styleOptions: IStyleOptions;
 }
 
@@ -48,30 +64,30 @@ const Container = styled.div<IContainerProps>`
 	bottom: 5px;
 	right: ${(props: any) => (props.isVisible ? '10px' : '-2000px')};
 	display: flex;
-	flexdirection: column;
-	alignitems: center;
-	justifycontent: center;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 	transition: all 200ms linear;
-	width: ${(props: any) => (props.isMinimized ? '100px' : '300px')};
-	borderradius: 10px;
-	boxshadow: 0px 0px 5px 10px #aaa;
-	padding: 5px;
-	backgroundcolor: ${(props: any) => props.styleOptions.bgColor};
+	width: ${(props: any) => (props.isMinimized ? '150px' : '300px')};
+	border-radius: 5px;
+	box-shadow: 0px 0px 10px 2px #aaa;
+	padding: 15px;
+	background-color: ${(props: any) => props.styleOptions.bgColor};
 `;
 
-const CloseButton = styled.div<ICloseButtonProps>`
+const WindowButton = styled.div<IWindowButton>`
 	display: flex;
-	justifycontent: center;
-	alignitems: center;
-	zindex: 100;
-	fontsize: 0.8rem;
-	width: 16px;
-	height: 16px;
-	borderradius: 3px;
+	justify-content: center;
+	align-items: center;
+	z-index: 100;
+	font-size: 0.8rem;
+	width: 12;
+	height: 12;
+	border-radius: 3px;
 	border: 2px solid ${(props: any) => props.styleOptions.primaryColor};
-	backgroundcolor: ${(props: any) => props.styleOptions.primaryColor};
+	background-color: ${(props: any) => props.styleOptions.bgColor};
 	color: ${(props: any) => props.styleOptions.textColor};
-	fontweight: bold;
+	font-weight: bold;
 	cursor: pointer;
 	position: absolute;
 	top: 2px;
@@ -80,6 +96,104 @@ const CloseButton = styled.div<ICloseButtonProps>`
 	&:hover {
 		backgroundcolor: ${(props: any) => props.styleOptions.bgColor};
 		color: ${(props: any) => props.styleOptions.secondaryColor};
+	}
+`;
+
+const SeekbarContainer = styled.div<ISeekbarContainer>`
+	text-align: center;
+	width: ${(props: any) => (props.isMinimized ? '100%' : '70%')};
+	position: relative;
+	z-index: 2;
+	margin-top: 10px;
+`;
+
+const Time = styled.h5`
+	width: 50px;
+	font-size: 0.6rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	left: -15px;
+	z-index: 100;
+`;
+
+const Seekbar = styled.input<ISeekBar>`
+	width: 100%;
+	appearance: none;
+	height: 2px;
+	background: ${(props: any) => props.styleOptions.primaryColor};
+	outline: none;
+	opacity: 0.7;
+	transition: opacity 0.2s;
+	::-webkit-slider-thumb {
+		appearance: none;
+		width: 12px; /* Set a specific slider handle width */
+		height: 12px; /* Slider handle height */
+		background: ${(props: any) => props.bgColor}; /* Green background */
+		cursor: pointer; /* Cursor on hover */
+		border: 2px solid ${(props: any) => props.primaryColor};
+		border-radius: 50%;
+		z-index: 1;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+		cursor: pointer;
+		transition: transform 0.1s ease-out;
+	}
+	::-moz-range-thumb {
+		appearance: none;
+		width: 12px; /* Set a specific slider handle width */
+		height: 12px; /* Slider handle height */
+		background: ${(props: any) => props.bgColor}; /* Green background */
+		cursor: pointer; /* Cursor on hover */
+		border: 2px solid ${(props: any) => props.primaryColor};
+		border-radius: 50%;
+		z-index: 1;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+		cursor: pointer;
+		transition: transform 0.1s ease-out;
+	}
+`;
+
+const ControlsContainer = styled.div<IControlsContainer>`
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	z-index: 1;
+	${(props: any) =>
+		props.isMinimized
+			? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
+			: 'padding-top: 2px'}
+	& div {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+`;
+
+const ControlButton = styled.div<IControlButton>`
+	border-radius: 50%;
+	background-color: ${(props: any) => props.styleOptions.bgColor};
+	color: ${(props: any) => props.styleOptions.primaryColor};
+	font-size: bold;
+	cursor: pointer;
+	border: 2px solid ${(props: any) => props.styleOptions.secondaryColor};
+	&:hover {
+		border: 2px solid ${(props: any) => props.styleOptions.primaryColor};
+		background-color: ${(props: any) => props.styleOptions.bgColor};
+		color: ${(props: any) => props.styleOptions.secondaryColor};
+	}
+	transition: all 0.2s;
+	font-size: 1rem;
+`;
+
+const OptionsContainer = styled.div`
+	display: flex;
+	justify-content: between;
+	width: 100%;
+	& div {
+		display: flex;
+		justify-content: flex-end;
 	}
 `;
 
@@ -292,35 +406,30 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			styleOptions={styleOptions}
 		>
 			{/* Close button */}
-			<CloseButton
+			<WindowButton
 				styleOptions={styleOptions}
 				onPointerDown={handleHideReader}
 			>
 				<MdOutlineClose title="Close" />
-			</CloseButton>
+			</WindowButton>
 			{/* Minimize button */}
-			<div
+			<WindowButton
+				style={{ right: '20px' }}
 				title={isMinimized ? 'Maximize' : 'Minimize'}
+				styleOptions={styleOptions}
 				onPointerDown={
 					isMinimized ? handleMaximizeReader : handleMinimizeReader
 				}
-				className="flex justify-center items-center z-[100] text-[0.8rem] w-[16px] h-[16px] rounded-[3px] border-[2px] border-colorExtra1 bg-colorExtra1 text-colorDark font-bold cursor-pointer absolute top-[2px] right-[21px] hover:bg-bgLight hover:text-colorExtra2 transition-all"
 			>
 				{isMinimized ? <FiMaximize /> : <FiMinimize />}
-			</div>
+			</WindowButton>
 
 			{/* Seek bar */}
 
-			<div
-				className={`text-center ${
-					isMinimized ? 'w-[100%] ' : 'w-[70%] '
-				} relative z-[2]`}
-			>
-				<h5 className=" w-[50px] text-[0.6rem] flex justify-center absolute bottom-[-5px]  left-[-15px]">
-					{format(elapsedTime)}
-				</h5>
-				<input
-					//	className={styles.slider}
+			<SeekbarContainer isMinimized={isMinimized}>
+				<Time>{format(elapsedTime)}</Time>
+				<Seekbar
+					styleOptions={styleOptions}
 					type="range"
 					min="0"
 					max={numberOfWords}
@@ -328,53 +437,53 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 					value={currentWordIndex}
 					onChange={handleManualSeek}
 				/>
-				<h5 className=" w-[50px] text-[0.6rem] flex justify-center absolute bottom-[-5px]  right-[-15px]">
+				<Time style={{ top: '0px', left: 'auto', right: '-15px' }}>
 					{format(duration)}*
-				</h5>
-			</div>
+				</Time>
+			</SeekbarContainer>
 
 			{/* Main controls unit */}
-			<div
-				className={`w-[100%] flex flex-col relative z-[1] ${
-					!isMinimized ? ' border-b-[1px] py-2' : 'pt-2'
-				}  `}
-			>
-				<div className={`flex items-center justify-center`}>
-					<AiFillFastBackward
+			<ControlsContainer isMinimized={isMinimized}>
+				<div>
+					<ControlButton
+						as={AiFillFastBackward}
 						title="Fast backward"
 						onDoubleClick={(e) => e.preventDefault()}
 						onPointerDown={() =>
 							handleGenericSeek(currentWordIndex - 5)
 						}
-						className={`rounded-[50%] bg-colorExtra2 text-colorDark font-bold cursor-pointer border-[2px] border-colorExtra1 hover:border-colorExtra1 hover:bg-bgLight hover:text-colorExtra2 transition-all text-[1rem]`}
+						styleOptions={styleOptions}
 					/>
 					{!isReading ? (
-						<AiFillPlayCircle
+						<ControlButton
+							as={AiFillPlayCircle}
 							title="Play"
 							onPointerDown={handleAudioReadPlay}
-							className={`rounded-[50%] bg-colorExtra1 text-colorDark font-bold cursor-pointer mx-[5px] border-[2px] border-colorExtra2 hover:border-colorExtra1 hover:bg-bgLight hover:text-colorExtra2 transition-all text-[1.2rem]`}
+							styleOptions={styleOptions}
 						/>
 					) : (
-						<AiFillPauseCircle
+						<ControlButton
+							as={AiFillPauseCircle}
 							title="Pause"
-							className={`rounded-[50%] bg-colorExtra1 text-colorDark font-bold cursor-pointer mx-[5px] border-[2px] border-colorExtra2 hover:border-colorExtra1 hover:bg-bgLight hover:text-colorExtra2 transition-all text-[1.2rem]`}
+							styleOptions={styleOptions}
 							onPointerDown={handleAudioReadPause}
 						/>
 					)}
-					<AiFillFastForward
+					<ControlButton
+						as={AiFillFastForward}
 						title="Fast forsward"
 						onPointerDown={() =>
 							handleGenericSeek(currentWordIndex + 5)
 						}
-						className={`rounded-[50%] bg-colorExtra2 text-colorDark font-bold cursor-pointer  border-[2px] border-colorExtra1 hover:border-colorExtra1 hover:bg-bgLight hover:text-colorExtra2 transition-all text-[1rem]`}
+						styleOptions={styleOptions}
 					/>
 				</div>
-			</div>
+			</ControlsContainer>
 			{/* Settings unit */}
 			{!isMinimized && (
 				<>
-					<div className="flex justify-between w-100">
-						<div className="flex items-end">
+					<OptionsContainer>
+						<div>
 							<CustomSelect
 								name="rate"
 								options={[
@@ -433,7 +542,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 								/>
 							</div>
 						</div>
-					</div>
+					</OptionsContainer>
 
 					<div
 						style={{

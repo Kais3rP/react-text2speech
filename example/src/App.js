@@ -12,6 +12,12 @@ function App() {
 		<div className={styles.container}>
 			<div ref={setNode}>
 				<span>Hello world</span>
+				<span>Hello world</span>
+				<span>Hello world</span>
+				<span>Hello world</span>
+				<span>Hello world</span>
+				<span>Hello world</span>
+				<span>Hello world</span>
 			</div>
 			{node && <AudioReader textContainer={node} />}
 			<button
