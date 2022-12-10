@@ -5,9 +5,15 @@ import AudioReader, { useAudioReaderStore } from 'react-text2speech';
 function App() {
 	const [node, setNode] = useState(null);
 
-	const { isReading, isVisible, showAudioReader, startReading, stopReading } =
-		useAudioReaderStore();
-
+	const {
+		isLoading,
+		isReading,
+		isVisible,
+		showAudioReader,
+		startReading,
+		stopReading,
+	} = useAudioReaderStore();
+	console.log('Is loading', isLoading);
 	return (
 		<div className={styles.container}>
 			<div ref={setNode}>
@@ -32,6 +38,7 @@ function App() {
 			>
 				{isReading ? 'Pause' : 'Play'}
 			</button>
+			<h2>{isLoading && 'Loading...'}</h2>
 		</div>
 	);
 }

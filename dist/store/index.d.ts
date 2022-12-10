@@ -12,6 +12,7 @@ interface IAudioReaderState {
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;
+    isLoading: boolean;
     setDuration: (n: number) => void;
     setCurrentWordIndex: (n: number) => void;
     setNumberOfWords: (n: number) => void;
@@ -30,6 +31,7 @@ interface IAudioReaderState {
     setVoices: (voices: SpeechSynthesisVoice[]) => void;
     setVolume: (volume: string) => void;
     setElapsedTime: (time: number) => void;
+    setIsLoading: (b: boolean) => void;
 }
 export declare const useAudioReaderStore: import("zustand").UseBoundStore<Omit<Omit<import("zustand").StoreApi<IAudioReaderState>, "setState"> & {
     setState(partial: IAudioReaderState | Partial<IAudioReaderState> | ((state: IAudioReaderState) => IAudioReaderState | Partial<IAudioReaderState>), replace?: boolean | undefined, actionType?: string | {

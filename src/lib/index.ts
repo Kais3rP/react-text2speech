@@ -29,6 +29,7 @@ export class SpeechSynth extends EventEmitter {
 			/* Ev handlers */
 			onEnd = () => null,
 			onStart = () => null,
+			onEffectivelySpeakingStart = () => null,
 			onPause = () => null,
 			onResume = () => null,
 			onReset = () => null,
@@ -69,6 +70,7 @@ export class SpeechSynth extends EventEmitter {
 			{ type: 'boundary', handler: onBoundary },
 			{ type: 'time-tick', handler: onTimeTick },
 			{ type: 'word-click', handler: onWordClick },
+			{ type: 'speaking-start', handler: onEffectivelySpeakingStart },
 			{ type: 'start', handler: onStart },
 			{ type: 'pause', handler: onPause },
 			{ type: 'resume', handler: onResume },
@@ -86,9 +88,11 @@ export class SpeechSynth extends EventEmitter {
 		/* State */
 
 		this.state = {
-			/* Options */
+			/* Internal properties */
 			voice: {} as SpeechSynthesisVoice,
 			voices: [] as SpeechSynthesisVoice[],
+			/* UI */
+			isLoading: true,
 			/* Highlight & Reading time */
 			currentWordIndex: 1,
 			highlightedWords: [] as HTMLElement[],
@@ -169,6 +173,9 @@ export class SpeechSynth extends EventEmitter {
 			/* Add listeners */
 
 			this.utterance.onboundary = this.handleBoundary.bind(this);
+			this.utterance.onstart = this.events.find(
+				(evs) => evs.type === 'speaking-start'
+			)?.handler as any;
 
 			/* Attach click event listener to words */
 
@@ -255,7 +262,7 @@ export class SpeechSynth extends EventEmitter {
 			.join(' ');
 
 		/* Highlight the current word */
-
+		console.log('Highlight', this.state.currentWordIndex);
 		this.highlightText(this.state.currentWordIndex);
 
 		/* Increase the current index of word read */
@@ -292,10 +299,6 @@ export class SpeechSynth extends EventEmitter {
 		const wordToHighlight: HTMLElement | null =
 			this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
 
-		// eslint-disable-next-line prettier/prettier
-		const previousWord: HTMLElement | null =
-			this.textContainer.querySelector(`[data-id="${wordIndex - 1}"]`);
-
 		if (!wordToHighlight) return;
 
 		/* Update highlighted words array */
@@ -310,12 +313,11 @@ export class SpeechSynth extends EventEmitter {
 
 		if (position <= this.state.lastWordPosition) {
 			this.scrollTo(this.state.currentWordIndex);
+
 			/* Reset the row highlight */
 
 			if (!this.options.isPreserveHighlighting) {
 				this.state.highlightedWords.forEach((el) => {
-					/* el.classList.remove('highlight-word1');
-					el.classList.remove('highlight-word2'); */
 					el.style.backgroundColor = '';
 				});
 				this.state.highlightedWords = [wordToHighlight];
@@ -328,25 +330,15 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Apply highlight style */
 
-		/* wordToHighlight.classList.add('highlight-word2');
-		wordToHighlight.classList.add('highlight-word1'); */
 		wordToHighlight.style.backgroundColor = this.style.color1 as string;
-		wordToHighlight.style.boxShadow = `8px 0px 0px 0px ${this.style.color2}`;
-
-		// remove the current highlight class and leave the secondary highlight class to the previous word
-		if (previousWord) {
-			previousWord.style.backgroundColor = this.style.color2 as string;
-			previousWord.style.boxShadow = `8px 0px 0px 0px ${this.style.color2}`;
-		}
+		wordToHighlight.style.boxShadow = `8px 0px 0px 0px ${this.style.color1}`;
 	}
 
 	private resetHighlight() {
-		this.state.highlightedWords = [];
-		this.textContainer.querySelectorAll(`[data-id]`).forEach((n) => {
+		this.state.highlightedWords.forEach((n) => {
 			(n as HTMLElement).style.backgroundColor = '';
 			(n as HTMLElement).style.boxShadow = '';
-			/* n.classList.remove('highlight-word1');
-			n.classList.remove('highlight-word2'); */
+			this.state.highlightedWords = [];
 		});
 	}
 
@@ -477,6 +469,7 @@ export class SpeechSynth extends EventEmitter {
 	/* Control methods */
 
 	seekTo(index: number) {
+		console.log('Seek to', this.isPaused(), this.isPlaying());
 		const isPlaying = this.isPlaying();
 		const isPaused = this.isPaused();
 		this.emit('seek', this, index);
@@ -517,14 +510,15 @@ export class SpeechSynth extends EventEmitter {
 		)(this.settings.rate as number);
 
 		this.emit('time-tick', this, this.state.elapsedTime);
+		console.log('Is playing', isPlaying);
 
 		if (isPlaying) this.play();
 
-		/* Play the remaining text with the new settings applied and pause if the settings are changed while in pause */
-
 		if (isPaused) {
+			console.log('Is paused');
 			this.play();
 			this.pause();
+			this.synth.cancel();
 		}
 	}
 

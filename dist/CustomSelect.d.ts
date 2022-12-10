@@ -3,7 +3,7 @@ export interface IOption {
     name: string;
     value: string;
 }
-export interface IProps {
+export interface ICustomSelectProps {
     children?: JSX.Element | string;
     options: IOption[];
     value: string;
@@ -21,6 +21,6 @@ export interface IButtonProps {
     [key: string]: any;
 }
 export declare const Button: FC<IButtonProps>;
-declare const CustomSelect: FC<IProps>;
+declare const CustomSelect: FC<ICustomSelectProps>;
 export default CustomSelect;
 //# sourceMappingURL=CustomSelect.d.ts.map

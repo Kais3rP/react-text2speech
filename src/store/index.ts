@@ -16,6 +16,7 @@ interface IAudioReaderState {
 	numberOfWords: number;
 	currentWordIndex: number;
 	duration: number;
+	isLoading: boolean;
 	setDuration: (n: number) => void;
 	setCurrentWordIndex: (n: number) => void;
 	setNumberOfWords: (n: number) => void;
@@ -34,12 +35,14 @@ interface IAudioReaderState {
 	setVoices: (voices: SpeechSynthesisVoice[]) => void;
 	setVolume: (volume: string) => void;
 	setElapsedTime: (time: number) => void;
+	setIsLoading: (b: boolean) => void;
 }
 
 export const useAudioReaderStore = create<IAudioReaderState>()(
 	devtools(
 		persist((set) => ({
 			isReading: false,
+			isLoading: false,
 			rate: '1',
 			voice: 'Microsoft Aria Online (Natural) - English (United States)',
 			voices: [],
@@ -52,6 +55,12 @@ export const useAudioReaderStore = create<IAudioReaderState>()(
 			numberOfWords: 0,
 			currentWordIndex: 1,
 			duration: 0,
+			setIsLoading: (b: boolean) =>
+				set(
+					produce((state) => {
+						state.isLoading = b;
+					})
+				),
 			setDuration: (n: number) =>
 				set(
 					produce((state) => {

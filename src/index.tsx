@@ -54,6 +54,15 @@ interface IControlsContainer {
 
 interface IControlButton {
 	styleOptions: IStyleOptions;
+	isLoading: boolean;
+}
+
+interface IDots {
+	styleOptions: IStyleOptions;
+}
+
+interface IReset {
+	styleOptions: IStyleOptions;
 }
 
 /* Styled Components */
@@ -101,7 +110,7 @@ const WindowButton = styled.div<IWindowButton>`
 
 const SeekbarContainer = styled.div<ISeekbarContainer>`
 	text-align: center;
-	width: ${(props: any) => (props.isMinimized ? '100%' : '70%')};
+	width: ${(props: any) => (props.isMinimized ? '100%' : '90%')};
 	position: relative;
 	z-index: 2;
 	margin-top: 10px;
@@ -116,6 +125,7 @@ const Time = styled.h5`
 	position: absolute;
 	left: -15px;
 	z-index: 100;
+	color: #111;
 `;
 
 const Seekbar = styled.input<ISeekBar>`
@@ -130,22 +140,26 @@ const Seekbar = styled.input<ISeekBar>`
 		appearance: none;
 		width: 12px; /* Set a specific slider handle width */
 		height: 12px; /* Slider handle height */
-		background: ${(props: any) => props.bgColor}; /* Green background */
+		background: ${(props: any) => props.styleOptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props: any) => props.primaryColor};
+		border: 2px solid ${(props: any) => props.styleOptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 		cursor: pointer;
 		transition: transform 0.1s ease-out;
 	}
+	&::-webkit-slider-thumb:hover {
+		transform: scale(1.1);
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+	}
 	::-moz-range-thumb {
 		appearance: none;
 		width: 12px; /* Set a specific slider handle width */
 		height: 12px; /* Slider handle height */
-		background: ${(props: any) => props.bgColor}; /* Green background */
+		background: ${(props: any) => props.styleOptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props: any) => props.primaryColor};
+		border: 2px solid ${(props: any) => props.styleOptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -160,15 +174,16 @@ const ControlsContainer = styled.div<IControlsContainer>`
 	flex-direction: column;
 	position: relative;
 	z-index: 1;
-	${(props: any) =>
-		props.isMinimized
-			? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
-			: 'padding-top: 2px'}
+	margin: 5px 0px 5px 0px;
 	& div {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
+	${(props: any) =>
+		props.isMinimized
+			? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
+			: 'padding-top: 2px'}
 `;
 
 const ControlButton = styled.div<IControlButton>`
@@ -185,16 +200,54 @@ const ControlButton = styled.div<IControlButton>`
 	}
 	transition: all 0.2s;
 	font-size: 1rem;
+	pointer-events: ${(props) => (props.isLoading ? 'none' : 'default')};
 `;
 
 const OptionsContainer = styled.div`
 	display: flex;
-	justify-content: between;
+	justify-content: space-between;
 	width: 100%;
-	& div {
+	& div#options-wrapper-1 {
+		display: flex;
+		justify-content: flex-start;
+		align-items: flex-end;
+	}
+	& div#options-wrapper-2 {
+		width: 200px;
 		display: flex;
 		justify-content: flex-end;
+		align-items: center;
+		padding-top: 1px;
 	}
+`;
+
+const Dots = styled(BiDotsHorizontal)<IDots>`
+	font-size: 0.8rem;
+	color: ${(props) => props.styleOptions.primaryColor};
+	margin-bottom: 3px;
+	padding: 0px;
+	cursor: pointer;
+	&:hover {
+		color: ${(props) => props.styleOptions.secondaryColor};
+	}
+`;
+
+const Reset = styled(BiReset)<IReset>`
+	position: absolute;
+	top: 50%;
+	right: 5px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: 0.2s ease-in;
+	font-size: 0.9rem;
+	color: ${(props) => props.styleOptions.primaryColor};
+	&:hover {
+		color: ${(props) => props.styleOptions.secondaryColor};
+	}
+`;
+
+const SliderContainer = styled.div`
+	width: 70px;
 `;
 
 const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
@@ -210,6 +263,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		currentWordIndex,
 		duration,
 		numberOfWords,
+		isLoading,
 		stopReading,
 		startReading,
 		setRate,
@@ -231,6 +285,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		setNumberOfWords,
 		setCurrentWordIndex,
 		setDuration,
+		setIsLoading,
 	} = useAudioReaderStore();
 
 	const audioReaderRef = useRef<SpeechSynth>();
@@ -329,12 +384,21 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	};
 
 	useEffect(() => {
+		/* Reset browser active speech synth queue on refresh or new load */
+
+		window.speechSynthesis.cancel();
+
 		if (!textContainer) return;
 
 		audioReaderRef.current = new SpeechSynth(textContainer, {
 			...options,
 			onStart: (reader: SpeechSynth) => {
 				console.log('Start');
+				setIsLoading(true);
+			},
+			onEffectivelySpeakingStart: (reader: SpeechSynth) => {
+				console.log('Voice speaking');
+				setIsLoading(false);
 			},
 			onPause: (reader: SpeechSynth) => {
 				console.log('Pause');
@@ -385,7 +449,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	useEffect(() => {
 		const reader = audioReaderRef.current;
 
-		if (!reader || isFirstRender) return;
+		if (!reader || isFirstRender) return setIsLoading(false);
 		if (isReading) {
 			if (reader.isPaused()) {
 				console.log('Resuming');
@@ -397,7 +461,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		} else {
 			if (reader.isPlaying()) reader.pause();
 		}
-	}, [isReading, textContainer, isFirstRender]);
+	}, [isReading, textContainer, isFirstRender, setIsLoading]);
 
 	return (
 		<Container
@@ -453,6 +517,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							handleGenericSeek(currentWordIndex - 5)
 						}
 						styleOptions={styleOptions}
+						isLoading={isLoading}
 					/>
 					{!isReading ? (
 						<ControlButton
@@ -460,6 +525,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							title="Play"
 							onPointerDown={handleAudioReadPlay}
 							styleOptions={styleOptions}
+							isLoading={isLoading}
 						/>
 					) : (
 						<ControlButton
@@ -467,6 +533,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							title="Pause"
 							styleOptions={styleOptions}
 							onPointerDown={handleAudioReadPause}
+							isLoading={isLoading}
 						/>
 					)}
 					<ControlButton
@@ -476,6 +543,12 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							handleGenericSeek(currentWordIndex + 5)
 						}
 						styleOptions={styleOptions}
+						isLoading={isLoading}
+					/>
+					<Reset
+						title="reset"
+						styleOptions={styleOptions}
+						onClick={handleReset}
 					/>
 				</div>
 			</ControlsContainer>
@@ -483,7 +556,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			{!isMinimized && (
 				<>
 					<OptionsContainer>
-						<div>
+						<div id="options-wrapper-1">
 							<CustomSelect
 								name="rate"
 								options={[
@@ -515,19 +588,14 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 								title="Voices"
 								styleOptions={styleOptions}
 							/>
-							<BiDotsHorizontal
+							<Dots
+								styleOptions={styleOptions}
 								onPointerDown={toggleSettings}
-								className="text-[0.8rem] text-colorExtra1 mb-[3px] p-[0px] cursor-pointer hover:text-colorExtra1"
 							/>
 						</div>
 
-						<div className="w-[100px] flex items-center pt-1">
-							<BiReset
-								title="reset"
-								className={` mr-2 font-bold cursor-pointer hover:text-[#D00] hover:bg-bgLight hover:text-colorLight transition-all text-[0.9rem]`}
-								onClick={handleReset}
-							/>
-							<div className="w-[70px]">
+						<div id="options-wrapper-2">
+							<SliderContainer>
 								<Slider
 									icon={<BiVolumeFull />}
 									onChange={handleVolumeChange}
@@ -540,7 +608,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 									}}
 									styleOptions={styleOptions}
 								/>
-							</div>
+							</SliderContainer>
 						</div>
 					</OptionsContainer>
 

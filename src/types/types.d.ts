@@ -7,6 +7,7 @@ declare global {
 	interface IEvents {
 		onEnd: (c: SpeechSynth, v?: any) => void;
 		onStart: (c: SpeechSynth, v?: any) => void;
+		onEffectivelySpeakingStart: (c: SpeechSynth, v?: any) => void;
 		onPause: (c: SpeechSynth, v?: any) => void;
 		onResume: (c: SpeechSynth, v?: any) => void;
 		onReset: (c: SpeechSynth, v?: any) => void;
@@ -38,8 +39,11 @@ declare global {
 	type Events = IEvent[];
 
 	interface IState {
+		/* Internal properties */
 		voice: SpeechSynthesisVoice;
 		voices: SpeechSynthesisVoice[];
+		/* UI */
+		isLoading: boolean;
 		/* Highlight & Reading time */
 		currentWordIndex: number;
 		highlightedWords: HTMLElement[];

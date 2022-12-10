@@ -1,4 +1,5 @@
-import React, { FC, useState, useRef, useCallback, CSSProperties } from 'react';
+import React, { FC, useState, useRef, useCallback } from 'react';
+import styled from 'styled-components';
 import { useOnClickOutside } from './hooks/index';
 
 export interface IOption {
@@ -6,7 +7,7 @@ export interface IOption {
 	value: string;
 }
 
-export interface IProps {
+export interface ICustomSelectProps {
 	children?: JSX.Element | string;
 	options: IOption[];
 	value: string;
@@ -23,27 +24,66 @@ export interface IButtonProps {
 	[key: string]: any;
 }
 
+interface IStyledButtonProps {
+	styleOptions: IStyleOptions;
+}
+
+interface IOptionsContainer {
+	styleOptions: IStyleOptions;
+	showOptions: boolean;
+}
+
+interface ILabel {
+	styleOptions: IStyleOptions;
+}
+
+const Container = styled.div`
+	margin-right: 10px;
+`;
+
+const StyledButton = styled.button<IStyledButtonProps>`
+	font-size: 0.7rem;
+	font-weight: bold;
+	color: ${(props) => props.styleOptions.primaryColor};
+	cursor: pointer;
+	transition: all 0.5s linear;
+	border: none;
+	background: none;
+	&:hover {
+		color: ${(props) => props.styleOptions.secondaryColor};
+	}
+`;
+
+const OptionsContainer = styled.div<IOptionsContainer>`
+	opacity: ${(props) => (props.showOptions ? 1 : 0)};
+	pointerevents: ${(props) => (props.showOptions ? 'all' : 'none')};
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
+	right: 0;
+	background: styleOptions.bgColor;
+	color: styleOptions.textColor;
+	padding: 5px;
+	zindex: 100;
+	display: flex;
+	justifycontent: center;
+	alignitems: center;
+	transition: all 0.2s ease-in;
+`;
+
+const Label = styled.div<ILabel>`
+	color: ${(props) => props.styleOptions.secondaryColor};
+`;
+
 export const Button: FC<IButtonProps> = ({
 	children,
 	styleOptions,
 	...props
 }) => {
-	const button = {
-		fontSize: '0.7rem',
-		fontWeight: 'bold',
-		color: styleOptions.primaryColor,
-		cursor: 'pointer',
-		transition: 'all 0.5s linear',
-	};
-
-	return (
-		<button style={button} {...props}>
-			{children}
-		</button>
-	);
+	return <StyledButton styleOptions={styleOptions}>{children}</StyledButton>;
 };
 
-const CustomSelect: FC<IProps> = ({
+const CustomSelect: FC<ICustomSelectProps> = ({
 	options,
 	value,
 	title,
@@ -70,41 +110,21 @@ const CustomSelect: FC<IProps> = ({
 
 	useOnClickOutside(ref, hide);
 
-	const container = {
-		marginRight: '10px',
-	};
-
-	const optionsStyle: CSSProperties = {
-		position: 'absolute',
-		width: '100%',
-		bottom: '0px',
-		right: '0',
-		background: styleOptions.bgColor,
-		color: styleOptions.textColor,
-		padding: '5px',
-		zIndex: '100',
-		display: 'flex',
-		justifyContent: 'center',
-		alignItems: 'center',
-		transition: 'all 0.2s ease-in,',
-	};
-
-	const titleStyle: CSSProperties = {};
-
 	return (
-		<div style={{ ...container, ...props.style }} {...props}>
-			<Button type="button" onClick={show} styleOptions={styleOptions}>
-				{options.find((o) => o.value === value)?.name}
-			</Button>
-			<div
-				ref={ref}
-				style={{
-					...optionsStyle,
-					opacity: showOptions ? 1 : 0,
-					pointerEvents: showOptions ? 'all' : 'none',
-				}}
+		<Container {...props}>
+			<StyledButton
+				type="button"
+				onClick={show}
+				styleOptions={styleOptions}
 			>
-				<div style={titleStyle}>{title}</div>
+				{options.find((o) => o.value === value)?.name}
+			</StyledButton>
+			<OptionsContainer
+				ref={ref}
+				styleOptions={styleOptions}
+				showOptions={showOptions}
+			>
+				<Label styleOptions={styleOptions}>{title}</Label>
 				{options.map((opt) => (
 					<Button
 						key={opt.value}
@@ -114,8 +134,8 @@ const CustomSelect: FC<IProps> = ({
 						{opt.name}
 					</Button>
 				))}
-			</div>
-		</div>
+			</OptionsContainer>
+		</Container>
 	);
 };
 

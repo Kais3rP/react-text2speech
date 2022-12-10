@@ -9,6 +9,14 @@ export type SliderData = {
 	unit: string;
 };
 
+interface IIcon {
+	styleOptions: IStyleOptions;
+}
+
+interface ISlider {
+	styleOptions: IStyleOptions;
+}
+
 interface IProps {
 	children?: JSX.Element | string;
 	data: SliderData;
@@ -42,11 +50,11 @@ const SliderContainer = styled.div`
 	}
 `;
 
-const StyledSlider = styled.input`
+const StyledSlider = styled.input<ISlider>`
 	width: 100%;
 	appearance: none;
 	height: 2px;
-	background: var(--bg-dark);
+	background: ${(props: any) => props.styleOptions.primaryColor};
 	outline: none;
 	opacity: 0.7;
 	transition: opacity 0.2s;
@@ -57,10 +65,10 @@ const StyledSlider = styled.input`
 		appearance: none;
 		width: 8px; /* Set a specific slider handle width */
 		height: 17px; /* Slider handle height */
-		background: var(--color-extra2); /* Green background */
+		background: ${(props: any) => props.styleOptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
 		width: 3px;
-		border: 2px solid var(--color-extra1);
+		border: 2px solid ${(props: any) => props.styleOptions.primaryColor};
 		border-radius: 2px;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -74,10 +82,10 @@ const StyledSlider = styled.input`
 		appearance: none;
 		width: 8px; /* Set a specific slider handle width */
 		height: 20px; /* Slider handle height */
-		background: var(--color-extra2); /* Extra background */
+		background: ${(props: any) => props.styleOptions.primaryColor};
 		cursor: pointer; /* Cursor on hover */
 		width: 3px;
-		border: 2px solid var(--color-light);
+		border: 2px solid ${(props: any) => props.styleOptions.primaryColor};
 		border-radius: 2px;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -86,12 +94,12 @@ const StyledSlider = styled.input`
 	}
 `;
 
-const Icon = styled.div`
+const Icon = styled.div<IIcon>`
 	font-size: 0.9rem;
 	margin-right: 5px;
 	& * {
-		stroke: var(--bg-dark);
-		color: var(--bg-dark);
+		stroke: ${(props: any) => props.styleOptions.primaryColor};
+		color: ${(props: any) => props.styleOptions.primaryColor};
 	}
 `;
 
@@ -104,7 +112,7 @@ const Slider: FC<IProps> = ({
 }) => {
 	return (
 		<SliderContainer {...props}>
-			{icon && <Icon>{icon}</Icon>}
+			{icon && <Icon styleOptions={styleOptions}>{icon}</Icon>}
 			<StyledSlider
 				min={data.min}
 				max={data.max}
@@ -112,6 +120,7 @@ const Slider: FC<IProps> = ({
 				type="range"
 				value={data.value}
 				onChange={onChange}
+				styleOptions={styleOptions}
 			/>
 		</SliderContainer>
 	);
