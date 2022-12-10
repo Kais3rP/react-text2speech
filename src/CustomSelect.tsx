@@ -33,15 +33,16 @@ interface IOptionsContainer {
 	showOptions: boolean;
 }
 
-interface ILabel {
+/* interface ILabel {
 	styleOptions: IStyleOptions;
 }
-
+ */
 const Container = styled.div`
 	margin-right: 10px;
 `;
 
 const StyledButton = styled.button<IStyledButtonProps>`
+	position: relative;
 	font-size: 0.7rem;
 	font-weight: bold;
 	color: ${(props) => props.styleOptions.primaryColor};
@@ -52,35 +53,51 @@ const StyledButton = styled.button<IStyledButtonProps>`
 	&:hover {
 		color: ${(props) => props.styleOptions.secondaryColor};
 	}
+	&::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: -2px;
+		width: 0px;
+		height: 2px;
+		background-color: ${(props) => props.styleOptions.primaryColor};
+		transition: all 0.2s ease-in;
+	}
+	&:hover::after {
+		width: 100%;
+	}
 `;
 
 const OptionsContainer = styled.div<IOptionsContainer>`
 	opacity: ${(props) => (props.showOptions ? 1 : 0)};
-	pointerevents: ${(props) => (props.showOptions ? 'all' : 'none')};
+	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
 	bottom: 0px;
 	right: 0;
-	background: styleOptions.bgColor;
-	color: styleOptions.textColor;
-	padding: 5px;
-	zindex: 100;
+	background-color: ${(props) => props.styleOptions.bgColor};
+	color: ${(props) => props.styleOptions.primaryColor};
+	z-index: 100;
 	display: flex;
-	justifycontent: center;
-	alignitems: center;
-	transition: all 0.2s ease-in;
+	justify-content: center;
+	align-items: center;
+	padding: 8px 0px 10px 0px;
 `;
 
-const Label = styled.div<ILabel>`
+/* const Label = styled.div<ILabel>`
 	color: ${(props) => props.styleOptions.secondaryColor};
-`;
+`; */
 
 export const Button: FC<IButtonProps> = ({
 	children,
 	styleOptions,
 	...props
 }) => {
-	return <StyledButton styleOptions={styleOptions}>{children}</StyledButton>;
+	return (
+		<StyledButton styleOptions={styleOptions} {...props}>
+			{children}
+		</StyledButton>
+	);
 };
 
 const CustomSelect: FC<ICustomSelectProps> = ({
@@ -104,12 +121,13 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 	}, []);
 
 	const onOptionClick = (val: string) => {
+		console.log('Click and hide');
 		onChange(val);
 		hide();
 	};
 
 	useOnClickOutside(ref, hide);
-
+	console.log('Show options', showOptions);
 	return (
 		<Container {...props}>
 			<StyledButton
@@ -124,11 +142,13 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 				styleOptions={styleOptions}
 				showOptions={showOptions}
 			>
-				<Label styleOptions={styleOptions}>{title}</Label>
+				{/* <Label styleOptions={styleOptions}>{title}</Label> */}
 				{options.map((opt) => (
 					<Button
 						key={opt.value}
-						onClick={() => onOptionClick(opt.value)}
+						onClick={() => {
+							onOptionClick(opt.value);
+						}}
 						styleOptions={styleOptions}
 					>
 						{opt.name}

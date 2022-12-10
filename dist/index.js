@@ -2818,10 +2818,15 @@ const useIsFirstRender = () => {
     return ref.current;
 };
 
+/* interface ILabel {
+    styleOptions: IStyleOptions;
+}
+ */
 const Container$1 = styled.div `
 	margin-right: 10px;
 `;
 const StyledButton = styled.button `
+	position: relative;
 	font-size: 0.7rem;
 	font-weight: bold;
 	color: ${(props) => props.styleOptions.primaryColor};
@@ -2832,29 +2837,41 @@ const StyledButton = styled.button `
 	&:hover {
 		color: ${(props) => props.styleOptions.secondaryColor};
 	}
+	&::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: -2px;
+		width: 0px;
+		height: 2px;
+		background-color: ${(props) => props.styleOptions.primaryColor};
+		transition: all 0.2s ease-in;
+	}
+	&:hover::after {
+		width: 100%;
+	}
 `;
 const OptionsContainer$1 = styled.div `
 	opacity: ${(props) => (props.showOptions ? 1 : 0)};
-	pointerevents: ${(props) => (props.showOptions ? 'all' : 'none')};
+	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
 	bottom: 0px;
 	right: 0;
-	background: styleOptions.bgColor;
-	color: styleOptions.textColor;
-	padding: 5px;
-	zindex: 100;
+	background-color: ${(props) => props.styleOptions.bgColor};
+	color: ${(props) => props.styleOptions.primaryColor};
+	z-index: 100;
 	display: flex;
-	justifycontent: center;
-	alignitems: center;
-	transition: all 0.2s ease-in;
+	justify-content: center;
+	align-items: center;
+	padding: 8px 0px 10px 0px;
 `;
-const Label = styled.div `
-	color: ${(props) => props.styleOptions.secondaryColor};
-`;
+/* const Label = styled.div<ILabel>`
+    color: ${(props) => props.styleOptions.secondaryColor};
+`; */
 const Button = (_a) => {
-    var { children, styleOptions } = _a; __rest(_a, ["children", "styleOptions"]);
-    return React__default["default"].createElement(StyledButton, { styleOptions: styleOptions }, children);
+    var { children, styleOptions } = _a, props = __rest(_a, ["children", "styleOptions"]);
+    return (React__default["default"].createElement(StyledButton, Object.assign({ styleOptions: styleOptions }, props), children));
 };
 const CustomSelect = (_a) => {
     var _b;
@@ -2868,15 +2885,17 @@ const CustomSelect = (_a) => {
         setShowOptions(false);
     }, []);
     const onOptionClick = (val) => {
+        console.log('Click and hide');
         onChange(val);
         hide();
     };
     useOnClickOutside(ref, hide);
+    console.log('Show options', showOptions);
     return (React__default["default"].createElement(Container$1, Object.assign({}, props),
         React__default["default"].createElement(StyledButton, { type: "button", onClick: show, styleOptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
-        React__default["default"].createElement(OptionsContainer$1, { ref: ref, styleOptions: styleOptions, showOptions: showOptions },
-            React__default["default"].createElement(Label, { styleOptions: styleOptions }, title),
-            options.map((opt) => (React__default["default"].createElement(Button, { key: opt.value, onClick: () => onOptionClick(opt.value), styleOptions: styleOptions }, opt.name))))));
+        React__default["default"].createElement(OptionsContainer$1, { ref: ref, styleOptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React__default["default"].createElement(Button, { key: opt.value, onClick: () => {
+                onOptionClick(opt.value);
+            }, styleOptions: styleOptions }, opt.name))))));
 };
 
 /* Styled Components */
@@ -3447,6 +3466,7 @@ const Time = styled.h5 `
 	justify-content: center;
 	align-items: center;
 	position: absolute;
+	top: 3px;
 	left: -15px;
 	z-index: 100;
 	color: #111;
@@ -3565,6 +3585,40 @@ const Reset = styled(BiReset) `
 const SliderContainer = styled.div `
 	width: 70px;
 `;
+const ExtraSettings = styled.div `
+	opacity: ${(props) => (props.issettingsvisible ? 1 : 0)};
+	pointer-events: ${(props) => (props.issettingsvisible ? 'all' : 'none')};
+	position: absolute;
+	width: 100%;
+	bottom: 0px;
+	right: 0px;
+	background-color: ${(props) => props.styleOptions.bgColor};
+	color: ${(props) => props.styleOptions.primaryColor};
+	padding: 10px 0px 10px 0px;
+	z-index: 100;
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	transition: all 0.2s linear;
+
+	& label {
+		display: flex;
+		padding: 0px;
+		margin: 0px;
+	}
+
+	& input {
+		cursor: pointer;
+	}
+
+	& h5 {
+		padding: 0px;
+		margin: 0px;
+		font-size: 0.8rem;
+		margin-left: 1px;
+	}
+`;
+
 const AudioReader = ({ textContainer, options, styleOptions }) => {
     const isFirstRender = useIsFirstRender();
     const { isReading, rate, voice, voices, volume, elapsedTime, currentWordIndex, duration, numberOfWords, isLoading, stopReading, startReading, setRate, setVoice, setVoices, setVolume, setElapsedTime, isMinimized, minimize, maximize, hideAudioReader, isVisible, isSettingsVisible, showSettings, hideSettings, isPreserveHighlighting, enablePreserveHighlighting, disablePreserveHighlighting, setNumberOfWords, setCurrentWordIndex, setDuration, setIsLoading, } = useAudioReaderStore();
@@ -3587,6 +3641,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
         const reader = audioReaderRef.current;
         if (!reader)
             return;
+        console.log('Rate change', value);
         reader.editUtterance({ rate: +value });
         setRate(value);
         setDuration(reader.state.duration);
@@ -3723,7 +3778,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
         React__default["default"].createElement(SeekbarContainer, { isMinimized: isMinimized },
             React__default["default"].createElement(Time, null, formatDuration_1(elapsedTime)),
             React__default["default"].createElement(Seekbar, { styleOptions: styleOptions, type: "range", min: "0", max: numberOfWords, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
-            React__default["default"].createElement(Time, { style: { top: '0px', left: 'auto', right: '-15px' } },
+            React__default["default"].createElement(Time, { style: { left: 'auto', right: '-15px' } },
                 formatDuration_1(duration),
                 "*")),
         React__default["default"].createElement(ControlsContainer, { isMinimized: isMinimized },
@@ -3760,16 +3815,11 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                                 value: +volume,
                                 unit: '%',
                             }, styleOptions: styleOptions })))),
-            React__default["default"].createElement("div", { style: {
-                    opacity: isSettingsVisible ? 1 : 0,
-                    pointerEvents: isSettingsVisible ? 'all' : 'none',
-                }, className: "absolute w-100 bottom-[0px] right-0 bg-bgLight text-colorLight pb-[20px] px-[10px] z-[100] flex justify-start items-center transition-all" },
-                React__default["default"].createElement("label", { htmlFor: "is-row-check", className: "flex" },
-                    React__default["default"].createElement("input", { id: "is-row-check", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting, className: "cursor-pointer" }),
-                    React__default["default"].createElement("h5", { className: "text-[0.8rem] ml-1" },
-                        ' ',
-                        "Preserve Highlighting"),
-                    React__default["default"].createElement(BiDotsHorizontal, { onPointerDown: toggleSettings, className: "text-[0.8rem] text-colorExtra1 cursor-pointer hover:text-colorExtra1 absolute bottom-[0px] left-[5px]" })))))));
+            React__default["default"].createElement(ExtraSettings, { styleOptions: styleOptions, issettingsvisible: isSettingsVisible },
+                React__default["default"].createElement("label", { htmlFor: "is-row-check" },
+                    React__default["default"].createElement("input", { id: "is-row-check", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
+                    React__default["default"].createElement("h5", null, "Preserve Highlighting"),
+                    React__default["default"].createElement(BiDotsHorizontal, { onPointerDown: toggleSettings })))))));
 };
 AudioReader.defaultProps = {
     styleOptions: {
