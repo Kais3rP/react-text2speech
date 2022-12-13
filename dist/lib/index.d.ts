@@ -5,6 +5,7 @@ export declare class SpeechSynth extends EventEmitter {
     synth: SpeechSynthesis;
     utterance: SpeechSynthesisUtterance;
     timeoutRef: string | number | Timeout | undefined;
+    seekTimeoutRef: string | number | Timeout | undefined;
     style: IStyle;
     settings: ISettings;
     events: Events;

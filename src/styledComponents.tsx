@@ -115,8 +115,8 @@ export const Seekbar = styled.input<ISeekBar>`
 	transition: opacity 0.2s;
 	::-webkit-slider-thumb {
 		appearance: none;
-		width: 12px; /* Set a specific slider handle width */
-		height: 12px; /* Slider handle height */
+		width: 14px; /* Set a specific slider handle width */
+		height: 14px; /* Slider handle height */
 		background: ${(props: any) => props.styleOptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
 		border: 2px solid ${(props: any) => props.styleOptions.primaryColor};
@@ -184,6 +184,7 @@ export const OptionsContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
+	padding-bottom: 13px;
 	& div#options-wrapper-1 {
 		display: flex;
 		justify-content: flex-start;
@@ -194,7 +195,6 @@ export const OptionsContainer = styled.div`
 		display: flex;
 		justify-content: flex-end;
 		align-items: center;
-		padding-top: 1px;
 	}
 `;
 
@@ -232,11 +232,11 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 	pointer-events: ${(props) => (props.issettingsvisible ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
+	height: 50px;
 	bottom: 0px;
 	right: 0px;
 	background-color: ${(props) => props.styleOptions.bgColor};
 	color: ${(props) => props.styleOptions.primaryColor};
-	padding: 10px 0px 10px 0px;
 	z-index: 100;
 	display: flex;
 	justify-content: start;

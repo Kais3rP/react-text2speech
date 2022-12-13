@@ -33,10 +33,6 @@ interface IOptionsContainer {
 	showOptions: boolean;
 }
 
-/* interface ILabel {
-	styleOptions: IStyleOptions;
-}
- */
 const Container = styled.div`
 	margin-right: 10px;
 `;
@@ -73,20 +69,18 @@ const OptionsContainer = styled.div<IOptionsContainer>`
 	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
+	height: 50px;
 	bottom: 0px;
 	right: 0;
 	background-color: ${(props) => props.styleOptions.bgColor};
 	color: ${(props) => props.styleOptions.primaryColor};
 	z-index: 100;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
-	padding: 8px 0px 10px 0px;
+	overflow-x: hidden;
 `;
-
-/* const Label = styled.div<ILabel>`
-	color: ${(props) => props.styleOptions.secondaryColor};
-`; */
 
 export const Button: FC<IButtonProps> = ({
 	children,
@@ -121,13 +115,12 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 	}, []);
 
 	const onOptionClick = (val: string) => {
-		console.log('Click and hide');
 		onChange(val);
 		hide();
 	};
 
 	useOnClickOutside(ref, hide);
-	console.log('Show options', showOptions);
+
 	return (
 		<Container {...props}>
 			<StyledButton

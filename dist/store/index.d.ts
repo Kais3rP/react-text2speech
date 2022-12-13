@@ -39,13 +39,17 @@ export declare const useAudioReaderStore: import("zustand").UseBoundStore<Omit<O
     } | undefined): void;
 }, "persist"> & {
     persist: {
-        setOptions: (options: Partial<import("zustand/middleware").PersistOptions<IAudioReaderState, IAudioReaderState>>) => void;
+        setOptions: (options: Partial<import("zustand/middleware").PersistOptions<IAudioReaderState, {
+            [k: string]: any;
+        }>>) => void;
         clearStorage: () => void;
         rehydrate: () => Promise<void>;
         hasHydrated: () => boolean;
         onHydrate: (fn: (state: IAudioReaderState) => void) => () => void;
         onFinishHydration: (fn: (state: IAudioReaderState) => void) => () => void;
-        getOptions: () => Partial<import("zustand/middleware").PersistOptions<IAudioReaderState, IAudioReaderState>>;
+        getOptions: () => Partial<import("zustand/middleware").PersistOptions<IAudioReaderState, {
+            [k: string]: any;
+        }>>;
     };
 }>;
 export {};

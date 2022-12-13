@@ -209,8 +209,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Instances */
         this.synth = window.speechSynthesis;
         this.utterance = new window.SpeechSynthesisUtterance();
-        /* Tick state */
+        /* Timeouts */
         this.timeoutRef = undefined;
+        this.seekTimeoutRef = undefined;
         /* Utterance settings */
         this.settings = {
             pitch: pitch,
@@ -269,7 +270,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
                     this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI).length > 0
                         ? this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI)[0]
                         : this.state.voices[0];
-                console.log('Voices', this.state.voices, 'voice', this.state.voice);
                 /* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags"
         on stringified HTML */
                 if (this.options.isHighlightTextOn && !this.options.isSSROn)
@@ -299,7 +299,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 this.addCustomEventListeners();
                 /* -------------------------------------------------------------------- */
                 /* Init utterance settings */
-                console.log('Init utterance');
                 this.initUtterance();
                 return this;
             }
@@ -313,7 +312,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
-        console.log('VOICE', this.state.voice);
         this.utterance.text = this.state.wholeText;
         this.utterance.lang = this.settings.language;
         this.utterance.voice = this.state.voice;
@@ -353,7 +351,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
             .slice(this.state.currentWordIndex, length + 1)
             .join(' ');
         /* Highlight the current word */
-        console.log('Highlight', this.state.currentWordIndex);
         this.highlightText(this.state.currentWordIndex);
         /* Increase the current index of word read */
         this.state.currentWordIndex += 1;
@@ -366,7 +363,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
             let id = null;
             try {
                 id = setInterval(() => {
-                    console.log('INTERVAL');
                     if (this.synth.getVoices().length !== 0) {
                         resolve(this.synth.getVoices());
                         clearInterval(id);
@@ -494,12 +490,11 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     /* Control methods */
     seekTo(index) {
-        console.log('Seek to', this.isPaused(), this.isPlaying());
         const isPlaying = this.isPlaying();
         const isPaused = this.isPaused();
         this.emit('seek', this, index);
         /* Cancel synth instance */
-        this.synth.cancel();
+        // this.synth.cancel();
         /* Reset timeout  */
         clearTimeout(this.timeoutRef);
         /* Set the new text slice */
@@ -517,14 +512,20 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Recalculate time elapsed */
         this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
         this.emit('time-tick', this, this.state.elapsedTime);
-        console.log('Is playing', isPlaying);
-        if (isPlaying)
-            this.play();
+        if (isPlaying) {
+            clearTimeout(this.seekTimeoutRef);
+            this.seekTimeoutRef = setTimeout(() => {
+                this.synth.cancel();
+                this.play();
+            }, 500);
+        }
         if (isPaused) {
-            console.log('Is paused');
-            this.play();
-            this.pause();
-            this.synth.cancel();
+            clearTimeout(this.seekTimeoutRef);
+            this.seekTimeoutRef = setTimeout(() => {
+                this.synth.cancel();
+                this.play();
+                this.pause();
+            }, 500);
         }
     }
     /* ------------------------------------------------------------------------------------ */
@@ -540,8 +541,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         return new Promise((resolve) => {
             this.utterance.onend = () => {
                 this.emit('end', this);
-                this.reset();
-                resolve(null);
+                /* 				this.reset();  // Commented to let the handling of the reset directly to the Component that consumes this library.
+                 */ resolve(null);
             };
         });
     }
@@ -1699,7 +1700,10 @@ const useAudioReaderStore = create()(middleware_2(middleware_3((set) => ({
     setElapsedTime: (time) => set(fn((state) => {
         state.elapsedTime = time;
     })),
-}))));
+}), {
+    name: 'IAudioReaderState',
+    partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => !['elapsedTime', 'isReading'].includes(key))),
+})));
 
 // THIS FILE IS AUTO GENERATED
 function BiDotsHorizontal (props) {
@@ -2818,10 +2822,6 @@ const useIsFirstRender = () => {
     return ref.current;
 };
 
-/* interface ILabel {
-    styleOptions: IStyleOptions;
-}
- */
 const Container$1 = styled.div `
 	margin-right: 10px;
 `;
@@ -2856,19 +2856,18 @@ const OptionsContainer$1 = styled.div `
 	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
+	height: 50px;
 	bottom: 0px;
 	right: 0;
 	background-color: ${(props) => props.styleOptions.bgColor};
 	color: ${(props) => props.styleOptions.primaryColor};
 	z-index: 100;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
-	padding: 8px 0px 10px 0px;
+	overflow-x: hidden;
 `;
-/* const Label = styled.div<ILabel>`
-    color: ${(props) => props.styleOptions.secondaryColor};
-`; */
 const Button = (_a) => {
     var { children, styleOptions } = _a, props = __rest(_a, ["children", "styleOptions"]);
     return (React__default["default"].createElement(StyledButton, Object.assign({ styleOptions: styleOptions }, props), children));
@@ -2885,12 +2884,10 @@ const CustomSelect = (_a) => {
         setShowOptions(false);
     }, []);
     const onOptionClick = (val) => {
-        console.log('Click and hide');
         onChange(val);
         hide();
     };
     useOnClickOutside(ref, hide);
-    console.log('Show options', showOptions);
     return (React__default["default"].createElement(Container$1, Object.assign({}, props),
         React__default["default"].createElement(StyledButton, { type: "button", onClick: show, styleOptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
         React__default["default"].createElement(OptionsContainer$1, { ref: ref, styleOptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React__default["default"].createElement(Button, { key: opt.value, onClick: () => {
@@ -3481,8 +3478,8 @@ const Seekbar = styled.input `
 	transition: opacity 0.2s;
 	::-webkit-slider-thumb {
 		appearance: none;
-		width: 12px; /* Set a specific slider handle width */
-		height: 12px; /* Slider handle height */
+		width: 14px; /* Set a specific slider handle width */
+		height: 14px; /* Slider handle height */
 		background: ${(props) => props.styleOptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
 		border: 2px solid ${(props) => props.styleOptions.primaryColor};
@@ -3546,6 +3543,7 @@ const OptionsContainer = styled.div `
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
+	padding-bottom: 13px;
 	& div#options-wrapper-1 {
 		display: flex;
 		justify-content: flex-start;
@@ -3556,7 +3554,6 @@ const OptionsContainer = styled.div `
 		display: flex;
 		justify-content: flex-end;
 		align-items: center;
-		padding-top: 1px;
 	}
 `;
 const Dots = styled(BiDotsHorizontal) `
@@ -3590,11 +3587,11 @@ const ExtraSettings = styled.div `
 	pointer-events: ${(props) => (props.issettingsvisible ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
+	height: 50px;
 	bottom: 0px;
 	right: 0px;
 	background-color: ${(props) => props.styleOptions.bgColor};
 	color: ${(props) => props.styleOptions.primaryColor};
-	padding: 10px 0px 10px 0px;
 	z-index: 100;
 	display: flex;
 	justify-content: start;
@@ -3641,7 +3638,6 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
         const reader = audioReaderRef.current;
         if (!reader)
             return;
-        console.log('Rate change', value);
         reader.editUtterance({ rate: +value });
         setRate(value);
         setDuration(reader.state.duration);
@@ -3691,7 +3687,6 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
     };
     /* Seeking handlers */
     const debouncedHandleManualSeek = lodash_debounce((value) => {
-        console.log('Seek value', value);
         const reader = audioReaderRef.current;
         if (!reader)
             return;
@@ -3783,9 +3778,17 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                 "*")),
         React__default["default"].createElement(ControlsContainer, { isMinimized: isMinimized },
             React__default["default"].createElement("div", null,
-                React__default["default"].createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: () => handleGenericSeek(currentWordIndex - 5), styleOptions: styleOptions, isLoading: isLoading }),
+                React__default["default"].createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: () => handleGenericSeek(currentWordIndex - 5 <= 0
+                        ? 0
+                        : currentWordIndex - 5), styleOptions: styleOptions, isLoading: isLoading }),
                 !isReading ? (React__default["default"].createElement(ControlButton, { as: AiFillPlayCircle, title: "Play", onPointerDown: handleAudioReadPlay, styleOptions: styleOptions, isLoading: isLoading })) : (React__default["default"].createElement(ControlButton, { as: AiFillPauseCircle, title: "Pause", styleOptions: styleOptions, onPointerDown: handleAudioReadPause, isLoading: isLoading })),
-                React__default["default"].createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: () => handleGenericSeek(currentWordIndex + 5), styleOptions: styleOptions, isLoading: isLoading }),
+                React__default["default"].createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: () => {
+                        var _a, _b, _c;
+                        return handleGenericSeek(currentWordIndex + 5 >=
+                            ((_a = audioReaderRef.current) === null || _a === void 0 ? void 0 : _a.state.wholeTextArray.length)
+                            ? (_c = (_b = audioReaderRef.current) === null || _b === void 0 ? void 0 : _b.state.wholeTextArray) === null || _c === void 0 ? void 0 : _c.length
+                            : currentWordIndex + 5);
+                    }, styleOptions: styleOptions, isLoading: isLoading }),
                 React__default["default"].createElement(Reset, { title: "reset", styleOptions: styleOptions, onClick: handleReset }))),
         !isMinimized && (React__default["default"].createElement(React__default["default"].Fragment, null,
             React__default["default"].createElement(OptionsContainer, null,

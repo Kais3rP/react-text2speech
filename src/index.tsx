@@ -104,7 +104,6 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	const handleRateChange = (value: string) => {
 		const reader = audioReaderRef.current;
 		if (!reader) return;
-		console.log('Rate change', value);
 		reader.editUtterance({ rate: +value });
 		setRate(value);
 		setDuration(reader.state.duration);
@@ -158,7 +157,6 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	/* Seeking handlers */
 
 	const debouncedHandleManualSeek = debounce((value: number) => {
-		console.log('Seek value', value);
 		const reader = audioReaderRef.current;
 		if (!reader) return;
 		reader.seekTo(value);
@@ -308,7 +306,11 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 						title="Fast backward"
 						onDoubleClick={(e) => e.preventDefault()}
 						onPointerDown={() =>
-							handleGenericSeek(currentWordIndex - 5)
+							handleGenericSeek(
+								currentWordIndex - 5 <= 0
+									? 0
+									: currentWordIndex - 5
+							)
 						}
 						styleOptions={styleOptions}
 						isLoading={isLoading}
@@ -334,7 +336,14 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 						as={AiFillFastForward}
 						title="Fast forsward"
 						onPointerDown={() =>
-							handleGenericSeek(currentWordIndex + 5)
+							handleGenericSeek(
+								currentWordIndex + 5 >=
+									(audioReaderRef.current?.state
+										.wholeTextArray.length as number)
+									? (audioReaderRef.current?.state
+											.wholeTextArray?.length as number)
+									: currentWordIndex + 5
+							)
 						}
 						styleOptions={styleOptions}
 						isLoading={isLoading}

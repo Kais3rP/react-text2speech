@@ -1,5 +1,4 @@
 import EventEmitter from 'events';
-
 import { Utils } from './Utils';
 
 export class SpeechSynth extends EventEmitter {
@@ -7,6 +6,8 @@ export class SpeechSynth extends EventEmitter {
 	synth: SpeechSynthesis;
 	utterance: SpeechSynthesisUtterance;
 	timeoutRef: string | number | Timeout | undefined;
+	seekTimeoutRef: string | number | Timeout | undefined;
+
 	style: IStyle;
 
 	settings: ISettings;
@@ -52,9 +53,10 @@ export class SpeechSynth extends EventEmitter {
 		this.synth = window.speechSynthesis;
 		this.utterance = new window.SpeechSynthesisUtterance();
 
-		/* Tick state */
+		/* Timeouts */
 
 		this.timeoutRef = undefined;
+		this.seekTimeoutRef = undefined;
 
 		/* Utterance settings */
 
@@ -127,8 +129,6 @@ export class SpeechSynth extends EventEmitter {
 					  )[0]
 					: this.state.voices[0];
 
-			console.log('Voices', this.state.voices, 'voice', this.state.voice);
-
 			/* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags" 
     on stringified HTML */
 
@@ -191,7 +191,6 @@ export class SpeechSynth extends EventEmitter {
 			/* -------------------------------------------------------------------- */
 
 			/* Init utterance settings */
-			console.log('Init utterance');
 
 			this.initUtterance();
 
@@ -207,7 +206,6 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
-		console.log('VOICE', this.state.voice);
 		this.utterance.text = this.state.wholeText;
 		this.utterance.lang = this.settings.language as string;
 		this.utterance.voice = this.state.voice;
@@ -262,7 +260,7 @@ export class SpeechSynth extends EventEmitter {
 			.join(' ');
 
 		/* Highlight the current word */
-		console.log('Highlight', this.state.currentWordIndex);
+
 		this.highlightText(this.state.currentWordIndex);
 
 		/* Increase the current index of word read */
@@ -281,7 +279,6 @@ export class SpeechSynth extends EventEmitter {
 			let id: Interval | null = null;
 			try {
 				id = setInterval(() => {
-					console.log('INTERVAL');
 					if (this.synth.getVoices().length !== 0) {
 						resolve(this.synth.getVoices());
 						clearInterval(id as Interval);
@@ -469,14 +466,13 @@ export class SpeechSynth extends EventEmitter {
 	/* Control methods */
 
 	seekTo(index: number) {
-		console.log('Seek to', this.isPaused(), this.isPlaying());
 		const isPlaying = this.isPlaying();
 		const isPaused = this.isPaused();
 		this.emit('seek', this, index);
 
 		/* Cancel synth instance */
 
-		this.synth.cancel();
+		// this.synth.cancel();
 
 		/* Reset timeout  */
 
@@ -510,15 +506,22 @@ export class SpeechSynth extends EventEmitter {
 		)(this.settings.rate as number);
 
 		this.emit('time-tick', this, this.state.elapsedTime);
-		console.log('Is playing', isPlaying);
 
-		if (isPlaying) this.play();
+		if (isPlaying) {
+			clearTimeout(this.seekTimeoutRef);
+			this.seekTimeoutRef = setTimeout(() => {
+				this.synth.cancel();
+				this.play();
+			}, 500);
+		}
 
 		if (isPaused) {
-			console.log('Is paused');
-			this.play();
-			this.pause();
-			this.synth.cancel();
+			clearTimeout(this.seekTimeoutRef);
+			this.seekTimeoutRef = setTimeout(() => {
+				this.synth.cancel();
+				this.play();
+				this.pause();
+			}, 500);
 		}
 	}
 
@@ -542,8 +545,8 @@ export class SpeechSynth extends EventEmitter {
 		return new Promise((resolve) => {
 			this.utterance.onend = () => {
 				this.emit('end', this);
-				this.reset();
-				resolve(null);
+				/* 				this.reset();  // Commented to let the handling of the reset directly to the Component that consumes this library.
+				 */ resolve(null);
 			};
 		});
 	}
