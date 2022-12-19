@@ -1,66 +1,23 @@
 import { BiDotsHorizontal, BiReset } from 'react-icons/bi';
 import styled from 'styled-components';
-
-interface IContainerProps {
-	isVisible: boolean;
-	isMinimized: boolean;
-	styleoptions: IStyleOptions;
-}
-
-interface IWindowButton {
-	styleoptions: IStyleOptions;
-}
-
-interface ISeekbarContainer {
-	isMinimized: boolean;
-}
-
-interface ISeekBar {
-	styleoptions: IStyleOptions;
-}
-
-interface IControlsContainer {
-	isMinimized: boolean;
-}
-
-interface IControlButton {
-	styleoptions: IStyleOptions;
-	isLoading: boolean;
-}
-
-interface IDots {
-	styleoptions: IStyleOptions;
-}
-
-interface IReset {
-	styleoptions: IStyleOptions;
-}
-
-interface IExtraSettings {
-	styleoptions: IStyleOptions;
-	issettingsvisible: boolean;
-}
-
 /* Styled Components */
-
-export const Container = styled.div<IContainerProps>`
+export const Container = styled.div `
 	position: fixed;
 	zindex: 1000;
 	bottom: 5px;
-	right: ${(props: any) => (props.isVisible ? '10px' : '-2000px')};
+	right: ${(props) => (props.isVisible ? '10px' : '-2000px')};
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	transition: all 200ms linear;
-	width: ${(props: any) => (props.isMinimized ? '150px' : '300px')};
+	width: ${(props) => (props.isMinimized ? '150px' : '300px')};
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
-	background-color: ${(props: any) => props.styleoptions.bgColor};
+	background-color: ${(props) => props.styleOptions.bgColor};
 `;
-
-export const WindowButton = styled.div<IWindowButton>`
+export const WindowButton = styled.div `
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -69,27 +26,28 @@ export const WindowButton = styled.div<IWindowButton>`
 	width: 12;
 	height: 12;
 	border-radius: 3px;
-	border: 2px solid ${(props: any) => props.styleoptions.primaryColor};
-	background-color: ${(props: any) => props.styleoptions.bgColor};
-	color: ${(props: any) => props.styleoptions.textColor};
+	border: 2px solid ${(props) => props.styleOptions.primaryColor};
+	background-color: ${(props) => props.styleOptions.bgColor};
+	color: ${(props) => props.styleOptions.textColor};
 	font-weight: bold;
 	cursor: pointer;
+	position: absolute;
+	top: 2px;
+	right: 2px;
 	transition: all 0.2s linear;
 	&:hover {
-		backgroundcolor: ${(props: any) => props.styleoptions.bgColor};
-		color: ${(props: any) => props.styleoptions.secondaryColor};
+		backgroundcolor: ${(props) => props.styleOptions.bgColor};
+		color: ${(props) => props.styleOptions.secondaryColor};
 	}
 `;
-
-export const SeekbarContainer = styled.div<ISeekbarContainer>`
+export const SeekbarContainer = styled.div `
 	text-align: center;
-	width: ${(props: any) => (props.isMinimized ? '100%' : '90%')};
+	width: ${(props) => (props.isMinimized ? '100%' : '90%')};
 	position: relative;
 	z-index: 2;
 	margin-top: 10px;
 `;
-
-export const Time = styled.h5`
+export const Time = styled.h5 `
 	width: 50px;
 	font-size: 0.6rem;
 	display: flex;
@@ -101,12 +59,11 @@ export const Time = styled.h5`
 	z-index: 100;
 	color: #111;
 `;
-
-export const Seekbar = styled.input<ISeekBar>`
+export const Seekbar = styled.input `
 	width: 100%;
 	appearance: none;
 	height: 2px;
-	background: ${(props: any) => props.styleoptions.primaryColor};
+	background: ${(props) => props.styleOptions.primaryColor};
 	outline: none;
 	opacity: 0.7;
 	transition: opacity 0.2s;
@@ -114,9 +71,9 @@ export const Seekbar = styled.input<ISeekBar>`
 		appearance: none;
 		width: 14px; /* Set a specific slider handle width */
 		height: 14px; /* Slider handle height */
-		background: ${(props: any) => props.styleoptions.bgColor};
+		background: ${(props) => props.styleOptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props: any) => props.styleoptions.primaryColor};
+		border: 2px solid ${(props) => props.styleOptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -131,9 +88,9 @@ export const Seekbar = styled.input<ISeekBar>`
 		appearance: none;
 		width: 12px; /* Set a specific slider handle width */
 		height: 12px; /* Slider handle height */
-		background: ${(props: any) => props.styleoptions.bgColor};
+		background: ${(props) => props.styleOptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props: any) => props.styleoptions.primaryColor};
+		border: 2px solid ${(props) => props.styleOptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -141,8 +98,7 @@ export const Seekbar = styled.input<ISeekBar>`
 		transition: transform 0.1s ease-out;
 	}
 `;
-
-export const ControlsContainer = styled.div<IControlsContainer>`
+export const ControlsContainer = styled.div `
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -154,30 +110,27 @@ export const ControlsContainer = styled.div<IControlsContainer>`
 		justify-content: center;
 		align-items: center;
 	}
-	${(props: any) =>
-		props.isMinimized
-			? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
-			: 'padding-top: 2px'}
+	${(props) => props.isMinimized
+    ? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
+    : 'padding-top: 2px'}
 `;
-
-export const ControlButton = styled.div<IControlButton>`
+export const ControlButton = styled.div `
 	border-radius: 50%;
-	background-color: ${(props: any) => props.styleoptions.bgColor};
-	color: ${(props: any) => props.styleoptions.primaryColor};
+	background-color: ${(props) => props.styleOptions.bgColor};
+	color: ${(props) => props.styleOptions.primaryColor};
 	font-size: bold;
 	cursor: pointer;
-	border: 2px solid ${(props: any) => props.styleoptions.secondaryColor};
+	border: 2px solid ${(props) => props.styleOptions.secondaryColor};
 	&:hover {
-		border: 2px solid ${(props: any) => props.styleoptions.primaryColor};
-		background-color: ${(props: any) => props.styleoptions.bgColor};
-		color: ${(props: any) => props.styleoptions.secondaryColor};
+		border: 2px solid ${(props) => props.styleOptions.primaryColor};
+		background-color: ${(props) => props.styleOptions.bgColor};
+		color: ${(props) => props.styleOptions.secondaryColor};
 	}
 	transition: all 0.2s;
 	font-size: 1rem;
 	pointer-events: ${(props) => (props.isLoading ? 'none' : 'default')};
 `;
-
-export const OptionsContainer = styled.div`
+export const OptionsContainer = styled.div `
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
@@ -194,19 +147,17 @@ export const OptionsContainer = styled.div`
 		align-items: center;
 	}
 `;
-
-export const Dots = styled(BiDotsHorizontal)<IDots>`
+export const Dots = styled(BiDotsHorizontal) `
 	font-size: 0.8rem;
-	color: ${(props) => props.styleoptions.primaryColor};
+	color: ${(props) => props.styleOptions.primaryColor};
 	margin-bottom: 3px;
 	padding: 0px;
 	cursor: pointer;
 	&:hover {
-		color: ${(props) => props.styleoptions.secondaryColor};
+		color: ${(props) => props.styleOptions.secondaryColor};
 	}
 `;
-
-export const Reset = styled(BiReset)<IReset>`
+export const Reset = styled(BiReset) `
 	position: absolute;
 	top: 50%;
 	right: 5px;
@@ -214,17 +165,15 @@ export const Reset = styled(BiReset)<IReset>`
 	cursor: pointer;
 	transition: 0.2s ease-in;
 	font-size: 0.9rem;
-	color: ${(props) => props.styleoptions.primaryColor};
+	color: ${(props) => props.styleOptions.primaryColor};
 	&:hover {
-		color: ${(props) => props.styleoptions.secondaryColor};
+		color: ${(props) => props.styleOptions.secondaryColor};
 	}
 `;
-
-export const SliderContainer = styled.div`
+export const SliderContainer = styled.div `
 	width: 70px;
 `;
-
-export const ExtraSettings = styled.div<IExtraSettings>`
+export const ExtraSettings = styled.div `
 	opacity: ${(props) => (props.issettingsvisible ? 1 : 0)};
 	pointer-events: ${(props) => (props.issettingsvisible ? 'all' : 'none')};
 	position: absolute;
@@ -232,8 +181,8 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 	height: 53px;
 	bottom: 0px;
 	right: 0px;
-	background-color: ${(props) => props.styleoptions.bgColor};
-	color: ${(props) => props.styleoptions.primaryColor};
+	background-color: ${(props) => props.styleOptions.bgColor};
+	color: ${(props) => props.styleOptions.primaryColor};
 	z-index: 100;
 	display: flex;
 	justify-content: start;
@@ -257,3 +206,4 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 		margin-left: 1px;
 	}
 `;
+//# sourceMappingURL=styledComponents.js.map

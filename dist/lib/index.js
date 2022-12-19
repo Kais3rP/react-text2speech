@@ -13,17 +13,21 @@ export class SpeechSynth extends EventEmitter {
     constructor(textContainer, { 
     /* Settings */
     pitch = 1, rate = 1, language = 'en-US', voiceURI = 'Microsoft Aria Online (Natural) - English (United States)', volume = 1, 
+    /* Style */
+    color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
-    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, 
+    onEnd = () => null, onStart = () => null, onEffectivelySpeakingStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, 
     /* Options */
     isHighlightTextOn = true, isPreserveHighlighting = true, isSSROn = false, }) {
         super();
         this.textContainer = textContainer;
+        this.style = { color1, color2 };
         /* Instances */
         this.synth = window.speechSynthesis;
         this.utterance = new window.SpeechSynthesisUtterance();
-        /* Tick state */
+        /* Timeouts */
         this.timeoutRef = undefined;
+        this.seekTimeoutRef = undefined;
         /* Utterance settings */
         this.settings = {
             pitch: pitch,
@@ -36,6 +40,7 @@ export class SpeechSynth extends EventEmitter {
             { type: 'boundary', handler: onBoundary },
             { type: 'time-tick', handler: onTimeTick },
             { type: 'word-click', handler: onWordClick },
+            { type: 'speaking-start', handler: onEffectivelySpeakingStart },
             { type: 'start', handler: onStart },
             { type: 'pause', handler: onPause },
             { type: 'resume', handler: onResume },
@@ -50,9 +55,11 @@ export class SpeechSynth extends EventEmitter {
         };
         /* State */
         this.state = {
-            /* Options */
+            /* Internal properties */
             voice: {},
             voices: [],
+            /* UI */
+            isLoading: true,
             /* Highlight & Reading time */
             currentWordIndex: 1,
             highlightedWords: [],
@@ -69,6 +76,7 @@ export class SpeechSynth extends EventEmitter {
         };
     }
     init() {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             /* Get voices */
             try {
@@ -78,11 +86,12 @@ export class SpeechSynth extends EventEmitter {
                     this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI).length > 0
                         ? this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI)[0]
                         : this.state.voices[0];
-                console.log('Voices', this.state.voices, 'voice', this.state.voice);
                 /* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags"
         on stringified HTML */
                 if (this.options.isHighlightTextOn && !this.options.isSSROn)
                     SpeechSynth.addHTMLHighlightTags(this.textContainer);
+                /* Add basic style to the words that have just been tagged wit HTML tags */
+                this.applyBasicStyleToWords(this.textContainer, '[data-id]');
                 /* Init state properties */
                 /* Get the total number of words to highlight */
                 this.state.numberOfWords = this.retrieveNumberOfWords(this.textContainer, '[data-id]');
@@ -95,6 +104,7 @@ export class SpeechSynth extends EventEmitter {
                 /* -------------------------------------------------------------------- */
                 /* Add listeners */
                 this.utterance.onboundary = this.handleBoundary.bind(this);
+                this.utterance.onstart = (_a = this.events.find((evs) => evs.type === 'speaking-start')) === null || _a === void 0 ? void 0 : _a.handler;
                 /* Attach click event listener to words */
                 this.attachEventListenersToWords(this.textContainer, '[data-id]', {
                     type: 'click',
@@ -105,7 +115,6 @@ export class SpeechSynth extends EventEmitter {
                 this.addCustomEventListeners();
                 /* -------------------------------------------------------------------- */
                 /* Init utterance settings */
-                console.log('Init utterance');
                 this.initUtterance();
                 return this;
             }
@@ -119,7 +128,6 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
-        console.log('VOICE', this.state.voice);
         this.utterance.text = this.state.wholeText;
         this.utterance.lang = this.settings.language;
         this.utterance.voice = this.state.voice;
@@ -171,7 +179,6 @@ export class SpeechSynth extends EventEmitter {
             let id = null;
             try {
                 id = setInterval(() => {
-                    console.log('INTERVAL');
                     if (this.synth.getVoices().length !== 0) {
                         resolve(this.synth.getVoices());
                         clearInterval(id);
@@ -185,8 +192,8 @@ export class SpeechSynth extends EventEmitter {
         });
     }
     highlightText(wordIndex) {
+        // eslint-disable-next-line prettier/prettier
         const wordToHighlight = this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
-        const previousWord = this.textContainer.querySelector(`[data-id="${wordIndex - 1}"]`);
         if (!wordToHighlight)
             return;
         /* Update highlighted words array */
@@ -199,8 +206,7 @@ export class SpeechSynth extends EventEmitter {
             /* Reset the row highlight */
             if (!this.options.isPreserveHighlighting) {
                 this.state.highlightedWords.forEach((el) => {
-                    el.classList.remove('highlight-word1');
-                    el.classList.remove('highlight-word2');
+                    el.style.backgroundColor = '';
                 });
                 this.state.highlightedWords = [wordToHighlight];
             }
@@ -208,17 +214,14 @@ export class SpeechSynth extends EventEmitter {
         /* Update last word position */
         this.state.lastWordPosition = position;
         /* Apply highlight style */
-        wordToHighlight.classList.add('highlight-word2');
-        wordToHighlight.classList.add('highlight-word1');
-        // remove the current highlight class and leave the secondary highlight class to the previous word
-        if (previousWord)
-            previousWord.classList.remove('highlight-word1');
+        wordToHighlight.style.backgroundColor = this.style.color1;
+        wordToHighlight.style.boxShadow = `8px 0px 0px 0px ${this.style.color1}`;
     }
     resetHighlight() {
-        this.state.highlightedWords = [];
-        this.textContainer.querySelectorAll(`[data-id]`).forEach((n) => {
-            n.classList.remove('highlight-word1');
-            n.classList.remove('highlight-word2');
+        this.state.highlightedWords.forEach((n) => {
+            n.style.backgroundColor = '';
+            n.style.boxShadow = '';
+            this.state.highlightedWords = [];
         });
     }
     addCustomEventListeners() {
@@ -244,6 +247,15 @@ export class SpeechSynth extends EventEmitter {
         return [...node.querySelectorAll(selector)]
             .map((el) => el.textContent)
             .filter((el) => el && !Utils.isPunctuation(el)); // Exclude punctuation and "" empty string characters
+    }
+    applyBasicStyleToWords(node, selector) {
+        [...node.querySelectorAll(selector)]
+            .filter((el) => el && !Utils.isPunctuation(el.textContent))
+            .forEach((el) => {
+            if (!el)
+                return;
+            el.style.transition = 'all 0.4s';
+        });
     }
     getTextDuration(str, rate) {
         return (str.length * 100 * 1) / rate;
@@ -298,7 +310,7 @@ export class SpeechSynth extends EventEmitter {
         const isPaused = this.isPaused();
         this.emit('seek', this, index);
         /* Cancel synth instance */
-        this.synth.cancel();
+        // this.synth.cancel();
         /* Reset timeout  */
         clearTimeout(this.timeoutRef);
         /* Set the new text slice */
@@ -316,12 +328,20 @@ export class SpeechSynth extends EventEmitter {
         /* Recalculate time elapsed */
         this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
         this.emit('time-tick', this, this.state.elapsedTime);
-        if (isPlaying)
-            this.play();
-        /* Play the remaining text with the new settings applied and pause if the settings are changed while in pause */
+        if (isPlaying) {
+            clearTimeout(this.seekTimeoutRef);
+            this.seekTimeoutRef = setTimeout(() => {
+                this.synth.cancel();
+                this.play();
+            }, 500);
+        }
         if (isPaused) {
-            this.play();
-            this.pause();
+            clearTimeout(this.seekTimeoutRef);
+            this.seekTimeoutRef = setTimeout(() => {
+                this.synth.cancel();
+                this.play();
+                this.pause();
+            }, 500);
         }
     }
     /* ------------------------------------------------------------------------------------ */
@@ -337,8 +357,8 @@ export class SpeechSynth extends EventEmitter {
         return new Promise((resolve) => {
             this.utterance.onend = () => {
                 this.emit('end', this);
-                this.reset();
-                resolve(null);
+                /* 				this.reset();  // Commented to let the handling of the reset directly to the Component that consumes this library.
+                 */ resolve(null);
             };
         });
     }

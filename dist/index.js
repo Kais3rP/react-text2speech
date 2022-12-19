@@ -2833,13 +2833,13 @@ const StyledButton = styled.button `
 	position: relative;
 	font-size: 0.7rem;
 	font-weight: bold;
-	color: ${(props) => props.styleOptions.primaryColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	cursor: pointer;
 	transition: all 0.5s linear;
 	border: none;
 	background: none;
 	&:hover {
-		color: ${(props) => props.styleOptions.secondaryColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 	&::after {
 		content: '';
@@ -2848,7 +2848,7 @@ const StyledButton = styled.button `
 		bottom: -2px;
 		width: 0px;
 		height: 2px;
-		background-color: ${(props) => props.styleOptions.primaryColor};
+		background-color: ${(props) => props.styleoptions.primaryColor};
 		transition: all 0.2s ease-in;
 	}
 	&:hover::after {
@@ -2863,8 +2863,8 @@ const OptionsContainer$1 = styled.div `
 	height: 53px;
 	bottom: 0px;
 	right: 0;
-	background-color: ${(props) => props.styleOptions.bgColor};
-	color: ${(props) => props.styleOptions.primaryColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	z-index: 100;
 	display: flex;
 	flex-wrap: wrap;
@@ -2874,7 +2874,7 @@ const OptionsContainer$1 = styled.div `
 `;
 const Button = (_a) => {
     var { children, styleOptions } = _a, props = __rest(_a, ["children", "styleOptions"]);
-    return (React__default["default"].createElement(StyledButton, Object.assign({ styleOptions: styleOptions }, props), children));
+    return (React__default["default"].createElement(StyledButton, Object.assign({ styleoptions: styleOptions }, props), children));
 };
 const CustomSelect = (_a) => {
     var _b;
@@ -2893,8 +2893,8 @@ const CustomSelect = (_a) => {
     };
     useOnClickOutside(ref, hide);
     return (React__default["default"].createElement(Container$1, Object.assign({}, props),
-        React__default["default"].createElement(StyledButton, { type: "button", onClick: show, styleOptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
-        React__default["default"].createElement(OptionsContainer$1, { ref: ref, styleOptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React__default["default"].createElement(Button, { key: opt.value, onClick: () => {
+        React__default["default"].createElement(StyledButton, { type: "button", onClick: show, styleoptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
+        React__default["default"].createElement(OptionsContainer$1, { ref: ref, styleoptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React__default["default"].createElement(Button, { key: opt.value, onClick: () => {
                 onOptionClick(opt.value);
             }, styleOptions: styleOptions }, opt.name))))));
 };
@@ -2925,7 +2925,7 @@ const StyledSlider = styled.input `
 	width: 100%;
 	appearance: none;
 	height: 2px;
-	background: ${(props) => props.styleOptions.primaryColor};
+	background: ${(props) => props.styleoptions.primaryColor};
 	outline: none;
 	opacity: 0.7;
 	transition: opacity 0.2s;
@@ -2936,10 +2936,10 @@ const StyledSlider = styled.input `
 		appearance: none;
 		width: 8px; /* Set a specific slider handle width */
 		height: 17px; /* Slider handle height */
-		background: ${(props) => props.styleOptions.bgColor};
+		background: ${(props) => props.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
 		width: 3px;
-		border: 2px solid ${(props) => props.styleOptions.primaryColor};
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
 		border-radius: 2px;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -2953,10 +2953,10 @@ const StyledSlider = styled.input `
 		appearance: none;
 		width: 8px; /* Set a specific slider handle width */
 		height: 20px; /* Slider handle height */
-		background: ${(props) => props.styleOptions.primaryColor};
+		background: ${(props) => props.styleoptions.primaryColor};
 		cursor: pointer; /* Cursor on hover */
 		width: 3px;
-		border: 2px solid ${(props) => props.styleOptions.primaryColor};
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
 		border-radius: 2px;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -2968,15 +2968,15 @@ const Icon = styled.div `
 	font-size: 0.9rem;
 	margin-right: 5px;
 	& * {
-		stroke: ${(props) => props.styleOptions.primaryColor};
-		color: ${(props) => props.styleOptions.primaryColor};
+		stroke: ${(props) => props.styleoptions.primaryColor};
+		color: ${(props) => props.styleoptions.primaryColor};
 	}
 `;
 const Slider = (_a) => {
     var { data, onChange, icon, styleOptions } = _a, props = __rest(_a, ["data", "onChange", "icon", "styleOptions"]);
     return (React__default["default"].createElement(SliderContainer$1, Object.assign({}, props),
-        icon && React__default["default"].createElement(Icon, { styleOptions: styleOptions }, icon),
-        React__default["default"].createElement(StyledSlider, { min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange, styleOptions: styleOptions })));
+        icon && React__default["default"].createElement(Icon, { styleoptions: styleOptions }, icon),
+        React__default["default"].createElement(StyledSlider, { min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange, styleoptions: styleOptions })));
 };
 
 // adapted from https://github.com/sindresorhus/parse-ms.
@@ -3428,7 +3428,7 @@ const Container = styled.div `
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
-	background-color: ${(props) => props.styleOptions.bgColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
 `;
 const WindowButton = styled.div `
 	display: flex;
@@ -3439,18 +3439,15 @@ const WindowButton = styled.div `
 	width: 12;
 	height: 12;
 	border-radius: 3px;
-	border: 2px solid ${(props) => props.styleOptions.primaryColor};
-	background-color: ${(props) => props.styleOptions.bgColor};
-	color: ${(props) => props.styleOptions.textColor};
+	border: 2px solid ${(props) => props.styleoptions.primaryColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.textColor};
 	font-weight: bold;
 	cursor: pointer;
-	position: absolute;
-	top: 2px;
-	right: 2px;
 	transition: all 0.2s linear;
 	&:hover {
-		backgroundcolor: ${(props) => props.styleOptions.bgColor};
-		color: ${(props) => props.styleOptions.secondaryColor};
+		backgroundcolor: ${(props) => props.styleoptions.bgColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 `;
 const SeekbarContainer = styled.div `
@@ -3476,7 +3473,7 @@ const Seekbar = styled.input `
 	width: 100%;
 	appearance: none;
 	height: 2px;
-	background: ${(props) => props.styleOptions.primaryColor};
+	background: ${(props) => props.styleoptions.primaryColor};
 	outline: none;
 	opacity: 0.7;
 	transition: opacity 0.2s;
@@ -3484,9 +3481,9 @@ const Seekbar = styled.input `
 		appearance: none;
 		width: 14px; /* Set a specific slider handle width */
 		height: 14px; /* Slider handle height */
-		background: ${(props) => props.styleOptions.bgColor};
+		background: ${(props) => props.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props) => props.styleOptions.primaryColor};
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -3501,9 +3498,9 @@ const Seekbar = styled.input `
 		appearance: none;
 		width: 12px; /* Set a specific slider handle width */
 		height: 12px; /* Slider handle height */
-		background: ${(props) => props.styleOptions.bgColor};
+		background: ${(props) => props.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props) => props.styleOptions.primaryColor};
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -3529,15 +3526,15 @@ const ControlsContainer = styled.div `
 `;
 const ControlButton = styled.div `
 	border-radius: 50%;
-	background-color: ${(props) => props.styleOptions.bgColor};
-	color: ${(props) => props.styleOptions.primaryColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	font-size: bold;
 	cursor: pointer;
-	border: 2px solid ${(props) => props.styleOptions.secondaryColor};
+	border: 2px solid ${(props) => props.styleoptions.secondaryColor};
 	&:hover {
-		border: 2px solid ${(props) => props.styleOptions.primaryColor};
-		background-color: ${(props) => props.styleOptions.bgColor};
-		color: ${(props) => props.styleOptions.secondaryColor};
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
+		background-color: ${(props) => props.styleoptions.bgColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 	transition: all 0.2s;
 	font-size: 1rem;
@@ -3562,12 +3559,12 @@ const OptionsContainer = styled.div `
 `;
 const Dots = styled(BiDotsHorizontal) `
 	font-size: 0.8rem;
-	color: ${(props) => props.styleOptions.primaryColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	margin-bottom: 3px;
 	padding: 0px;
 	cursor: pointer;
 	&:hover {
-		color: ${(props) => props.styleOptions.secondaryColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 `;
 const Reset = styled(BiReset) `
@@ -3578,9 +3575,9 @@ const Reset = styled(BiReset) `
 	cursor: pointer;
 	transition: 0.2s ease-in;
 	font-size: 0.9rem;
-	color: ${(props) => props.styleOptions.primaryColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	&:hover {
-		color: ${(props) => props.styleOptions.secondaryColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 `;
 const SliderContainer = styled.div `
@@ -3594,8 +3591,8 @@ const ExtraSettings = styled.div `
 	height: 53px;
 	bottom: 0px;
 	right: 0px;
-	background-color: ${(props) => props.styleOptions.bgColor};
-	color: ${(props) => props.styleOptions.primaryColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	z-index: 100;
 	display: flex;
 	justify-content: start;
@@ -3770,13 +3767,13 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                 reader.pause();
         }
     }, [isReading, textContainer, isFirstRender, setIsLoading]);
-    return (React__default["default"].createElement(Container, { isVisible: isVisible, isMinimized: isMinimized, styleOptions: styleOptions },
-        React__default["default"].createElement(WindowButton, { styleOptions: styleOptions, onPointerDown: handleHideReader },
+    return (React__default["default"].createElement(Container, { isVisible: isVisible, isMinimized: isMinimized, styleoptions: styleOptions },
+        React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '2px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },
             React__default["default"].createElement(MdOutlineClose, { title: "Close" })),
-        React__default["default"].createElement(WindowButton, { style: { right: '20px' }, title: isMinimized ? 'Maximize' : 'Minimize', styleOptions: styleOptions, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React__default["default"].createElement(FiMaximize, null) : React__default["default"].createElement(FiMinimize, null)),
+        React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '20px' }, title: isMinimized ? 'Maximize' : 'Minimize', styleoptions: styleOptions, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React__default["default"].createElement(FiMaximize, null) : React__default["default"].createElement(FiMinimize, null)),
         React__default["default"].createElement(SeekbarContainer, { isMinimized: isMinimized },
             React__default["default"].createElement(Time, null, formatDuration_1(elapsedTime)),
-            React__default["default"].createElement(Seekbar, { styleOptions: styleOptions, type: "range", min: "0", max: numberOfWords, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
+            React__default["default"].createElement(Seekbar, { styleoptions: styleOptions, type: "range", min: "0", max: numberOfWords, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
             React__default["default"].createElement(Time, { style: { left: 'auto', right: '-15px' } },
                 formatDuration_1(duration),
                 "*")),
@@ -3784,16 +3781,16 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
             React__default["default"].createElement("div", null,
                 React__default["default"].createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: () => handleGenericSeek(currentWordIndex - 5 <= 0
                         ? 0
-                        : currentWordIndex - 5), styleOptions: styleOptions, isLoading: isLoading }),
-                !isReading ? (React__default["default"].createElement(ControlButton, { as: AiFillPlayCircle, title: "Play", onPointerDown: handleAudioReadPlay, styleOptions: styleOptions, isLoading: isLoading })) : (React__default["default"].createElement(ControlButton, { as: AiFillPauseCircle, title: "Pause", styleOptions: styleOptions, onPointerDown: handleAudioReadPause, isLoading: isLoading })),
+                        : currentWordIndex - 5), styleoptions: styleOptions, isLoading: isLoading }),
+                !isReading ? (React__default["default"].createElement(ControlButton, { as: AiFillPlayCircle, title: "Play", onPointerDown: handleAudioReadPlay, styleoptions: styleOptions, isLoading: isLoading })) : (React__default["default"].createElement(ControlButton, { as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleAudioReadPause, isLoading: isLoading })),
                 React__default["default"].createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: () => {
                         var _a, _b, _c;
                         return handleGenericSeek(currentWordIndex + 5 >=
                             ((_a = audioReaderRef.current) === null || _a === void 0 ? void 0 : _a.state.wholeTextArray.length)
                             ? (_c = (_b = audioReaderRef.current) === null || _b === void 0 ? void 0 : _b.state.wholeTextArray) === null || _c === void 0 ? void 0 : _c.length
                             : currentWordIndex + 5);
-                    }, styleOptions: styleOptions, isLoading: isLoading }),
-                React__default["default"].createElement(Reset, { title: "reset", styleOptions: styleOptions, onClick: handleReset }))),
+                    }, styleoptions: styleOptions, isLoading: isLoading }),
+                React__default["default"].createElement(Reset, { title: "reset", styleoptions: styleOptions, onClick: handleReset }))),
         !isMinimized && (React__default["default"].createElement(React__default["default"].Fragment, null,
             React__default["default"].createElement(OptionsContainer, null,
                 React__default["default"].createElement("div", { id: "options-wrapper-1" },
@@ -3812,7 +3809,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                                 value: voice.voiceURI,
                             });
                         }), onChange: handleVoiceChange, value: voice, defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
-                    React__default["default"].createElement(Dots, { styleOptions: styleOptions, onPointerDown: toggleSettings })),
+                    React__default["default"].createElement(Dots, { styleoptions: styleOptions, onPointerDown: toggleSettings })),
                 React__default["default"].createElement("div", { id: "options-wrapper-2" },
                     React__default["default"].createElement(SliderContainer, null,
                         React__default["default"].createElement(Slider, { icon: React__default["default"].createElement(BiVolumeFull, null), onChange: handleVolumeChange, data: {
@@ -3822,7 +3819,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                                 value: +volume,
                                 unit: '%',
                             }, styleOptions: styleOptions })))),
-            React__default["default"].createElement(ExtraSettings, { styleOptions: styleOptions, issettingsvisible: isSettingsVisible, onPointerDown: toggleSettings },
+            React__default["default"].createElement(ExtraSettings, { styleoptions: styleOptions, issettingsvisible: isSettingsVisible, onPointerDown: toggleSettings },
                 React__default["default"].createElement("label", { htmlFor: "is-row-check", onPointerDown: (e) => e.stopPropagation() },
                     React__default["default"].createElement("input", { id: "is-row-check", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
                     React__default["default"].createElement("h5", null, "Preserve Highlighting")))))));

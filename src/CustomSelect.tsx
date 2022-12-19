@@ -25,11 +25,11 @@ export interface IButtonProps {
 }
 
 interface IStyledButtonProps {
-	styleOptions: IStyleOptions;
+	styleoptions: IStyleOptions;
 }
 
 interface IOptionsContainer {
-	styleOptions: IStyleOptions;
+	styleoptions: IStyleOptions;
 	showOptions: boolean;
 }
 
@@ -41,13 +41,13 @@ const StyledButton = styled.button<IStyledButtonProps>`
 	position: relative;
 	font-size: 0.7rem;
 	font-weight: bold;
-	color: ${(props) => props.styleOptions.primaryColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	cursor: pointer;
 	transition: all 0.5s linear;
 	border: none;
 	background: none;
 	&:hover {
-		color: ${(props) => props.styleOptions.secondaryColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 	&::after {
 		content: '';
@@ -56,7 +56,7 @@ const StyledButton = styled.button<IStyledButtonProps>`
 		bottom: -2px;
 		width: 0px;
 		height: 2px;
-		background-color: ${(props) => props.styleOptions.primaryColor};
+		background-color: ${(props) => props.styleoptions.primaryColor};
 		transition: all 0.2s ease-in;
 	}
 	&:hover::after {
@@ -72,8 +72,8 @@ const OptionsContainer = styled.div<IOptionsContainer>`
 	height: 53px;
 	bottom: 0px;
 	right: 0;
-	background-color: ${(props) => props.styleOptions.bgColor};
-	color: ${(props) => props.styleOptions.primaryColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	z-index: 100;
 	display: flex;
 	flex-wrap: wrap;
@@ -88,7 +88,7 @@ export const Button: FC<IButtonProps> = ({
 	...props
 }) => {
 	return (
-		<StyledButton styleOptions={styleOptions} {...props}>
+		<StyledButton styleoptions={styleOptions} {...props}>
 			{children}
 		</StyledButton>
 	);
@@ -126,16 +126,16 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 			<StyledButton
 				type="button"
 				onClick={show}
-				styleOptions={styleOptions}
+				styleoptions={styleOptions}
 			>
 				{options.find((o) => o.value === value)?.name}
 			</StyledButton>
 			<OptionsContainer
 				ref={ref}
-				styleOptions={styleOptions}
+				styleoptions={styleOptions}
 				showOptions={showOptions}
 			>
-				{/* <Label styleOptions={styleOptions}>{title}</Label> */}
+				{/* <Label styleoptions={styleOptions}>{title}</Label> */}
 				{options.map((opt) => (
 					<Button
 						key={opt.value}

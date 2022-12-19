@@ -1,3 +1,79 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:100);
+
 .container {
 	color: #bbb;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.title {
+	font-size: 2rem;
+	text-decoration: none;
+	position: relative;
+}
+
+.title::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: -2px;
+	width: 0px;
+	height: 2px;
+	background-color: rgb(101, 101, 237);
+	transition: all 0.2s ease-in;
+}
+
+.title:hover::after {
+	width: 100%;
+}
+
+.play {
+	width: 32;
+	height: 32;
+	font-size: 2rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 3px;
+	border: 2px solid #00d;
+	background-color: #fff;
+	color: rgb(41, 29, 122);
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.2s linear;
+}
+
+.play:hover {
+	background-color: #fff;
+	color: #55f;
+}
+
+.text {
+	padding: 50px 10vw 50px 10vw;
+	text-align: justify;
+	color: #555;
+}
+
+.loader {
+	display: inline-block;
+	width: 50px;
+	height: 50px;
+	border: 3px solid rgba(255, 255, 255, 0.3);
+	border-radius: 50%;
+	border-top-color: #fff;
+	animation: spin 1s ease-in-out infinite;
+	-webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+@-webkit-keyframes spin {
+	to {
+		-webkit-transform: rotate(360deg);
+	}
 }

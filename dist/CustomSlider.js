@@ -37,7 +37,7 @@ const StyledSlider = styled.input `
 	width: 100%;
 	appearance: none;
 	height: 2px;
-	background: var(--bg-dark);
+	background: ${(props) => props.styleOptions.primaryColor};
 	outline: none;
 	opacity: 0.7;
 	transition: opacity 0.2s;
@@ -48,10 +48,10 @@ const StyledSlider = styled.input `
 		appearance: none;
 		width: 8px; /* Set a specific slider handle width */
 		height: 17px; /* Slider handle height */
-		background: var(--color-extra2); /* Green background */
+		background: ${(props) => props.styleOptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
 		width: 3px;
-		border: 2px solid var(--color-extra1);
+		border: 2px solid ${(props) => props.styleOptions.primaryColor};
 		border-radius: 2px;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -65,10 +65,10 @@ const StyledSlider = styled.input `
 		appearance: none;
 		width: 8px; /* Set a specific slider handle width */
 		height: 20px; /* Slider handle height */
-		background: var(--color-extra2); /* Extra background */
+		background: ${(props) => props.styleOptions.primaryColor};
 		cursor: pointer; /* Cursor on hover */
 		width: 3px;
-		border: 2px solid var(--color-light);
+		border: 2px solid ${(props) => props.styleOptions.primaryColor};
 		border-radius: 2px;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -80,15 +80,15 @@ const Icon = styled.div `
 	font-size: 0.9rem;
 	margin-right: 5px;
 	& * {
-		stroke: var(--bg-dark);
-		color: var(--bg-dark);
+		stroke: ${(props) => props.styleOptions.primaryColor};
+		color: ${(props) => props.styleOptions.primaryColor};
 	}
 `;
 const Slider = (_a) => {
     var { data, onChange, icon, styleOptions } = _a, props = __rest(_a, ["data", "onChange", "icon", "styleOptions"]);
     return (React.createElement(SliderContainer, Object.assign({}, props),
-        icon && React.createElement(Icon, null, icon),
-        React.createElement(StyledSlider, { min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange })));
+        icon && React.createElement(Icon, { styleOptions: styleOptions }, icon),
+        React.createElement(StyledSlider, { min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange, styleOptions: styleOptions })));
 };
 export default Slider;
 //# sourceMappingURL=CustomSlider.js.map

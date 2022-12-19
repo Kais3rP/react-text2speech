@@ -26,13 +26,13 @@ PERFORMANCE OF THIS SOFTWARE.
 	position: relative;
 	font-size: 0.7rem;
 	font-weight: bold;
-	color: ${e=>e.styleOptions.primaryColor};
+	color: ${e=>e.styleoptions.primaryColor};
 	cursor: pointer;
 	transition: all 0.5s linear;
 	border: none;
 	background: none;
 	&:hover {
-		color: ${e=>e.styleOptions.secondaryColor};
+		color: ${e=>e.styleoptions.secondaryColor};
 	}
 	&::after {
 		content: '';
@@ -41,7 +41,7 @@ PERFORMANCE OF THIS SOFTWARE.
 		bottom: -2px;
 		width: 0px;
 		height: 2px;
-		background-color: ${e=>e.styleOptions.primaryColor};
+		background-color: ${e=>e.styleoptions.primaryColor};
 		transition: all 0.2s ease-in;
 	}
 	&:hover::after {
@@ -55,15 +55,15 @@ PERFORMANCE OF THIS SOFTWARE.
 	height: 53px;
 	bottom: 0px;
 	right: 0;
-	background-color: ${e=>e.styleOptions.bgColor};
-	color: ${e=>e.styleOptions.primaryColor};
+	background-color: ${e=>e.styleoptions.bgColor};
+	color: ${e=>e.styleoptions.primaryColor};
 	z-index: 100;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
 	overflow-x: hidden;
-`,ur=t=>{var{children:n,styleOptions:r}=t,o=x(t,["children","styleOptions"]);return e.createElement(cr,Object.assign({styleOptions:r},o),n)},dr=n=>{var r,{options:o,value:c,title:l,onChange:u,styleOptions:d,style:p}=n,f=x(n,["options","value","title","onChange","styleOptions","style"]);const[h,m]=s(!1),g=t(null),y=a((()=>{m(!1)}),[]);return((e,t)=>{i((()=>{const n=n=>{e.current&&!e.current.contains(null==n?void 0:n.target)&&t(n)};return document.addEventListener("mousedown",n),document.addEventListener("touchstart",n),()=>{document.removeEventListener("mousedown",n),document.removeEventListener("touchstart",n)}}),[e,t])})(g,y),e.createElement(ar,Object.assign({},f),e.createElement(cr,{type:"button",onClick:()=>{m(!0)},styleOptions:d},null===(r=o.find((e=>e.value===c)))||void 0===r?void 0:r.name),e.createElement(lr,{ref:g,styleOptions:d,showOptions:h},o.map((t=>e.createElement(ur,{key:t.value,onClick:()=>{var e;e=t.value,u(e),y()},styleOptions:d},t.name)))))},pr=sr.div`
+`,ur=t=>{var{children:n,styleOptions:r}=t,o=x(t,["children","styleOptions"]);return e.createElement(cr,Object.assign({styleoptions:r},o),n)},dr=n=>{var r,{options:o,value:c,title:l,onChange:u,styleOptions:d,style:p}=n,f=x(n,["options","value","title","onChange","styleOptions","style"]);const[h,m]=s(!1),g=t(null),y=a((()=>{m(!1)}),[]);return((e,t)=>{i((()=>{const n=n=>{e.current&&!e.current.contains(null==n?void 0:n.target)&&t(n)};return document.addEventListener("mousedown",n),document.addEventListener("touchstart",n),()=>{document.removeEventListener("mousedown",n),document.removeEventListener("touchstart",n)}}),[e,t])})(g,y),e.createElement(ar,Object.assign({},f),e.createElement(cr,{type:"button",onClick:()=>{m(!0)},styleoptions:d},null===(r=o.find((e=>e.value===c)))||void 0===r?void 0:r.name),e.createElement(lr,{ref:g,styleoptions:d,showOptions:h},o.map((t=>e.createElement(ur,{key:t.value,onClick:()=>{var e;e=t.value,u(e),y()},styleOptions:d},t.name)))))},pr=sr.div`
 	position: relative;
 	display: flex;
 	align-items: center;
@@ -87,7 +87,7 @@ PERFORMANCE OF THIS SOFTWARE.
 	width: 100%;
 	appearance: none;
 	height: 2px;
-	background: ${e=>e.styleOptions.primaryColor};
+	background: ${e=>e.styleoptions.primaryColor};
 	outline: none;
 	opacity: 0.7;
 	transition: opacity 0.2s;
@@ -98,10 +98,10 @@ PERFORMANCE OF THIS SOFTWARE.
 		appearance: none;
 		width: 8px; /* Set a specific slider handle width */
 		height: 17px; /* Slider handle height */
-		background: ${e=>e.styleOptions.bgColor};
+		background: ${e=>e.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
 		width: 3px;
-		border: 2px solid ${e=>e.styleOptions.primaryColor};
+		border: 2px solid ${e=>e.styleoptions.primaryColor};
 		border-radius: 2px;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -115,10 +115,10 @@ PERFORMANCE OF THIS SOFTWARE.
 		appearance: none;
 		width: 8px; /* Set a specific slider handle width */
 		height: 20px; /* Slider handle height */
-		background: ${e=>e.styleOptions.primaryColor};
+		background: ${e=>e.styleoptions.primaryColor};
 		cursor: pointer; /* Cursor on hover */
 		width: 3px;
-		border: 2px solid ${e=>e.styleOptions.primaryColor};
+		border: 2px solid ${e=>e.styleoptions.primaryColor};
 		border-radius: 2px;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -129,10 +129,10 @@ PERFORMANCE OF THIS SOFTWARE.
 	font-size: 0.9rem;
 	margin-right: 5px;
 	& * {
-		stroke: ${e=>e.styleOptions.primaryColor};
-		color: ${e=>e.styleOptions.primaryColor};
+		stroke: ${e=>e.styleoptions.primaryColor};
+		color: ${e=>e.styleoptions.primaryColor};
 	}
-`,mr=t=>{var{data:n,onChange:r,icon:o,styleOptions:i}=t,s=x(t,["data","onChange","icon","styleOptions"]);return e.createElement(pr,Object.assign({},s),o&&e.createElement(hr,{styleOptions:i},o),e.createElement(fr,{min:n.min,max:n.max,step:n.step,type:"range",value:n.value,onChange:r,styleOptions:i}))};function gr(e,t){t=t||2;let n=e.toString(),r=0;return r=t-n.length+1,n=new Array(r).join("0").concat(n),n}var yr=function(e,t){const n=t&&t.leading,r=e<=-1e3?"-":"",o=function(e){if("number"!=typeof e)throw new TypeError("Expected a number");return{days:Math.trunc(e/864e5),hours:Math.trunc(e/36e5)%24,minutes:Math.trunc(e/6e4)%60,seconds:Math.trunc(e/1e3)%60,milliseconds:Math.trunc(e)%1e3}}(e<0?-e:e),i=gr(o.seconds);return o.days?r+o.days+":"+gr(o.hours)+":"+gr(o.minutes)+":"+i:o.hours?r+(n?gr(o.hours):o.hours)+":"+gr(o.minutes)+":"+i:r+(n?gr(o.minutes):o.minutes)+":"+i};function vr(e){return m({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{fill:"none",d:"M0 0h24v24H0V0z"}},{tag:"path",attr:{d:"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"}}]})(e)}var br=/^\s+|\s+$/g,wr=/^[-+]0x[0-9a-f]+$/i,xr=/^0b[01]+$/i,Sr=/^0o[0-7]+$/i,Or=parseInt,Cr="object"==typeof global&&global&&global.Object===Object&&global,Er="object"==typeof self&&self&&self.Object===Object&&self,kr=Cr||Er||Function("return this")(),_r=Object.prototype.toString,Ar=Math.max,Pr=Math.min,Tr=function(){return kr.Date.now()};function Rr(e){var t=typeof e;return!!e&&("object"==t||"function"==t)}function jr(e){if("number"==typeof e)return e;if(function(e){return"symbol"==typeof e||function(e){return!!e&&"object"==typeof e}(e)&&"[object Symbol]"==_r.call(e)}(e))return NaN;if(Rr(e)){var t="function"==typeof e.valueOf?e.valueOf():e;e=Rr(t)?t+"":t}if("string"!=typeof e)return 0===e?e:+e;e=e.replace(br,"");var n=xr.test(e);return n||Sr.test(e)?Or(e.slice(2),n?2:8):wr.test(e)?NaN:+e}var Ir=function(e,t,n){var r,o,i,s,a,c,l=0,u=!1,d=!1,p=!0;if("function"!=typeof e)throw new TypeError("Expected a function");function f(t){var n=r,i=o;return r=o=void 0,l=t,s=e.apply(i,n)}function h(e){return l=e,a=setTimeout(g,t),u?f(e):s}function m(e){var n=e-c;return void 0===c||n>=t||n<0||d&&e-l>=i}function g(){var e=Tr();if(m(e))return y(e);a=setTimeout(g,function(e){var n=t-(e-c);return d?Pr(n,i-(e-l)):n}(e))}function y(e){return a=void 0,p&&r?f(e):(r=o=void 0,s)}function v(){var e=Tr(),n=m(e);if(r=arguments,o=this,c=e,n){if(void 0===a)return h(c);if(d)return a=setTimeout(g,t),f(c)}return void 0===a&&(a=setTimeout(g,t)),s}return t=jr(t)||0,Rr(n)&&(u=!!n.leading,i=(d="maxWait"in n)?Ar(jr(n.maxWait)||0,t):i,p="trailing"in n?!!n.trailing:p),v.cancel=function(){void 0!==a&&clearTimeout(a),l=0,r=c=o=a=void 0},v.flush=function(){return void 0===a?s:y(Tr())},v};const Nr=sr.div`
+`,mr=t=>{var{data:n,onChange:r,icon:o,styleOptions:i}=t,s=x(t,["data","onChange","icon","styleOptions"]);return e.createElement(pr,Object.assign({},s),o&&e.createElement(hr,{styleoptions:i},o),e.createElement(fr,{min:n.min,max:n.max,step:n.step,type:"range",value:n.value,onChange:r,styleoptions:i}))};function gr(e,t){t=t||2;let n=e.toString(),r=0;return r=t-n.length+1,n=new Array(r).join("0").concat(n),n}var yr=function(e,t){const n=t&&t.leading,r=e<=-1e3?"-":"",o=function(e){if("number"!=typeof e)throw new TypeError("Expected a number");return{days:Math.trunc(e/864e5),hours:Math.trunc(e/36e5)%24,minutes:Math.trunc(e/6e4)%60,seconds:Math.trunc(e/1e3)%60,milliseconds:Math.trunc(e)%1e3}}(e<0?-e:e),i=gr(o.seconds);return o.days?r+o.days+":"+gr(o.hours)+":"+gr(o.minutes)+":"+i:o.hours?r+(n?gr(o.hours):o.hours)+":"+gr(o.minutes)+":"+i:r+(n?gr(o.minutes):o.minutes)+":"+i};function vr(e){return m({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{fill:"none",d:"M0 0h24v24H0V0z"}},{tag:"path",attr:{d:"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"}}]})(e)}var br=/^\s+|\s+$/g,wr=/^[-+]0x[0-9a-f]+$/i,xr=/^0b[01]+$/i,Sr=/^0o[0-7]+$/i,Or=parseInt,Cr="object"==typeof global&&global&&global.Object===Object&&global,Er="object"==typeof self&&self&&self.Object===Object&&self,kr=Cr||Er||Function("return this")(),_r=Object.prototype.toString,Ar=Math.max,Pr=Math.min,Tr=function(){return kr.Date.now()};function Rr(e){var t=typeof e;return!!e&&("object"==t||"function"==t)}function jr(e){if("number"==typeof e)return e;if(function(e){return"symbol"==typeof e||function(e){return!!e&&"object"==typeof e}(e)&&"[object Symbol]"==_r.call(e)}(e))return NaN;if(Rr(e)){var t="function"==typeof e.valueOf?e.valueOf():e;e=Rr(t)?t+"":t}if("string"!=typeof e)return 0===e?e:+e;e=e.replace(br,"");var n=xr.test(e);return n||Sr.test(e)?Or(e.slice(2),n?2:8):wr.test(e)?NaN:+e}var Ir=function(e,t,n){var r,o,i,s,a,c,l=0,u=!1,d=!1,p=!0;if("function"!=typeof e)throw new TypeError("Expected a function");function f(t){var n=r,i=o;return r=o=void 0,l=t,s=e.apply(i,n)}function h(e){return l=e,a=setTimeout(g,t),u?f(e):s}function m(e){var n=e-c;return void 0===c||n>=t||n<0||d&&e-l>=i}function g(){var e=Tr();if(m(e))return y(e);a=setTimeout(g,function(e){var n=t-(e-c);return d?Pr(n,i-(e-l)):n}(e))}function y(e){return a=void 0,p&&r?f(e):(r=o=void 0,s)}function v(){var e=Tr(),n=m(e);if(r=arguments,o=this,c=e,n){if(void 0===a)return h(c);if(d)return a=setTimeout(g,t),f(c)}return void 0===a&&(a=setTimeout(g,t)),s}return t=jr(t)||0,Rr(n)&&(u=!!n.leading,i=(d="maxWait"in n)?Ar(jr(n.maxWait)||0,t):i,p="trailing"in n?!!n.trailing:p),v.cancel=function(){void 0!==a&&clearTimeout(a),l=0,r=c=o=a=void 0},v.flush=function(){return void 0===a?s:y(Tr())},v};const Nr=sr.div`
 	position: fixed;
 	zindex: 1000;
 	bottom: 5px;
@@ -146,7 +146,7 @@ PERFORMANCE OF THIS SOFTWARE.
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
-	background-color: ${e=>e.styleOptions.bgColor};
+	background-color: ${e=>e.styleoptions.bgColor};
 `,Mr=sr.div`
 	display: flex;
 	justify-content: center;
@@ -156,18 +156,15 @@ PERFORMANCE OF THIS SOFTWARE.
 	width: 12;
 	height: 12;
 	border-radius: 3px;
-	border: 2px solid ${e=>e.styleOptions.primaryColor};
-	background-color: ${e=>e.styleOptions.bgColor};
-	color: ${e=>e.styleOptions.textColor};
+	border: 2px solid ${e=>e.styleoptions.primaryColor};
+	background-color: ${e=>e.styleoptions.bgColor};
+	color: ${e=>e.styleoptions.textColor};
 	font-weight: bold;
 	cursor: pointer;
-	position: absolute;
-	top: 2px;
-	right: 2px;
 	transition: all 0.2s linear;
 	&:hover {
-		backgroundcolor: ${e=>e.styleOptions.bgColor};
-		color: ${e=>e.styleOptions.secondaryColor};
+		backgroundcolor: ${e=>e.styleoptions.bgColor};
+		color: ${e=>e.styleoptions.secondaryColor};
 	}
 `,Dr=sr.div`
 	text-align: center;
@@ -190,7 +187,7 @@ PERFORMANCE OF THIS SOFTWARE.
 	width: 100%;
 	appearance: none;
 	height: 2px;
-	background: ${e=>e.styleOptions.primaryColor};
+	background: ${e=>e.styleoptions.primaryColor};
 	outline: none;
 	opacity: 0.7;
 	transition: opacity 0.2s;
@@ -198,9 +195,9 @@ PERFORMANCE OF THIS SOFTWARE.
 		appearance: none;
 		width: 14px; /* Set a specific slider handle width */
 		height: 14px; /* Slider handle height */
-		background: ${e=>e.styleOptions.bgColor};
+		background: ${e=>e.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${e=>e.styleOptions.primaryColor};
+		border: 2px solid ${e=>e.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -215,9 +212,9 @@ PERFORMANCE OF THIS SOFTWARE.
 		appearance: none;
 		width: 12px; /* Set a specific slider handle width */
 		height: 12px; /* Slider handle height */
-		background: ${e=>e.styleOptions.bgColor};
+		background: ${e=>e.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${e=>e.styleOptions.primaryColor};
+		border: 2px solid ${e=>e.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -239,15 +236,15 @@ PERFORMANCE OF THIS SOFTWARE.
 	${e=>e.isMinimized?"border-bottom: 1px; padding: 2px 0px 2px 0px;":"padding-top: 2px"}
 `,Vr=sr.div`
 	border-radius: 50%;
-	background-color: ${e=>e.styleOptions.bgColor};
-	color: ${e=>e.styleOptions.primaryColor};
+	background-color: ${e=>e.styleoptions.bgColor};
+	color: ${e=>e.styleoptions.primaryColor};
 	font-size: bold;
 	cursor: pointer;
-	border: 2px solid ${e=>e.styleOptions.secondaryColor};
+	border: 2px solid ${e=>e.styleoptions.secondaryColor};
 	&:hover {
-		border: 2px solid ${e=>e.styleOptions.primaryColor};
-		background-color: ${e=>e.styleOptions.bgColor};
-		color: ${e=>e.styleOptions.secondaryColor};
+		border: 2px solid ${e=>e.styleoptions.primaryColor};
+		background-color: ${e=>e.styleoptions.bgColor};
+		color: ${e=>e.styleoptions.secondaryColor};
 	}
 	transition: all 0.2s;
 	font-size: 1rem;
@@ -270,12 +267,12 @@ PERFORMANCE OF THIS SOFTWARE.
 	}
 `,Wr=sr((function(e){return m({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{d:"M10 10h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4z"}}]})(e)}))`
 	font-size: 0.8rem;
-	color: ${e=>e.styleOptions.primaryColor};
+	color: ${e=>e.styleoptions.primaryColor};
 	margin-bottom: 3px;
 	padding: 0px;
 	cursor: pointer;
 	&:hover {
-		color: ${e=>e.styleOptions.secondaryColor};
+		color: ${e=>e.styleoptions.secondaryColor};
 	}
 `,Hr=sr((function(e){return m({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{d:"M12 16c1.671 0 3-1.331 3-3s-1.329-3-3-3-3 1.331-3 3 1.329 3 3 3z"}},{tag:"path",attr:{d:"M20.817 11.186a8.94 8.94 0 0 0-1.355-3.219 9.053 9.053 0 0 0-2.43-2.43 8.95 8.95 0 0 0-3.219-1.355 9.028 9.028 0 0 0-1.838-.18V2L8 5l3.975 3V6.002c.484-.002.968.044 1.435.14a6.961 6.961 0 0 1 2.502 1.053 7.005 7.005 0 0 1 1.892 1.892A6.967 6.967 0 0 1 19 13a7.032 7.032 0 0 1-.55 2.725 7.11 7.11 0 0 1-.644 1.188 7.2 7.2 0 0 1-.858 1.039 7.028 7.028 0 0 1-3.536 1.907 7.13 7.13 0 0 1-2.822 0 6.961 6.961 0 0 1-2.503-1.054 7.002 7.002 0 0 1-1.89-1.89A6.996 6.996 0 0 1 5 13H3a9.02 9.02 0 0 0 1.539 5.034 9.096 9.096 0 0 0 2.428 2.428A8.95 8.95 0 0 0 12 22a9.09 9.09 0 0 0 1.814-.183 9.014 9.014 0 0 0 3.218-1.355 8.886 8.886 0 0 0 1.331-1.099 9.228 9.228 0 0 0 1.1-1.332A8.952 8.952 0 0 0 21 13a9.09 9.09 0 0 0-.183-1.814z"}}]})(e)}))`
 	position: absolute;
@@ -285,9 +282,9 @@ PERFORMANCE OF THIS SOFTWARE.
 	cursor: pointer;
 	transition: 0.2s ease-in;
 	font-size: 0.9rem;
-	color: ${e=>e.styleOptions.primaryColor};
+	color: ${e=>e.styleoptions.primaryColor};
 	&:hover {
-		color: ${e=>e.styleOptions.secondaryColor};
+		color: ${e=>e.styleoptions.secondaryColor};
 	}
 `,Br=sr.div`
 	width: 70px;
@@ -299,8 +296,8 @@ PERFORMANCE OF THIS SOFTWARE.
 	height: 53px;
 	bottom: 0px;
 	right: 0px;
-	background-color: ${e=>e.styleOptions.bgColor};
-	color: ${e=>e.styleOptions.primaryColor};
+	background-color: ${e=>e.styleoptions.bgColor};
+	color: ${e=>e.styleoptions.primaryColor};
 	z-index: 100;
 	display: flex;
 	justify-content: start;
@@ -323,5 +320,5 @@ PERFORMANCE OF THIS SOFTWARE.
 		font-size: 0.8rem;
 		margin-left: 1px;
 	}
-`,Gr=({textContainer:n,options:r,styleOptions:o})=>{const s=(()=>{const e=t(!0);return i((()=>{e.current=!1}),[]),e.current})(),{isReading:a,rate:l,voice:u,voices:d,volume:p,elapsedTime:f,currentWordIndex:h,duration:m,numberOfWords:g,isLoading:x,stopReading:S,startReading:O,setRate:E,setVoice:k,setVoices:_,setVolume:A,setElapsedTime:P,isMinimized:T,minimize:R,maximize:j,hideAudioReader:I,isVisible:N,isSettingsVisible:M,showSettings:D,hideSettings:z,isPreserveHighlighting:$,enablePreserveHighlighting:L,disablePreserveHighlighting:V,setNumberOfWords:F,setCurrentWordIndex:W,setDuration:H,setIsLoading:B}=Xe(),U=t(),G=()=>{S()},q=()=>{const e=U.current;null==e||e.reset(),S(),P(0),W(1)},K=()=>{M?z():D()},Y=Ir((e=>{const t=U.current;t&&t.seekTo(e)}),5),X=c((()=>e=>{Y(+e.target.value)}),[]),J=e=>{const t=U.current;null==t||t.seekTo(e)};return i((()=>{if(window.speechSynthesis.cancel(),n)return U.current=new C(n,Object.assign(Object.assign({},r),{onStart:e=>{console.log("Start"),B(!0)},onEffectivelySpeakingStart:e=>{console.log("Voice speaking"),B(!1)},onPause:e=>{console.log("Pause")},onResume:e=>{console.log("Resume")},onReset:e=>{console.log("Reset")},onEnd:()=>{console.log("End"),q()},onBoundary:(e,t)=>{W(e.state.currentWordIndex)},onSeek:(e,t)=>{W(t)},onTimeTick:(e,t)=>{P(e.state.elapsedTime)},onWordClick:(e,t)=>{const n=+t.target.dataset.id;J(n-1)}})),U.current.init().then((e=>{_(e.state.voices),F(e.state.numberOfWords),H(e.state.duration)})).catch((e=>console.log(e))),()=>{var e;null===(e=U.current)||void 0===e||e.reset()}}),[n]),i((()=>{const e=U.current;if(!e||s)return B(!1);a?e.isPaused()?(console.log("Resuming"),e.resume()):(console.log("Playing"),e.play()):e.isPlaying()&&e.pause()}),[a,n,s,B]),e.createElement(Nr,{isVisible:N,isMinimized:T,styleOptions:o},e.createElement(Mr,{styleOptions:o,onPointerDown:()=>{I(),G()}},e.createElement(vr,{title:"Close"})),e.createElement(Mr,{style:{right:"20px"},title:T?"Maximize":"Minimize",styleOptions:o,onPointerDown:T?()=>{j()}:()=>{R()}},T?e.createElement(Ze,null):e.createElement(Qe,null)),e.createElement(Dr,{isMinimized:T},e.createElement(zr,null,yr(f)),e.createElement($r,{styleOptions:o,type:"range",min:"0",max:g,step:"1",value:h,onChange:X}),e.createElement(zr,{style:{left:"auto",right:"-15px"}},yr(m),"*")),e.createElement(Lr,{isMinimized:T},e.createElement("div",null,e.createElement(Vr,{as:y,title:"Fast backward",onDoubleClick:e=>e.preventDefault(),onPointerDown:()=>J(h-5<=0?0:h-5),styleOptions:o,isLoading:x}),a?e.createElement(Vr,{as:b,title:"Pause",styleOptions:o,onPointerDown:G,isLoading:x}):e.createElement(Vr,{as:w,title:"Play",onPointerDown:()=>{O()},styleOptions:o,isLoading:x}),e.createElement(Vr,{as:v,title:"Fast forsward",onPointerDown:()=>{var e,t,n;return J(h+5>=(null===(e=U.current)||void 0===e?void 0:e.state.wholeTextArray.length)?null===(n=null===(t=U.current)||void 0===t?void 0:t.state.wholeTextArray)||void 0===n?void 0:n.length:h+5)},styleOptions:o,isLoading:x}),e.createElement(Hr,{title:"reset",styleOptions:o,onClick:q}))),!T&&e.createElement(e.Fragment,null,e.createElement(Fr,null,e.createElement("div",{id:"options-wrapper-1"},e.createElement(dr,{name:"rate",options:[{value:"0.5",name:"0.5x"},{value:"0.75",name:"0.75x"},{value:"1",name:"1x"},{value:"1.25",name:"1.25x"},{value:"1.5",name:"1.5x"},{value:"2",name:"2x"}],onChange:e=>{const t=U.current;t&&(t.editUtterance({rate:+e}),E(e),H(t.state.duration))},value:l,defaultValue:"1",title:"Rate",styleOptions:o}),e.createElement(dr,{name:"voice",options:null==d?void 0:d.map((e=>{var t;return{name:null===(t=e.name)||void 0===t?void 0:t.replace(/(Microsoft)|(Online)|(\(Natural\)) -\s.*$/gm,""),value:e.voiceURI}})),onChange:e=>{const t=U.current;null==t||t.editUtterance({voiceURI:e}),k(e)},value:u,defaultValue:"1",title:"Voices",styleOptions:o}),e.createElement(Wr,{styleOptions:o,onPointerDown:K})),e.createElement("div",{id:"options-wrapper-2"},e.createElement(Br,null,e.createElement(mr,{icon:e.createElement(Je,null),onChange:e=>{const t=U.current,n=e.target;t&&(t.editUtterance({volume:+n.value}),A(n.value))},data:{min:"0.1",max:"1",step:"0.1",value:+p,unit:"%"},styleOptions:o})))),e.createElement(Ur,{styleOptions:o,issettingsvisible:M,onPointerDown:K},e.createElement("label",{htmlFor:"is-row-check",onPointerDown:e=>e.stopPropagation()},e.createElement("input",{id:"is-row-check",type:"checkbox",checked:$,onChange:e=>{const t=U.current,n=e.target;t&&(n.checked?(L(),t.options.isPreserveHighlighting=!0):(V(),t.options.isPreserveHighlighting=!1))}}),e.createElement("h5",null,"Preserve Highlighting")))))};Gr.defaultProps={styleOptions:{primaryColor:"#00D",secondaryColor:"#55F",bgColor:"#FFF",textColor:"#222"}};export{C as SpeechSynth,Gr as default,Xe as useAudioReaderStore};
+`,Gr=({textContainer:n,options:r,styleOptions:o})=>{const s=(()=>{const e=t(!0);return i((()=>{e.current=!1}),[]),e.current})(),{isReading:a,rate:l,voice:u,voices:d,volume:p,elapsedTime:f,currentWordIndex:h,duration:m,numberOfWords:g,isLoading:x,stopReading:S,startReading:O,setRate:E,setVoice:k,setVoices:_,setVolume:A,setElapsedTime:P,isMinimized:T,minimize:R,maximize:j,hideAudioReader:I,isVisible:N,isSettingsVisible:M,showSettings:D,hideSettings:z,isPreserveHighlighting:$,enablePreserveHighlighting:L,disablePreserveHighlighting:V,setNumberOfWords:F,setCurrentWordIndex:W,setDuration:H,setIsLoading:B}=Xe(),U=t(),G=()=>{S()},q=()=>{const e=U.current;null==e||e.reset(),S(),P(0),W(1)},K=()=>{M?z():D()},Y=Ir((e=>{const t=U.current;t&&t.seekTo(e)}),5),X=c((()=>e=>{Y(+e.target.value)}),[]),J=e=>{const t=U.current;null==t||t.seekTo(e)};return i((()=>{if(window.speechSynthesis.cancel(),n)return U.current=new C(n,Object.assign(Object.assign({},r),{onStart:e=>{console.log("Start"),B(!0)},onEffectivelySpeakingStart:e=>{console.log("Voice speaking"),B(!1)},onPause:e=>{console.log("Pause")},onResume:e=>{console.log("Resume")},onReset:e=>{console.log("Reset")},onEnd:()=>{console.log("End"),q()},onBoundary:(e,t)=>{W(e.state.currentWordIndex)},onSeek:(e,t)=>{W(t)},onTimeTick:(e,t)=>{P(e.state.elapsedTime)},onWordClick:(e,t)=>{const n=+t.target.dataset.id;J(n-1)}})),U.current.init().then((e=>{_(e.state.voices),F(e.state.numberOfWords),H(e.state.duration)})).catch((e=>console.log(e))),()=>{var e;null===(e=U.current)||void 0===e||e.reset()}}),[n]),i((()=>{const e=U.current;if(!e||s)return B(!1);a?e.isPaused()?(console.log("Resuming"),e.resume()):(console.log("Playing"),e.play()):e.isPlaying()&&e.pause()}),[a,n,s,B]),e.createElement(Nr,{isVisible:N,isMinimized:T,styleoptions:o},e.createElement(Mr,{style:{position:"absolute",top:"2px",right:"2px"},styleoptions:o,onPointerDown:()=>{I(),G()}},e.createElement(vr,{title:"Close"})),e.createElement(Mr,{style:{position:"absolute",top:"2px",right:"20px"},title:T?"Maximize":"Minimize",styleoptions:o,onPointerDown:T?()=>{j()}:()=>{R()}},T?e.createElement(Ze,null):e.createElement(Qe,null)),e.createElement(Dr,{isMinimized:T},e.createElement(zr,null,yr(f)),e.createElement($r,{styleoptions:o,type:"range",min:"0",max:g,step:"1",value:h,onChange:X}),e.createElement(zr,{style:{left:"auto",right:"-15px"}},yr(m),"*")),e.createElement(Lr,{isMinimized:T},e.createElement("div",null,e.createElement(Vr,{as:y,title:"Fast backward",onDoubleClick:e=>e.preventDefault(),onPointerDown:()=>J(h-5<=0?0:h-5),styleoptions:o,isLoading:x}),a?e.createElement(Vr,{as:b,title:"Pause",styleoptions:o,onPointerDown:G,isLoading:x}):e.createElement(Vr,{as:w,title:"Play",onPointerDown:()=>{O()},styleoptions:o,isLoading:x}),e.createElement(Vr,{as:v,title:"Fast forsward",onPointerDown:()=>{var e,t,n;return J(h+5>=(null===(e=U.current)||void 0===e?void 0:e.state.wholeTextArray.length)?null===(n=null===(t=U.current)||void 0===t?void 0:t.state.wholeTextArray)||void 0===n?void 0:n.length:h+5)},styleoptions:o,isLoading:x}),e.createElement(Hr,{title:"reset",styleoptions:o,onClick:q}))),!T&&e.createElement(e.Fragment,null,e.createElement(Fr,null,e.createElement("div",{id:"options-wrapper-1"},e.createElement(dr,{name:"rate",options:[{value:"0.5",name:"0.5x"},{value:"0.75",name:"0.75x"},{value:"1",name:"1x"},{value:"1.25",name:"1.25x"},{value:"1.5",name:"1.5x"},{value:"2",name:"2x"}],onChange:e=>{const t=U.current;t&&(t.editUtterance({rate:+e}),E(e),H(t.state.duration))},value:l,defaultValue:"1",title:"Rate",styleOptions:o}),e.createElement(dr,{name:"voice",options:null==d?void 0:d.map((e=>{var t;return{name:null===(t=e.name)||void 0===t?void 0:t.replace(/(Microsoft)|(Online)|(\(Natural\)) -\s.*$/gm,""),value:e.voiceURI}})),onChange:e=>{const t=U.current;null==t||t.editUtterance({voiceURI:e}),k(e)},value:u,defaultValue:"1",title:"Voices",styleOptions:o}),e.createElement(Wr,{styleoptions:o,onPointerDown:K})),e.createElement("div",{id:"options-wrapper-2"},e.createElement(Br,null,e.createElement(mr,{icon:e.createElement(Je,null),onChange:e=>{const t=U.current,n=e.target;t&&(t.editUtterance({volume:+n.value}),A(n.value))},data:{min:"0.1",max:"1",step:"0.1",value:+p,unit:"%"},styleOptions:o})))),e.createElement(Ur,{styleoptions:o,issettingsvisible:M,onPointerDown:K},e.createElement("label",{htmlFor:"is-row-check",onPointerDown:e=>e.stopPropagation()},e.createElement("input",{id:"is-row-check",type:"checkbox",checked:$,onChange:e=>{const t=U.current,n=e.target;t&&(n.checked?(L(),t.options.isPreserveHighlighting=!0):(V(),t.options.isPreserveHighlighting=!1))}}),e.createElement("h5",null,"Preserve Highlighting")))))};Gr.defaultProps={styleOptions:{primaryColor:"#00D",secondaryColor:"#55F",bgColor:"#FFF",textColor:"#222"}};export{C as SpeechSynth,Gr as default,Xe as useAudioReaderStore};
 //# sourceMappingURL=index.es.js.map

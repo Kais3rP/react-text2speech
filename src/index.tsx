@@ -259,20 +259,21 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		<Container
 			isVisible={isVisible}
 			isMinimized={isMinimized}
-			styleOptions={styleOptions}
+			styleoptions={styleOptions}
 		>
 			{/* Close button */}
 			<WindowButton
-				styleOptions={styleOptions}
+				style={{ position: 'absolute', top: '2px', right: '2px' }}
+				styleoptions={styleOptions}
 				onPointerDown={handleHideReader}
 			>
 				<MdOutlineClose title="Close" />
 			</WindowButton>
 			{/* Minimize button */}
 			<WindowButton
-				style={{ right: '20px' }}
+				style={{ position: 'absolute', top: '2px', right: '20px' }}
 				title={isMinimized ? 'Maximize' : 'Minimize'}
-				styleOptions={styleOptions}
+				styleoptions={styleOptions}
 				onPointerDown={
 					isMinimized ? handleMaximizeReader : handleMinimizeReader
 				}
@@ -285,7 +286,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			<SeekbarContainer isMinimized={isMinimized}>
 				<Time>{format(elapsedTime)}</Time>
 				<Seekbar
-					styleOptions={styleOptions}
+					styleoptions={styleOptions}
 					type="range"
 					min="0"
 					max={numberOfWords}
@@ -312,7 +313,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 									: currentWordIndex - 5
 							)
 						}
-						styleOptions={styleOptions}
+						styleoptions={styleOptions}
 						isLoading={isLoading}
 					/>
 					{!isReading ? (
@@ -320,14 +321,14 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							as={AiFillPlayCircle}
 							title="Play"
 							onPointerDown={handleAudioReadPlay}
-							styleOptions={styleOptions}
+							styleoptions={styleOptions}
 							isLoading={isLoading}
 						/>
 					) : (
 						<ControlButton
 							as={AiFillPauseCircle}
 							title="Pause"
-							styleOptions={styleOptions}
+							styleoptions={styleOptions}
 							onPointerDown={handleAudioReadPause}
 							isLoading={isLoading}
 						/>
@@ -345,12 +346,12 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 									: currentWordIndex + 5
 							)
 						}
-						styleOptions={styleOptions}
+						styleoptions={styleOptions}
 						isLoading={isLoading}
 					/>
 					<Reset
 						title="reset"
-						styleOptions={styleOptions}
+						styleoptions={styleOptions}
 						onClick={handleReset}
 					/>
 				</div>
@@ -392,7 +393,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 								styleOptions={styleOptions}
 							/>
 							<Dots
-								styleOptions={styleOptions}
+								styleoptions={styleOptions}
 								onPointerDown={toggleSettings}
 							/>
 						</div>
@@ -416,7 +417,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 					</OptionsContainer>
 
 					<ExtraSettings
-						styleOptions={styleOptions}
+						styleoptions={styleOptions}
 						issettingsvisible={isSettingsVisible}
 						onPointerDown={toggleSettings}
 					>

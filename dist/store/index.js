@@ -3,6 +3,7 @@ import { devtools, persist } from 'zustand/middleware';
 import { produce } from 'immer';
 export const useAudioReaderStore = create()(devtools(persist((set) => ({
     isReading: false,
+    isLoading: false,
     rate: '1',
     voice: 'Microsoft Aria Online (Natural) - English (United States)',
     voices: [],
@@ -15,6 +16,9 @@ export const useAudioReaderStore = create()(devtools(persist((set) => ({
     numberOfWords: 0,
     currentWordIndex: 1,
     duration: 0,
+    setIsLoading: (b) => set(produce((state) => {
+        state.isLoading = b;
+    })),
     setDuration: (n) => set(produce((state) => {
         state.duration = n;
     })),
@@ -69,5 +73,12 @@ export const useAudioReaderStore = create()(devtools(persist((set) => ({
     setElapsedTime: (time) => set(produce((state) => {
         state.elapsedTime = time;
     })),
-}))));
+}), {
+    name: 'IAudioReaderState',
+    partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => ![
+        'elapsedTime',
+        'isReading',
+        'currentWordIndex',
+    ].includes(key))),
+})));
 //# sourceMappingURL=index.js.map
