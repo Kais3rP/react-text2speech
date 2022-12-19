@@ -43,6 +43,7 @@
 	font-weight: bold;
 	cursor: pointer;
 	transition: all 0.2s linear;
+	margin-top: 50px;
 }
 
 .play:hover {
