@@ -1702,7 +1702,11 @@ const useAudioReaderStore = create()(middleware_2(middleware_3((set) => ({
     })),
 }), {
     name: 'IAudioReaderState',
-    partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => !['elapsedTime', 'isReading'].includes(key))),
+    partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => ![
+        'elapsedTime',
+        'isReading',
+        'currentWordIndex',
+    ].includes(key))),
 })));
 
 // THIS FILE IS AUTO GENERATED
@@ -2856,7 +2860,7 @@ const OptionsContainer$1 = styled.div `
 	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
-	height: 50px;
+	height: 53px;
 	bottom: 0px;
 	right: 0;
 	background-color: ${(props) => props.styleOptions.bgColor};
@@ -3587,7 +3591,7 @@ const ExtraSettings = styled.div `
 	pointer-events: ${(props) => (props.issettingsvisible ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
-	height: 50px;
+	height: 53px;
 	bottom: 0px;
 	right: 0px;
 	background-color: ${(props) => props.styleOptions.bgColor};
@@ -3818,17 +3822,16 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                                 value: +volume,
                                 unit: '%',
                             }, styleOptions: styleOptions })))),
-            React__default["default"].createElement(ExtraSettings, { styleOptions: styleOptions, issettingsvisible: isSettingsVisible },
-                React__default["default"].createElement("label", { htmlFor: "is-row-check" },
+            React__default["default"].createElement(ExtraSettings, { styleOptions: styleOptions, issettingsvisible: isSettingsVisible, onPointerDown: toggleSettings },
+                React__default["default"].createElement("label", { htmlFor: "is-row-check", onPointerDown: (e) => e.stopPropagation() },
                     React__default["default"].createElement("input", { id: "is-row-check", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
-                    React__default["default"].createElement("h5", null, "Preserve Highlighting"),
-                    React__default["default"].createElement(BiDotsHorizontal, { onPointerDown: toggleSettings })))))));
+                    React__default["default"].createElement("h5", null, "Preserve Highlighting")))))));
 };
 AudioReader.defaultProps = {
     styleOptions: {
         primaryColor: '#00D',
         secondaryColor: '#55F',
-        bgColor: '#DDD',
+        bgColor: '#FFF',
         textColor: '#222',
     },
 };

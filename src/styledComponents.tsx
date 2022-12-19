@@ -232,7 +232,7 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 	pointer-events: ${(props) => (props.issettingsvisible ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
-	height: 50px;
+	height: 53px;
 	bottom: 0px;
 	right: 0px;
 	background-color: ${(props) => props.styleOptions.bgColor};

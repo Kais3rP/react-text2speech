@@ -69,7 +69,7 @@ const OptionsContainer = styled.div<IOptionsContainer>`
 	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
-	height: 50px;
+	height: 53px;
 	bottom: 0px;
 	right: 0;
 	background-color: ${(props) => props.styleOptions.bgColor};

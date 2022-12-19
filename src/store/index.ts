@@ -177,7 +177,11 @@ export const useAudioReaderStore = create<IAudioReaderState>()(
 					Object.fromEntries(
 						Object.entries(state).filter(
 							([key]) =>
-								!['elapsedTime', 'isReading'].includes(key)
+								![
+									'elapsedTime',
+									'isReading',
+									'currentWordIndex',
+								].includes(key)
 						)
 					),
 			}

@@ -13,7 +13,7 @@ import {
 } from 'react-icons/ai';
 import { SpeechSynth } from './lib';
 import { useAudioReaderStore } from './store';
-import { BiDotsHorizontal, BiVolumeFull } from 'react-icons/bi';
+import { BiVolumeFull } from 'react-icons/bi';
 import { FiMinimize, FiMaximize } from 'react-icons/fi';
 import CustomSelect from './CustomSelect';
 import Slider from './CustomSlider';
@@ -418,8 +418,12 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 					<ExtraSettings
 						styleOptions={styleOptions}
 						issettingsvisible={isSettingsVisible}
+						onPointerDown={toggleSettings}
 					>
-						<label htmlFor="is-row-check">
+						<label
+							htmlFor="is-row-check"
+							onPointerDown={(e) => e.stopPropagation()}
+						>
 							<input
 								id="is-row-check"
 								type="checkbox"
@@ -427,7 +431,6 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 								onChange={handlePreserveHighlighting}
 							/>
 							<h5>Preserve Highlighting</h5>
-							<BiDotsHorizontal onPointerDown={toggleSettings} />
 						</label>
 					</ExtraSettings>
 				</>
@@ -440,7 +443,7 @@ AudioReader.defaultProps = {
 	styleOptions: {
 		primaryColor: '#00D',
 		secondaryColor: '#55F',
-		bgColor: '#DDD',
+		bgColor: '#FFF',
 		textColor: '#222',
 	},
 };
