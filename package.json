@@ -26,7 +26,7 @@
 		"test:watch": "jest --coverage --watch",
 		"test:ci": "cross-env CI=1 jest",
 		"predeploy": "cd example && yarn install && yarn run build",
-		"deploy": "gh-pages -d example/build -b gh-pages",
+		"deploy": "gh-pages -d ./example/build -b gh-pages",
 		"prepare": "husky install"
 	},
 	"engines": {
