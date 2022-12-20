@@ -14,7 +14,6 @@
 		"url": "",
 		"type": "git"
 	},
-	"homepage": ".",
 	"license": "MIT",
 	"private": true,
 	"scripts": {
