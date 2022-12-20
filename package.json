@@ -14,7 +14,7 @@
 		"url": "",
 		"type": "git"
 	},
-	"homepage": "https://kais3rp.github.io/react-text2speech",
+	"homepage": ".",
 	"license": "MIT",
 	"private": true,
 	"scripts": {
