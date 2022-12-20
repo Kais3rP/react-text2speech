@@ -1,0 +1,22 @@
+{
+    "login" : "Login",
+    "register" : "Register",
+    "email" : "E-mail",
+    "password" : "Password",
+    "needToRegister" : "Need to <1>Register?</1>",
+    "forgotThePassword" : "I forgot the <1>Password!</1>",
+    "remember" : "Remember me",
+    "loginSocials" : "Log in with Socials:",
+    "copyright" : "Copyright © 2021 Cesare Polonara, All rights reserved.",
+    "tos" : "Terms Of Service",
+    "privacy" : "Privacy Policy",
+    "themes" : "THEMES",
+    "theme" : "THEME",
+    "colors" : "COLORS",
+    "menu" : "MENU",
+    "welcome" : "Welcome",
+    "joinedRoom" : "You joined channel",
+    "users" : "Users",
+    "publicChannels" : "Public Channels",
+    "friends": "Friends"
+}
