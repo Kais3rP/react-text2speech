@@ -3421,13 +3421,13 @@ const Container = styled.div `
 	position: fixed;
 	zindex: 1000;
 	bottom: 5px;
-	right: ${(props) => (props.isVisible ? '10px' : '-2000px')};
+	right: ${(props) => (props.isvisible === 'true' ? '10px' : '-2000px')};
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	transition: all 200ms linear;
-	width: ${(props) => (props.isMinimized ? '150px' : '300px')};
+	width: ${(props) => props.isminimized === 'true' ? '150px' : '300px'};
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
@@ -3455,7 +3455,7 @@ const WindowButton = styled.div `
 `;
 const SeekbarContainer = styled.div `
 	text-align: center;
-	width: ${(props) => (props.isMinimized ? '100%' : '90%')};
+	width: ${(props) => (props.isminimized === 'true' ? '100%' : '90%')};
 	position: relative;
 	z-index: 2;
 	margin-top: 10px;
@@ -3523,7 +3523,7 @@ const ControlsContainer = styled.div `
 		justify-content: center;
 		align-items: center;
 	}
-	${(props) => props.isMinimized
+	${(props) => props.isminimized === 'true'
     ? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
     : 'padding-top: 2px'}
 `;
@@ -3541,7 +3541,7 @@ const ControlButton = styled.div `
 	}
 	transition: all 0.2s;
 	font-size: 1rem;
-	pointer-events: ${(props) => (props.isLoading ? 'none' : 'default')};
+	pointer-events: ${(props) => props.isloading === 'true' ? 'none' : 'default'};
 `;
 const OptionsContainer = styled.div `
 	display: flex;
@@ -3587,11 +3587,11 @@ const SliderContainer = styled.div `
 	width: 70px;
 `;
 const ExtraSettings = styled.div `
-	opacity: ${(props) => (props.issettingsvisible ? 1 : 0)};
-	pointer-events: ${(props) => (props.issettingsvisible ? 'all' : 'none')};
+	opacity: ${(props) => (props.issettingsvisible === 'true' ? 1 : 0)};
+	pointer-events: ${(props) => props.issettingsvisible === 'true' ? 'all' : 'none'};
 	position: absolute;
 	width: 100%;
-	height: 53px;
+	height: 51px;
 	bottom: 0px;
 	right: 0px;
 	background-color: ${(props) => props.styleoptions.bgColor};
@@ -3770,29 +3770,29 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                 reader.pause();
         }
     }, [isReading, textContainer, isFirstRender, setIsLoading]);
-    return (React__default["default"].createElement(Container, { isVisible: isVisible, isMinimized: isMinimized, styleoptions: styleOptions },
+    return (React__default["default"].createElement(Container, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
         React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '2px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },
             React__default["default"].createElement(MdOutlineClose, { title: "Close" })),
         React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '20px' }, title: isMinimized ? 'Maximize' : 'Minimize', styleoptions: styleOptions, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React__default["default"].createElement(FiMaximize, null) : React__default["default"].createElement(FiMinimize, null)),
-        React__default["default"].createElement(SeekbarContainer, { isMinimized: isMinimized },
+        React__default["default"].createElement(SeekbarContainer, { isminimized: isMinimized.toString() },
             React__default["default"].createElement(Time, null, formatDuration_1(elapsedTime)),
             React__default["default"].createElement(Seekbar, { styleoptions: styleOptions, type: "range", min: "0", max: numberOfWords, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
             React__default["default"].createElement(Time, { style: { left: 'auto', right: '-15px' } },
                 formatDuration_1(duration),
                 "*")),
-        React__default["default"].createElement(ControlsContainer, { isMinimized: isMinimized },
+        React__default["default"].createElement(ControlsContainer, { isminimized: isMinimized.toString() },
             React__default["default"].createElement("div", null,
                 React__default["default"].createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: () => handleGenericSeek(currentWordIndex - 5 <= 0
                         ? 0
-                        : currentWordIndex - 5), styleoptions: styleOptions, isLoading: isLoading }),
-                !isReading ? (React__default["default"].createElement(ControlButton, { as: AiFillPlayCircle, title: "Play", onPointerDown: handleAudioReadPlay, styleoptions: styleOptions, isLoading: isLoading })) : (React__default["default"].createElement(ControlButton, { as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleAudioReadPause, isLoading: isLoading })),
+                        : currentWordIndex - 5), styleoptions: styleOptions, isloading: isLoading.toString() }),
+                !isReading ? (React__default["default"].createElement(ControlButton, { as: AiFillPlayCircle, title: "Play", onPointerDown: handleAudioReadPlay, styleoptions: styleOptions, isloading: isLoading.toString() })) : (React__default["default"].createElement(ControlButton, { as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleAudioReadPause, isloading: isLoading.toString() })),
                 React__default["default"].createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: () => {
                         var _a, _b, _c;
                         return handleGenericSeek(currentWordIndex + 5 >=
                             ((_a = audioReaderRef.current) === null || _a === void 0 ? void 0 : _a.state.wholeTextArray.length)
                             ? (_c = (_b = audioReaderRef.current) === null || _b === void 0 ? void 0 : _b.state.wholeTextArray) === null || _c === void 0 ? void 0 : _c.length
                             : currentWordIndex + 5);
-                    }, styleoptions: styleOptions, isLoading: isLoading }),
+                    }, styleoptions: styleOptions, isloading: isLoading.toString() }),
                 React__default["default"].createElement(Reset, { title: "reset", styleoptions: styleOptions, onClick: handleReset }))),
         !isMinimized && (React__default["default"].createElement(React__default["default"].Fragment, null,
             React__default["default"].createElement(OptionsContainer, null,
@@ -3822,7 +3822,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                                 value: +volume,
                                 unit: '%',
                             }, styleOptions: styleOptions })))),
-            React__default["default"].createElement(ExtraSettings, { styleoptions: styleOptions, issettingsvisible: isSettingsVisible, onPointerDown: toggleSettings },
+            React__default["default"].createElement(ExtraSettings, { styleoptions: styleOptions, issettingsvisible: isSettingsVisible.toString(), onPointerDown: toggleSettings },
                 React__default["default"].createElement("label", { htmlFor: "is-row-check", onPointerDown: (e) => e.stopPropagation() },
                     React__default["default"].createElement("input", { id: "is-row-check", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
                     React__default["default"].createElement("h5", null, "Preserve Highlighting")))))));

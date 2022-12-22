@@ -259,8 +259,8 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 	return (
 		<Container
-			isVisible={isVisible}
-			isMinimized={isMinimized}
+			isvisible={isVisible.toString()}
+			isminimized={isMinimized.toString()}
 			styleoptions={styleOptions}
 		>
 			{/* Close button */}
@@ -285,7 +285,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 			{/* Seek bar */}
 
-			<SeekbarContainer isMinimized={isMinimized}>
+			<SeekbarContainer isminimized={isMinimized.toString()}>
 				<Time>{format(elapsedTime)}</Time>
 				<Seekbar
 					styleoptions={styleOptions}
@@ -302,7 +302,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			</SeekbarContainer>
 
 			{/* Main controls unit */}
-			<ControlsContainer isMinimized={isMinimized}>
+			<ControlsContainer isminimized={isMinimized.toString()}>
 				<div>
 					<ControlButton
 						as={AiFillFastBackward}
@@ -316,7 +316,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							)
 						}
 						styleoptions={styleOptions}
-						isLoading={isLoading}
+						isloading={isLoading.toString()}
 					/>
 					{!isReading ? (
 						<ControlButton
@@ -324,7 +324,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							title="Play"
 							onPointerDown={handleAudioReadPlay}
 							styleoptions={styleOptions}
-							isLoading={isLoading}
+							isloading={isLoading.toString()}
 						/>
 					) : (
 						<ControlButton
@@ -332,7 +332,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							title="Pause"
 							styleoptions={styleOptions}
 							onPointerDown={handleAudioReadPause}
-							isLoading={isLoading}
+							isloading={isLoading.toString()}
 						/>
 					)}
 					<ControlButton
@@ -349,7 +349,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							)
 						}
 						styleoptions={styleOptions}
-						isLoading={isLoading}
+						isloading={isLoading.toString()}
 					/>
 					<Reset
 						title="reset"
@@ -420,7 +420,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 					<ExtraSettings
 						styleoptions={styleOptions}
-						issettingsvisible={isSettingsVisible}
+						issettingsvisible={isSettingsVisible.toString()}
 						onPointerDown={toggleSettings}
 					>
 						<label

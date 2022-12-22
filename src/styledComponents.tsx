@@ -2,8 +2,8 @@ import { BiDotsHorizontal, BiReset } from 'react-icons/bi';
 import styled from 'styled-components';
 
 interface IContainerProps {
-	isVisible: boolean;
-	isMinimized: boolean;
+	isvisible: string;
+	isminimized: string;
 	styleoptions: IStyleOptions;
 }
 
@@ -12,7 +12,7 @@ interface IWindowButton {
 }
 
 interface ISeekbarContainer {
-	isMinimized: boolean;
+	isminimized: string;
 }
 
 interface ISeekBar {
@@ -20,12 +20,12 @@ interface ISeekBar {
 }
 
 interface IControlsContainer {
-	isMinimized: boolean;
+	isminimized: string;
 }
 
 interface IControlButton {
 	styleoptions: IStyleOptions;
-	isLoading: boolean;
+	isloading: string;
 }
 
 interface IDots {
@@ -38,7 +38,7 @@ interface IReset {
 
 interface IExtraSettings {
 	styleoptions: IStyleOptions;
-	issettingsvisible: boolean;
+	issettingsvisible: string;
 }
 
 /* Styled Components */
@@ -47,13 +47,14 @@ export const Container = styled.div<IContainerProps>`
 	position: fixed;
 	zindex: 1000;
 	bottom: 5px;
-	right: ${(props: any) => (props.isVisible ? '10px' : '-2000px')};
+	right: ${(props: any) => (props.isvisible === 'true' ? '10px' : '-2000px')};
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	transition: all 200ms linear;
-	width: ${(props: any) => (props.isMinimized ? '150px' : '300px')};
+	width: ${(props: any) =>
+		props.isminimized === 'true' ? '150px' : '300px'};
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
@@ -83,7 +84,7 @@ export const WindowButton = styled.div<IWindowButton>`
 
 export const SeekbarContainer = styled.div<ISeekbarContainer>`
 	text-align: center;
-	width: ${(props: any) => (props.isMinimized ? '100%' : '90%')};
+	width: ${(props: any) => (props.isminimized === 'true' ? '100%' : '90%')};
 	position: relative;
 	z-index: 2;
 	margin-top: 10px;
@@ -155,7 +156,7 @@ export const ControlsContainer = styled.div<IControlsContainer>`
 		align-items: center;
 	}
 	${(props: any) =>
-		props.isMinimized
+		props.isminimized === 'true'
 			? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
 			: 'padding-top: 2px'}
 `;
@@ -174,7 +175,8 @@ export const ControlButton = styled.div<IControlButton>`
 	}
 	transition: all 0.2s;
 	font-size: 1rem;
-	pointer-events: ${(props) => (props.isLoading ? 'none' : 'default')};
+	pointer-events: ${(props) =>
+		props.isloading === 'true' ? 'none' : 'default'};
 `;
 
 export const OptionsContainer = styled.div`
@@ -225,11 +227,12 @@ export const SliderContainer = styled.div`
 `;
 
 export const ExtraSettings = styled.div<IExtraSettings>`
-	opacity: ${(props) => (props.issettingsvisible ? 1 : 0)};
-	pointer-events: ${(props) => (props.issettingsvisible ? 'all' : 'none')};
+	opacity: ${(props) => (props.issettingsvisible === 'true' ? 1 : 0)};
+	pointer-events: ${(props) =>
+		props.issettingsvisible === 'true' ? 'all' : 'none'};
 	position: absolute;
 	width: 100%;
-	height: 53px;
+	height: 51px;
 	bottom: 0px;
 	right: 0px;
 	background-color: ${(props) => props.styleoptions.bgColor};

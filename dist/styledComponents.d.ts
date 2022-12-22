@@ -1,23 +1,23 @@
 interface IContainerProps {
-    isVisible: boolean;
-    isMinimized: boolean;
+    isvisible: string;
+    isminimized: string;
     styleoptions: IStyleOptions;
 }
 interface IWindowButton {
     styleoptions: IStyleOptions;
 }
 interface ISeekbarContainer {
-    isMinimized: boolean;
+    isminimized: string;
 }
 interface ISeekBar {
     styleoptions: IStyleOptions;
 }
 interface IControlsContainer {
-    isMinimized: boolean;
+    isminimized: string;
 }
 interface IControlButton {
     styleoptions: IStyleOptions;
-    isLoading: boolean;
+    isloading: string;
 }
 interface IDots {
     styleoptions: IStyleOptions;
@@ -27,7 +27,7 @@ interface IReset {
 }
 interface IExtraSettings {
     styleoptions: IStyleOptions;
-    issettingsvisible: boolean;
+    issettingsvisible: string;
 }
 export declare const Container: import("styled-components").StyledComponent<"div", any, IContainerProps, never>;
 export declare const WindowButton: import("styled-components").StyledComponent<"div", any, IWindowButton, never>;
