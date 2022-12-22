@@ -39,7 +39,7 @@ export class Utils {
 	}
 
 	static isSpecialCharacter(str: string): boolean {
-		return /^([.,;:\-_`'"*+()[]\{\}<>\s\n])$/.test(str);
+		return /^([.,;:\-_`'"*+()[\]{}<>\s\n])$/.test(str);
 	}
 
 	static isHTMLEntity(str: string): boolean {

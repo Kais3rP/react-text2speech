@@ -39,207 +39,59 @@ function App() {
 			</button>
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
-				risus est, tempor at est non, auctor fringilla augue. Nullam vel
-				fringilla ipsum, eget feugiat magna. Fusce et quam rhoncus,
-				laoreet justo a, lacinia ipsum. Donec aliquet dictum est at
-				feugiat. Aenean ullamcorper lobortis libero, sed malesuada
-				lectus imperdiet eget. Nulla mattis mi sit amet justo consequat
-				egestas. Phasellus rhoncus, turpis tincidunt congue egestas,
-				erat turpis fringilla eros, ut blandit enim tortor quis magna.
-				Etiam eget nisi sem. Nam vulputate elit massa, id egestas ipsum
-				ultricies eget. Mauris iaculis vestibulum nisl nec lobortis.
-				Mauris nec bibendum ante, in tincidunt nibh. Maecenas sapien
-				ante, faucibus ut metus ut, maximus consequat felis. Donec sed
-				ex semper, tempor sem gravida, posuere erat. Interdum et
-				malesuada fames ac ante ipsum primis in faucibus. Vestibulum
-				rhoncus leo vel aliquam vehicula. Maecenas bibendum sem in quam
-				tincidunt, eget imperdiet metus pretium. Nullam placerat a ipsum
-				at eleifend. Integer pharetra nulla ut arcu ultricies, et
-				accumsan leo posuere. Quisque ac odio eu risus interdum
-				vehicula. Ut sit amet tincidunt erat. Nullam porttitor convallis
-				elementum. Fusce cursus urna vestibulum odio volutpat, vel
-				volutpat enim interdum. Sed tincidunt gravida felis, ac finibus
-				eros tempor nec. Nulla consectetur odio in turpis ultricies
-				lobortis. Nunc augue tortor, gravida et lacinia a, aliquet et
-				velit. Curabitur a elit eget felis consequat iaculis. Donec sit
-				amet diam venenatis, elementum magna pulvinar, sollicitudin
-				mauris. Vivamus mauris felis, venenatis at ultricies quis,
-				bibendum eu sem. Sed aliquam rutrum malesuada. Cras suscipit ex
-				in sapien luctus facilisis. Praesent placerat nisi et lacus
-				pharetra, at finibus lorem malesuada. Pellentesque ac mollis
-				justo. Orci varius natoque penatibus et magnis dis parturient
-				montes, nascetur ridiculus mus. Curabitur finibus facilisis
-				urna, in pellentesque est faucibus vitae. Quisque egestas, nulla
-				non interdum dictum, nibh nunc tincidunt lacus, vel maximus orci
-				dui sit amet quam. Vestibulum tempor neque at ipsum suscipit
-				consectetur. Nulla tempor cursus odio id feugiat. Quisque
-				dignissim non tortor malesuada pretium. Sed tincidunt porttitor
-				velit, eu pretium orci sodales ullamcorper. Praesent interdum
-				vitae ante sed lacinia. Ut a sagittis lorem. Nullam finibus
-				purus ac tortor iaculis gravida. Integer ut aliquet justo. Morbi
-				sed tristique dui. Aliquam neque ex, porta sit amet enim eu,
-				vulputate dignissim sapien. Sed blandit felis quis imperdiet
-				varius. Nam ac volutpat lorem. Curabitur feugiat massa ac
-				vestibulum sagittis. Etiam ullamcorper risus eu sodales viverra.
-				Praesent ut metus volutpat elit vulputate dapibus. Suspendisse
-				potenti. Sed iaculis malesuada sodales. Aenean vitae convallis
-				risus. Integer imperdiet pulvinar elit. Integer sed dolor nec mi
-				bibendum auctor. Integer id blandit leo. Fusce nisl libero,
-				porta nec erat id, luctus vehicula leo. Sed vitae leo eu nibh
-				commodo facilisis a non enim. Nulla at hendrerit tellus, ut
-				tempus mauris. Fusce nec eros luctus, tristique risus eu, mattis
-				mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-				Aenean risus est, tempor at est non, auctor fringilla augue.
-				Nullam vel fringilla ipsum, eget feugiat magna. Fusce et quam
-				rhoncus, laoreet justo a, lacinia ipsum. Donec aliquet dictum
-				est at feugiat. Aenean ullamcorper lobortis libero, sed
-				malesuada lectus imperdiet eget. Nulla mattis mi sit amet justo
-				consequat egestas. Phasellus rhoncus, turpis tincidunt congue
-				egestas, erat turpis fringilla eros, ut blandit enim tortor quis
-				magna. Etiam eget nisi sem. Nam vulputate elit massa, id egestas
-				ipsum ultricies eget. Mauris iaculis vestibulum nisl nec
-				lobortis. Mauris nec bibendum ante, in tincidunt nibh. Maecenas
-				sapien ante, faucibus ut metus ut, maximus consequat felis.
-				Donec sed ex semper, tempor sem gravida, posuere erat. Interdum
-				et malesuada fames ac ante ipsum primis in faucibus. Vestibulum
-				rhoncus leo vel aliquam vehicula. Maecenas bibendum sem in quam
-				tincidunt, eget imperdiet metus pretium. Nullam placerat a ipsum
-				at eleifend. Integer pharetra nulla ut arcu ultricies, et
-				accumsan leo posuere. Quisque ac odio eu risus interdum
-				vehicula. Ut sit amet tincidunt erat. Nullam porttitor convallis
-				elementum. Fusce cursus urna vestibulum odio volutpat, vel
-				volutpat enim interdum. Sed tincidunt gravida felis, ac finibus
-				eros tempor nec. Nulla consectetur odio in turpis ultricies
-				lobortis. Nunc augue tortor, gravida et lacinia a, aliquet et
-				velit. Curabitur a elit eget felis consequat iaculis. Donec sit
-				amet diam venenatis, elementum magna pulvinar, sollicitudin
-				mauris. Vivamus mauris felis, venenatis at ultricies quis,
-				bibendum eu sem. Sed aliquam rutrum malesuada. Cras suscipit ex
-				in sapien luctus facilisis. Praesent placerat nisi et lacus
-				pharetra, at finibus lorem malesuada. Pellentesque ac mollis
-				justo. Orci varius natoque penatibus et magnis dis parturient
-				montes, nascetur ridiculus mus. Curabitur finibus facilisis
-				urna, in pellentesque est faucibus vitae. Quisque egestas, nulla
-				non interdum dictum, nibh nunc tincidunt lacus, vel maximus orci
-				dui sit amet quam. Vestibulum tempor neque at ipsum suscipit
-				consectetur. Nulla tempor cursus odio id feugiat. Quisque
-				dignissim non tortor malesuada pretium. Sed tincidunt porttitor
-				velit, eu pretium orci sodales ullamcorper. Praesent interdum
-				vitae ante sed lacinia. Ut a sagittis lorem. Nullam finibus
-				purus ac tortor iaculis gravida. Integer ut aliquet justo. Morbi
-				sed tristique dui. Aliquam neque ex, porta sit amet enim eu,
-				vulputate dignissim sapien. Sed blandit felis quis imperdiet
-				varius. Nam ac volutpat lorem. Curabitur feugiat massa ac
-				vestibulum sagittis. Etiam ullamcorper risus eu sodales viverra.
-				Praesent ut metus volutpat elit vulputate dapibus. Suspendisse
-				potenti. Sed iaculis malesuada sodales. Aenean vitae convallis
-				risus. Integer imperdiet pulvinar elit. Integer sed dolor nec mi
-				bibendum auctor. Integer id blandit leo. Fusce nisl libero,
-				porta nec erat id, luctus vehicula leo. Sed vitae leo eu nibh
-				commodo facilisis a non enim. Nulla at hendrerit tellus, ut
-				tempus mauris. Fusce nec eros luctus, tristique risus eu, mattis
-				mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-				Aenean risus est, tempor at est non, auctor fringilla augue.
-				Nullam vel fringilla ipsum, eget feugiat magna. Fusce et quam
-				rhoncus, laoreet justo a, lacinia ipsum. Donec aliquet dictum
-				est at feugiat. Aenean ullamcorper lobortis libero, sed
-				malesuada lectus imperdiet eget. Nulla mattis mi sit amet justo
-				consequat egestas. Phasellus rhoncus, turpis tincidunt congue
-				egestas, erat turpis fringilla eros, ut blandit enim tortor quis
-				magna. Etiam eget nisi sem. Nam vulputate elit massa, id egestas
-				ipsum ultricies eget. Mauris iaculis vestibulum nisl nec
-				lobortis. Mauris nec bibendum ante, in tincidunt nibh. Maecenas
-				sapien ante, faucibus ut metus ut, maximus consequat felis.
-				Donec sed ex semper, tempor sem gravida, posuere erat. Interdum
-				et malesuada fames ac ante ipsum primis in faucibus. Vestibulum
-				rhoncus leo vel aliquam vehicula. Maecenas bibendum sem in quam
-				tincidunt, eget imperdiet metus pretium. Nullam placerat a ipsum
-				at eleifend. Integer pharetra nulla ut arcu ultricies, et
-				accumsan leo posuere. Quisque ac odio eu risus interdum
-				vehicula. Ut sit amet tincidunt erat. Nullam porttitor convallis
-				elementum. Fusce cursus urna vestibulum odio volutpat, vel
-				volutpat enim interdum. Sed tincidunt gravida felis, ac finibus
-				eros tempor nec. Nulla consectetur odio in turpis ultricies
-				lobortis. Nunc augue tortor, gravida et lacinia a, aliquet et
-				velit. Curabitur a elit eget felis consequat iaculis. Donec sit
-				amet diam venenatis, elementum magna pulvinar, sollicitudin
-				mauris. Vivamus mauris felis, venenatis at ultricies quis,
-				bibendum eu sem. Sed aliquam rutrum malesuada. Cras suscipit ex
-				in sapien luctus facilisis. Praesent placerat nisi et lacus
-				pharetra, at finibus lorem malesuada. Pellentesque ac mollis
-				justo. Orci varius natoque penatibus et magnis dis parturient
-				montes, nascetur ridiculus mus. Curabitur finibus facilisis
-				urna, in pellentesque est faucibus vitae. Quisque egestas, nulla
-				non interdum dictum, nibh nunc tincidunt lacus, vel maximus orci
-				dui sit amet quam. Vestibulum tempor neque at ipsum suscipit
-				consectetur. Nulla tempor cursus odio id feugiat. Quisque
-				dignissim non tortor malesuada pretium. Sed tincidunt porttitor
-				velit, eu pretium orci sodales ullamcorper. Praesent interdum
-				vitae ante sed lacinia. Ut a sagittis lorem. Nullam finibus
-				purus ac tortor iaculis gravida. Integer ut aliquet justo. Morbi
-				sed tristique dui. Aliquam neque ex, porta sit amet enim eu,
-				vulputate dignissim sapien. Sed blandit felis quis imperdiet
-				varius. Nam ac volutpat lorem. Curabitur feugiat massa ac
-				vestibulum sagittis. Etiam ullamcorper risus eu sodales viverra.
-				Praesent ut metus volutpat elit vulputate dapibus. Suspendisse
-				potenti. Sed iaculis malesuada sodales. Aenean vitae convallis
-				risus. Integer imperdiet pulvinar elit. Integer sed dolor nec mi
-				bibendum auctor. Integer id blandit leo. Fusce nisl libero,
-				porta nec erat id, luctus vehicula leo. Sed vitae leo eu nibh
-				commodo facilisis a non enim. Nulla at hendrerit tellus, ut
-				tempus mauris. Fusce nec eros luctus, tristique risus eu, mattis
-				mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-				Aenean risus est, tempor at est non, auctor fringilla augue.
-				Nullam vel fringilla ipsum, eget feugiat magna. Fusce et quam
-				rhoncus, laoreet justo a, lacinia ipsum. Donec aliquet dictum
-				est at feugiat. Aenean ullamcorper lobortis libero, sed
-				malesuada lectus imperdiet eget. Nulla mattis mi sit amet justo
-				consequat egestas. Phasellus rhoncus, turpis tincidunt congue
-				egestas, erat turpis fringilla eros, ut blandit enim tortor quis
-				magna. Etiam eget nisi sem. Nam vulputate elit massa, id egestas
-				ipsum ultricies eget. Mauris iaculis vestibulum nisl nec
-				lobortis. Mauris nec bibendum ante, in tincidunt nibh. Maecenas
-				sapien ante, faucibus ut metus ut, maximus consequat felis.
-				Donec sed ex semper, tempor sem gravida, posuere erat. Interdum
-				et malesuada fames ac ante ipsum primis in faucibus. Vestibulum
-				rhoncus leo vel aliquam vehicula. Maecenas bibendum sem in quam
-				tincidunt, eget imperdiet metus pretium. Nullam placerat a ipsum
-				at eleifend. Integer pharetra nulla ut arcu ultricies, et
-				accumsan leo posuere. Quisque ac odio eu risus interdum
-				vehicula. Ut sit amet tincidunt erat. Nullam porttitor convallis
-				elementum. Fusce cursus urna vestibulum odio volutpat, vel
-				volutpat enim interdum. Sed tincidunt gravida felis, ac finibus
-				eros tempor nec. Nulla consectetur odio in turpis ultricies
-				lobortis. Nunc augue tortor, gravida et lacinia a, aliquet et
-				velit. Curabitur a elit eget felis consequat iaculis. Donec sit
-				amet diam venenatis, elementum magna pulvinar, sollicitudin
-				mauris. Vivamus mauris felis, venenatis at ultricies quis,
-				bibendum eu sem. Sed aliquam rutrum malesuada. Cras suscipit ex
-				in sapien luctus facilisis. Praesent placerat nisi et lacus
-				pharetra, at finibus lorem malesuada. Pellentesque ac mollis
-				justo. Orci varius natoque penatibus et magnis dis parturient
-				montes, nascetur ridiculus mus. Curabitur finibus facilisis
-				urna, in pellentesque est faucibus vitae. Quisque egestas, nulla
-				non interdum dictum, nibh nunc tincidunt lacus, vel maximus orci
-				dui sit amet quam. Vestibulum tempor neque at ipsum suscipit
-				consectetur. Nulla tempor cursus odio id feugiat. Quisque
-				dignissim non tortor malesuada pretium. Sed tincidunt porttitor
-				velit, eu pretium orci sodales ullamcorper. Praesent interdum
-				vitae ante sed lacinia. Ut a sagittis lorem. Nullam finibus
-				purus ac tortor iaculis gravida. Integer ut aliquet justo. Morbi
-				sed tristique dui. Aliquam neque ex, porta sit amet enim eu,
-				vulputate dignissim sapien. Sed blandit felis quis imperdiet
-				varius. Nam ac volutpat lorem. Curabitur feugiat massa ac
-				vestibulum sagittis. Etiam ullamcorper risus eu sodales viverra.
-				Praesent ut metus volutpat elit vulputate dapibus. Suspendisse
-				potenti. Sed iaculis malesuada sodales. Aenean vitae convallis
-				risus. Integer imperdiet pulvinar elit. Integer sed dolor nec mi
-				bibendum auctor. Integer id blandit leo. Fusce nisl libero,
-				porta nec erat id, luctus vehicula leo. Sed vitae leo eu nibh
-				commodo facilisis a non enim. Nulla at hendrerit tellus, ut
-				tempus mauris. Fusce nec eros luctus, tristique risus eu, mattis
-				mi.
+				The <em>European General Data Protection Regulation (GDPR)</em>{' '}
+				recently banned the usage of Google Analytics due to the <em>fact</em>.
+				<em>fact</em>.
+				<em>fact</em>.
+				<em>fact</em>.
+				<em>fact</em>.
+
+				that Google keeps users' data in US servers and this led to a
+				massive black hole for web developers, since GA was one of the
+				most used technology to monitor the usage of websites and web.
+
+				applications. After a brief search on web, it looked like there
+				were a lot of alternatives to GA, which are GDRP compliant, but
+				most of them do not offer FREE plans being served as cloud
+				services. There are a few ones though, that offer both a paid
+				Cloud based version and a free self-hosted version, I'll name
+				just two of them, Matomo and Umami . I picked the latter one
+				since it has a Github repo built with NextJS , which I'm
+				familiar with, in this post I'll show you how to setup a fully
+				working Analytics Dashboard and connect it to your website,
+				using a self hosted, and totally FREE solution thanks to Umami .
+				1. Fork the repo First of all you need to fork the github repo,
+				if you don't already own a github account, open one in a few
+				steps by going here . Fork this repo:
+				https://github.com/mikecao/umami.git Navigate to the repo and
+				click the fork button on the up-right section (it has 1.7 k
+				forks at the time of writing) . As you can see it's a NextJS
+				application, if you are not familiar with this technology it's
+				not a problem, since you won't have to edit code. NextJS is a
+				framework based on React , developed by Vercel , it uses a
+				serverless approach and lets you set up a rest API without a
+				dedicated web server, just by writing lambda functions. 2. Set
+				up a PostgreSQL Database Umami uses MySQL or PostgreSQL
+				Databases to keep the analytics data, hence you need to set up
+				and host one of these two and connect them to your NextJS
+				application, I'll show here how to easily set up a PostgreSQL DB
+				on Heroku . If you don't already have an Heroku account, open
+				one by going here . Heroku offers a free plan. Once you have
+				created an account, navigate to
+				https://dashboard.heroku.com/apps and click the New --> Create
+				new App button. Choose a geographic location and an app name
+				(Since this will only have to host your database, the app name
+				is not important) and proceed to create the App. Now you will be
+				redirected automatically to your newly created App dashboard,
+				but you still need to add the PostgreSQL DB. In order to do so,
+				you just need to go to the Resources Tab, type Postgres in the
+				Add-ons search box, and select Heroku Postgres from the dropdown
+				list. Choose the Hooby dev - free plan (or a paid version if you
+				prefer), and you're done. Now you should see the PostgreSQL
+				Addon in the Add-ons list. Just click on it to be redirected to
+				the Database dashboard. Just click on the Settings Tab and by
+				pressing on the View Credentials button you will be given the
+				personal credentials to access your brand new DB.
 			</div>
 		</div>
 	);

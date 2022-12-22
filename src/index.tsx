@@ -184,6 +184,8 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 		audioReaderRef.current = new SpeechSynth(textContainer, {
 			...options,
+			color1: styleOptions.highlightColor1,
+			color2: styleOptions.highlightColor2,
 			onStart: (reader: SpeechSynth) => {
 				console.log('Start');
 				setIsLoading(true);
@@ -441,11 +443,18 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 };
 
 AudioReader.defaultProps = {
+	options: {
+		isHighlightTextOn: true,
+		isPreserveHighlighting: true,
+		isSSROn: false,
+	},
 	styleOptions: {
 		primaryColor: '#00D',
 		secondaryColor: '#55F',
 		bgColor: '#FFF',
 		textColor: '#222',
+		highlightColor1: '#98AFC7',
+		highlightColor2: '#737CA1',
 	},
 };
 

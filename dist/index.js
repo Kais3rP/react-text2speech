@@ -171,7 +171,7 @@ class Utils {
         return /<\/code>/.test(str);
     }
     static isSpecialCharacter(str) {
-        return /^([.,;:\-_`'"*+()[]\{\}<>\s\n])$/.test(str);
+        return /^([.,;:\-_`'"*+()[\]{}<>\s\n])$/.test(str);
     }
     static isHTMLEntity(str) {
         return /&[a-z]+?;+/.test(str);
@@ -400,11 +400,13 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Apply highlight style */
         wordToHighlight.style.backgroundColor = this.style.color1;
         wordToHighlight.style.boxShadow = `8px 0px 0px 0px ${this.style.color1}`;
+        wordToHighlight.style.textDecoration = 'underline';
     }
     resetHighlight() {
         this.state.highlightedWords.forEach((n) => {
             n.style.backgroundColor = '';
             n.style.boxShadow = '';
+            n.style.textDecoration = 'none';
             this.state.highlightedWords = [];
         });
     }
@@ -596,6 +598,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
             else if (typeof window !== 'undefined' &&
                 node instanceof HTMLElement)
                 code = node.innerHTML;
+            console.log('INNER HTML', code);
             code = code
                 .split('\n') // Add br break line in place of \n
                 .join('<br/>')
@@ -3707,7 +3710,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
         window.speechSynthesis.cancel();
         if (!textContainer)
             return;
-        audioReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { onStart: (reader) => {
+        audioReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: styleOptions.highlightColor1, color2: styleOptions.highlightColor2, onStart: (reader) => {
                 console.log('Start');
                 setIsLoading(true);
             }, onEffectivelySpeakingStart: (reader) => {
@@ -3825,11 +3828,18 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                     React__default["default"].createElement("h5", null, "Preserve Highlighting")))))));
 };
 AudioReader.defaultProps = {
+    options: {
+        isHighlightTextOn: true,
+        isPreserveHighlighting: true,
+        isSSROn: false,
+    },
     styleOptions: {
         primaryColor: '#00D',
         secondaryColor: '#55F',
         bgColor: '#FFF',
         textColor: '#222',
+        highlightColor1: '#98AFC7',
+        highlightColor2: '#737CA1',
     },
 };
 

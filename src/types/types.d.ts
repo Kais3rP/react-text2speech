@@ -82,5 +82,7 @@ declare global {
 		secondaryColor: string;
 		bgColor: string;
 		textColor: string;
+		highlightColor1: string;
+		highlightColor2: string;
 	}
 }
