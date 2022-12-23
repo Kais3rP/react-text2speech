@@ -39,7 +39,7 @@ const Container = styled.div`
 
 const StyledButton = styled.button<IStyledButtonProps>`
 	position: relative;
-	font-size: 0.7rem;
+	font-size: 0.7em;
 	font-weight: bold;
 	color: ${(props) => props.styleoptions.primaryColor};
 	cursor: pointer;

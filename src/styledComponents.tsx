@@ -41,6 +41,8 @@ interface IExtraSettings {
 	issettingsvisible: string;
 }
 
+interface ICheckBox {}
+
 /* Styled Components */
 
 export const Container = styled.div<IContainerProps>`
@@ -61,6 +63,9 @@ export const Container = styled.div<IContainerProps>`
 	padding: 15px;
 	background-color: ${(props: any) => props.styleoptions.bgColor};
 	font-family: Arial, sans-serif !important;
+	& * {
+		box-sizing: border-box;
+	}
 `;
 
 export const WindowButton = styled.div<IWindowButton>`
@@ -69,8 +74,8 @@ export const WindowButton = styled.div<IWindowButton>`
 	align-items: center;
 	z-index: 100;
 	font-size: 1em !important;
-	width: 16px;
-	height: 16px;
+	width: 20px;
+	height: 20px;
 	border-radius: 3px;
 	border: 2px solid ${(props: any) => props.styleoptions.primaryColor};
 	background-color: ${(props: any) => props.styleoptions.bgColor};
@@ -246,7 +251,7 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 	justify-content: start;
 	align-items: center;
 	transition: all 0.2s linear;
-
+	padding: 0px 0px 0px 10px;
 	& label {
 		display: flex;
 		padding: 0px;
@@ -265,4 +270,9 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 		font-weight: normal !important;
 		line-height: 20px !important;
 	}
+`;
+
+export const CheckBox = styled.input<ICheckBox>`
+	margin: 0 !important;
+	padding: 0 !important;
 `;

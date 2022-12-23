@@ -22,6 +22,7 @@ import { MdOutlineClose } from 'react-icons/md';
 import debounce from 'lodash.debounce';
 import { useIsFirstRender } from 'hooks';
 import {
+	CheckBox,
 	Container,
 	ControlButton,
 	ControlsContainer,
@@ -433,7 +434,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							htmlFor="is-row-check"
 							onPointerDown={(e) => e.stopPropagation()}
 						>
-							<input
+							<CheckBox
 								id="is-row-check"
 								type="checkbox"
 								checked={isPreserveHighlighting}

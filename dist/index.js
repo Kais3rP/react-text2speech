@@ -2834,7 +2834,7 @@ const Container$1 = styled.div `
 `;
 const StyledButton = styled.button `
 	position: relative;
-	font-size: 0.7rem;
+	font-size: 0.7em;
 	font-weight: bold;
 	color: ${(props) => props.styleoptions.primaryColor};
 	cursor: pointer;
@@ -3435,6 +3435,9 @@ const Container = styled.div `
 	padding: 15px;
 	background-color: ${(props) => props.styleoptions.bgColor};
 	font-family: Arial, sans-serif !important;
+	& * {
+		box-sizing: border-box;
+	}
 `;
 const WindowButton = styled.div `
 	display: flex;
@@ -3442,8 +3445,8 @@ const WindowButton = styled.div `
 	align-items: center;
 	z-index: 100;
 	font-size: 1em !important;
-	width: 16px;
-	height: 16px;
+	width: 20px;
+	height: 20px;
 	border-radius: 3px;
 	border: 2px solid ${(props) => props.styleoptions.primaryColor};
 	background-color: ${(props) => props.styleoptions.bgColor};
@@ -3606,7 +3609,7 @@ const ExtraSettings = styled.div `
 	justify-content: start;
 	align-items: center;
 	transition: all 0.2s linear;
-
+	padding: 0px 0px 0px 10px;
 	& label {
 		display: flex;
 		padding: 0px;
@@ -3625,6 +3628,10 @@ const ExtraSettings = styled.div `
 		font-weight: normal !important;
 		line-height: 20px !important;
 	}
+`;
+const CheckBox = styled.input `
+	margin: 0 !important;
+	padding: 0 !important;
 `;
 
 const AudioReader = ({ textContainer, options, styleOptions }) => {
@@ -3835,7 +3842,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                             }, styleOptions: styleOptions })))),
             React__default["default"].createElement(ExtraSettings, { styleoptions: styleOptions, issettingsvisible: isSettingsVisible.toString(), onPointerDown: toggleSettings },
                 React__default["default"].createElement("label", { htmlFor: "is-row-check", onPointerDown: (e) => e.stopPropagation() },
-                    React__default["default"].createElement("input", { id: "is-row-check", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
+                    React__default["default"].createElement(CheckBox, { id: "is-row-check", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
                     React__default["default"].createElement("h5", null, "Preserve Highlighting")))))));
 };
 AudioReader.defaultProps = {
