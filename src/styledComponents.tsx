@@ -44,6 +44,7 @@ interface IExtraSettings {
 /* Styled Components */
 
 export const Container = styled.div<IContainerProps>`
+	font-size: 16px;
 	position: fixed;
 	z-index: 1000;
 	bottom: 5px;
@@ -67,7 +68,7 @@ export const WindowButton = styled.div<IWindowButton>`
 	justify-content: center;
 	align-items: center;
 	z-index: 100;
-	font-size: 1rem !important;
+	font-size: 1em !important;
 	width: 16px;
 	height: 16px;
 	border-radius: 3px;
@@ -93,7 +94,7 @@ export const SeekbarContainer = styled.div<ISeekbarContainer>`
 
 export const Time = styled.h5`
 	width: 50px;
-	font-size: 0.7rem !important;
+	font-size: 0.7em !important;
 	font-weight: normal !important;
 	display: flex;
 	justify-content: center;
@@ -168,7 +169,7 @@ export const ControlButton = styled.div<IControlButton>`
 	border-radius: 50%;
 	background-color: ${(props: any) => props.styleoptions.bgColor};
 	color: ${(props: any) => props.styleoptions.primaryColor};
-	font-size: normal !important;
+	font-weight: normal !important;
 	cursor: pointer;
 	border: 2px solid ${(props: any) => props.styleoptions.secondaryColor};
 	&:hover {
@@ -177,9 +178,9 @@ export const ControlButton = styled.div<IControlButton>`
 		color: ${(props: any) => props.styleoptions.secondaryColor};
 	}
 	transition: all 0.2s;
-	font-size: 1rem !important;
+	font-size: 1.1em;
 	pointer-events: ${(props) =>
-		props.isloading === 'true' ? 'none' : 'default'};
+		props.isloading === 'true' ? 'none' : 'auto'};
 `;
 
 export const OptionsContainer = styled.div`
@@ -201,7 +202,7 @@ export const OptionsContainer = styled.div`
 `;
 
 export const Dots = styled(BiDotsHorizontal)<IDots>`
-	font-size: 0.8rem;
+	font-size: 0.8em;
 	color: ${(props) => props.styleoptions.primaryColor};
 	margin-bottom: 3px;
 	padding: 0px;
@@ -218,7 +219,7 @@ export const Reset = styled(BiReset)<IReset>`
 	font-weight: bold;
 	cursor: pointer;
 	transition: 0.2s ease-in;
-	font-size: 0.9rem;
+	font-size: 0.9em;
 	color: ${(props) => props.styleoptions.primaryColor};
 	&:hover {
 		color: ${(props) => props.styleoptions.secondaryColor};
@@ -259,7 +260,7 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 	& h5 {
 		padding: 0px;
 		margin: 0px;
-		font-size: 0.8rem;
+		font-size: 0.8em;
 		margin-left: 1px;
 		font-weight: normal !important;
 		line-height: 20px !important;

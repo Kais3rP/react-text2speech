@@ -320,6 +320,9 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 					/>
 					{!isReading ? (
 						<ControlButton
+							style={{
+								fontSize: '1.5em',
+							}}
 							as={AiFillPlayCircle}
 							title="Play"
 							onPointerDown={handleAudioReadPlay}
@@ -328,6 +331,9 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 						/>
 					) : (
 						<ControlButton
+							style={{
+								fontSize: '1.5em',
+							}}
 							as={AiFillPauseCircle}
 							title="Pause"
 							styleoptions={styleOptions}

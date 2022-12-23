@@ -3419,6 +3419,7 @@ var lodash_debounce = debounce;
 
 /* Styled Components */
 const Container = styled.div `
+	font-size: 16px;
 	position: fixed;
 	z-index: 1000;
 	bottom: 5px;
@@ -3440,7 +3441,7 @@ const WindowButton = styled.div `
 	justify-content: center;
 	align-items: center;
 	z-index: 100;
-	font-size: 1rem !important;
+	font-size: 1em !important;
 	width: 16px;
 	height: 16px;
 	border-radius: 3px;
@@ -3464,7 +3465,7 @@ const SeekbarContainer = styled.div `
 `;
 const Time = styled.h5 `
 	width: 50px;
-	font-size: 0.7rem !important;
+	font-size: 0.7em !important;
 	font-weight: normal !important;
 	display: flex;
 	justify-content: center;
@@ -3535,7 +3536,7 @@ const ControlButton = styled.div `
 	border-radius: 50%;
 	background-color: ${(props) => props.styleoptions.bgColor};
 	color: ${(props) => props.styleoptions.primaryColor};
-	font-size: normal !important;
+	font-weight: normal !important;
 	cursor: pointer;
 	border: 2px solid ${(props) => props.styleoptions.secondaryColor};
 	&:hover {
@@ -3544,8 +3545,8 @@ const ControlButton = styled.div `
 		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 	transition: all 0.2s;
-	font-size: 1rem !important;
-	pointer-events: ${(props) => props.isloading === 'true' ? 'none' : 'default'};
+	font-size: 1.1em;
+	pointer-events: ${(props) => props.isloading === 'true' ? 'none' : 'auto'};
 `;
 const OptionsContainer = styled.div `
 	display: flex;
@@ -3565,7 +3566,7 @@ const OptionsContainer = styled.div `
 	}
 `;
 const Dots = styled(BiDotsHorizontal) `
-	font-size: 0.8rem;
+	font-size: 0.8em;
 	color: ${(props) => props.styleoptions.primaryColor};
 	margin-bottom: 3px;
 	padding: 0px;
@@ -3581,7 +3582,7 @@ const Reset = styled(BiReset) `
 	font-weight: bold;
 	cursor: pointer;
 	transition: 0.2s ease-in;
-	font-size: 0.9rem;
+	font-size: 0.9em;
 	color: ${(props) => props.styleoptions.primaryColor};
 	&:hover {
 		color: ${(props) => props.styleoptions.secondaryColor};
@@ -3619,7 +3620,7 @@ const ExtraSettings = styled.div `
 	& h5 {
 		padding: 0px;
 		margin: 0px;
-		font-size: 0.8rem;
+		font-size: 0.8em;
 		margin-left: 1px;
 		font-weight: normal !important;
 		line-height: 20px !important;
@@ -3791,7 +3792,11 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                 React__default["default"].createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: () => handleGenericSeek(currentWordIndex - 5 <= 0
                         ? 0
                         : currentWordIndex - 5), styleoptions: styleOptions, isloading: isLoading.toString() }),
-                !isReading ? (React__default["default"].createElement(ControlButton, { as: AiFillPlayCircle, title: "Play", onPointerDown: handleAudioReadPlay, styleoptions: styleOptions, isloading: isLoading.toString() })) : (React__default["default"].createElement(ControlButton, { as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleAudioReadPause, isloading: isLoading.toString() })),
+                !isReading ? (React__default["default"].createElement(ControlButton, { style: {
+                        fontSize: '1.5em',
+                    }, as: AiFillPlayCircle, title: "Play", onPointerDown: handleAudioReadPlay, styleoptions: styleOptions, isloading: isLoading.toString() })) : (React__default["default"].createElement(ControlButton, { style: {
+                        fontSize: '1.5em',
+                    }, as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleAudioReadPause, isloading: isLoading.toString() })),
                 React__default["default"].createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: () => {
                         var _a, _b, _c;
                         return handleGenericSeek(currentWordIndex + 5 >=

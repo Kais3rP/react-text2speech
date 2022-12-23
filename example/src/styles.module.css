@@ -30,8 +30,6 @@
 }
 
 .play {
-	width: 32;
-	height: 32;
 	font-size: 2rem;
 	display: flex;
 	justify-content: center;

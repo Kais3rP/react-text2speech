@@ -134,6 +134,7 @@ PERFORMANCE OF THIS SOFTWARE.
 		color: ${e=>e.styleoptions.primaryColor};
 	}
 `,mr=t=>{var{data:n,onChange:r,icon:o,styleOptions:i}=t,s=x(t,["data","onChange","icon","styleOptions"]);return e.createElement(pr,Object.assign({},s),o&&e.createElement(hr,{styleoptions:i},o),e.createElement(fr,{min:n.min,max:n.max,step:n.step,type:"range",value:n.value,onChange:r,styleoptions:i}))};function gr(e,t){t=t||2;let n=e.toString(),r=0;return r=t-n.length+1,n=new Array(r).join("0").concat(n),n}var yr=function(e,t){const n=t&&t.leading,r=e<=-1e3?"-":"",o=function(e){if("number"!=typeof e)throw new TypeError("Expected a number");return{days:Math.trunc(e/864e5),hours:Math.trunc(e/36e5)%24,minutes:Math.trunc(e/6e4)%60,seconds:Math.trunc(e/1e3)%60,milliseconds:Math.trunc(e)%1e3}}(e<0?-e:e),i=gr(o.seconds);return o.days?r+o.days+":"+gr(o.hours)+":"+gr(o.minutes)+":"+i:o.hours?r+(n?gr(o.hours):o.hours)+":"+gr(o.minutes)+":"+i:r+(n?gr(o.minutes):o.minutes)+":"+i};function vr(e){return m({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{fill:"none",d:"M0 0h24v24H0V0z"}},{tag:"path",attr:{d:"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"}}]})(e)}var br=/^\s+|\s+$/g,wr=/^[-+]0x[0-9a-f]+$/i,xr=/^0b[01]+$/i,Sr=/^0o[0-7]+$/i,Or=parseInt,Cr="object"==typeof global&&global&&global.Object===Object&&global,Er="object"==typeof self&&self&&self.Object===Object&&self,kr=Cr||Er||Function("return this")(),_r=Object.prototype.toString,Ar=Math.max,Pr=Math.min,Tr=function(){return kr.Date.now()};function Rr(e){var t=typeof e;return!!e&&("object"==t||"function"==t)}function jr(e){if("number"==typeof e)return e;if(function(e){return"symbol"==typeof e||function(e){return!!e&&"object"==typeof e}(e)&&"[object Symbol]"==_r.call(e)}(e))return NaN;if(Rr(e)){var t="function"==typeof e.valueOf?e.valueOf():e;e=Rr(t)?t+"":t}if("string"!=typeof e)return 0===e?e:+e;e=e.replace(br,"");var n=xr.test(e);return n||Sr.test(e)?Or(e.slice(2),n?2:8):wr.test(e)?NaN:+e}var Ir=function(e,t,n){var r,o,i,s,a,c,l=0,u=!1,d=!1,p=!0;if("function"!=typeof e)throw new TypeError("Expected a function");function f(t){var n=r,i=o;return r=o=void 0,l=t,s=e.apply(i,n)}function h(e){return l=e,a=setTimeout(g,t),u?f(e):s}function m(e){var n=e-c;return void 0===c||n>=t||n<0||d&&e-l>=i}function g(){var e=Tr();if(m(e))return y(e);a=setTimeout(g,function(e){var n=t-(e-c);return d?Pr(n,i-(e-l)):n}(e))}function y(e){return a=void 0,p&&r?f(e):(r=o=void 0,s)}function v(){var e=Tr(),n=m(e);if(r=arguments,o=this,c=e,n){if(void 0===a)return h(c);if(d)return a=setTimeout(g,t),f(c)}return void 0===a&&(a=setTimeout(g,t)),s}return t=jr(t)||0,Rr(n)&&(u=!!n.leading,i=(d="maxWait"in n)?Ar(jr(n.maxWait)||0,t):i,p="trailing"in n?!!n.trailing:p),v.cancel=function(){void 0!==a&&clearTimeout(a),l=0,r=c=o=a=void 0},v.flush=function(){return void 0===a?s:y(Tr())},v};const Nr=sr.div`
+	font-size: 16px;
 	position: fixed;
 	z-index: 1000;
 	bottom: 5px;
@@ -154,7 +155,7 @@ PERFORMANCE OF THIS SOFTWARE.
 	justify-content: center;
 	align-items: center;
 	z-index: 100;
-	font-size: 1rem !important;
+	font-size: 1em !important;
 	width: 16px;
 	height: 16px;
 	border-radius: 3px;
@@ -176,7 +177,7 @@ PERFORMANCE OF THIS SOFTWARE.
 	margin-top: 10px;
 `,$r=sr.h5`
 	width: 50px;
-	font-size: 0.7rem !important;
+	font-size: 0.7em !important;
 	font-weight: normal !important;
 	display: flex;
 	justify-content: center;
@@ -242,7 +243,7 @@ PERFORMANCE OF THIS SOFTWARE.
 	border-radius: 50%;
 	background-color: ${e=>e.styleoptions.bgColor};
 	color: ${e=>e.styleoptions.primaryColor};
-	font-size: normal !important;
+	font-weight: normal !important;
 	cursor: pointer;
 	border: 2px solid ${e=>e.styleoptions.secondaryColor};
 	&:hover {
@@ -251,8 +252,8 @@ PERFORMANCE OF THIS SOFTWARE.
 		color: ${e=>e.styleoptions.secondaryColor};
 	}
 	transition: all 0.2s;
-	font-size: 1rem !important;
-	pointer-events: ${e=>"true"===e.isloading?"none":"default"};
+	font-size: 1.1em;
+	pointer-events: ${e=>"true"===e.isloading?"none":"auto"};
 `,Fr=sr.div`
 	display: flex;
 	justify-content: space-between;
@@ -270,7 +271,7 @@ PERFORMANCE OF THIS SOFTWARE.
 		align-items: center;
 	}
 `,Hr=sr((function(e){return m({tag:"svg",attr:{viewBox:"0 0 24 24"},child:[{tag:"path",attr:{d:"M10 10h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4z"}}]})(e)}))`
-	font-size: 0.8rem;
+	font-size: 0.8em;
 	color: ${e=>e.styleoptions.primaryColor};
 	margin-bottom: 3px;
 	padding: 0px;
@@ -285,7 +286,7 @@ PERFORMANCE OF THIS SOFTWARE.
 	font-weight: bold;
 	cursor: pointer;
 	transition: 0.2s ease-in;
-	font-size: 0.9rem;
+	font-size: 0.9em;
 	color: ${e=>e.styleoptions.primaryColor};
 	&:hover {
 		color: ${e=>e.styleoptions.secondaryColor};
@@ -321,10 +322,10 @@ PERFORMANCE OF THIS SOFTWARE.
 	& h5 {
 		padding: 0px;
 		margin: 0px;
-		font-size: 0.8rem;
+		font-size: 0.8em;
 		margin-left: 1px;
 		font-weight: normal !important;
 		line-height: 20px !important;
 	}
-`,Gr=({textContainer:n,options:r,styleOptions:o})=>{const s=(()=>{const e=t(!0);return i((()=>{e.current=!1}),[]),e.current})(),{isReading:a,rate:l,voice:u,voices:d,volume:p,elapsedTime:f,currentWordIndex:h,duration:m,numberOfWords:g,isLoading:x,stopReading:S,startReading:O,setRate:E,setVoice:k,setVoices:_,setVolume:A,setElapsedTime:P,isMinimized:T,minimize:R,maximize:j,hideAudioReader:I,isVisible:N,isSettingsVisible:D,showSettings:z,hideSettings:$,isPreserveHighlighting:M,enablePreserveHighlighting:L,disablePreserveHighlighting:V,setNumberOfWords:F,setCurrentWordIndex:H,setDuration:W,setIsLoading:B}=Xe(),U=t(),G=()=>{S()},q=()=>{const e=U.current;null==e||e.reset(),S(),P(0),H(1)},K=()=>{D?$():z()},Y=Ir((e=>{const t=U.current;t&&t.seekTo(e)}),5),X=c((()=>e=>{Y(+e.target.value)}),[]),J=e=>{const t=U.current;null==t||t.seekTo(e)};return i((()=>{if(window.speechSynthesis.cancel(),n)return U.current=new C(n,Object.assign(Object.assign({},r),{color1:o.highlightColor1,color2:o.highlightColor2,onStart:e=>{console.log("Start"),B(!0)},onEffectivelySpeakingStart:e=>{console.log("Voice speaking"),B(!1)},onPause:e=>{console.log("Pause")},onResume:e=>{console.log("Resume")},onReset:e=>{console.log("Reset")},onEnd:()=>{console.log("End"),q()},onBoundary:(e,t)=>{H(e.state.currentWordIndex)},onSeek:(e,t)=>{H(t)},onTimeTick:(e,t)=>{P(e.state.elapsedTime)},onWordClick:(e,t)=>{const n=+t.target.dataset.id;J(n-1)}})),U.current.init().then((e=>{_(e.state.voices),F(e.state.numberOfWords),W(e.state.duration)})).catch((e=>console.log(e))),()=>{var e;null===(e=U.current)||void 0===e||e.reset()}}),[n]),i((()=>{const e=U.current;if(!e||s)return B(!1);a?e.isPaused()?(console.log("Resuming"),e.resume()):(console.log("Playing"),e.play()):e.isPlaying()&&e.pause()}),[a,n,s,B]),e.createElement(Nr,{isvisible:N.toString(),isminimized:T.toString(),styleoptions:o},e.createElement(Dr,{style:{position:"absolute",top:"2px",right:"3px"},styleoptions:o,onPointerDown:()=>{I(),G()}},e.createElement(vr,{title:"Close"})),e.createElement(Dr,{style:{position:"absolute",top:"2px",right:"24px"},title:T?"Maximize":"Minimize",styleoptions:o,onPointerDown:T?()=>{j()}:()=>{R()}},T?e.createElement(Ze,null):e.createElement(Qe,null)),e.createElement(zr,{isminimized:T.toString()},e.createElement($r,null,yr(f)),e.createElement(Mr,{styleoptions:o,type:"range",min:"0",max:g,step:"1",value:h,onChange:X}),e.createElement($r,{style:{left:"auto",right:"-15px"}},yr(m),"*")),e.createElement(Lr,{isminimized:T.toString()},e.createElement("div",null,e.createElement(Vr,{as:y,title:"Fast backward",onDoubleClick:e=>e.preventDefault(),onPointerDown:()=>J(h-5<=0?0:h-5),styleoptions:o,isloading:x.toString()}),a?e.createElement(Vr,{as:b,title:"Pause",styleoptions:o,onPointerDown:G,isloading:x.toString()}):e.createElement(Vr,{as:w,title:"Play",onPointerDown:()=>{O()},styleoptions:o,isloading:x.toString()}),e.createElement(Vr,{as:v,title:"Fast forsward",onPointerDown:()=>{var e,t,n;return J(h+5>=(null===(e=U.current)||void 0===e?void 0:e.state.wholeTextArray.length)?null===(n=null===(t=U.current)||void 0===t?void 0:t.state.wholeTextArray)||void 0===n?void 0:n.length:h+5)},styleoptions:o,isloading:x.toString()}),e.createElement(Wr,{title:"reset",styleoptions:o,onClick:q}))),!T&&e.createElement(e.Fragment,null,e.createElement(Fr,null,e.createElement("div",{id:"options-wrapper-1"},e.createElement(dr,{name:"rate",options:[{value:"0.5",name:"0.5x"},{value:"0.75",name:"0.75x"},{value:"1",name:"1x"},{value:"1.25",name:"1.25x"},{value:"1.5",name:"1.5x"},{value:"2",name:"2x"}],onChange:e=>{const t=U.current;t&&(t.editUtterance({rate:+e}),E(e),W(t.state.duration))},value:l,defaultValue:"1",title:"Rate",styleOptions:o}),e.createElement(dr,{name:"voice",options:null==d?void 0:d.map((e=>{var t;return{name:null===(t=e.name)||void 0===t?void 0:t.replace(/(Microsoft)|(Online)|(\(Natural\)) -\s.*$/gm,""),value:e.voiceURI}})),onChange:e=>{const t=U.current;null==t||t.editUtterance({voiceURI:e}),k(e)},value:u,defaultValue:"1",title:"Voices",styleOptions:o}),e.createElement(Hr,{styleoptions:o,onPointerDown:K})),e.createElement("div",{id:"options-wrapper-2"},e.createElement(Br,null,e.createElement(mr,{icon:e.createElement(Je,null),onChange:e=>{const t=U.current,n=e.target;t&&(t.editUtterance({volume:+n.value}),A(n.value))},data:{min:"0.1",max:"1",step:"0.1",value:+p,unit:"%"},styleOptions:o})))),e.createElement(Ur,{styleoptions:o,issettingsvisible:D.toString(),onPointerDown:K},e.createElement("label",{htmlFor:"is-row-check",onPointerDown:e=>e.stopPropagation()},e.createElement("input",{id:"is-row-check",type:"checkbox",checked:M,onChange:e=>{const t=U.current,n=e.target;t&&(n.checked?(L(),t.options.isPreserveHighlighting=!0):(V(),t.options.isPreserveHighlighting=!1))}}),e.createElement("h5",null,"Preserve Highlighting")))))};Gr.defaultProps={options:{isHighlightTextOn:!0,isPreserveHighlighting:!0,isSSROn:!1},styleOptions:{primaryColor:"#00D",secondaryColor:"#55F",bgColor:"#FFF",textColor:"#222",highlightColor1:"#98AFC7",highlightColor2:"#737CA1"}};export{C as SpeechSynth,Gr as default,Xe as useAudioReaderStore};
+`,Gr=({textContainer:n,options:r,styleOptions:o})=>{const s=(()=>{const e=t(!0);return i((()=>{e.current=!1}),[]),e.current})(),{isReading:a,rate:l,voice:u,voices:d,volume:p,elapsedTime:f,currentWordIndex:h,duration:m,numberOfWords:g,isLoading:x,stopReading:S,startReading:O,setRate:E,setVoice:k,setVoices:_,setVolume:A,setElapsedTime:P,isMinimized:T,minimize:R,maximize:j,hideAudioReader:I,isVisible:N,isSettingsVisible:D,showSettings:z,hideSettings:$,isPreserveHighlighting:M,enablePreserveHighlighting:L,disablePreserveHighlighting:V,setNumberOfWords:F,setCurrentWordIndex:H,setDuration:W,setIsLoading:B}=Xe(),U=t(),G=()=>{S()},q=()=>{const e=U.current;null==e||e.reset(),S(),P(0),H(1)},K=()=>{D?$():z()},Y=Ir((e=>{const t=U.current;t&&t.seekTo(e)}),5),X=c((()=>e=>{Y(+e.target.value)}),[]),J=e=>{const t=U.current;null==t||t.seekTo(e)};return i((()=>{if(window.speechSynthesis.cancel(),n)return U.current=new C(n,Object.assign(Object.assign({},r),{color1:o.highlightColor1,color2:o.highlightColor2,onStart:e=>{console.log("Start"),B(!0)},onEffectivelySpeakingStart:e=>{console.log("Voice speaking"),B(!1)},onPause:e=>{console.log("Pause")},onResume:e=>{console.log("Resume")},onReset:e=>{console.log("Reset")},onEnd:()=>{console.log("End"),q()},onBoundary:(e,t)=>{H(e.state.currentWordIndex)},onSeek:(e,t)=>{H(t)},onTimeTick:(e,t)=>{P(e.state.elapsedTime)},onWordClick:(e,t)=>{const n=+t.target.dataset.id;J(n-1)}})),U.current.init().then((e=>{_(e.state.voices),F(e.state.numberOfWords),W(e.state.duration)})).catch((e=>console.log(e))),()=>{var e;null===(e=U.current)||void 0===e||e.reset()}}),[n]),i((()=>{const e=U.current;if(!e||s)return B(!1);a?e.isPaused()?(console.log("Resuming"),e.resume()):(console.log("Playing"),e.play()):e.isPlaying()&&e.pause()}),[a,n,s,B]),e.createElement(Nr,{isvisible:N.toString(),isminimized:T.toString(),styleoptions:o},e.createElement(Dr,{style:{position:"absolute",top:"2px",right:"3px"},styleoptions:o,onPointerDown:()=>{I(),G()}},e.createElement(vr,{title:"Close"})),e.createElement(Dr,{style:{position:"absolute",top:"2px",right:"24px"},title:T?"Maximize":"Minimize",styleoptions:o,onPointerDown:T?()=>{j()}:()=>{R()}},T?e.createElement(Ze,null):e.createElement(Qe,null)),e.createElement(zr,{isminimized:T.toString()},e.createElement($r,null,yr(f)),e.createElement(Mr,{styleoptions:o,type:"range",min:"0",max:g,step:"1",value:h,onChange:X}),e.createElement($r,{style:{left:"auto",right:"-15px"}},yr(m),"*")),e.createElement(Lr,{isminimized:T.toString()},e.createElement("div",null,e.createElement(Vr,{as:y,title:"Fast backward",onDoubleClick:e=>e.preventDefault(),onPointerDown:()=>J(h-5<=0?0:h-5),styleoptions:o,isloading:x.toString()}),a?e.createElement(Vr,{style:{fontSize:"1.5em"},as:b,title:"Pause",styleoptions:o,onPointerDown:G,isloading:x.toString()}):e.createElement(Vr,{style:{fontSize:"1.5em"},as:w,title:"Play",onPointerDown:()=>{O()},styleoptions:o,isloading:x.toString()}),e.createElement(Vr,{as:v,title:"Fast forsward",onPointerDown:()=>{var e,t,n;return J(h+5>=(null===(e=U.current)||void 0===e?void 0:e.state.wholeTextArray.length)?null===(n=null===(t=U.current)||void 0===t?void 0:t.state.wholeTextArray)||void 0===n?void 0:n.length:h+5)},styleoptions:o,isloading:x.toString()}),e.createElement(Wr,{title:"reset",styleoptions:o,onClick:q}))),!T&&e.createElement(e.Fragment,null,e.createElement(Fr,null,e.createElement("div",{id:"options-wrapper-1"},e.createElement(dr,{name:"rate",options:[{value:"0.5",name:"0.5x"},{value:"0.75",name:"0.75x"},{value:"1",name:"1x"},{value:"1.25",name:"1.25x"},{value:"1.5",name:"1.5x"},{value:"2",name:"2x"}],onChange:e=>{const t=U.current;t&&(t.editUtterance({rate:+e}),E(e),W(t.state.duration))},value:l,defaultValue:"1",title:"Rate",styleOptions:o}),e.createElement(dr,{name:"voice",options:null==d?void 0:d.map((e=>{var t;return{name:null===(t=e.name)||void 0===t?void 0:t.replace(/(Microsoft)|(Online)|(\(Natural\)) -\s.*$/gm,""),value:e.voiceURI}})),onChange:e=>{const t=U.current;null==t||t.editUtterance({voiceURI:e}),k(e)},value:u,defaultValue:"1",title:"Voices",styleOptions:o}),e.createElement(Hr,{styleoptions:o,onPointerDown:K})),e.createElement("div",{id:"options-wrapper-2"},e.createElement(Br,null,e.createElement(mr,{icon:e.createElement(Je,null),onChange:e=>{const t=U.current,n=e.target;t&&(t.editUtterance({volume:+n.value}),A(n.value))},data:{min:"0.1",max:"1",step:"0.1",value:+p,unit:"%"},styleOptions:o})))),e.createElement(Ur,{styleoptions:o,issettingsvisible:D.toString(),onPointerDown:K},e.createElement("label",{htmlFor:"is-row-check",onPointerDown:e=>e.stopPropagation()},e.createElement("input",{id:"is-row-check",type:"checkbox",checked:M,onChange:e=>{const t=U.current,n=e.target;t&&(n.checked?(L(),t.options.isPreserveHighlighting=!0):(V(),t.options.isPreserveHighlighting=!1))}}),e.createElement("h5",null,"Preserve Highlighting")))))};Gr.defaultProps={options:{isHighlightTextOn:!0,isPreserveHighlighting:!0,isSSROn:!1},styleOptions:{primaryColor:"#00D",secondaryColor:"#55F",bgColor:"#FFF",textColor:"#222",highlightColor1:"#98AFC7",highlightColor2:"#737CA1"}};export{C as SpeechSynth,Gr as default,Xe as useAudioReaderStore};
 //# sourceMappingURL=index.es.js.map
