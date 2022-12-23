@@ -2841,6 +2841,7 @@ const StyledButton = styled.button `
 	transition: all 0.5s linear;
 	border: none;
 	background: none;
+	padding: 1px 6px !important;
 	&:hover {
 		color: ${(props) => props.styleoptions.secondaryColor};
 	}
@@ -2850,7 +2851,7 @@ const StyledButton = styled.button `
 		left: 0;
 		bottom: -2px;
 		width: 0px;
-		height: 2px;
+		height: 1.2px;
 		background-color: ${(props) => props.styleoptions.primaryColor};
 		transition: all 0.2s ease-in;
 	}
@@ -2863,7 +2864,7 @@ const OptionsContainer$1 = styled.div `
 	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
-	height: 53px;
+	height: 46px;
 	bottom: 0px;
 	right: 0;
 	background-color: ${(props) => props.styleoptions.bgColor};
@@ -3419,7 +3420,7 @@ var lodash_debounce = debounce;
 /* Styled Components */
 const Container = styled.div `
 	position: fixed;
-	zindex: 1000;
+	z-index: 1000;
 	bottom: 5px;
 	right: ${(props) => (props.isvisible === 'true' ? '10px' : '-2000px')};
 	display: flex;
@@ -3432,20 +3433,21 @@ const Container = styled.div `
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
 	background-color: ${(props) => props.styleoptions.bgColor};
+	font-family: Arial, sans-serif !important;
 `;
 const WindowButton = styled.div `
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	z-index: 100;
-	font-size: 0.8rem;
-	width: 12;
-	height: 12;
+	font-size: 1rem !important;
+	width: 16px;
+	height: 16px;
 	border-radius: 3px;
 	border: 2px solid ${(props) => props.styleoptions.primaryColor};
 	background-color: ${(props) => props.styleoptions.bgColor};
 	color: ${(props) => props.styleoptions.textColor};
-	font-weight: bold;
+	font-weight: bold !important;
 	cursor: pointer;
 	transition: all 0.2s linear;
 	&:hover {
@@ -3462,15 +3464,17 @@ const SeekbarContainer = styled.div `
 `;
 const Time = styled.h5 `
 	width: 50px;
-	font-size: 0.6rem;
+	font-size: 0.7rem !important;
+	font-weight: normal !important;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	position: absolute;
-	top: 3px;
+	top: 19px;
 	left: -15px;
-	z-index: 100;
+	z-index: 100 !important;
 	color: #111;
+	margin: 0 !important;
 `;
 const Seekbar = styled.input `
 	width: 100%;
@@ -3531,7 +3535,7 @@ const ControlButton = styled.div `
 	border-radius: 50%;
 	background-color: ${(props) => props.styleoptions.bgColor};
 	color: ${(props) => props.styleoptions.primaryColor};
-	font-size: bold;
+	font-size: normal !important;
 	cursor: pointer;
 	border: 2px solid ${(props) => props.styleoptions.secondaryColor};
 	&:hover {
@@ -3540,7 +3544,7 @@ const ControlButton = styled.div `
 		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 	transition: all 0.2s;
-	font-size: 1rem;
+	font-size: 1rem !important;
 	pointer-events: ${(props) => props.isloading === 'true' ? 'none' : 'default'};
 `;
 const OptionsContainer = styled.div `
@@ -3591,7 +3595,7 @@ const ExtraSettings = styled.div `
 	pointer-events: ${(props) => props.issettingsvisible === 'true' ? 'all' : 'none'};
 	position: absolute;
 	width: 100%;
-	height: 51px;
+	height: 46px;
 	bottom: 0px;
 	right: 0px;
 	background-color: ${(props) => props.styleoptions.bgColor};
@@ -3617,6 +3621,8 @@ const ExtraSettings = styled.div `
 		margin: 0px;
 		font-size: 0.8rem;
 		margin-left: 1px;
+		font-weight: normal !important;
+		line-height: 20px !important;
 	}
 `;
 
@@ -3771,9 +3777,9 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
         }
     }, [isReading, textContainer, isFirstRender, setIsLoading]);
     return (React__default["default"].createElement(Container, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
-        React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '2px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },
+        React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '3px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },
             React__default["default"].createElement(MdOutlineClose, { title: "Close" })),
-        React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '20px' }, title: isMinimized ? 'Maximize' : 'Minimize', styleoptions: styleOptions, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React__default["default"].createElement(FiMaximize, null) : React__default["default"].createElement(FiMinimize, null)),
+        React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', styleoptions: styleOptions, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React__default["default"].createElement(FiMaximize, null) : React__default["default"].createElement(FiMinimize, null)),
         React__default["default"].createElement(SeekbarContainer, { isminimized: isMinimized.toString() },
             React__default["default"].createElement(Time, null, formatDuration_1(elapsedTime)),
             React__default["default"].createElement(Seekbar, { styleoptions: styleOptions, type: "range", min: "0", max: numberOfWords, step: "1", value: currentWordIndex, onChange: handleManualSeek }),

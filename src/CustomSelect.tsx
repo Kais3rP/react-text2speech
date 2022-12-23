@@ -46,6 +46,7 @@ const StyledButton = styled.button<IStyledButtonProps>`
 	transition: all 0.5s linear;
 	border: none;
 	background: none;
+	padding: 1px 6px !important;
 	&:hover {
 		color: ${(props) => props.styleoptions.secondaryColor};
 	}
@@ -55,7 +56,7 @@ const StyledButton = styled.button<IStyledButtonProps>`
 		left: 0;
 		bottom: -2px;
 		width: 0px;
-		height: 2px;
+		height: 1.2px;
 		background-color: ${(props) => props.styleoptions.primaryColor};
 		transition: all 0.2s ease-in;
 	}
@@ -69,7 +70,7 @@ const OptionsContainer = styled.div<IOptionsContainer>`
 	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
-	height: 53px;
+	height: 46px;
 	bottom: 0px;
 	right: 0;
 	background-color: ${(props) => props.styleoptions.bgColor};

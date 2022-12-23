@@ -45,7 +45,7 @@ interface IExtraSettings {
 
 export const Container = styled.div<IContainerProps>`
 	position: fixed;
-	zindex: 1000;
+	z-index: 1000;
 	bottom: 5px;
 	right: ${(props: any) => (props.isvisible === 'true' ? '10px' : '-2000px')};
 	display: flex;
@@ -59,6 +59,7 @@ export const Container = styled.div<IContainerProps>`
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
 	background-color: ${(props: any) => props.styleoptions.bgColor};
+	font-family: Arial, sans-serif !important;
 `;
 
 export const WindowButton = styled.div<IWindowButton>`
@@ -66,14 +67,14 @@ export const WindowButton = styled.div<IWindowButton>`
 	justify-content: center;
 	align-items: center;
 	z-index: 100;
-	font-size: 0.8rem;
-	width: 12;
-	height: 12;
+	font-size: 1rem !important;
+	width: 16px;
+	height: 16px;
 	border-radius: 3px;
 	border: 2px solid ${(props: any) => props.styleoptions.primaryColor};
 	background-color: ${(props: any) => props.styleoptions.bgColor};
 	color: ${(props: any) => props.styleoptions.textColor};
-	font-weight: bold;
+	font-weight: bold !important;
 	cursor: pointer;
 	transition: all 0.2s linear;
 	&:hover {
@@ -92,15 +93,17 @@ export const SeekbarContainer = styled.div<ISeekbarContainer>`
 
 export const Time = styled.h5`
 	width: 50px;
-	font-size: 0.6rem;
+	font-size: 0.7rem !important;
+	font-weight: normal !important;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	position: absolute;
-	top: 3px;
+	top: 19px;
 	left: -15px;
-	z-index: 100;
+	z-index: 100 !important;
 	color: #111;
+	margin: 0 !important;
 `;
 
 export const Seekbar = styled.input<ISeekBar>`
@@ -165,7 +168,7 @@ export const ControlButton = styled.div<IControlButton>`
 	border-radius: 50%;
 	background-color: ${(props: any) => props.styleoptions.bgColor};
 	color: ${(props: any) => props.styleoptions.primaryColor};
-	font-size: bold;
+	font-size: normal !important;
 	cursor: pointer;
 	border: 2px solid ${(props: any) => props.styleoptions.secondaryColor};
 	&:hover {
@@ -174,7 +177,7 @@ export const ControlButton = styled.div<IControlButton>`
 		color: ${(props: any) => props.styleoptions.secondaryColor};
 	}
 	transition: all 0.2s;
-	font-size: 1rem;
+	font-size: 1rem !important;
 	pointer-events: ${(props) =>
 		props.isloading === 'true' ? 'none' : 'default'};
 `;
@@ -232,7 +235,7 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 		props.issettingsvisible === 'true' ? 'all' : 'none'};
 	position: absolute;
 	width: 100%;
-	height: 51px;
+	height: 46px;
 	bottom: 0px;
 	right: 0px;
 	background-color: ${(props) => props.styleoptions.bgColor};
@@ -258,5 +261,7 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 		margin: 0px;
 		font-size: 0.8rem;
 		margin-left: 1px;
+		font-weight: normal !important;
+		line-height: 20px !important;
 	}
 `;

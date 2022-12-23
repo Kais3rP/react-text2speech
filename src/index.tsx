@@ -265,7 +265,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		>
 			{/* Close button */}
 			<WindowButton
-				style={{ position: 'absolute', top: '2px', right: '2px' }}
+				style={{ position: 'absolute', top: '2px', right: '3px' }}
 				styleoptions={styleOptions}
 				onPointerDown={handleHideReader}
 			>
@@ -273,7 +273,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			</WindowButton>
 			{/* Minimize button */}
 			<WindowButton
-				style={{ position: 'absolute', top: '2px', right: '20px' }}
+				style={{ position: 'absolute', top: '2px', right: '24px' }}
 				title={isMinimized ? 'Maximize' : 'Minimize'}
 				styleoptions={styleOptions}
 				onPointerDown={
