@@ -39,59 +39,162 @@ function App() {
 			</button>
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
-				The <em>European General Data Protection Regulation (GDPR)</em>{' '}
-				recently banned the usage of Google Analytics due to the <em>fact</em>.
-				<em>fact</em>.
-				<em>fact</em>.
-				<em>fact</em>.
-				<em>fact</em>.
-
-				that Google keeps users' data in US servers and this led to a
-				massive black hole for web developers, since GA was one of the
-				most used technology to monitor the usage of websites and web.
-
-				applications. After a brief search on web, it looked like there
-				were a lot of alternatives to GA, which are GDRP compliant, but
-				most of them do not offer FREE plans being served as cloud
-				services. There are a few ones though, that offer both a paid
-				Cloud based version and a free self-hosted version, I'll name
-				just two of them, Matomo and Umami . I picked the latter one
-				since it has a Github repo built with NextJS , which I'm
-				familiar with, in this post I'll show you how to setup a fully
-				working Analytics Dashboard and connect it to your website,
-				using a self hosted, and totally FREE solution thanks to Umami .
-				1. Fork the repo First of all you need to fork the github repo,
-				if you don't already own a github account, open one in a few
-				steps by going here . Fork this repo:
-				https://github.com/mikecao/umami.git Navigate to the repo and
-				click the fork button on the up-right section (it has 1.7 k
-				forks at the time of writing) . As you can see it's a NextJS
-				application, if you are not familiar with this technology it's
-				not a problem, since you won't have to edit code. NextJS is a
-				framework based on React , developed by Vercel , it uses a
-				serverless approach and lets you set up a rest API without a
-				dedicated web server, just by writing lambda functions. 2. Set
-				up a PostgreSQL Database Umami uses MySQL or PostgreSQL
-				Databases to keep the analytics data, hence you need to set up
-				and host one of these two and connect them to your NextJS
-				application, I'll show here how to easily set up a PostgreSQL DB
-				on Heroku . If you don't already have an Heroku account, open
-				one by going here . Heroku offers a free plan. Once you have
-				created an account, navigate to
-				https://dashboard.heroku.com/apps and click the New --> Create
-				new App button. Choose a geographic location and an app name
-				(Since this will only have to host your database, the app name
-				is not important) and proceed to create the App. Now you will be
-				redirected automatically to your newly created App dashboard,
-				but you still need to add the PostgreSQL DB. In order to do so,
-				you just need to go to the Resources Tab, type Postgres in the
-				Add-ons search box, and select Heroku Postgres from the dropdown
-				list. Choose the Hooby dev - free plan (or a paid version if you
-				prefer), and you're done. Now you should see the PostgreSQL
-				Addon in the Add-ons list. Just click on it to be redirected to
-				the Database dashboard. Just click on the Settings Tab and by
-				pressing on the View Credentials button you will be given the
-				personal credentials to access your brand new DB.
+				<h1>Ut vero dolorem ea illum fugit. </h1>
+				<p>
+					Lorem ipsum dolor sit amet. Et animi debitis eos tenetur
+					inventoreQui totam qui iure ratione ab distinctio deleniti
+					ut modi inventore. Sed totam iste et dolorem autem{' '}
+					<em>
+						Eum magni sit quaerat voluptate et officiis tempora in
+						laborum modi
+					</em>
+					. Ad dolorem illum qui quibusdam veritatisEum nihil rem quod
+					laborum hic doloremque nesciunt rem beatae iusto. Sit esse
+					libero non enim ametEum quidem et dignissimos repellat qui
+					voluptatem possimus. Et aperiam sapienteQui dignissimos ut
+					excepturi reiciendis sed dignissimos quidem ut ratione ullam
+					quo animi quas ea enim odio. Quo tempore internos At
+					corporis mollitia33 nemo sit voluptatem ullam cum mollitia
+					tempore ad minima soluta. Ut mollitia necessitatibus ea
+					delectus eiusqui voluptas! At fugiat praesentium aut
+					veritatis officiisut error.{' '}
+				</p>
+				<ul>
+					<li>
+						Vel consequatur officia rem error facere est doloribus
+						fugiat.{' '}
+					</li>
+					<li>
+						Qui tempore cumque non inventore culpa non adipisci
+						inventore.{' '}
+					</li>
+					<li>
+						Et voluptatem voluptatem et recusandae eius At tenetur
+						eaque.{' '}
+					</li>
+					<li>In voluptates velit hic facere reiciendis. </li>
+					<li>Qui officiis atque a voluptate aperiam. </li>
+					<li>
+						Quo harum consequatur aut saepe consequuntur aut
+						praesentium incidunt.{' '}
+					</li>
+				</ul>
+				<blockquote cite="https://www.loremipzum.com">
+					Est molestias assumenda non veritatis libero est voluptates
+					corrupti sed quis Quis et consequatur dolores.{' '}
+				</blockquote>
+				<h2>Vel natus dignissimos ad totam earum a omnis enim! </h2>
+				<p>
+					Ad impedit temporaQui quos sit aliquid enim qui maxime modi
+					non fugiat voluptatem non accusantium galisum vel voluptate
+					fuga. Sed architecto veritatis ut iusto asperioresest
+					consectetur et inventore illum. Et commodi quasiAut
+					asperiores est accusamus quidem eum explicabo facilis? 33
+					nihil modiAut voluptates 33 quis fuga aut quia ullam sed
+					voluptate provident aut fugiat nesciunt? Et explicabo illo
+					qui veritatis impeditEum velit eos ratione sunt est nihil
+					nobis aut provident delectus et galisum eius. Et omnis
+					eaqueUt quae qui pariatur ratione eos mollitia saepe? Aut
+					repellendus quaerat <em>Aut quibusdam</em> et iusto quia.
+					Sit ratione omnis quo deserunt itaqueEst nobis et culpa
+					dolorum rem similique culpa ad amet aliquam aut totam velit.
+					Ea modi architecto ut eveniet ipsamIn eveniet ut pariatur
+					libero eos eveniet voluptatem cum iste galisum. Non dolorum
+					nobisQuo dolore est quibusdam quidem eos mollitia explicabo
+					ab esse rerum quo optio facilis eum galisum laudantium. In
+					fuga nesciunt{' '}
+					<a
+						href="https://www.loremipzum.com"
+						target="_blank"
+						rel="noreferrer"
+					>
+						Et assumenda sit doloremque dicta est beatae doloremque
+					</a>{' '}
+					33 ratione natus id voluptas quidem ut inventore
+					consequatur.{' '}
+				</p>
+				<ol>
+					<li>
+						Et voluptatem dolor aut perspiciatis nesciunt id
+						nesciunt ipsum.{' '}
+					</li>
+					<li>Ut unde odit et labore Quis. </li>
+					<li>
+						Non quia doloribus ut doloremque rerum in galisum
+						exercitationem ut rerum ipsa.{' '}
+					</li>
+					<li>
+						Ut quia voluptas qui perferendis earum aut
+						exercitationem aspernatur.{' '}
+					</li>
+					<li>
+						Sit eius aperiam ut tenetur asperiores est debitis
+						doloremque qui quaerat quaerat.{' '}
+					</li>
+				</ol>
+				<h3>Qui laborum quidem et vero autem ut quos aliquam. </h3>
+				<p>
+					Aut accusantium consequatur et reprehenderit eiuset magni et
+					quas doloremque qui ipsam quia. Ut voluptate numquamEum
+					beatae et voluptas dignissimos. Non laborum nesciunt ad
+					rerum nesciuntEst praesentium aut veniam modi nam culpa
+					nulla quo autem fugiat. Cum atque rationeNon neque sit
+					ratione fugiat qui aspernatur quos vel voluptates facilis.
+					Est consequatur illo est quis teneturqui Quis aut itaque
+					quae ea laborum omnis. Ut eligendi magnamEx pariatur in
+					quasi enim est quia impedit et odio nulla. Aut repudiandae
+					quos aut possimus maxime{' '}
+					<strong>Ut quaerat qui ullam dolorem</strong> id ratione
+					neque qui iste minima quo quia eius. Nam optio vitae ea
+					cumque repudiandae{' '}
+					<a
+						href="https://www.loremipzum.com"
+						target="_blank"
+						rel="noreferrer"
+					>
+						Non molestias eos accusantium laboriosam
+					</a>{' '}
+					qui velit dolorem in sapiente voluptates At nihil totam. Non
+					illum aspernatur sit similique odita iste est iure
+					consequatur. Eos impedit adipisci ut recusandae rerumEum
+					culpa qui excepturi sequi. Sed magni laudantium At odit
+					quisNon fuga sit alias libero sit dolorem dolorem qui itaque
+					doloremque qui optio excepturi. Vel aliquid voluptasEt quae
+					cum soluta molestiae non saepe dolores eum voluptatibus
+					asperiores et possimus enim. Et distinctio officia qui
+					tempora fugaAut porro est recusandae repellat. Ea placeat
+					commodi quo excepturi enimId iste?{' '}
+				</p>
+				<dl>
+					<dt>
+						<dfn>Sed eius placeat sed repellat dicta. </dfn>
+					</dt>
+					<dd>Aut omnis mollitia id dignissimos ipsum. </dd>
+					<dt>
+						<dfn>
+							Aut perferendis tempore non dolore reiciendis.{' '}
+						</dfn>
+					</dt>
+					<dd>Et expedita internos qui voluptatibus sint. </dd>
+				</dl>
+				<pre>
+					<code>
+						&lt;!-- Ut quae dolorum. --&gt;
+						<br />
+						&lt;quidem&gt;Sit beatae repellat et omnis libero qui
+						nihil aspernatur?&lt;/quidem&gt;
+						<br />
+						&lt;aut&gt;Ut earum corrupti est neque sapiente rem
+						nostrum debitis.&lt;/aut&gt;
+						<br />
+						&lt;reprehenderit&gt;Ut sunt
+						mollitia.&lt;/reprehenderit&gt;
+						<br />
+						&lt;aperiam&gt;Vel fugit galisum et voluptate
+						omnis.&lt;/aperiam&gt;
+						<br />
+					</code>
+				</pre>
 			</div>
 		</div>
 	);

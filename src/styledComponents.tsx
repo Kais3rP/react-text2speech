@@ -58,6 +58,7 @@ export const Container = styled.div<IContainerProps>`
 	transition: all 200ms linear;
 	width: ${(props: any) =>
 		props.isminimized === 'true' ? '150px' : '300px'};
+	height: 125px;
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
