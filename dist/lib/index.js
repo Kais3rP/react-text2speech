@@ -216,11 +216,13 @@ export class SpeechSynth extends EventEmitter {
         /* Apply highlight style */
         wordToHighlight.style.backgroundColor = this.style.color1;
         wordToHighlight.style.boxShadow = `8px 0px 0px 0px ${this.style.color1}`;
+        wordToHighlight.style.textDecoration = 'underline';
     }
     resetHighlight() {
         this.state.highlightedWords.forEach((n) => {
             n.style.backgroundColor = '';
             n.style.boxShadow = '';
+            n.style.textDecoration = 'none';
             this.state.highlightedWords = [];
         });
     }
@@ -412,6 +414,7 @@ export class SpeechSynth extends EventEmitter {
             else if (typeof window !== 'undefined' &&
                 node instanceof HTMLElement)
                 code = node.innerHTML;
+            console.log('INNER HTML', code);
             code = code
                 .split('\n') // Add br break line in place of \n
                 .join('<br/>')

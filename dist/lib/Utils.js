@@ -31,7 +31,7 @@ export class Utils {
         return /<\/code>/.test(str);
     }
     static isSpecialCharacter(str) {
-        return /^([.,;:\-_`'"*+()[]\{\}<>\s\n])$/.test(str);
+        return /^([.,;:\-_`'"*+()[\]{}<>\s\n])$/.test(str);
     }
     static isHTMLEntity(str) {
         return /&[a-z]+?;+/.test(str);

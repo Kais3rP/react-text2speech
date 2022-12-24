@@ -64,6 +64,7 @@ export const Container = styled.div<IContainerProps>`
 	padding: 15px;
 	background-color: ${(props: any) => props.styleoptions.bgColor};
 	font-family: Arial, sans-serif !important;
+	box-sizing: border-box;
 	& * {
 		box-sizing: border-box;
 	}

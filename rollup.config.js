@@ -7,6 +7,8 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
+import analyze from 'rollup-plugin-analyzer';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default {
 	input: `src/index.tsx`,
@@ -64,5 +66,7 @@ export default {
 		}),
 		// Resolve source maps to the original source
 		sourceMaps(),
+		// analyze(),
+		visualizer(),
 	],
 };

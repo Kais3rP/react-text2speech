@@ -17,15 +17,16 @@ const Container = styled.div `
 `;
 const StyledButton = styled.button `
 	position: relative;
-	font-size: 0.7rem;
+	font-size: 0.7em;
 	font-weight: bold;
-	color: ${(props) => props.styleOptions.primaryColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	cursor: pointer;
 	transition: all 0.5s linear;
 	border: none;
 	background: none;
+	padding: 1px 6px !important;
 	&:hover {
-		color: ${(props) => props.styleOptions.secondaryColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 	&::after {
 		content: '';
@@ -33,8 +34,8 @@ const StyledButton = styled.button `
 		left: 0;
 		bottom: -2px;
 		width: 0px;
-		height: 2px;
-		background-color: ${(props) => props.styleOptions.primaryColor};
+		height: 1.2px;
+		background-color: ${(props) => props.styleoptions.primaryColor};
 		transition: all 0.2s ease-in;
 	}
 	&:hover::after {
@@ -46,11 +47,11 @@ const OptionsContainer = styled.div `
 	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
 	width: 100%;
-	height: 53px;
+	height: 46px;
 	bottom: 0px;
 	right: 0;
-	background-color: ${(props) => props.styleOptions.bgColor};
-	color: ${(props) => props.styleOptions.primaryColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	z-index: 100;
 	display: flex;
 	flex-wrap: wrap;
@@ -60,7 +61,7 @@ const OptionsContainer = styled.div `
 `;
 export const Button = (_a) => {
     var { children, styleOptions } = _a, props = __rest(_a, ["children", "styleOptions"]);
-    return (React.createElement(StyledButton, Object.assign({ styleOptions: styleOptions }, props), children));
+    return (React.createElement(StyledButton, Object.assign({ styleoptions: styleOptions }, props), children));
 };
 const CustomSelect = (_a) => {
     var _b;
@@ -79,8 +80,8 @@ const CustomSelect = (_a) => {
     };
     useOnClickOutside(ref, hide);
     return (React.createElement(Container, Object.assign({}, props),
-        React.createElement(StyledButton, { type: "button", onClick: show, styleOptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
-        React.createElement(OptionsContainer, { ref: ref, styleOptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React.createElement(Button, { key: opt.value, onClick: () => {
+        React.createElement(StyledButton, { type: "button", onClick: show, styleoptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
+        React.createElement(OptionsContainer, { ref: ref, styleoptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React.createElement(Button, { key: opt.value, onClick: () => {
                 onOptionClick(opt.value);
             }, styleOptions: styleOptions }, opt.name))))));
 };

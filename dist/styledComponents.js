@@ -2,68 +2,73 @@ import { BiDotsHorizontal, BiReset } from 'react-icons/bi';
 import styled from 'styled-components';
 /* Styled Components */
 export const Container = styled.div `
+	font-size: 16px;
 	position: fixed;
-	zindex: 1000;
+	z-index: 1000;
 	bottom: 5px;
-	right: ${(props) => (props.isVisible ? '10px' : '-2000px')};
+	right: ${(props) => (props.isvisible === 'true' ? '10px' : '-2000px')};
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	transition: all 200ms linear;
-	width: ${(props) => (props.isMinimized ? '150px' : '300px')};
+	width: ${(props) => props.isminimized === 'true' ? '150px' : '300px'};
+	height: 125px;
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
-	background-color: ${(props) => props.styleOptions.bgColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	font-family: Arial, sans-serif !important;
+	& * {
+		box-sizing: border-box;
+	}
 `;
 export const WindowButton = styled.div `
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	z-index: 100;
-	font-size: 0.8rem;
-	width: 12;
-	height: 12;
+	font-size: 1em !important;
+	width: 20px;
+	height: 20px;
 	border-radius: 3px;
-	border: 2px solid ${(props) => props.styleOptions.primaryColor};
-	background-color: ${(props) => props.styleOptions.bgColor};
-	color: ${(props) => props.styleOptions.textColor};
-	font-weight: bold;
+	border: 2px solid ${(props) => props.styleoptions.primaryColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.textColor};
+	font-weight: bold !important;
 	cursor: pointer;
-	position: absolute;
-	top: 2px;
-	right: 2px;
 	transition: all 0.2s linear;
 	&:hover {
-		backgroundcolor: ${(props) => props.styleOptions.bgColor};
-		color: ${(props) => props.styleOptions.secondaryColor};
+		backgroundcolor: ${(props) => props.styleoptions.bgColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 `;
 export const SeekbarContainer = styled.div `
 	text-align: center;
-	width: ${(props) => (props.isMinimized ? '100%' : '90%')};
+	width: ${(props) => (props.isminimized === 'true' ? '100%' : '90%')};
 	position: relative;
 	z-index: 2;
 	margin-top: 10px;
 `;
 export const Time = styled.h5 `
 	width: 50px;
-	font-size: 0.6rem;
+	font-size: 0.7em !important;
+	font-weight: normal !important;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	position: absolute;
-	top: 3px;
+	top: 19px;
 	left: -15px;
-	z-index: 100;
+	z-index: 100 !important;
 	color: #111;
+	margin: 0 !important;
 `;
 export const Seekbar = styled.input `
 	width: 100%;
 	appearance: none;
 	height: 2px;
-	background: ${(props) => props.styleOptions.primaryColor};
+	background: ${(props) => props.styleoptions.primaryColor};
 	outline: none;
 	opacity: 0.7;
 	transition: opacity 0.2s;
@@ -71,9 +76,9 @@ export const Seekbar = styled.input `
 		appearance: none;
 		width: 14px; /* Set a specific slider handle width */
 		height: 14px; /* Slider handle height */
-		background: ${(props) => props.styleOptions.bgColor};
+		background: ${(props) => props.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props) => props.styleOptions.primaryColor};
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -88,9 +93,9 @@ export const Seekbar = styled.input `
 		appearance: none;
 		width: 12px; /* Set a specific slider handle width */
 		height: 12px; /* Slider handle height */
-		background: ${(props) => props.styleOptions.bgColor};
+		background: ${(props) => props.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props) => props.styleOptions.primaryColor};
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
 		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -110,25 +115,25 @@ export const ControlsContainer = styled.div `
 		justify-content: center;
 		align-items: center;
 	}
-	${(props) => props.isMinimized
+	${(props) => props.isminimized === 'true'
     ? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
     : 'padding-top: 2px'}
 `;
 export const ControlButton = styled.div `
 	border-radius: 50%;
-	background-color: ${(props) => props.styleOptions.bgColor};
-	color: ${(props) => props.styleOptions.primaryColor};
-	font-size: bold;
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.primaryColor};
+	font-weight: normal !important;
 	cursor: pointer;
-	border: 2px solid ${(props) => props.styleOptions.secondaryColor};
+	border: 2px solid ${(props) => props.styleoptions.secondaryColor};
 	&:hover {
-		border: 2px solid ${(props) => props.styleOptions.primaryColor};
-		background-color: ${(props) => props.styleOptions.bgColor};
-		color: ${(props) => props.styleOptions.secondaryColor};
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
+		background-color: ${(props) => props.styleoptions.bgColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 	transition: all 0.2s;
-	font-size: 1rem;
-	pointer-events: ${(props) => (props.isLoading ? 'none' : 'default')};
+	font-size: 1.1em;
+	pointer-events: ${(props) => props.isloading === 'true' ? 'none' : 'auto'};
 `;
 export const OptionsContainer = styled.div `
 	display: flex;
@@ -148,13 +153,13 @@ export const OptionsContainer = styled.div `
 	}
 `;
 export const Dots = styled(BiDotsHorizontal) `
-	font-size: 0.8rem;
-	color: ${(props) => props.styleOptions.primaryColor};
+	font-size: 0.8em;
+	color: ${(props) => props.styleoptions.primaryColor};
 	margin-bottom: 3px;
 	padding: 0px;
 	cursor: pointer;
 	&:hover {
-		color: ${(props) => props.styleOptions.secondaryColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 `;
 export const Reset = styled(BiReset) `
@@ -164,31 +169,31 @@ export const Reset = styled(BiReset) `
 	font-weight: bold;
 	cursor: pointer;
 	transition: 0.2s ease-in;
-	font-size: 0.9rem;
-	color: ${(props) => props.styleOptions.primaryColor};
+	font-size: 0.9em;
+	color: ${(props) => props.styleoptions.primaryColor};
 	&:hover {
-		color: ${(props) => props.styleOptions.secondaryColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
 	}
 `;
 export const SliderContainer = styled.div `
 	width: 70px;
 `;
 export const ExtraSettings = styled.div `
-	opacity: ${(props) => (props.issettingsvisible ? 1 : 0)};
-	pointer-events: ${(props) => (props.issettingsvisible ? 'all' : 'none')};
+	opacity: ${(props) => (props.issettingsvisible === 'true' ? 1 : 0)};
+	pointer-events: ${(props) => props.issettingsvisible === 'true' ? 'all' : 'none'};
 	position: absolute;
 	width: 100%;
-	height: 53px;
+	height: 46px;
 	bottom: 0px;
 	right: 0px;
-	background-color: ${(props) => props.styleOptions.bgColor};
-	color: ${(props) => props.styleOptions.primaryColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.primaryColor};
 	z-index: 100;
 	display: flex;
 	justify-content: start;
 	align-items: center;
 	transition: all 0.2s linear;
-
+	padding: 0px 0px 0px 10px;
 	& label {
 		display: flex;
 		padding: 0px;
@@ -202,8 +207,14 @@ export const ExtraSettings = styled.div `
 	& h5 {
 		padding: 0px;
 		margin: 0px;
-		font-size: 0.8rem;
+		font-size: 0.8em;
 		margin-left: 1px;
+		font-weight: normal !important;
+		line-height: 20px !important;
 	}
+`;
+export const CheckBox = styled.input `
+	margin: 0 !important;
+	padding: 0 !important;
 `;
 //# sourceMappingURL=styledComponents.js.map
