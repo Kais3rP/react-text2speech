@@ -54,7 +54,7 @@ const {
 3. Using the Component is as easy as doing:
 `<AudioReader textContainer={node} />`
 Where `node` must be an `HTMLElement` containing the text or HTML child nodes containing text, that you want to be read. 
-Since in React the refs receive the reference to the DOM element after the first render, the best way to pass the `ref` to the `AudioReader` Component is setting it as a React State:
+Since in React the DOM refs receive the reference to the DOM element after the first render, the best way to pass the `ref` to the `AudioReader` Component is setting it as a React State:
 ```javascript
 const [node, setNode] = useState(null);
 
@@ -65,9 +65,15 @@ const [node, setNode] = useState(null);
 
 ```
 
-4. The `AudioReader` Component expects just the `textContainer` prop, you can pass two extra props though 
+4. The `AudioReader` Component expects just the `textContainer` prop as required, you can pass two extra props though to tweak style and options:
 
 ## API / Props
+
+| Props         | Default value                                                                      | Required |
+|---------------|------------------------------------------------------------------------------------|----------|
+| textContainer | undefined                                                                          | true     |
+| styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" } | false    |
+| options       | { isHighlightTextOn: true, isPreserveHighlighting: true, isSSROn: false }          | false    |
 
 ## License
 
