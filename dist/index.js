@@ -1631,7 +1631,7 @@ middleware.subscribeWithSelector;
 
 function n$1(n){for(var r=arguments.length,t=Array(r>1?r-1:0),e=1;e<r;e++)t[e-1]=arguments[e];if("production"!==process.env.NODE_ENV){var i=Y$1[n],o=i?"function"==typeof i?i.apply(null,t):i:"unknown error nr: "+n;throw Error("[Immer] "+o)}throw Error("[Immer] minified error nr: "+n+(t.length?" "+t.map((function(n){return "'"+n+"'"})).join(","):"")+". Find the full error at: https://bit.ly/3cXEKWf")}function r$1(n){return !!n&&!!n[Q$1]}function t$1(n){return !!n&&(function(n){if(!n||"object"!=typeof n)return !1;var r=Object.getPrototypeOf(n);if(null===r)return !0;var t=Object.hasOwnProperty.call(r,"constructor")&&r.constructor;return t===Object||"function"==typeof t&&Function.toString.call(t)===Z$1}(n)||Array.isArray(n)||!!n[L$1]||!!n.constructor[L$1]||s(n)||v$2(n))}function i(n,r,t){void 0===t&&(t=!1),0===o(n)?(t?Object.keys:nn)(n).forEach((function(e){t&&"symbol"==typeof e||r(e,n[e],n);})):n.forEach((function(t,e){return r(e,t,n)}));}function o(n){var r=n[Q$1];return r?r.i>3?r.i-4:r.i:Array.isArray(n)?1:s(n)?2:v$2(n)?3:0}function u(n,r){return 2===o(n)?n.has(r):Object.prototype.hasOwnProperty.call(n,r)}function a(n,r){return 2===o(n)?n.get(r):n[r]}function f$1(n,r,t){var e=o(n);2===e?n.set(r,t):3===e?(n.delete(r),n.add(t)):n[r]=t;}function c$1(n,r){return n===r?0!==n||1/n==1/r:n!=n&&r!=r}function s(n){return X$1&&n instanceof Map}function v$2(n){return q$2&&n instanceof Set}function p$1(n){return n.o||n.t}function l$1(n){if(Array.isArray(n))return Array.prototype.slice.call(n);var r=rn(n);delete r[Q$1];for(var t=nn(r),e=0;e<t.length;e++){var i=t[e],o=r[i];!1===o.writable&&(o.writable=!0,o.configurable=!0),(o.get||o.set)&&(r[i]={configurable:!0,writable:!0,enumerable:o.enumerable,value:n[i]});}return Object.create(Object.getPrototypeOf(n),r)}function d$1(n,e){return void 0===e&&(e=!1),y$2(n)||r$1(n)||!t$1(n)?n:(o(n)>1&&(n.set=n.add=n.clear=n.delete=h$1),Object.freeze(n),e&&i(n,(function(n,r){return d$1(r,!0)}),!0),n)}function h$1(){n$1(2);}function y$2(n){return null==n||"object"!=typeof n||Object.isFrozen(n)}function b$2(r){var t=tn[r];return t||n$1(18,r),t}function _$1(){return "production"===process.env.NODE_ENV||U$1||n$1(0),U$1}function j$1(n,r){r&&(b$2("Patches"),n.u=[],n.s=[],n.v=r);}function O$1(n){g$2(n),n.p.forEach(S$1),n.p=null;}function g$2(n){n===U$1&&(U$1=n.l);}function w$2(n){return U$1={p:[],l:U$1,h:n,m:!0,_:0}}function S$1(n){var r=n[Q$1];0===r.i||1===r.i?r.j():r.O=!0;}function P(r,e){e._=e.p.length;var i=e.p[0],o=void 0!==r&&r!==i;return e.h.g||b$2("ES5").S(e,r,o),o?(i[Q$1].P&&(O$1(e),n$1(4)),t$1(r)&&(r=M$1(e,r),e.l||x$2(e,r)),e.u&&b$2("Patches").M(i[Q$1].t,r,e.u,e.s)):r=M$1(e,i,[]),O$1(e),e.u&&e.v(e.u,e.s),r!==H$1?r:void 0}function M$1(n,r,t){if(y$2(r))return r;var e=r[Q$1];if(!e)return i(r,(function(i,o){return A$1(n,e,r,i,o,t)}),!0),r;if(e.A!==n)return r;if(!e.P)return x$2(n,e.t,!0),e.t;if(!e.I){e.I=!0,e.A._--;var o=4===e.i||5===e.i?e.o=l$1(e.k):e.o;i(3===e.i?new Set(o):o,(function(r,i){return A$1(n,e,o,r,i,t)})),x$2(n,o,!1),t&&n.u&&b$2("Patches").R(e,t,n.u,n.s);}return e.o}function A$1(e,i,o,a,c,s){if("production"!==process.env.NODE_ENV&&c===o&&n$1(5),r$1(c)){var v=M$1(e,c,s&&i&&3!==i.i&&!u(i.D,a)?s.concat(a):void 0);if(f$1(o,a,v),!r$1(v))return;e.m=!1;}if(t$1(c)&&!y$2(c)){if(!e.h.F&&e._<1)return;M$1(e,c),i&&i.A.l||x$2(e,c);}}function x$2(n,r,t){void 0===t&&(t=!1),n.h.F&&n.m&&d$1(r,t);}function z$2(n,r){var t=n[Q$1];return (t?p$1(t):n)[r]}function I$1(n,r){if(r in n)for(var t=Object.getPrototypeOf(n);t;){var e=Object.getOwnPropertyDescriptor(t,r);if(e)return e;t=Object.getPrototypeOf(t);}}function k$2(n){n.P||(n.P=!0,n.l&&k$2(n.l));}function E$1(n){n.o||(n.o=l$1(n.t));}function R$1(n,r,t){var e=s(r)?b$2("MapSet").N(r,t):v$2(r)?b$2("MapSet").T(r,t):n.g?function(n,r){var t=Array.isArray(n),e={i:t?1:0,A:r?r.A:_$1(),P:!1,I:!1,D:{},l:r,t:n,k:null,o:null,j:null,C:!1},i=e,o=en;t&&(i=[e],o=on);var u=Proxy.revocable(i,o),a=u.revoke,f=u.proxy;return e.k=f,e.j=a,f}(r,t):b$2("ES5").J(r,t);return (t?t.A:_$1()).p.push(e),e}function D$1(e){return r$1(e)||n$1(22,e),function n(r){if(!t$1(r))return r;var e,u=r[Q$1],c=o(r);if(u){if(!u.P&&(u.i<4||!b$2("ES5").K(u)))return u.t;u.I=!0,e=F$1(r,c),u.I=!1;}else e=F$1(r,c);return i(e,(function(r,t){u&&a(u.t,r)===t||f$1(e,r,n(t));})),3===c?new Set(e):e}(e)}function F$1(n,r){switch(r){case 2:return new Map(n);case 3:return Array.from(n)}return l$1(n)}var G$1,U$1,W$1="undefined"!=typeof Symbol&&"symbol"==typeof Symbol("x"),X$1="undefined"!=typeof Map,q$2="undefined"!=typeof Set,B$1="undefined"!=typeof Proxy&&void 0!==Proxy.revocable&&"undefined"!=typeof Reflect,H$1=W$1?Symbol.for("immer-nothing"):((G$1={})["immer-nothing"]=!0,G$1),L$1=W$1?Symbol.for("immer-draftable"):"__$immer_draftable",Q$1=W$1?Symbol.for("immer-state"):"__$immer_state",Y$1={0:"Illegal state",1:"Immer drafts cannot have computed properties",2:"This object has been frozen and should not be mutated",3:function(n){return "Cannot use a proxy that has been revoked. Did you pass an object from inside an immer function to an async process? "+n},4:"An immer producer returned a new value *and* modified its draft. Either return a new value *or* modify the draft.",5:"Immer forbids circular references",6:"The first or second argument to `produce` must be a function",7:"The third argument to `produce` must be a function or undefined",8:"First argument to `createDraft` must be a plain object, an array, or an immerable object",9:"First argument to `finishDraft` must be a draft returned by `createDraft`",10:"The given draft is already finalized",11:"Object.defineProperty() cannot be used on an Immer draft",12:"Object.setPrototypeOf() cannot be used on an Immer draft",13:"Immer only supports deleting array indices",14:"Immer only supports setting array indices and the 'length' property",15:function(n){return "Cannot apply patch, path doesn't resolve: "+n},16:'Sets cannot have "replace" patches.',17:function(n){return "Unsupported patch operation: "+n},18:function(n){return "The plugin for '"+n+"' has not been loaded into Immer. To enable the plugin, import and call `enable"+n+"()` when initializing your application."},20:"Cannot use proxies if Proxy, Proxy.revocable or Reflect are not available",21:function(n){return "produce can only be called on things that are draftable: plain objects, arrays, Map, Set or classes that are marked with '[immerable]: true'. Got '"+n+"'"},22:function(n){return "'current' expects a draft, got: "+n},23:function(n){return "'original' expects a draft, got: "+n},24:"Patching reserved attributes like __proto__, prototype and constructor is not allowed"},Z$1=""+Object.prototype.constructor,nn="undefined"!=typeof Reflect&&Reflect.ownKeys?Reflect.ownKeys:void 0!==Object.getOwnPropertySymbols?function(n){return Object.getOwnPropertyNames(n).concat(Object.getOwnPropertySymbols(n))}:Object.getOwnPropertyNames,rn=Object.getOwnPropertyDescriptors||function(n){var r={};return nn(n).forEach((function(t){r[t]=Object.getOwnPropertyDescriptor(n,t);})),r},tn={},en={get:function(n,r){if(r===Q$1)return n;var e=p$1(n);if(!u(e,r))return function(n,r,t){var e,i=I$1(r,t);return i?"value"in i?i.value:null===(e=i.get)||void 0===e?void 0:e.call(n.k):void 0}(n,e,r);var i=e[r];return n.I||!t$1(i)?i:i===z$2(n.t,r)?(E$1(n),n.o[r]=R$1(n.A.h,i,n)):i},has:function(n,r){return r in p$1(n)},ownKeys:function(n){return Reflect.ownKeys(p$1(n))},set:function(n,r,t){var e=I$1(p$1(n),r);if(null==e?void 0:e.set)return e.set.call(n.k,t),!0;if(!n.P){var i=z$2(p$1(n),r),o=null==i?void 0:i[Q$1];if(o&&o.t===t)return n.o[r]=t,n.D[r]=!1,!0;if(c$1(t,i)&&(void 0!==t||u(n.t,r)))return !0;E$1(n),k$2(n);}return n.o[r]===t&&"number"!=typeof t&&(void 0!==t||r in n.o)||(n.o[r]=t,n.D[r]=!0,!0)},deleteProperty:function(n,r){return void 0!==z$2(n.t,r)||r in n.t?(n.D[r]=!1,E$1(n),k$2(n)):delete n.D[r],n.o&&delete n.o[r],!0},getOwnPropertyDescriptor:function(n,r){var t=p$1(n),e=Reflect.getOwnPropertyDescriptor(t,r);return e?{writable:!0,configurable:1!==n.i||"length"!==r,enumerable:e.enumerable,value:t[r]}:e},defineProperty:function(){n$1(11);},getPrototypeOf:function(n){return Object.getPrototypeOf(n.t)},setPrototypeOf:function(){n$1(12);}},on={};i(en,(function(n,r){on[n]=function(){return arguments[0]=arguments[0][0],r.apply(this,arguments)};})),on.deleteProperty=function(r,t){return "production"!==process.env.NODE_ENV&&isNaN(parseInt(t))&&n$1(13),on.set.call(this,r,t,void 0)},on.set=function(r,t,e){return "production"!==process.env.NODE_ENV&&"length"!==t&&isNaN(parseInt(t))&&n$1(14),en.set.call(this,r[0],t,e,r[0])};var un=function(){function e(r){var e=this;this.g=B$1,this.F=!0,this.produce=function(r,i,o){if("function"==typeof r&&"function"!=typeof i){var u=i;i=r;var a=e;return function(n){var r=this;void 0===n&&(n=u);for(var t=arguments.length,e=Array(t>1?t-1:0),o=1;o<t;o++)e[o-1]=arguments[o];return a.produce(n,(function(n){var t;return (t=i).call.apply(t,[r,n].concat(e))}))}}var f;if("function"!=typeof i&&n$1(6),void 0!==o&&"function"!=typeof o&&n$1(7),t$1(r)){var c=w$2(e),s=R$1(e,r,void 0),v=!0;try{f=i(s),v=!1;}finally{v?O$1(c):g$2(c);}return "undefined"!=typeof Promise&&f instanceof Promise?f.then((function(n){return j$1(c,o),P(n,c)}),(function(n){throw O$1(c),n})):(j$1(c,o),P(f,c))}if(!r||"object"!=typeof r){if(void 0===(f=i(r))&&(f=r),f===H$1&&(f=void 0),e.F&&d$1(f,!0),o){var p=[],l=[];b$2("Patches").M(r,f,p,l),o(p,l);}return f}n$1(21,r);},this.produceWithPatches=function(n,r){if("function"==typeof n)return function(r){for(var t=arguments.length,i=Array(t>1?t-1:0),o=1;o<t;o++)i[o-1]=arguments[o];return e.produceWithPatches(r,(function(r){return n.apply(void 0,[r].concat(i))}))};var t,i,o=e.produce(n,r,(function(n,r){t=n,i=r;}));return "undefined"!=typeof Promise&&o instanceof Promise?o.then((function(n){return [n,t,i]})):[o,t,i]},"boolean"==typeof(null==r?void 0:r.useProxies)&&this.setUseProxies(r.useProxies),"boolean"==typeof(null==r?void 0:r.autoFreeze)&&this.setAutoFreeze(r.autoFreeze);}var i=e.prototype;return i.createDraft=function(e){t$1(e)||n$1(8),r$1(e)&&(e=D$1(e));var i=w$2(this),o=R$1(this,e,void 0);return o[Q$1].C=!0,g$2(i),o},i.finishDraft=function(r,t){var e=r&&r[Q$1];"production"!==process.env.NODE_ENV&&(e&&e.C||n$1(9),e.I&&n$1(10));var i=e.A;return j$1(i,t),P(void 0,i)},i.setAutoFreeze=function(n){this.F=n;},i.setUseProxies=function(r){r&&!B$1&&n$1(20),this.g=r;},i.applyPatches=function(n,t){var e;for(e=t.length-1;e>=0;e--){var i=t[e];if(0===i.path.length&&"replace"===i.op){n=i.value;break}}e>-1&&(t=t.slice(e+1));var o=b$2("Patches").$;return r$1(n)?o(n,t):this.produce(n,(function(n){return o(n,t)}))},e}(),an=new un,fn=an.produce;an.produceWithPatches.bind(an);an.setAutoFreeze.bind(an);an.setUseProxies.bind(an);an.applyPatches.bind(an);an.createDraft.bind(an);an.finishDraft.bind(an);
 
-const useAudioReaderStore = create()(middleware_2(middleware_3((set) => ({
+const useTextReaderStore = create()(middleware_2(middleware_3((set) => ({
     isReading: false,
     isLoading: false,
     rate: '1',
@@ -1670,10 +1670,10 @@ const useAudioReaderStore = create()(middleware_2(middleware_3((set) => ({
     hideSettings: () => set(fn((state) => {
         state.isSettingsVisible = false;
     })),
-    showAudioReader: () => set(fn((state) => {
+    showTextReader: () => set(fn((state) => {
         state.isVisible = true;
     })),
-    hideAudioReader: () => set(fn((state) => {
+    hideTextReader: () => set(fn((state) => {
         state.isVisible = false;
     })),
     minimize: () => set(fn((state) => {
@@ -1704,7 +1704,7 @@ const useAudioReaderStore = create()(middleware_2(middleware_3((set) => ({
         state.elapsedTime = time;
     })),
 }), {
-    name: 'IAudioReaderState',
+    name: 'ITextReaderState',
     partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => ![
         'elapsedTime',
         'isReading',
@@ -3636,26 +3636,26 @@ const CheckBox = styled.input `
 	padding: 0 !important;
 `;
 
-const AudioReader = ({ textContainer, options, styleOptions }) => {
+const TextReader = ({ textContainer, options, styleOptions }) => {
     const isFirstRender = useIsFirstRender();
-    const { isReading, rate, voice, voices, volume, elapsedTime, currentWordIndex, duration, numberOfWords, isLoading, stopReading, startReading, setRate, setVoice, setVoices, setVolume, setElapsedTime, isMinimized, minimize, maximize, hideAudioReader, isVisible, isSettingsVisible, showSettings, hideSettings, isPreserveHighlighting, enablePreserveHighlighting, disablePreserveHighlighting, setNumberOfWords, setCurrentWordIndex, setDuration, setIsLoading, } = useAudioReaderStore();
-    const audioReaderRef = React.useRef();
+    const { isReading, rate, voice, voices, volume, elapsedTime, currentWordIndex, duration, numberOfWords, isLoading, stopReading, startReading, setRate, setVoice, setVoices, setVolume, setElapsedTime, isMinimized, minimize, maximize, hideTextReader, isVisible, isSettingsVisible, showSettings, hideSettings, isPreserveHighlighting, enablePreserveHighlighting, disablePreserveHighlighting, setNumberOfWords, setCurrentWordIndex, setDuration, setIsLoading, } = useTextReaderStore();
+    const textReaderRef = React.useRef();
     /* Handlers */
-    const handleAudioReadPlay = () => {
+    const handleTextReadPlay = () => {
         startReading();
     };
-    const handleAudioReadPause = () => {
+    const handleTextReadPause = () => {
         stopReading();
     };
     const handleReset = () => {
-        const reader = audioReaderRef.current;
+        const reader = textReaderRef.current;
         reader === null || reader === void 0 ? void 0 : reader.reset();
         stopReading();
         setElapsedTime(0);
         setCurrentWordIndex(1);
     };
     const handleRateChange = (value) => {
-        const reader = audioReaderRef.current;
+        const reader = textReaderRef.current;
         if (!reader)
             return;
         reader.editUtterance({ rate: +value });
@@ -3663,12 +3663,12 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
         setDuration(reader.state.duration);
     };
     const handleVoiceChange = (value) => {
-        const reader = audioReaderRef.current;
+        const reader = textReaderRef.current;
         reader === null || reader === void 0 ? void 0 : reader.editUtterance({ voiceURI: value });
         setVoice(value);
     };
     const handleVolumeChange = (e) => {
-        const reader = audioReaderRef.current;
+        const reader = textReaderRef.current;
         const target = e.target;
         if (!reader)
             return;
@@ -3676,8 +3676,8 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
         setVolume(target.value);
     };
     const handleHideReader = () => {
-        hideAudioReader();
-        handleAudioReadPause();
+        hideTextReader();
+        handleTextReadPause();
     };
     const handleMinimizeReader = () => {
         minimize();
@@ -3686,7 +3686,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
         maximize();
     };
     const handlePreserveHighlighting = (e) => {
-        const reader = audioReaderRef.current;
+        const reader = textReaderRef.current;
         const target = e.target;
         if (!reader)
             return;
@@ -3707,7 +3707,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
     };
     /* Seeking handlers */
     const debouncedHandleManualSeek = lodash_debounce((value) => {
-        const reader = audioReaderRef.current;
+        const reader = textReaderRef.current;
         if (!reader)
             return;
         reader.seekTo(value);
@@ -3718,7 +3718,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
     const handleGenericSeek = (val) => {
-        const reader = audioReaderRef.current;
+        const reader = textReaderRef.current;
         reader === null || reader === void 0 ? void 0 : reader.seekTo(val);
     };
     React.useEffect(() => {
@@ -3726,7 +3726,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
         window.speechSynthesis.cancel();
         if (!textContainer)
             return;
-        audioReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: styleOptions.highlightColor1, color2: styleOptions.highlightColor2, onStart: (reader) => {
+        textReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: styleOptions.highlightColor1, color2: styleOptions.highlightColor2, onStart: (reader) => {
                 console.log('Start');
                 setIsLoading(true);
             }, onEffectivelySpeakingStart: (reader) => {
@@ -3752,7 +3752,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                 const idx = +target.dataset.id;
                 handleGenericSeek(idx - 1);
             } }));
-        audioReaderRef.current
+        textReaderRef.current
             .init()
             .then((reader) => {
             setVoices(reader.state.voices);
@@ -3762,13 +3762,13 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
             .catch((e) => console.log(e));
         return () => {
             var _a;
-            (_a = audioReaderRef.current) === null || _a === void 0 ? void 0 : _a.reset();
+            (_a = textReaderRef.current) === null || _a === void 0 ? void 0 : _a.reset();
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [textContainer]);
     /* Play */
     React.useEffect(() => {
-        const reader = audioReaderRef.current;
+        const reader = textReaderRef.current;
         if (!reader || isFirstRender)
             return setIsLoading(false);
         if (isReading) {
@@ -3803,14 +3803,14 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                         : currentWordIndex - 5), styleoptions: styleOptions, isloading: isLoading.toString() }),
                 !isReading ? (React__default["default"].createElement(ControlButton, { style: {
                         fontSize: '1.5em',
-                    }, as: AiFillPlayCircle, title: "Play", onPointerDown: handleAudioReadPlay, styleoptions: styleOptions, isloading: isLoading.toString() })) : (React__default["default"].createElement(ControlButton, { style: {
+                    }, as: AiFillPlayCircle, title: "Play", onPointerDown: handleTextReadPlay, styleoptions: styleOptions, isloading: isLoading.toString() })) : (React__default["default"].createElement(ControlButton, { style: {
                         fontSize: '1.5em',
-                    }, as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleAudioReadPause, isloading: isLoading.toString() })),
+                    }, as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleTextReadPause, isloading: isLoading.toString() })),
                 React__default["default"].createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: () => {
                         var _a, _b, _c;
                         return handleGenericSeek(currentWordIndex + 5 >=
-                            ((_a = audioReaderRef.current) === null || _a === void 0 ? void 0 : _a.state.wholeTextArray.length)
-                            ? (_c = (_b = audioReaderRef.current) === null || _b === void 0 ? void 0 : _b.state.wholeTextArray) === null || _c === void 0 ? void 0 : _c.length
+                            ((_a = textReaderRef.current) === null || _a === void 0 ? void 0 : _a.state.wholeTextArray.length)
+                            ? (_c = (_b = textReaderRef.current) === null || _b === void 0 ? void 0 : _b.state.wholeTextArray) === null || _c === void 0 ? void 0 : _c.length
                             : currentWordIndex + 5);
                     }, styleoptions: styleOptions, isloading: isLoading.toString() }),
                 React__default["default"].createElement(Reset, { title: "reset", styleoptions: styleOptions, onClick: handleReset }))),
@@ -3847,7 +3847,7 @@ const AudioReader = ({ textContainer, options, styleOptions }) => {
                     React__default["default"].createElement(CheckBox, { id: "is-row-check", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
                     React__default["default"].createElement("h5", null, "Preserve Highlighting")))))));
 };
-AudioReader.defaultProps = {
+TextReader.defaultProps = {
     options: {
         isHighlightTextOn: true,
         isPreserveHighlighting: true,
@@ -3864,6 +3864,6 @@ AudioReader.defaultProps = {
 };
 
 exports.SpeechSynth = SpeechSynth;
-exports["default"] = AudioReader;
-exports.useAudioReaderStore = useAudioReaderStore;
+exports["default"] = TextReader;
+exports.useTextReaderStore = useTextReaderStore;
 //# sourceMappingURL=index.js.map

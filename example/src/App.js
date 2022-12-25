@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 import { useState } from 'react';
-import AudioReader, { useAudioReaderStore } from 'react-text2speech';
+import TextReader, { useTextReaderStore } from 'react-text2speech';
 
 function App() {
 	const [node, setNode] = useState(null);
@@ -9,10 +9,10 @@ function App() {
 		isLoading,
 		isReading,
 		isVisible,
-		showAudioReader,
+		showTextReader,
 		startReading,
 		stopReading,
-	} = useAudioReaderStore();
+	} = useTextReaderStore();
 
 	return (
 		<div className={styles.container}>
@@ -23,14 +23,14 @@ function App() {
 			>
 				react-text2speech
 			</a>
-			{node && <AudioReader textContainer={node} />}
+			{node && <TextReader textContainer={node} />}
 			<button
 				className={styles.play}
 				onClick={
 					isReading
 						? stopReading
 						: () => {
-								if (!isVisible) showAudioReader();
+								if (!isVisible) showTextReader();
 								startReading();
 						  }
 				}

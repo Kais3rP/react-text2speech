@@ -2,7 +2,7 @@ import create from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { produce } from 'immer';
 
-interface IAudioReaderState {
+interface ITextReaderState {
 	isReading: boolean;
 	rate: string;
 	voice: string;
@@ -24,8 +24,8 @@ interface IAudioReaderState {
 	disablePreserveHighlighting: () => void;
 	showSettings: () => void;
 	hideSettings: () => void;
-	showAudioReader: () => void;
-	hideAudioReader: () => void;
+	showTextReader: () => void;
+	hideTextReader: () => void;
 	minimize: () => void;
 	maximize: () => void;
 	stopReading: () => void;
@@ -38,7 +38,7 @@ interface IAudioReaderState {
 	setIsLoading: (b: boolean) => void;
 }
 
-export const useAudioReaderStore = create<IAudioReaderState>()(
+export const useTextReaderStore = create<ITextReaderState>()(
 	devtools(
 		persist(
 			(set) => ({
@@ -104,13 +104,13 @@ export const useAudioReaderStore = create<IAudioReaderState>()(
 							state.isSettingsVisible = false;
 						})
 					),
-				showAudioReader: () =>
+				showTextReader: () =>
 					set(
 						produce((state) => {
 							state.isVisible = true;
 						})
 					),
-				hideAudioReader: () =>
+				hideTextReader: () =>
 					set(
 						produce((state) => {
 							state.isVisible = false;
@@ -172,8 +172,8 @@ export const useAudioReaderStore = create<IAudioReaderState>()(
 					),
 			}),
 			{
-				name: 'IAudioReaderState',
-				partialize: (state: IAudioReaderState) =>
+				name: 'ITextReaderState',
+				partialize: (state: ITextReaderState) =>
 					Object.fromEntries(
 						Object.entries(state).filter(
 							([key]) =>

@@ -12,7 +12,7 @@ import {
 	AiFillPlayCircle,
 } from 'react-icons/ai';
 import { SpeechSynth } from './lib';
-import { useAudioReaderStore } from './store';
+import { useTextReaderStore } from './store';
 import { BiVolumeFull } from 'react-icons/bi';
 import { FiMinimize, FiMaximize } from 'react-icons/fi';
 import CustomSelect from './CustomSelect';
@@ -44,7 +44,7 @@ interface IProps {
 	textContainer: HTMLElement;
 }
 
-const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
+const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	const isFirstRender = useIsFirstRender();
 
 	const {
@@ -68,7 +68,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		isMinimized,
 		minimize,
 		maximize,
-		hideAudioReader,
+		hideTextReader,
 		isVisible,
 		isSettingsVisible,
 		showSettings,
@@ -80,22 +80,22 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		setCurrentWordIndex,
 		setDuration,
 		setIsLoading,
-	} = useAudioReaderStore();
+	} = useTextReaderStore();
 
-	const audioReaderRef = useRef<SpeechSynth>();
+	const textReaderRef = useRef<SpeechSynth>();
 
 	/* Handlers */
 
-	const handleAudioReadPlay = () => {
+	const handleTextReadPlay = () => {
 		startReading();
 	};
 
-	const handleAudioReadPause = () => {
+	const handleTextReadPause = () => {
 		stopReading();
 	};
 
 	const handleReset = () => {
-		const reader = audioReaderRef.current;
+		const reader = textReaderRef.current;
 		reader?.reset();
 		stopReading();
 		setElapsedTime(0);
@@ -103,7 +103,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	};
 
 	const handleRateChange = (value: string) => {
-		const reader = audioReaderRef.current;
+		const reader = textReaderRef.current;
 		if (!reader) return;
 		reader.editUtterance({ rate: +value });
 		setRate(value);
@@ -111,13 +111,13 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	};
 
 	const handleVoiceChange = (value: string) => {
-		const reader = audioReaderRef.current;
+		const reader = textReaderRef.current;
 		reader?.editUtterance({ voiceURI: value });
 		setVoice(value);
 	};
 
 	const handleVolumeChange: ChangeEventHandler = (e) => {
-		const reader = audioReaderRef.current;
+		const reader = textReaderRef.current;
 		const target = e.target as HTMLInputElement;
 		if (!reader) return;
 		reader.editUtterance({ volume: +target.value });
@@ -125,8 +125,8 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	};
 
 	const handleHideReader = () => {
-		hideAudioReader();
-		handleAudioReadPause();
+		hideTextReader();
+		handleTextReadPause();
 	};
 
 	const handleMinimizeReader = () => {
@@ -138,7 +138,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	};
 
 	const handlePreserveHighlighting: ChangeEventHandler = (e) => {
-		const reader = audioReaderRef.current;
+		const reader = textReaderRef.current;
 		const target = e.target as HTMLInputElement;
 		if (!reader) return;
 		if (target.checked) {
@@ -158,7 +158,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	/* Seeking handlers */
 
 	const debouncedHandleManualSeek = debounce((value: number) => {
-		const reader = audioReaderRef.current;
+		const reader = textReaderRef.current;
 		if (!reader) return;
 		reader.seekTo(value);
 	}, 5);
@@ -172,7 +172,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	);
 
 	const handleGenericSeek = (val: number) => {
-		const reader = audioReaderRef.current;
+		const reader = textReaderRef.current;
 		reader?.seekTo(val);
 	};
 
@@ -183,7 +183,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 		if (!textContainer) return;
 
-		audioReaderRef.current = new SpeechSynth(textContainer, {
+		textReaderRef.current = new SpeechSynth(textContainer, {
 			...options,
 			color1: styleOptions.highlightColor1,
 			color2: styleOptions.highlightColor2,
@@ -224,7 +224,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			},
 		});
 
-		audioReaderRef.current
+		textReaderRef.current
 			.init()
 			.then((reader) => {
 				setVoices(reader.state.voices);
@@ -234,7 +234,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			.catch((e) => console.log(e));
 
 		return () => {
-			audioReaderRef.current?.reset();
+			textReaderRef.current?.reset();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [textContainer]);
@@ -242,7 +242,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	/* Play */
 
 	useEffect(() => {
-		const reader = audioReaderRef.current;
+		const reader = textReaderRef.current;
 
 		if (!reader || isFirstRender) return setIsLoading(false);
 		if (isReading) {
@@ -326,7 +326,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							}}
 							as={AiFillPlayCircle}
 							title="Play"
-							onPointerDown={handleAudioReadPlay}
+							onPointerDown={handleTextReadPlay}
 							styleoptions={styleOptions}
 							isloading={isLoading.toString()}
 						/>
@@ -338,7 +338,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 							as={AiFillPauseCircle}
 							title="Pause"
 							styleoptions={styleOptions}
-							onPointerDown={handleAudioReadPause}
+							onPointerDown={handleTextReadPause}
 							isloading={isLoading.toString()}
 						/>
 					)}
@@ -348,9 +348,9 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 						onPointerDown={() =>
 							handleGenericSeek(
 								currentWordIndex + 5 >=
-									(audioReaderRef.current?.state
-										.wholeTextArray.length as number)
-									? (audioReaderRef.current?.state
+									(textReaderRef.current?.state.wholeTextArray
+										.length as number)
+									? (textReaderRef.current?.state
 											.wholeTextArray?.length as number)
 									: currentWordIndex + 5
 							)
@@ -449,7 +449,7 @@ const AudioReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	);
 };
 
-AudioReader.defaultProps = {
+TextReader.defaultProps = {
 	options: {
 		isHighlightTextOn: true,
 		isPreserveHighlighting: true,
@@ -465,6 +465,6 @@ AudioReader.defaultProps = {
 	},
 };
 
-export default AudioReader;
+export default TextReader;
 export * from './store';
 export * from './lib';

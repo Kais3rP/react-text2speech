@@ -5,8 +5,8 @@ interface IProps {
     styleOptions: IStyleOptions;
     textContainer: HTMLElement;
 }
-declare const AudioReader: FC<IProps>;
-export default AudioReader;
+declare const TextReader: FC<IProps>;
+export default TextReader;
 export * from './store';
 export * from './lib';
 //# sourceMappingURL=index.d.ts.map
