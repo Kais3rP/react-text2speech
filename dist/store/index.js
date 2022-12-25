@@ -1,7 +1,7 @@
 import create from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { produce } from 'immer';
-export const useAudioReaderStore = create()(devtools(persist((set) => ({
+export const useTextReaderStore = create()(devtools(persist((set) => ({
     isReading: false,
     isLoading: false,
     rate: '1',
@@ -40,10 +40,10 @@ export const useAudioReaderStore = create()(devtools(persist((set) => ({
     hideSettings: () => set(produce((state) => {
         state.isSettingsVisible = false;
     })),
-    showAudioReader: () => set(produce((state) => {
+    showTextReader: () => set(produce((state) => {
         state.isVisible = true;
     })),
-    hideAudioReader: () => set(produce((state) => {
+    hideTextReader: () => set(produce((state) => {
         state.isVisible = false;
     })),
     minimize: () => set(produce((state) => {
@@ -74,7 +74,7 @@ export const useAudioReaderStore = create()(devtools(persist((set) => ({
         state.elapsedTime = time;
     })),
 }), {
-    name: 'IAudioReaderState',
+    name: 'ITextReaderState',
     partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => ![
         'elapsedTime',
         'isReading',

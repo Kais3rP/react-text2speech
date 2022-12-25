@@ -18,6 +18,7 @@ A React Component that leverages WEB Speech API to implement a text reader for w
 -   Preview of reading time ( time is averagely calculated )
 -   Control reading speed
 -   Select voice type and language
+-   Optional methods to add Highlight tags during static generation of the page to speed up page loading.
 
 ## Install
 

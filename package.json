@@ -1,6 +1,6 @@
 {
 	"name": "react-text2speech",
-	"version": "0.1.7",
+	"version": "0.2.1",
 	"keywords": [],
 	"description": "",
 	"main": "dist/index.min.js",

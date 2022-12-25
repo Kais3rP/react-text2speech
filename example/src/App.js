@@ -177,24 +177,6 @@ function App() {
 					</dt>
 					<dd>Et expedita internos qui voluptatibus sint. </dd>
 				</dl>
-				<pre>
-					<code>
-						&lt;!-- Ut quae dolorum. --&gt;
-						<br />
-						&lt;quidem&gt;Sit beatae repellat et omnis libero qui
-						nihil aspernatur?&lt;/quidem&gt;
-						<br />
-						&lt;aut&gt;Ut earum corrupti est neque sapiente rem
-						nostrum debitis.&lt;/aut&gt;
-						<br />
-						&lt;reprehenderit&gt;Ut sunt
-						mollitia.&lt;/reprehenderit&gt;
-						<br />
-						&lt;aperiam&gt;Vel fugit galisum et voluptate
-						omnis.&lt;/aperiam&gt;
-						<br />
-					</code>
-				</pre>
 			</div>
 		</div>
 	);
