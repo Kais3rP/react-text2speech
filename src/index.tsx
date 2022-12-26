@@ -227,6 +227,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		textReaderRef.current
 			.init()
 			.then((reader) => {
+				console.log('Reader state voices', reader.state.voices);
 				setVoices(reader.state.voices);
 				setNumberOfWords(reader.state.numberOfWords);
 				setDuration(reader.state.duration);
@@ -257,6 +258,8 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			if (reader.isPlaying()) reader.pause();
 		}
 	}, [isReading, textContainer, isFirstRender, setIsLoading]);
+
+	console.log('Voices react', voices);
 
 	return (
 		<Container

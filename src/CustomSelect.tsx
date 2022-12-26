@@ -104,6 +104,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 	style,
 	...props
 }) => {
+	console.log('Options', options);
 	const [showOptions, setShowOptions] = useState(false);
 	const ref = useRef(null);
 

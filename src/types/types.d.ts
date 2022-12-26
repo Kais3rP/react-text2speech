@@ -26,7 +26,7 @@ declare global {
 	interface ISettings {
 		pitch?: number;
 		rate?: number;
-		language?: string;
+		language?: string[];
 		voiceURI?: string;
 		volume?: number;
 	}

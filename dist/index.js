@@ -196,7 +196,7 @@ Utils.__join__ = function (fn) {
 class SpeechSynth extends EventEmitter__default["default"] {
     constructor(textContainer, { 
     /* Settings */
-    pitch = 1, rate = 1, language = 'en-US', voiceURI = 'Microsoft Aria Online (Natural) - English (United States)', volume = 1, 
+    pitch = 1, rate = 1, language = ['en_US', 'en-us'], voiceURI = 'Microsoft Aria Online (Natural) - English (United States)', volume = 1, 
     /* Style */
     color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
@@ -265,7 +265,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
             /* Get voices */
             try {
                 this.state.voices = yield this.getVoices();
-                this.state.voices = this.state.voices.filter((voice) => voice.lang === this.settings.language);
+                console.log('VOICES before filtering', this.state.voices, this.settings.language);
+                this.state.voices = this.state.voices.filter((voice) => { var _a; return (_a = this.settings.language) === null || _a === void 0 ? void 0 : _a.includes(voice.lang); });
+                console.log('VOICES after filtering', this.state.voices);
                 this.state.voice =
                     this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI).length > 0
                         ? this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI)[0]
@@ -313,7 +315,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
         this.utterance.text = this.state.wholeText;
-        this.utterance.lang = this.settings.language;
+        this.utterance.lang = this.settings.language[0];
         this.utterance.voice = this.state.voice;
         this.utterance.pitch = this.settings.pitch;
         this.utterance.rate = this.settings.rate;
@@ -377,6 +379,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     highlightText(wordIndex) {
         // eslint-disable-next-line prettier/prettier
+        console.log('Highlighting text');
         const wordToHighlight = this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
         if (!wordToHighlight)
             return;
@@ -457,15 +460,18 @@ class SpeechSynth extends EventEmitter__default["default"] {
         const isPlaying = this.isPlaying();
         const isPaused = this.isPaused();
         /* Cancel synth instance */
-        this.synth.cancel();
-        /* Reset timeout  */
+        // this.synth.cancel();
+        /* Reset timeouts  */
         clearTimeout(this.timeoutRef);
+        clearTimeout(this.editTimeoutRef);
         if (obj.voiceURI) {
             this.state.voice =
-                this.state.voices.filter((v) => v.voiceURI === obj.voiceURI &&
-                    v.lang === this.settings.language).length > 0
-                    ? this.state.voices.filter((v) => v.voiceURI === obj.voiceURI &&
-                        v.lang === this.settings.language)[0]
+                this.state.voices.filter((v) => v.voiceURI ===
+                    obj.voiceURI /* &&
+                 v.lang === this.settings.language */).length > 0
+                    ? this.state.voices.filter((v) => v.voiceURI ===
+                        obj.voiceURI /* &&
+                     v.lang === this.settings.language */)[0]
                     : this.state.voices[0];
             this.utterance.voice = this.state.voice;
         }
@@ -480,15 +486,15 @@ class SpeechSynth extends EventEmitter__default["default"] {
             this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
             this.emit('time-tick', this, this.state.elapsedTime);
         }
-        /* Do not play if settings are changed before the first play */
-        /* Play immediately after settings change if settings are changed while playing */
-        if (isPlaying)
-            this.play();
-        /* Play the remaining text with the new settings applied and pause if the settings are changed while in pause */
-        if (isPaused) {
-            this.play();
-            this.pause();
-        }
+        this.editTimeoutRef = setTimeout(() => {
+            this.synth.cancel();
+            if (isPlaying)
+                this.play();
+            if (isPaused) {
+                this.play();
+                this.pause();
+            }
+        }, 500);
     }
     /* Control methods */
     seekTo(index) {
@@ -497,8 +503,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.emit('seek', this, index);
         /* Cancel synth instance */
         // this.synth.cancel();
-        /* Reset timeout  */
+        /* Reset timeouts  */
         clearTimeout(this.timeoutRef);
+        clearTimeout(this.seekTimeoutRef);
         /* Set the new text slice */
         const textArr = this.state.wholeTextArray;
         const newText = textArr.slice(index, textArr.length + 1).join(' ');
@@ -514,21 +521,15 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Recalculate time elapsed */
         this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
         this.emit('time-tick', this, this.state.elapsedTime);
-        if (isPlaying) {
-            clearTimeout(this.seekTimeoutRef);
-            this.seekTimeoutRef = setTimeout(() => {
-                this.synth.cancel();
+        this.seekTimeoutRef = setTimeout(() => {
+            this.synth.cancel();
+            if (isPlaying)
                 this.play();
-            }, 500);
-        }
-        if (isPaused) {
-            clearTimeout(this.seekTimeoutRef);
-            this.seekTimeoutRef = setTimeout(() => {
-                this.synth.cancel();
+            if (isPaused) {
                 this.play();
                 this.pause();
-            }, 500);
-        }
+            }
+        }, 500);
     }
     /* ------------------------------------------------------------------------------------ */
     /* Public Methods to control the player state */
@@ -598,7 +599,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
             else if (typeof window !== 'undefined' &&
                 node instanceof HTMLElement)
                 code = node.innerHTML;
-            console.log('INNER HTML', code);
             code = code
                 .split('\n') // Add br break line in place of \n
                 .join('<br/>')
@@ -2883,6 +2883,7 @@ const Button = (_a) => {
 const CustomSelect = (_a) => {
     var _b;
     var { options, value, title, onChange, styleOptions, style } = _a, props = __rest(_a, ["options", "value", "title", "onChange", "styleOptions", "style"]);
+    console.log('Options', options);
     const [showOptions, setShowOptions] = React.useState(false);
     const ref = React.useRef(null);
     const show = () => {
@@ -3755,6 +3756,7 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         textReaderRef.current
             .init()
             .then((reader) => {
+            console.log('Reader state voices', reader.state.voices);
             setVoices(reader.state.voices);
             setNumberOfWords(reader.state.numberOfWords);
             setDuration(reader.state.duration);
@@ -3786,6 +3788,7 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                 reader.pause();
         }
     }, [isReading, textContainer, isFirstRender, setIsLoading]);
+    console.log('Voices react', voices);
     return (React__default["default"].createElement(Container, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
         React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '3px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },
             React__default["default"].createElement(MdOutlineClose, { title: "Close" })),

@@ -7,6 +7,7 @@ export class SpeechSynth extends EventEmitter {
 	utterance: SpeechSynthesisUtterance;
 	timeoutRef: string | number | Timeout | undefined;
 	seekTimeoutRef: string | number | Timeout | undefined;
+	editTimeoutRef: string | number | Timeout | undefined;
 
 	style: IStyle;
 
@@ -21,7 +22,7 @@ export class SpeechSynth extends EventEmitter {
 			/* Settings */
 			pitch = 1,
 			rate = 1,
-			language = 'en-US',
+			language = ['en_US', 'en-us'],
 			voiceURI = 'Microsoft Aria Online (Natural) - English (United States)',
 			volume = 1,
 			/* Style */
@@ -116,9 +117,15 @@ export class SpeechSynth extends EventEmitter {
 
 		try {
 			this.state.voices = await this.getVoices();
-			this.state.voices = this.state.voices.filter(
-				(voice) => voice.lang === this.settings.language
+			console.log(
+				'VOICES before filtering',
+				this.state.voices,
+				this.settings.language
 			);
+			this.state.voices = this.state.voices.filter((voice) =>
+				this.settings.language?.includes(voice.lang)
+			);
+			console.log('VOICES after filtering', this.state.voices);
 
 			this.state.voice =
 				this.state.voices.filter(
@@ -207,7 +214,7 @@ export class SpeechSynth extends EventEmitter {
 
 	private initUtterance() {
 		this.utterance.text = this.state.wholeText;
-		this.utterance.lang = this.settings.language as string;
+		this.utterance.lang = (this.settings.language as string[])[0] as string;
 		this.utterance.voice = this.state.voice;
 		this.utterance.pitch = this.settings.pitch as number;
 		this.utterance.rate = this.settings.rate as number;
@@ -293,6 +300,7 @@ export class SpeechSynth extends EventEmitter {
 
 	private highlightText(wordIndex: number): void {
 		// eslint-disable-next-line prettier/prettier
+		console.log('Highlighting text');
 		const wordToHighlight: HTMLElement | null =
 			this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
 
@@ -406,23 +414,22 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Cancel synth instance */
 
-		this.synth.cancel();
+		// this.synth.cancel();
 
-		/* Reset timeout  */
+		/* Reset timeouts  */
 
 		clearTimeout(this.timeoutRef);
+		clearTimeout(this.editTimeoutRef);
 
 		if (obj.voiceURI) {
 			this.state.voice =
 				this.state.voices.filter(
-					(v) =>
-						v.voiceURI === obj.voiceURI &&
-						v.lang === this.settings.language
+					(v) => v.voiceURI === obj.voiceURI /* &&
+						 v.lang === this.settings.language */
 				).length > 0
 					? this.state.voices.filter(
-							(v) =>
-								v.voiceURI === obj.voiceURI &&
-								v.lang === this.settings.language
+							(v) => v.voiceURI === obj.voiceURI /* &&
+								 v.lang === this.settings.language */
 					  )[0]
 					: this.state.voices[0];
 			this.utterance.voice = this.state.voice as SpeechSynthesisVoice;
@@ -455,15 +462,14 @@ export class SpeechSynth extends EventEmitter {
 			this.emit('time-tick', this, this.state.elapsedTime);
 		}
 
-		/* Do not play if settings are changed before the first play */
-		/* Play immediately after settings change if settings are changed while playing */
-
-		if (isPlaying) this.play();
-		/* Play the remaining text with the new settings applied and pause if the settings are changed while in pause */
-		if (isPaused) {
-			this.play();
-			this.pause();
-		}
+		this.editTimeoutRef = setTimeout(() => {
+			this.synth.cancel();
+			if (isPlaying) this.play();
+			if (isPaused) {
+				this.play();
+				this.pause();
+			}
+		}, 500);
 	}
 
 	/* Control methods */
@@ -477,9 +483,10 @@ export class SpeechSynth extends EventEmitter {
 
 		// this.synth.cancel();
 
-		/* Reset timeout  */
+		/* Reset timeouts  */
 
 		clearTimeout(this.timeoutRef);
+		clearTimeout(this.seekTimeoutRef);
 
 		/* Set the new text slice */
 
@@ -510,22 +517,14 @@ export class SpeechSynth extends EventEmitter {
 
 		this.emit('time-tick', this, this.state.elapsedTime);
 
-		if (isPlaying) {
-			clearTimeout(this.seekTimeoutRef);
-			this.seekTimeoutRef = setTimeout(() => {
-				this.synth.cancel();
-				this.play();
-			}, 500);
-		}
-
-		if (isPaused) {
-			clearTimeout(this.seekTimeoutRef);
-			this.seekTimeoutRef = setTimeout(() => {
-				this.synth.cancel();
+		this.seekTimeoutRef = setTimeout(() => {
+			this.synth.cancel();
+			if (isPlaying) this.play();
+			if (isPaused) {
 				this.play();
 				this.pause();
-			}, 500);
-		}
+			}
+		}, 500);
 	}
 
 	/* ------------------------------------------------------------------------------------ */
@@ -633,7 +632,7 @@ export class SpeechSynth extends EventEmitter {
 				node instanceof HTMLElement
 			)
 				code = node.innerHTML;
-			console.log('INNER HTML', code);
+
 			code = code
 				.split('\n') // Add br break line in place of \n
 				.join('<br/>')
