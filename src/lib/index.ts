@@ -257,14 +257,25 @@ export class SpeechSynth extends EventEmitter {
 		clearTimeout(this.timeoutRef);
 	}
 
-	private handleBoundary(e: SpeechSynthesisEvent) {
+	private getRemainingText(): string {
 		const length = this.state.wholeTextArray.length;
-
 		/* Calculate and set the remaining text */
-
-		this.state.textRemaining = this.state.wholeTextArray
+		return this.state.wholeTextArray
 			.slice(this.state.currentWordIndex, length + 1)
 			.join(' ');
+	}
+
+	temp = 0;
+
+	private handleBoundary(e: SpeechSynthesisEvent) {
+		this.temp++;
+		console.log(
+			'On boundary',
+			this.state.currentWordIndex,
+			this.temp,
+			this.state.textRemaining.slice(0, 10)
+		);
+		if (this.isPaused() && this.state.currentWordIndex > this.temp) return;
 
 		/* Highlight the current word */
 
@@ -299,8 +310,6 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private highlightText(wordIndex: number): void {
-		// eslint-disable-next-line prettier/prettier
-		console.log('Highlighting text');
 		const wordToHighlight: HTMLElement | null =
 			this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
 
@@ -412,38 +421,23 @@ export class SpeechSynth extends EventEmitter {
 		const isPlaying = this.isPlaying();
 		const isPaused = this.isPaused();
 
-		/* Cancel synth instance */
-
-		// this.synth.cancel();
-
 		/* Reset timeouts  */
 
 		clearTimeout(this.timeoutRef);
 		clearTimeout(this.editTimeoutRef);
 
+		/* Update voice in the state if it changes */
+
 		if (obj.voiceURI) {
 			this.state.voice =
-				this.state.voices.filter(
-					(v) => v.voiceURI === obj.voiceURI /* &&
-						 v.lang === this.settings.language */
-				).length > 0
+				this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)
+					.length > 0
 					? this.state.voices.filter(
-							(v) => v.voiceURI === obj.voiceURI /* &&
-								 v.lang === this.settings.language */
+							(v) => v.voiceURI === obj.voiceURI
 					  )[0]
 					: this.state.voices[0];
 			this.utterance.voice = this.state.voice as SpeechSynthesisVoice;
 		}
-
-		/* Update utterance object, adding the remaining text left to be played */
-
-		this.utterance = Object.assign(this.utterance, {
-			...obj,
-			text: this.state.textRemaining,
-		});
-		/* Update instance settings object to keep them in sync with utterance settings */
-
-		this.settings = { ...this.settings, ...obj };
 
 		/* Recalculate total duration  and current elapsedTime when rate changes */
 
@@ -452,6 +446,7 @@ export class SpeechSynth extends EventEmitter {
 				this.state.wholeText,
 				obj.rate
 			);
+
 			/* Recalculate time elapsed */
 
 			this.state.elapsedTime = this.getAverageTextElapsedTime(
@@ -461,6 +456,19 @@ export class SpeechSynth extends EventEmitter {
 
 			this.emit('time-tick', this, this.state.elapsedTime);
 		}
+
+		/* Update utterance object, adding the remaining settings and remaining text left to be played */
+
+		this.utterance = Object.assign(this.utterance, {
+			...obj,
+			text: this.getRemainingText(),
+		});
+
+		/* Update instance settings object to keep them in sync with utterance settings */
+
+		this.settings = { ...this.settings, ...obj };
+
+		/*  Debounce to handle volume change properly */
 
 		this.editTimeoutRef = setTimeout(() => {
 			this.synth.cancel();
@@ -566,6 +574,9 @@ export class SpeechSynth extends EventEmitter {
 
 	resume() {
 		this.synth.resume();
+
+		/* 	this.synth.cancel();
+		this.play(); */
 		this.state.isPaused = false;
 		this.state.isPlaying = true;
 		this.emit('resume');
@@ -634,10 +645,12 @@ export class SpeechSynth extends EventEmitter {
 				code = node.innerHTML;
 
 			code = code
-				.split('\n') // Add br break line in place of \n
+				.split('\n')
 				.join('<br/>')
+				// Add br break line in place of \n
 				.replace(/\(\s*(.+?)\s*\)/g, (_, b) => `(${b})`) // Fix extra spaces in () parens to avoid highlighting extra characters
 				.replace(/\s+([;.,:]+?)/g, (_, b) => b) // Fix extra spaces in [] parens to avoid highlighting extra characters
+				.replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
 				.replace(
 					/<.+?>/g,
 					(match) => '#' + match.replace(/\s/g, '@@') + '#'
@@ -646,8 +659,8 @@ export class SpeechSynth extends EventEmitter {
 				.split(/[#\s]/)
 				.filter((el) => el)
 				.map((el) => {
+					// Exclude code tags
 					if (options?.excludeCodeTags) {
-						// Exclude code tags
 						if (Utils.isCodeOpenTag(el)) {
 							isCode = true;
 							return el;
@@ -659,8 +672,12 @@ export class SpeechSynth extends EventEmitter {
 						if (isCode) return el;
 					}
 
+					// prevent punctuation and html entities to be assigned an highlight span tag
+
 					if (Utils.isSpecialCharacter(el) || Utils.isHTMLEntity(el))
-						return el; // prevent punctuation and html entities to be assigned an highlight span tag
+						return el;
+
+					// wrap in a data-id html tag only plain words ( exclude html tags )
 
 					if (!Utils.isTag(el)) {
 						index++;

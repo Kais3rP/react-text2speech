@@ -259,8 +259,6 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		}
 	}, [isReading, textContainer, isFirstRender, setIsLoading]);
 
-	console.log('Voices react', voices);
-
 	return (
 		<Container
 			isvisible={isVisible.toString()}

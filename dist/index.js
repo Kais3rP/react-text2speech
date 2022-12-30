@@ -204,6 +204,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     /* Options */
     isHighlightTextOn = true, isPreserveHighlighting = true, isSSROn = false, }) {
         super();
+        this.temp = 0;
         this.textContainer = textContainer;
         this.style = { color1, color2 };
         /* Instances */
@@ -346,12 +347,18 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.state.elapsedTime = 0;
         clearTimeout(this.timeoutRef);
     }
-    handleBoundary(e) {
+    getRemainingText() {
         const length = this.state.wholeTextArray.length;
         /* Calculate and set the remaining text */
-        this.state.textRemaining = this.state.wholeTextArray
+        return this.state.wholeTextArray
             .slice(this.state.currentWordIndex, length + 1)
             .join(' ');
+    }
+    handleBoundary(e) {
+        this.temp++;
+        console.log('On boundary', this.state.currentWordIndex, this.temp, this.state.textRemaining.slice(0, 10));
+        if (this.isPaused() && this.state.currentWordIndex > this.temp)
+            return;
         /* Highlight the current word */
         this.highlightText(this.state.currentWordIndex);
         /* Increase the current index of word read */
@@ -378,8 +385,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         });
     }
     highlightText(wordIndex) {
-        // eslint-disable-next-line prettier/prettier
-        console.log('Highlighting text');
         const wordToHighlight = this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
         if (!wordToHighlight)
             return;
@@ -459,26 +464,18 @@ class SpeechSynth extends EventEmitter__default["default"] {
     editUtterance(obj) {
         const isPlaying = this.isPlaying();
         const isPaused = this.isPaused();
-        /* Cancel synth instance */
-        // this.synth.cancel();
         /* Reset timeouts  */
         clearTimeout(this.timeoutRef);
         clearTimeout(this.editTimeoutRef);
+        /* Update voice in the state if it changes */
         if (obj.voiceURI) {
             this.state.voice =
-                this.state.voices.filter((v) => v.voiceURI ===
-                    obj.voiceURI /* &&
-                 v.lang === this.settings.language */).length > 0
-                    ? this.state.voices.filter((v) => v.voiceURI ===
-                        obj.voiceURI /* &&
-                     v.lang === this.settings.language */)[0]
+                this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)
+                    .length > 0
+                    ? this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)[0]
                     : this.state.voices[0];
             this.utterance.voice = this.state.voice;
         }
-        /* Update utterance object, adding the remaining text left to be played */
-        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.state.textRemaining }));
-        /* Update instance settings object to keep them in sync with utterance settings */
-        this.settings = Object.assign(Object.assign({}, this.settings), obj);
         /* Recalculate total duration  and current elapsedTime when rate changes */
         if (obj.rate) {
             this.state.duration = this.getTextDuration(this.state.wholeText, obj.rate);
@@ -486,6 +483,11 @@ class SpeechSynth extends EventEmitter__default["default"] {
             this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
             this.emit('time-tick', this, this.state.elapsedTime);
         }
+        /* Update utterance object, adding the remaining settings and remaining text left to be played */
+        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.getRemainingText() }));
+        /* Update instance settings object to keep them in sync with utterance settings */
+        this.settings = Object.assign(Object.assign({}, this.settings), obj);
+        /*  Debounce to handle volume change properly */
         this.editTimeoutRef = setTimeout(() => {
             this.synth.cancel();
             if (isPlaying)
@@ -559,6 +561,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     resume() {
         this.synth.resume();
+        /* 	this.synth.cancel();
+        this.play(); */
         this.state.isPaused = false;
         this.state.isPlaying = true;
         this.emit('resume');
@@ -600,17 +604,19 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 node instanceof HTMLElement)
                 code = node.innerHTML;
             code = code
-                .split('\n') // Add br break line in place of \n
+                .split('\n')
                 .join('<br/>')
+                // Add br break line in place of \n
                 .replace(/\(\s*(.+?)\s*\)/g, (_, b) => `(${b})`) // Fix extra spaces in () parens to avoid highlighting extra characters
                 .replace(/\s+([;.,:]+?)/g, (_, b) => b) // Fix extra spaces in [] parens to avoid highlighting extra characters
+                .replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
                 .replace(/<.+?>/g, (match) => '#' + match.replace(/\s/g, '@@') + '#') // Separate html tags and add @@ symbol to spaces inside HTML tags
                 .replace(/(\d+\.\d+)(\w*)/, (_, a, b) => a + ' ' + b) // Separate numbers from measures units e.g. 1.7k -> 1.7 k since the reader ha issues reading that format
                 .split(/[#\s]/)
                 .filter((el) => el)
                 .map((el) => {
+                // Exclude code tags
                 if (options === null || options === void 0 ? void 0 : options.excludeCodeTags) {
-                    // Exclude code tags
                     if (Utils.isCodeOpenTag(el)) {
                         isCode = true;
                         return el;
@@ -622,8 +628,10 @@ class SpeechSynth extends EventEmitter__default["default"] {
                     if (isCode)
                         return el;
                 }
+                // prevent punctuation and html entities to be assigned an highlight span tag
                 if (Utils.isSpecialCharacter(el) || Utils.isHTMLEntity(el))
-                    return el; // prevent punctuation and html entities to be assigned an highlight span tag
+                    return el;
+                // wrap in a data-id html tag only plain words ( exclude html tags )
                 if (!Utils.isTag(el)) {
                     index++;
                     return `<span data-id="${index}">${el}</span>`;
@@ -2883,7 +2891,6 @@ const Button = (_a) => {
 const CustomSelect = (_a) => {
     var _b;
     var { options, value, title, onChange, styleOptions, style } = _a, props = __rest(_a, ["options", "value", "title", "onChange", "styleOptions", "style"]);
-    console.log('Options', options);
     const [showOptions, setShowOptions] = React.useState(false);
     const ref = React.useRef(null);
     const show = () => {
@@ -3788,7 +3795,6 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                 reader.pause();
         }
     }, [isReading, textContainer, isFirstRender, setIsLoading]);
-    console.log('Voices react', voices);
     return (React__default["default"].createElement(Container, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
         React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '3px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },
             React__default["default"].createElement(MdOutlineClose, { title: "Close" })),
