@@ -121,7 +121,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 	};
 
 	useOnClickOutside(ref, hide);
-
+	console.log('Voices', options, value);
 	return (
 		<Container {...props}>
 			<StyledButton

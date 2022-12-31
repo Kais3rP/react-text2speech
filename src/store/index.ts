@@ -45,7 +45,7 @@ export const useTextReaderStore = create<ITextReaderState>()(
 				isReading: false,
 				isLoading: false,
 				rate: '1',
-				voice: 'Microsoft Aria Online (Natural) - English (United States)',
+				voice: '',
 				voices: [],
 				volume: '0.5',
 				elapsedTime: 0,

@@ -22,8 +22,8 @@ export class SpeechSynth extends EventEmitter {
 			/* Settings */
 			pitch = 1,
 			rate = 1,
-			language = ['en_US', 'en-us'],
-			voiceURI = 'Microsoft Aria Online (Natural) - English (United States)',
+			language = 'en',
+			voiceURI = '',
 			volume = 1,
 			/* Style */
 			color1 = '#DEE',
@@ -123,18 +123,11 @@ export class SpeechSynth extends EventEmitter {
 				this.settings.language
 			);
 			this.state.voices = this.state.voices.filter((voice) =>
-				this.settings.language?.includes(voice.lang)
+				voice.lang.startsWith(this.settings.language as string)
 			);
 			console.log('VOICES after filtering', this.state.voices);
 
-			this.state.voice =
-				this.state.voices.filter(
-					(v) => v.voiceURI === this.settings.voiceURI
-				).length > 0
-					? this.state.voices.filter(
-							(v) => v.voiceURI === this.settings.voiceURI
-					  )[0]
-					: this.state.voices[0];
+			this.state.voice = this.state.voices[0];
 
 			/* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags" 
     on stringified HTML */
@@ -214,7 +207,7 @@ export class SpeechSynth extends EventEmitter {
 
 	private initUtterance() {
 		this.utterance.text = this.state.wholeText;
-		this.utterance.lang = (this.settings.language as string[])[0] as string;
+		this.utterance.lang = this.settings.language as string;
 		this.utterance.voice = this.state.voice;
 		this.utterance.pitch = this.settings.pitch as number;
 		this.utterance.rate = this.settings.rate as number;

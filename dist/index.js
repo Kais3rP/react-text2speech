@@ -196,7 +196,7 @@ Utils.__join__ = function (fn) {
 class SpeechSynth extends EventEmitter__default["default"] {
     constructor(textContainer, { 
     /* Settings */
-    pitch = 1, rate = 1, language = ['en_US', 'en-us'], voiceURI = 'Microsoft Aria Online (Natural) - English (United States)', volume = 1, 
+    pitch = 1, rate = 1, language = 'en', voiceURI = '', volume = 1, 
     /* Style */
     color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
@@ -267,12 +267,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
             try {
                 this.state.voices = yield this.getVoices();
                 console.log('VOICES before filtering', this.state.voices, this.settings.language);
-                this.state.voices = this.state.voices.filter((voice) => { var _a; return (_a = this.settings.language) === null || _a === void 0 ? void 0 : _a.includes(voice.lang); });
+                this.state.voices = this.state.voices.filter((voice) => voice.lang.startsWith(this.settings.language));
                 console.log('VOICES after filtering', this.state.voices);
-                this.state.voice =
-                    this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI).length > 0
-                        ? this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI)[0]
-                        : this.state.voices[0];
+                this.state.voice = this.state.voices[0];
                 /* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags"
         on stringified HTML */
                 if (this.options.isHighlightTextOn && !this.options.isSSROn)
@@ -316,7 +313,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
         this.utterance.text = this.state.wholeText;
-        this.utterance.lang = this.settings.language[0];
+        this.utterance.lang = this.settings.language;
         this.utterance.voice = this.state.voice;
         this.utterance.pitch = this.settings.pitch;
         this.utterance.rate = this.settings.rate;
@@ -1636,7 +1633,7 @@ const useTextReaderStore = create()(middleware_2(middleware_3((set) => ({
     isReading: false,
     isLoading: false,
     rate: '1',
-    voice: 'Microsoft Aria Online (Natural) - English (United States)',
+    voice: '',
     voices: [],
     volume: '0.5',
     elapsedTime: 0,
@@ -2897,6 +2894,7 @@ const CustomSelect = (_a) => {
         hide();
     };
     useOnClickOutside(ref, hide);
+    console.log('Voices', options, value);
     return (React__default["default"].createElement(Container$1, Object.assign({}, props),
         React__default["default"].createElement(StyledButton, { type: "button", onClick: show, styleoptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
         React__default["default"].createElement(OptionsContainer$1, { ref: ref, styleoptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React__default["default"].createElement(Button, { key: opt.value, onClick: () => {
@@ -3727,7 +3725,7 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         window.speechSynthesis.cancel();
         if (!textContainer)
             return;
-        textReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: styleOptions.highlightColor1, color2: styleOptions.highlightColor2, onStart: (reader) => {
+        textReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '', color2: styleOptions.highlightColor2, onStart: (reader) => {
                 console.log('Start');
                 setIsLoading(true);
             }, onEffectivelySpeakingStart: (reader) => {
@@ -3758,6 +3756,7 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             .then((reader) => {
             console.log('Reader state voices', reader.state.voices);
             setVoices(reader.state.voices);
+            setVoice(reader.state.voices[0].voiceURI);
             setNumberOfWords(reader.state.numberOfWords);
             setDuration(reader.state.duration);
         })
@@ -3830,7 +3829,8 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                     React__default["default"].createElement(CustomSelect, { name: "voice", options: voices === null || voices === void 0 ? void 0 : voices.map((voice) => {
                             var _a;
                             return ({
-                                name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft)|(Online)|(\(Natural\)) -\s.*$/gm, ''),
+                                name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
+                                ''),
                                 value: voice.voiceURI,
                             });
                         }), onChange: handleVoiceChange, value: voice, defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
@@ -3851,6 +3851,13 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
 };
 TextReader.defaultProps = {
     options: {
+        /* Voice settings */
+        pitch: 1,
+        rate: 1,
+        language: 'en_US',
+        voiceURI: 'Microsoft Aria Online (Natural) - English (United States)',
+        volume: 1,
+        /* Options */
         isHighlightTextOn: true,
         isPreserveHighlighting: true,
         isSSROn: false,

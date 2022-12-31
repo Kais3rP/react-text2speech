@@ -23,7 +23,9 @@ function App() {
 			>
 				react-text2speech
 			</a>
-			{node && <TextReader textContainer={node} />}
+			{node && (
+				<TextReader textContainer={node} options={{ language: 'it' }} />
+			)}
 			<button
 				className={styles.play}
 				onClick={
@@ -41,9 +43,9 @@ function App() {
 			<div className={styles.text} ref={setNode}>
 				<h1>Ut vero dolorem ea illum fugit. </h1>
 				<p>
-					Lorem ipsum/ipsum/ipsum dolor sit amet. Et animi debitis eos tenetur
-					inventoreQui totam qui iure ratione ab distinctio deleniti
-					ut modi inventore. Sed totam iste et dolorem autem{' '}
+					Lorem ipsum/ipsum/ipsum dolor sit amet. Et animi debitis eos
+					tenetur inventoreQui totam qui iure ratione ab distinctio
+					deleniti ut modi inventore. Sed totam iste et dolorem autem{' '}
 					<em>
 						Eum magni sit quaerat voluptate et officiis tempora in
 						laborum modi

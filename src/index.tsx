@@ -39,7 +39,7 @@ import {
 
 interface IProps {
 	children?: JSX.Element | string;
-	options?: ISettings & IOptions & IStyle;
+	options: ISettings & IOptions & IStyle;
 	styleOptions: IStyleOptions;
 	textContainer: HTMLElement;
 }
@@ -185,7 +185,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 		textReaderRef.current = new SpeechSynth(textContainer, {
 			...options,
-			color1: styleOptions.highlightColor1,
+			color1: styleOptions?.highlightColor1 || '',
 			color2: styleOptions.highlightColor2,
 			onStart: (reader: SpeechSynth) => {
 				console.log('Start');
@@ -229,6 +229,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			.then((reader) => {
 				console.log('Reader state voices', reader.state.voices);
 				setVoices(reader.state.voices);
+				setVoice(reader.state.voices[0].voiceURI);
 				setNumberOfWords(reader.state.numberOfWords);
 				setDuration(reader.state.duration);
 			})
@@ -391,7 +392,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 								name="voice"
 								options={voices?.map((voice) => ({
 									name: voice.name?.replace(
-										/(Microsoft)|(Online)|(\(Natural\)) -\s.*$/gm,
+										/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
 										''
 									),
 									value: voice.voiceURI,
@@ -452,6 +453,13 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 TextReader.defaultProps = {
 	options: {
+		/* Voice settings */
+		pitch: 1,
+		rate: 1,
+		language: 'en_US',
+		voiceURI: 'Microsoft Aria Online (Natural) - English (United States)',
+		volume: 1,
+		/* Options */
 		isHighlightTextOn: true,
 		isPreserveHighlighting: true,
 		isSSROn: false,
