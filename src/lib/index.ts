@@ -257,26 +257,18 @@ export class SpeechSynth extends EventEmitter {
 		clearTimeout(this.timeoutRef);
 	}
 
-	private getRemainingText(): string {
+	private getRemainingText(idx: number): string {
 		const length = this.state.wholeTextArray.length;
 		/* Calculate and set the remaining text */
-		return this.state.wholeTextArray
-			.slice(this.state.currentWordIndex, length + 1)
-			.join(' ');
+		return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
 	}
 
-	temp = 0;
+	stopBoundary = false;
 
 	private handleBoundary(e: SpeechSynthesisEvent) {
-		this.temp++;
-		console.log(
-			'On boundary',
-			this.state.currentWordIndex,
-			this.temp,
-			this.state.textRemaining.slice(0, 10)
-		);
-		if (this.isPaused() && this.state.currentWordIndex > this.temp) return;
-
+		console.log(e);
+		/* if (this.state.currentWordIndex)
+		 */
 		/* Highlight the current word */
 
 		this.highlightText(this.state.currentWordIndex);
@@ -461,7 +453,7 @@ export class SpeechSynth extends EventEmitter {
 
 		this.utterance = Object.assign(this.utterance, {
 			...obj,
-			text: this.getRemainingText(),
+			text: this.getRemainingText(this.state.currentWordIndex),
 		});
 
 		/* Update instance settings object to keep them in sync with utterance settings */
@@ -498,9 +490,7 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Set the new text slice */
 
-		const textArr = this.state.wholeTextArray;
-		const newText = textArr.slice(index, textArr.length + 1).join(' ');
-		this.state.textRemaining = newText;
+		this.state.textRemaining = this.getRemainingText(index);
 
 		/* Update current word index */
 		/* Need to increase the index by 1 */
@@ -574,9 +564,6 @@ export class SpeechSynth extends EventEmitter {
 
 	resume() {
 		this.synth.resume();
-
-		/* 	this.synth.cancel();
-		this.play(); */
 		this.state.isPaused = false;
 		this.state.isPlaying = true;
 		this.emit('resume');

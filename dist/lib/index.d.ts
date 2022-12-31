@@ -20,7 +20,7 @@ export declare class SpeechSynth extends EventEmitter {
     private pauseTimeCount;
     private resetTimeCount;
     private getRemainingText;
-    temp: number;
+    stopBoundary: boolean;
     private handleBoundary;
     private getVoices;
     private highlightText;

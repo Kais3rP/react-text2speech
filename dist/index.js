@@ -204,7 +204,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     /* Options */
     isHighlightTextOn = true, isPreserveHighlighting = true, isSSROn = false, }) {
         super();
-        this.temp = 0;
+        this.stopBoundary = false;
         this.textContainer = textContainer;
         this.style = { color1, color2 };
         /* Instances */
@@ -347,18 +347,15 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.state.elapsedTime = 0;
         clearTimeout(this.timeoutRef);
     }
-    getRemainingText() {
+    getRemainingText(idx) {
         const length = this.state.wholeTextArray.length;
         /* Calculate and set the remaining text */
-        return this.state.wholeTextArray
-            .slice(this.state.currentWordIndex, length + 1)
-            .join(' ');
+        return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
     }
     handleBoundary(e) {
-        this.temp++;
-        console.log('On boundary', this.state.currentWordIndex, this.temp, this.state.textRemaining.slice(0, 10));
-        if (this.isPaused() && this.state.currentWordIndex > this.temp)
-            return;
+        console.log(e);
+        /* if (this.state.currentWordIndex)
+         */
         /* Highlight the current word */
         this.highlightText(this.state.currentWordIndex);
         /* Increase the current index of word read */
@@ -484,7 +481,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
             this.emit('time-tick', this, this.state.elapsedTime);
         }
         /* Update utterance object, adding the remaining settings and remaining text left to be played */
-        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.getRemainingText() }));
+        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.getRemainingText(this.state.currentWordIndex) }));
         /* Update instance settings object to keep them in sync with utterance settings */
         this.settings = Object.assign(Object.assign({}, this.settings), obj);
         /*  Debounce to handle volume change properly */
@@ -509,9 +506,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         clearTimeout(this.timeoutRef);
         clearTimeout(this.seekTimeoutRef);
         /* Set the new text slice */
-        const textArr = this.state.wholeTextArray;
-        const newText = textArr.slice(index, textArr.length + 1).join(' ');
-        this.state.textRemaining = newText;
+        this.state.textRemaining = this.getRemainingText(index);
         /* Update current word index */
         /* Need to increase the index by 1 */
         this.state.currentWordIndex = index + 1;
@@ -561,8 +556,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     resume() {
         this.synth.resume();
-        /* 	this.synth.cancel();
-        this.play(); */
         this.state.isPaused = false;
         this.state.isPlaying = true;
         this.emit('resume');
