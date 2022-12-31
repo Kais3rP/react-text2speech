@@ -227,7 +227,6 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		textReaderRef.current
 			.init()
 			.then((reader) => {
-				console.log('Reader state voices', reader.state.voices);
 				setVoices(reader.state.voices);
 				setVoice(reader.state.voices[0].voiceURI);
 				setNumberOfWords(reader.state.numberOfWords);

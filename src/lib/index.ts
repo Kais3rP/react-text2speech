@@ -117,16 +117,9 @@ export class SpeechSynth extends EventEmitter {
 
 		try {
 			this.state.voices = await this.getVoices();
-			console.log(
-				'VOICES before filtering',
-				this.state.voices,
-				this.settings.language
-			);
 			this.state.voices = this.state.voices.filter((voice) =>
 				voice.lang.startsWith(this.settings.language as string)
 			);
-			console.log('VOICES after filtering', this.state.voices);
-
 			this.state.voice = this.state.voices[0];
 
 			/* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags" 
@@ -259,9 +252,6 @@ export class SpeechSynth extends EventEmitter {
 	stopBoundary = false;
 
 	private handleBoundary(e: SpeechSynthesisEvent) {
-		console.log(e);
-		/* if (this.state.currentWordIndex)
-		 */
 		/* Highlight the current word */
 
 		this.highlightText(this.state.currentWordIndex);

@@ -266,9 +266,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
             /* Get voices */
             try {
                 this.state.voices = yield this.getVoices();
-                console.log('VOICES before filtering', this.state.voices, this.settings.language);
                 this.state.voices = this.state.voices.filter((voice) => voice.lang.startsWith(this.settings.language));
-                console.log('VOICES after filtering', this.state.voices);
                 this.state.voice = this.state.voices[0];
                 /* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags"
         on stringified HTML */
@@ -350,9 +348,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
     }
     handleBoundary(e) {
-        console.log(e);
-        /* if (this.state.currentWordIndex)
-         */
         /* Highlight the current word */
         this.highlightText(this.state.currentWordIndex);
         /* Increase the current index of word read */
@@ -3754,7 +3749,6 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         textReaderRef.current
             .init()
             .then((reader) => {
-            console.log('Reader state voices', reader.state.voices);
             setVoices(reader.state.voices);
             setVoice(reader.state.voices[0].voiceURI);
             setNumberOfWords(reader.state.numberOfWords);
