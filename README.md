@@ -13,8 +13,9 @@ A React Component that leverages WEB Speech API to implement a text reader for w
 
 ## Features:
 
--   Highlight of text during reading.
--   Full control on timeline by sliding seekbar or by manually clicking text words.
+-   Voice language customization
+-   Highlight of text during reading
+-   Full control on timeline by sliding seekbar or by manually clicking text words
 -   Preview of reading time ( time is averagely calculated )
 -   Control reading speed
 -   Select voice type and language
@@ -71,11 +72,11 @@ const [node, setNode] = useState(null);
 
 ## API / Props
 
-| Props         | Default value                                                                      | Required |
-| ------------- | ---------------------------------------------------------------------------------- | -------- |
-| textContainer | undefined                                                                          | true     |
-| styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" } | false    |
-| options       | { isHighlightTextOn: true, isPreserveHighlighting: true, isSSROn: false }          | false    |
+| Props         | Default value                                                                                                                                                                                     | Required |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| textContainer | undefined                                                                                                                                                                                         | true     |
+| styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" }                                                                                                                | false    |
+| options       | { pitch: 1, rate: 1, language: 'en',voiceURI: 'Microsoft Aria Online (Natural) - English (United States)', volume: 1, isHighlightTextOn: true, isPreserveHighlighting: true, isSSROn: false, } | false    |
 
 ## License
 

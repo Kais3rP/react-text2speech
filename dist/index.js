@@ -3725,7 +3725,7 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         window.speechSynthesis.cancel();
         if (!textContainer)
             return;
-        textReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '', color2: styleOptions.highlightColor2, onStart: (reader) => {
+        textReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
                 console.log('Start');
                 setIsLoading(true);
             }, onEffectivelySpeakingStart: (reader) => {
@@ -3854,7 +3854,7 @@ TextReader.defaultProps = {
         /* Voice settings */
         pitch: 1,
         rate: 1,
-        language: 'en_US',
+        language: 'en',
         voiceURI: 'Microsoft Aria Online (Natural) - English (United States)',
         volume: 1,
         /* Options */

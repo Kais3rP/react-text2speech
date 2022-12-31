@@ -185,8 +185,8 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 		textReaderRef.current = new SpeechSynth(textContainer, {
 			...options,
-			color1: styleOptions?.highlightColor1 || '',
-			color2: styleOptions.highlightColor2,
+			color1: styleOptions?.highlightColor1 || '#DEE',
+			color2: styleOptions.highlightColor2 || '#9DE',
 			onStart: (reader: SpeechSynth) => {
 				console.log('Start');
 				setIsLoading(true);
@@ -456,7 +456,7 @@ TextReader.defaultProps = {
 		/* Voice settings */
 		pitch: 1,
 		rate: 1,
-		language: 'en_US',
+		language: 'en',
 		voiceURI: 'Microsoft Aria Online (Natural) - English (United States)',
 		volume: 1,
 		/* Options */
