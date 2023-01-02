@@ -165,10 +165,15 @@ export class SpeechSynth extends EventEmitter {
 
 			/* Add listeners */
 
-			this.utterance.onboundary = this.handleBoundary.bind(this);
-			this.utterance.onstart = this.events.find(
-				(evs) => evs.type === 'speaking-start'
-			)?.handler as any;
+			// this.utterance.onboundary = this.handleBoundary.bind(this);
+			/* This marks the moment in which the speech effectively starts and not just when the play button is pressed ( "start" event ) */
+			this.utterance.onstart = (e) => {
+				this.timeCount(20);
+				const handler: EventHandler = this.events.find(
+					(evs) => evs.type === 'speaking-start'
+				)?.handler as EventHandler;
+				handler(this, e);
+			};
 
 			/* Attach click event listener to words */
 
@@ -199,7 +204,9 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
-		this.utterance.text = this.state.wholeText;
+		this.utterance.text = this.isMobile
+			? this.state.wholeText.slice(0, 300)
+			: this.state.wholeText;
 		this.utterance.lang = this.settings.language as string;
 		this.utterance.voice = this.state.voice;
 		this.utterance.pitch = this.settings.pitch as number;
@@ -218,20 +225,38 @@ export class SpeechSynth extends EventEmitter {
 			});
 	}
 
+	isMobile = true;
+
 	/* Timer */
 
-	private startTimeCount(frequency: number) {
+	private timeCount(frequency: number) {
 		if (frequency % 10 !== 0)
 			throw new Error('Frequency must be a multiple of 10');
 		this.state.elapsedTime += frequency;
+
+		/* Use this timer to perform the average highlighting in mobile devices */
+
+		if (
+			this.isMobile &&
+			this.state.elapsedTime % (300 * (this.settings.rate as number)) ===
+				0
+		) {
+			this.handleBoundary(
+				new SpeechSynthesisEvent('', {
+					utterance: this.utterance,
+				} as SpeechSynthesisEventInit)
+			);
+		}
+
+		/* Instructions executed every 1000ms when the reader is active */
+
 		if (this.state.elapsedTime % 1000 === 0)
 			this.emit('time-tick', this, this.state.elapsedTime);
 
 		this.timeoutRef = setTimeout(
-			this.startTimeCount.bind(this, frequency),
+			this.timeCount.bind(this, frequency),
 			frequency
 		);
-		// if (this.state.elapsedTime >= 10000) this.resetTimeCount();
 	}
 
 	private pauseTimeCount() {
@@ -249,9 +274,8 @@ export class SpeechSynth extends EventEmitter {
 		return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
 	}
 
-	stopBoundary = false;
-
 	private handleBoundary(e: SpeechSynthesisEvent) {
+		console.log('Handle boundary', this.state.currentWordIndex);
 		/* Highlight the current word */
 
 		this.highlightText(this.state.currentWordIndex);
@@ -518,8 +542,9 @@ export class SpeechSynth extends EventEmitter {
 		this.state.isPlaying = true;
 
 		/* Start timer */
+		/* Commented out to test the Start time count when speaking effectively begins */
 
-		this.startTimeCount(20);
+		/* this.timeCount(20); */
 
 		/* Emit start event */
 
@@ -553,7 +578,7 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Restart timer */
 
-		this.startTimeCount(20);
+		this.timeCount(20);
 	}
 
 	reset() {

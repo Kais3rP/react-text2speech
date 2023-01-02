@@ -204,7 +204,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     /* Options */
     isHighlightTextOn = true, isPreserveHighlighting = true, isSSROn = false, }) {
         super();
-        this.stopBoundary = false;
+        this.isMobile = true;
         this.textContainer = textContainer;
         this.style = { color1, color2 };
         /* Instances */
@@ -261,7 +261,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         };
     }
     init() {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             /* Get voices */
             try {
@@ -285,8 +284,14 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 this.state.wholeTextArray = this.retrieveWholeTextArray(this.textContainer, '[data-id]');
                 /* -------------------------------------------------------------------- */
                 /* Add listeners */
-                this.utterance.onboundary = this.handleBoundary.bind(this);
-                this.utterance.onstart = (_a = this.events.find((evs) => evs.type === 'speaking-start')) === null || _a === void 0 ? void 0 : _a.handler;
+                // this.utterance.onboundary = this.handleBoundary.bind(this);
+                /* This marks the moment in which the speech effectively starts and not just when the play button is pressed ( "start" event ) */
+                this.utterance.onstart = (e) => {
+                    var _a;
+                    this.timeCount(20);
+                    const handler = (_a = this.events.find((evs) => evs.type === 'speaking-start')) === null || _a === void 0 ? void 0 : _a.handler;
+                    handler(this, e);
+                };
                 /* Attach click event listener to words */
                 this.attachEventListenersToWords(this.textContainer, '[data-id]', {
                     type: 'click',
@@ -310,7 +315,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
-        this.utterance.text = this.state.wholeText;
+        this.utterance.text = this.isMobile
+            ? this.state.wholeText.slice(0, 300)
+            : this.state.wholeText;
         this.utterance.lang = this.settings.language;
         this.utterance.voice = this.state.voice;
         this.utterance.pitch = this.settings.pitch;
@@ -326,14 +333,22 @@ class SpeechSynth extends EventEmitter__default["default"] {
             });
     }
     /* Timer */
-    startTimeCount(frequency) {
+    timeCount(frequency) {
         if (frequency % 10 !== 0)
             throw new Error('Frequency must be a multiple of 10');
         this.state.elapsedTime += frequency;
+        /* Use this timer to perform the average highlighting in mobile devices */
+        if (this.isMobile &&
+            this.state.elapsedTime % (300 * this.settings.rate) ===
+                0) {
+            this.handleBoundary(new SpeechSynthesisEvent('', {
+                utterance: this.utterance,
+            }));
+        }
+        /* Instructions executed every 1000ms when the reader is active */
         if (this.state.elapsedTime % 1000 === 0)
             this.emit('time-tick', this, this.state.elapsedTime);
-        this.timeoutRef = setTimeout(this.startTimeCount.bind(this, frequency), frequency);
-        // if (this.state.elapsedTime >= 10000) this.resetTimeCount();
+        this.timeoutRef = setTimeout(this.timeCount.bind(this, frequency), frequency);
     }
     pauseTimeCount() {
         clearTimeout(this.timeoutRef);
@@ -348,6 +363,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
     }
     handleBoundary(e) {
+        console.log('Handle boundary', this.state.currentWordIndex);
         /* Highlight the current word */
         this.highlightText(this.state.currentWordIndex);
         /* Increase the current index of word read */
@@ -527,7 +543,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.state.isPaused = false;
         this.state.isPlaying = true;
         /* Start timer */
-        this.startTimeCount(20);
+        /* Commented out to test the Start time count when speaking effectively begins */
+        /* this.timeCount(20); */
         /* Emit start event */
         this.emit('start', this);
         return new Promise((resolve) => {
@@ -552,7 +569,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.state.isPlaying = true;
         this.emit('resume');
         /* Restart timer */
-        this.startTimeCount(20);
+        this.timeCount(20);
     }
     reset() {
         this.synth.cancel();
@@ -2889,7 +2906,6 @@ const CustomSelect = (_a) => {
         hide();
     };
     useOnClickOutside(ref, hide);
-    console.log('Voices', options, value);
     return (React__default["default"].createElement(Container$1, Object.assign({}, props),
         React__default["default"].createElement(StyledButton, { type: "button", onClick: show, styleoptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
         React__default["default"].createElement(OptionsContainer$1, { ref: ref, styleoptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React__default["default"].createElement(Button, { key: opt.value, onClick: () => {

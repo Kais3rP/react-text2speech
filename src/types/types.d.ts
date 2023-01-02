@@ -33,8 +33,10 @@ declare global {
 
 	interface IEvent {
 		type: string;
-		handler: ((c: SpeechSynth, v?: any) => void) | undefined;
+		handler: EventHandler;
 	}
+
+	type EventHandler = (c: SpeechSynth, v?: any) => void;
 
 	type Events = IEvent[];
 

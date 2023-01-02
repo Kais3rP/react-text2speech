@@ -16,11 +16,11 @@ export declare class SpeechSynth extends EventEmitter {
     init(): Promise<SpeechSynth>;
     private initUtterance;
     private scrollTo;
-    private startTimeCount;
+    isMobile: boolean;
+    private timeCount;
     private pauseTimeCount;
     private resetTimeCount;
     private getRemainingText;
-    stopBoundary: boolean;
     private handleBoundary;
     private getVoices;
     private highlightText;
