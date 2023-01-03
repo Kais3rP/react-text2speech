@@ -7,7 +7,6 @@ declare global {
 	interface IEvents {
 		onEnd: (c: SpeechSynth, v?: any) => void;
 		onStart: (c: SpeechSynth, v?: any) => void;
-		onEffectivelySpeakingStart: (c: SpeechSynth, v?: any) => void;
 		onPause: (c: SpeechSynth, v?: any) => void;
 		onResume: (c: SpeechSynth, v?: any) => void;
 		onReset: (c: SpeechSynth, v?: any) => void;

@@ -191,10 +191,10 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				console.log('Start');
 				setIsLoading(true);
 			},
-			onEffectivelySpeakingStart: (reader: SpeechSynth) => {
+			/* onEffectivelySpeakingStart: (reader: SpeechSynth) => {
 				console.log('Voice speaking');
 				setIsLoading(false);
-			},
+			}, */
 			onPause: (reader: SpeechSynth) => {
 				console.log('Pause');
 			},
@@ -252,7 +252,10 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				reader.resume();
 			} else {
 				console.log('Playing');
-				reader.play();
+				reader.play().then(() => {
+					console.log('Effectively starts to speak');
+					setIsLoading(false);
+				});
 			}
 		} else {
 			if (reader.isPlaying()) reader.pause();

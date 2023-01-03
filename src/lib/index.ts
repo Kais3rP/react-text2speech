@@ -31,7 +31,6 @@ export class SpeechSynth extends EventEmitter {
 			/* Ev handlers */
 			onEnd = () => null,
 			onStart = () => null,
-			onEffectivelySpeakingStart = () => null,
 			onPause = () => null,
 			onResume = () => null,
 			onReset = () => null,
@@ -73,7 +72,6 @@ export class SpeechSynth extends EventEmitter {
 			{ type: 'boundary', handler: onBoundary },
 			{ type: 'time-tick', handler: onTimeTick },
 			{ type: 'word-click', handler: onWordClick },
-			{ type: 'speaking-start', handler: onEffectivelySpeakingStart },
 			{ type: 'start', handler: onStart },
 			{ type: 'pause', handler: onPause },
 			{ type: 'resume', handler: onResume },
@@ -163,18 +161,6 @@ export class SpeechSynth extends EventEmitter {
 
 			/* -------------------------------------------------------------------- */
 
-			/* Add listeners */
-
-			// this.utterance.onboundary = this.handleBoundary.bind(this);
-			/* This marks the moment in which the speech effectively starts and not just when the play button is pressed ( "start" event ) */
-			this.utterance.onstart = (e) => {
-				this.timeCount(20);
-				const handler: EventHandler = this.events.find(
-					(evs) => evs.type === 'speaking-start'
-				)?.handler as EventHandler;
-				handler(this, e);
-			};
-
 			/* Attach click event listener to words */
 
 			this.attachEventListenersToWords(this.textContainer, '[data-id]', {
@@ -183,6 +169,8 @@ export class SpeechSynth extends EventEmitter {
 					this.emit('word-click', this, e);
 				},
 			});
+
+			/* Add class custom event listeners */
 
 			this.addCustomEventListeners();
 
@@ -229,7 +217,7 @@ export class SpeechSynth extends EventEmitter {
 
 	/* Timer */
 
-	private timeCount(frequency: number) {
+	private timeCount(e: SpeechSynthesisEvent | null, frequency: number) {
 		if (frequency % 10 !== 0)
 			throw new Error('Frequency must be a multiple of 10');
 		this.state.elapsedTime += frequency;
@@ -241,6 +229,7 @@ export class SpeechSynth extends EventEmitter {
 			this.state.elapsedTime % (300 * (this.settings.rate as number)) ===
 				0
 		) {
+			console.log('Event', e);
 			this.handleBoundary(
 				new SpeechSynthesisEvent('', {
 					utterance: this.utterance,
@@ -254,7 +243,7 @@ export class SpeechSynth extends EventEmitter {
 			this.emit('time-tick', this, this.state.elapsedTime);
 
 		this.timeoutRef = setTimeout(
-			this.timeCount.bind(this, frequency),
+			this.timeCount.bind(this, e, frequency),
 			frequency
 		);
 	}
@@ -473,7 +462,7 @@ export class SpeechSynth extends EventEmitter {
 			this.synth.cancel();
 			if (isPlaying) this.play();
 			if (isPaused) {
-				this.play();
+				this.play().then(() => this.pause());
 				this.pause();
 			}
 		}, 500);
@@ -526,8 +515,8 @@ export class SpeechSynth extends EventEmitter {
 			this.synth.cancel();
 			if (isPlaying) this.play();
 			if (isPaused) {
-				this.play();
-				this.pause();
+				this.play().then(() => this.pause());
+				this.pause(); // fire pause both sync and async to ensure the time counter does not get started since the play() method triggers the start event which is fired asynchronously
 			}
 		}, 500);
 	}
@@ -541,20 +530,14 @@ export class SpeechSynth extends EventEmitter {
 		this.state.isPaused = false;
 		this.state.isPlaying = true;
 
-		/* Start timer */
-		/* Commented out to test the Start time count when speaking effectively begins */
-
-		/* this.timeCount(20); */
-
 		/* Emit start event */
 
 		this.emit('start', this);
 
 		return new Promise((resolve) => {
-			this.utterance.onend = () => {
-				this.emit('end', this);
-				/* 				this.reset();  // Commented to let the handling of the reset directly to the Component that consumes this library.
-				 */ resolve(null);
+			this.utterance.onstart = (e) => {
+				this.timeCount(e, 20);
+				resolve(null);
 			};
 		});
 	}
@@ -566,7 +549,6 @@ export class SpeechSynth extends EventEmitter {
 		this.emit('pause', this);
 
 		/* Pause timer */
-
 		this.pauseTimeCount();
 	}
 
@@ -578,7 +560,7 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Restart timer */
 
-		this.timeCount(20);
+		this.timeCount(null, 20);
 	}
 
 	reset() {
