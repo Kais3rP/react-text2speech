@@ -157,6 +157,18 @@ class Utils {
             'nav',
         ];
     }
+    static isMobile() {
+        // check the user agent string
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+            return true;
+        // check the platform string
+        if (/iPad|iPhone|iPod/.test(navigator.platform))
+            return true;
+        // check the screen size and pixel density
+        if (window.innerWidth < 768 || window.devicePixelRatio > 1)
+            return true;
+        return false;
+    }
     /* Regex Utils */
     static isPunctuation(str) {
         return /^\s*[.,;:]+\s*$/.test(str);
@@ -204,7 +216,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
     /* Options */
     isHighlightTextOn = true, isPreserveHighlighting = true, isSSROn = false, }) {
         super();
-        this.isMobile = true;
         this.textContainer = textContainer;
         this.style = { color1, color2 };
         /* Instances */
@@ -239,6 +250,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         };
         /* State */
         this.state = {
+            isMobile: false,
             /* Internal properties */
             voice: {},
             voices: [],
@@ -261,6 +273,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
+            /* Check if it's a mobile device */
+            this.state.isMobile = Utils.isMobile();
             /* Get voices */
             try {
                 this.state.voices = yield this.getVoices();
@@ -306,7 +320,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
-        this.utterance.text = this.isMobile
+        this.utterance.text = this.state.isMobile
             ? this.state.wholeText.slice(0, 300)
             : this.state.wholeText;
         this.utterance.lang = this.settings.language;
@@ -314,6 +328,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.utterance.pitch = this.settings.pitch;
         this.utterance.rate = this.settings.rate;
         this.utterance.volume = this.settings.volume;
+        /* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
+        this.utterance.onboundary = this.handleBoundary.bind(this);
     }
     scrollTo(idx) {
         const el = this.textContainer.querySelector(`[data-id="${idx}"]`);
@@ -329,16 +345,16 @@ class SpeechSynth extends EventEmitter__default["default"] {
             throw new Error('Frequency must be a multiple of 10');
         this.state.elapsedTime += frequency;
         /* Use this timer to perform the average highlighting in mobile devices */
-        if (this.isMobile &&
-            this.state.elapsedTime % (300 * this.settings.rate) ===
+        if (this.state.isMobile &&
+            this.state.elapsedTime % (310 * this.settings.rate) ===
                 0) {
             console.log('Event', e);
             this.handleBoundary(new SpeechSynthesisEvent('', {
                 utterance: this.utterance,
             }));
         }
-        /* Instructions executed every 1000ms when the reader is active */
-        if (this.state.elapsedTime % 1000 === 0)
+        else if (this.state.elapsedTime % 1000 === 0)
+            /* Instructions executed every 1000ms when the reader is active */
             this.emit('time-tick', this, this.state.elapsedTime);
         this.timeoutRef = setTimeout(this.timeCount.bind(this, e, frequency), frequency);
     }
@@ -3726,13 +3742,7 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             return;
         textReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
                 console.log('Start');
-                setIsLoading(true);
-            }, 
-            /* onEffectivelySpeakingStart: (reader: SpeechSynth) => {
-                console.log('Voice speaking');
-                setIsLoading(false);
-            }, */
-            onPause: (reader) => {
+            }, onPause: (reader) => {
                 console.log('Pause');
             }, onResume: (reader) => {
                 console.log('Resume');
@@ -3779,16 +3789,15 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             }
             else {
                 console.log('Playing');
+                setIsLoading(true);
                 reader.play().then(() => {
                     console.log('Effectively starts to speak');
                     setIsLoading(false);
                 });
             }
         }
-        else {
-            if (reader.isPlaying())
-                reader.pause();
-        }
+        else if (reader.isPlaying())
+            reader.pause();
     }, [isReading, textContainer, isFirstRender, setIsLoading]);
     return (React__default["default"].createElement(Container, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
         React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '3px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },

@@ -16,7 +16,6 @@ export declare class SpeechSynth extends EventEmitter {
     init(): Promise<SpeechSynth>;
     private initUtterance;
     private scrollTo;
-    isMobile: boolean;
     private timeCount;
     private pauseTimeCount;
     private resetTimeCount;

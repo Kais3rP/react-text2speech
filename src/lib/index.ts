@@ -89,6 +89,7 @@ export class SpeechSynth extends EventEmitter {
 		/* State */
 
 		this.state = {
+			isMobile: false,
 			/* Internal properties */
 			voice: {} as SpeechSynthesisVoice,
 			voices: [] as SpeechSynthesisVoice[],
@@ -111,6 +112,8 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	async init(): Promise<SpeechSynth> {
+		/* Check if it's a mobile device */
+		this.state.isMobile = Utils.isMobile();
 		/* Get voices */
 
 		try {
@@ -192,7 +195,7 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
-		this.utterance.text = this.isMobile
+		this.utterance.text = this.state.isMobile
 			? this.state.wholeText.slice(0, 300)
 			: this.state.wholeText;
 		this.utterance.lang = this.settings.language as string;
@@ -200,6 +203,9 @@ export class SpeechSynth extends EventEmitter {
 		this.utterance.pitch = this.settings.pitch as number;
 		this.utterance.rate = this.settings.rate as number;
 		this.utterance.volume = this.settings.volume as number;
+
+		/* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
+		this.utterance.onboundary = this.handleBoundary.bind(this);
 	}
 
 	private scrollTo(idx: number): void {
@@ -213,8 +219,6 @@ export class SpeechSynth extends EventEmitter {
 			});
 	}
 
-	isMobile = true;
-
 	/* Timer */
 
 	private timeCount(e: SpeechSynthesisEvent | null, frequency: number) {
@@ -225,8 +229,8 @@ export class SpeechSynth extends EventEmitter {
 		/* Use this timer to perform the average highlighting in mobile devices */
 
 		if (
-			this.isMobile &&
-			this.state.elapsedTime % (300 * (this.settings.rate as number)) ===
+			this.state.isMobile &&
+			this.state.elapsedTime % (310 * (this.settings.rate as number)) ===
 				0
 		) {
 			console.log('Event', e);
@@ -235,11 +239,8 @@ export class SpeechSynth extends EventEmitter {
 					utterance: this.utterance,
 				} as SpeechSynthesisEventInit)
 			);
-		}
-
-		/* Instructions executed every 1000ms when the reader is active */
-
-		if (this.state.elapsedTime % 1000 === 0)
+		} else if (this.state.elapsedTime % 1000 === 0)
+			/* Instructions executed every 1000ms when the reader is active */
 			this.emit('time-tick', this, this.state.elapsedTime);
 
 		this.timeoutRef = setTimeout(

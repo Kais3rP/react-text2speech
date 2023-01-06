@@ -40,6 +40,7 @@ declare global {
 	type Events = IEvent[];
 
 	interface IState {
+		isMobile: boolean;
 		/* Internal properties */
 		voice: SpeechSynthesisVoice;
 		voices: SpeechSynthesisVoice[];

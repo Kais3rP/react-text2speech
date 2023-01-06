@@ -20,6 +20,24 @@ export class Utils {
 		];
 	}
 
+	static isMobile() {
+		// check the user agent string
+		if (
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				navigator.userAgent
+			)
+		)
+			return true;
+
+		// check the platform string
+		if (/iPad|iPhone|iPod/.test(navigator.platform)) return true;
+
+		// check the screen size and pixel density
+		if (window.innerWidth < 768 || window.devicePixelRatio > 1) return true;
+
+		return false;
+	}
+
 	/* Regex Utils */
 
 	static isPunctuation(str: string): boolean {
