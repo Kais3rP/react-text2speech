@@ -353,9 +353,11 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 utterance: this.utterance,
             }));
         }
-        else if (this.state.elapsedTime % 1000 === 0)
+        else if (this.state.elapsedTime % 1000 === 0) {
             /* Instructions executed every 1000ms when the reader is active */
             this.emit('time-tick', this, this.state.elapsedTime);
+            console.log(this.synth, this.utterance);
+        }
         this.timeoutRef = setTimeout(this.timeCount.bind(this, e, frequency), frequency);
     }
     pauseTimeCount() {
