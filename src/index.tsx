@@ -189,11 +189,6 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			color2: styleOptions.highlightColor2 || '#9DE',
 			onStart: (reader: SpeechSynth) => {
 				console.log('Start');
-				setIsLoading(true);
-			},
-			onEffectivelySpeakingStart: (reader: SpeechSynth) => {
-				console.log('Voice speaking');
-				setIsLoading(false);
 			},
 			onPause: (reader: SpeechSynth) => {
 				console.log('Pause');
@@ -252,11 +247,13 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				reader.resume();
 			} else {
 				console.log('Playing');
-				reader.play();
+				setIsLoading(true);
+				reader.play().then(() => {
+					console.log('Effectively starts to speak');
+					setIsLoading(false);
+				});
 			}
-		} else {
-			if (reader.isPlaying()) reader.pause();
-		}
+		} else if (reader.isPlaying()) reader.pause();
 	}, [isReading, textContainer, isFirstRender, setIsLoading]);
 
 	return (

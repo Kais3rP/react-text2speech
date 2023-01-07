@@ -7,7 +7,6 @@ declare global {
 	interface IEvents {
 		onEnd: (c: SpeechSynth, v?: any) => void;
 		onStart: (c: SpeechSynth, v?: any) => void;
-		onEffectivelySpeakingStart: (c: SpeechSynth, v?: any) => void;
 		onPause: (c: SpeechSynth, v?: any) => void;
 		onResume: (c: SpeechSynth, v?: any) => void;
 		onReset: (c: SpeechSynth, v?: any) => void;
@@ -33,12 +32,15 @@ declare global {
 
 	interface IEvent {
 		type: string;
-		handler: ((c: SpeechSynth, v?: any) => void) | undefined;
+		handler: EventHandler;
 	}
+
+	type EventHandler = (c: SpeechSynth, v?: any) => void;
 
 	type Events = IEvent[];
 
 	interface IState {
+		isMobile: boolean;
 		/* Internal properties */
 		voice: SpeechSynthesisVoice;
 		voices: SpeechSynthesisVoice[];

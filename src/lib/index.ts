@@ -31,7 +31,6 @@ export class SpeechSynth extends EventEmitter {
 			/* Ev handlers */
 			onEnd = () => null,
 			onStart = () => null,
-			onEffectivelySpeakingStart = () => null,
 			onPause = () => null,
 			onResume = () => null,
 			onReset = () => null,
@@ -73,7 +72,6 @@ export class SpeechSynth extends EventEmitter {
 			{ type: 'boundary', handler: onBoundary },
 			{ type: 'time-tick', handler: onTimeTick },
 			{ type: 'word-click', handler: onWordClick },
-			{ type: 'speaking-start', handler: onEffectivelySpeakingStart },
 			{ type: 'start', handler: onStart },
 			{ type: 'pause', handler: onPause },
 			{ type: 'resume', handler: onResume },
@@ -91,6 +89,7 @@ export class SpeechSynth extends EventEmitter {
 		/* State */
 
 		this.state = {
+			isMobile: false,
 			/* Internal properties */
 			voice: {} as SpeechSynthesisVoice,
 			voices: [] as SpeechSynthesisVoice[],
@@ -113,6 +112,8 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	async init(): Promise<SpeechSynth> {
+		/* Check if it's a mobile device */
+		this.state.isMobile = Utils.isMobile();
 		/* Get voices */
 
 		try {
@@ -163,13 +164,6 @@ export class SpeechSynth extends EventEmitter {
 
 			/* -------------------------------------------------------------------- */
 
-			/* Add listeners */
-
-			this.utterance.onboundary = this.handleBoundary.bind(this);
-			this.utterance.onstart = this.events.find(
-				(evs) => evs.type === 'speaking-start'
-			)?.handler as any;
-
 			/* Attach click event listener to words */
 
 			this.attachEventListenersToWords(this.textContainer, '[data-id]', {
@@ -178,6 +172,8 @@ export class SpeechSynth extends EventEmitter {
 					this.emit('word-click', this, e);
 				},
 			});
+
+			/* Add class custom event listeners */
 
 			this.addCustomEventListeners();
 
@@ -199,12 +195,17 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
-		this.utterance.text = this.state.wholeText;
+		this.utterance.text = this.state.isMobile
+			? this.state.wholeText.slice(0, 300)
+			: this.state.wholeText;
 		this.utterance.lang = this.settings.language as string;
 		this.utterance.voice = this.state.voice;
 		this.utterance.pitch = this.settings.pitch as number;
 		this.utterance.rate = this.settings.rate as number;
 		this.utterance.volume = this.settings.volume as number;
+
+		/* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
+		this.utterance.onboundary = this.handleBoundary.bind(this);
 	}
 
 	private scrollTo(idx: number): void {
@@ -220,18 +221,34 @@ export class SpeechSynth extends EventEmitter {
 
 	/* Timer */
 
-	private startTimeCount(frequency: number) {
+	private timeCount(e: SpeechSynthesisEvent | null, frequency: number) {
 		if (frequency % 10 !== 0)
 			throw new Error('Frequency must be a multiple of 10');
 		this.state.elapsedTime += frequency;
-		if (this.state.elapsedTime % 1000 === 0)
+
+		/* Use this timer to perform the average highlighting in mobile devices */
+
+		if (
+			this.state.isMobile &&
+			this.state.elapsedTime % (310 * (this.settings.rate as number)) ===
+				0
+		) {
+			console.log('Event', e);
+			this.handleBoundary(
+				new SpeechSynthesisEvent('', {
+					utterance: this.utterance,
+				} as SpeechSynthesisEventInit)
+			);
+		} else if (this.state.elapsedTime % 1000 === 0) {
+			/* Instructions executed every 1000ms when the reader is active */
 			this.emit('time-tick', this, this.state.elapsedTime);
+			console.log(this.synth, this.utterance);
+		}
 
 		this.timeoutRef = setTimeout(
-			this.startTimeCount.bind(this, frequency),
+			this.timeCount.bind(this, e, frequency),
 			frequency
 		);
-		// if (this.state.elapsedTime >= 10000) this.resetTimeCount();
 	}
 
 	private pauseTimeCount() {
@@ -249,9 +266,8 @@ export class SpeechSynth extends EventEmitter {
 		return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
 	}
 
-	stopBoundary = false;
-
 	private handleBoundary(e: SpeechSynthesisEvent) {
+		console.log('Handle boundary', this.state.currentWordIndex);
 		/* Highlight the current word */
 
 		this.highlightText(this.state.currentWordIndex);
@@ -449,7 +465,7 @@ export class SpeechSynth extends EventEmitter {
 			this.synth.cancel();
 			if (isPlaying) this.play();
 			if (isPaused) {
-				this.play();
+				this.play().then(() => this.pause());
 				this.pause();
 			}
 		}, 500);
@@ -502,8 +518,8 @@ export class SpeechSynth extends EventEmitter {
 			this.synth.cancel();
 			if (isPlaying) this.play();
 			if (isPaused) {
-				this.play();
-				this.pause();
+				this.play().then(() => this.pause());
+				this.pause(); // fire pause both sync and async to ensure the time counter does not get started since the play() method triggers the start event which is fired asynchronously
 			}
 		}, 500);
 	}
@@ -517,19 +533,14 @@ export class SpeechSynth extends EventEmitter {
 		this.state.isPaused = false;
 		this.state.isPlaying = true;
 
-		/* Start timer */
-
-		this.startTimeCount(20);
-
 		/* Emit start event */
 
 		this.emit('start', this);
 
 		return new Promise((resolve) => {
-			this.utterance.onend = () => {
-				this.emit('end', this);
-				/* 				this.reset();  // Commented to let the handling of the reset directly to the Component that consumes this library.
-				 */ resolve(null);
+			this.utterance.onstart = (e) => {
+				this.timeCount(e, 20);
+				resolve(null);
 			};
 		});
 	}
@@ -541,7 +552,6 @@ export class SpeechSynth extends EventEmitter {
 		this.emit('pause', this);
 
 		/* Pause timer */
-
 		this.pauseTimeCount();
 	}
 
@@ -553,7 +563,7 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Restart timer */
 
-		this.startTimeCount(20);
+		this.timeCount(null, 20);
 	}
 
 	reset() {

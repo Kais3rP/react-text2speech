@@ -157,6 +157,18 @@ class Utils {
             'nav',
         ];
     }
+    static isMobile() {
+        // check the user agent string
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+            return true;
+        // check the platform string
+        if (/iPad|iPhone|iPod/.test(navigator.platform))
+            return true;
+        // check the screen size and pixel density
+        if (window.innerWidth < 768 || window.devicePixelRatio > 1)
+            return true;
+        return false;
+    }
     /* Regex Utils */
     static isPunctuation(str) {
         return /^\s*[.,;:]+\s*$/.test(str);
@@ -200,11 +212,10 @@ class SpeechSynth extends EventEmitter__default["default"] {
     /* Style */
     color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
-    onEnd = () => null, onStart = () => null, onEffectivelySpeakingStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, 
+    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, 
     /* Options */
     isHighlightTextOn = true, isPreserveHighlighting = true, isSSROn = false, }) {
         super();
-        this.stopBoundary = false;
         this.textContainer = textContainer;
         this.style = { color1, color2 };
         /* Instances */
@@ -225,7 +236,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
             { type: 'boundary', handler: onBoundary },
             { type: 'time-tick', handler: onTimeTick },
             { type: 'word-click', handler: onWordClick },
-            { type: 'speaking-start', handler: onEffectivelySpeakingStart },
             { type: 'start', handler: onStart },
             { type: 'pause', handler: onPause },
             { type: 'resume', handler: onResume },
@@ -240,6 +250,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         };
         /* State */
         this.state = {
+            isMobile: false,
             /* Internal properties */
             voice: {},
             voices: [],
@@ -261,8 +272,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
         };
     }
     init() {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            /* Check if it's a mobile device */
+            this.state.isMobile = Utils.isMobile();
             /* Get voices */
             try {
                 this.state.voices = yield this.getVoices();
@@ -284,9 +296,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 /* Get the array of words that will be read */
                 this.state.wholeTextArray = this.retrieveWholeTextArray(this.textContainer, '[data-id]');
                 /* -------------------------------------------------------------------- */
-                /* Add listeners */
-                this.utterance.onboundary = this.handleBoundary.bind(this);
-                this.utterance.onstart = (_a = this.events.find((evs) => evs.type === 'speaking-start')) === null || _a === void 0 ? void 0 : _a.handler;
                 /* Attach click event listener to words */
                 this.attachEventListenersToWords(this.textContainer, '[data-id]', {
                     type: 'click',
@@ -294,6 +303,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
                         this.emit('word-click', this, e);
                     },
                 });
+                /* Add class custom event listeners */
                 this.addCustomEventListeners();
                 /* -------------------------------------------------------------------- */
                 /* Init utterance settings */
@@ -310,12 +320,16 @@ class SpeechSynth extends EventEmitter__default["default"] {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
-        this.utterance.text = this.state.wholeText;
+        this.utterance.text = this.state.isMobile
+            ? this.state.wholeText.slice(0, 300)
+            : this.state.wholeText;
         this.utterance.lang = this.settings.language;
         this.utterance.voice = this.state.voice;
         this.utterance.pitch = this.settings.pitch;
         this.utterance.rate = this.settings.rate;
         this.utterance.volume = this.settings.volume;
+        /* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
+        this.utterance.onboundary = this.handleBoundary.bind(this);
     }
     scrollTo(idx) {
         const el = this.textContainer.querySelector(`[data-id="${idx}"]`);
@@ -326,14 +340,25 @@ class SpeechSynth extends EventEmitter__default["default"] {
             });
     }
     /* Timer */
-    startTimeCount(frequency) {
+    timeCount(e, frequency) {
         if (frequency % 10 !== 0)
             throw new Error('Frequency must be a multiple of 10');
         this.state.elapsedTime += frequency;
-        if (this.state.elapsedTime % 1000 === 0)
+        /* Use this timer to perform the average highlighting in mobile devices */
+        if (this.state.isMobile &&
+            this.state.elapsedTime % (310 * this.settings.rate) ===
+                0) {
+            console.log('Event', e);
+            this.handleBoundary(new SpeechSynthesisEvent('', {
+                utterance: this.utterance,
+            }));
+        }
+        else if (this.state.elapsedTime % 1000 === 0) {
+            /* Instructions executed every 1000ms when the reader is active */
             this.emit('time-tick', this, this.state.elapsedTime);
-        this.timeoutRef = setTimeout(this.startTimeCount.bind(this, frequency), frequency);
-        // if (this.state.elapsedTime >= 10000) this.resetTimeCount();
+            console.log(this.synth, this.utterance);
+        }
+        this.timeoutRef = setTimeout(this.timeCount.bind(this, e, frequency), frequency);
     }
     pauseTimeCount() {
         clearTimeout(this.timeoutRef);
@@ -348,6 +373,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
     }
     handleBoundary(e) {
+        console.log('Handle boundary', this.state.currentWordIndex);
         /* Highlight the current word */
         this.highlightText(this.state.currentWordIndex);
         /* Increase the current index of word read */
@@ -482,7 +508,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
             if (isPlaying)
                 this.play();
             if (isPaused) {
-                this.play();
+                this.play().then(() => this.pause());
                 this.pause();
             }
         }, 500);
@@ -515,8 +541,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
             if (isPlaying)
                 this.play();
             if (isPaused) {
-                this.play();
-                this.pause();
+                this.play().then(() => this.pause());
+                this.pause(); // fire pause both sync and async to ensure the time counter does not get started since the play() method triggers the start event which is fired asynchronously
             }
         }, 500);
     }
@@ -526,15 +552,12 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.synth.speak(this.utterance);
         this.state.isPaused = false;
         this.state.isPlaying = true;
-        /* Start timer */
-        this.startTimeCount(20);
         /* Emit start event */
         this.emit('start', this);
         return new Promise((resolve) => {
-            this.utterance.onend = () => {
-                this.emit('end', this);
-                /* 				this.reset();  // Commented to let the handling of the reset directly to the Component that consumes this library.
-                 */ resolve(null);
+            this.utterance.onstart = (e) => {
+                this.timeCount(e, 20);
+                resolve(null);
             };
         });
     }
@@ -552,7 +575,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.state.isPlaying = true;
         this.emit('resume');
         /* Restart timer */
-        this.startTimeCount(20);
+        this.timeCount(null, 20);
     }
     reset() {
         this.synth.cancel();
@@ -2889,7 +2912,6 @@ const CustomSelect = (_a) => {
         hide();
     };
     useOnClickOutside(ref, hide);
-    console.log('Voices', options, value);
     return (React__default["default"].createElement(Container$1, Object.assign({}, props),
         React__default["default"].createElement(StyledButton, { type: "button", onClick: show, styleoptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
         React__default["default"].createElement(OptionsContainer$1, { ref: ref, styleoptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React__default["default"].createElement(Button, { key: opt.value, onClick: () => {
@@ -3722,10 +3744,6 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             return;
         textReaderRef.current = new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
                 console.log('Start');
-                setIsLoading(true);
-            }, onEffectivelySpeakingStart: (reader) => {
-                console.log('Voice speaking');
-                setIsLoading(false);
             }, onPause: (reader) => {
                 console.log('Pause');
             }, onResume: (reader) => {
@@ -3773,13 +3791,15 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             }
             else {
                 console.log('Playing');
-                reader.play();
+                setIsLoading(true);
+                reader.play().then(() => {
+                    console.log('Effectively starts to speak');
+                    setIsLoading(false);
+                });
             }
         }
-        else {
-            if (reader.isPlaying())
-                reader.pause();
-        }
+        else if (reader.isPlaying())
+            reader.pause();
     }, [isReading, textContainer, isFirstRender, setIsLoading]);
     return (React__default["default"].createElement(Container, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
         React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '3px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },
