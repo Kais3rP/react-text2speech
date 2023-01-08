@@ -96,7 +96,7 @@ export class SpeechSynth extends EventEmitter {
 			/* UI */
 			isLoading: true,
 			/* Highlight & Reading time */
-			currentWordIndex: 1,
+			currentWordIndex: 0,
 			highlightedWords: [] as HTMLElement[],
 			lastWordPosition: 0,
 			numberOfWords: 0,
@@ -105,6 +105,8 @@ export class SpeechSynth extends EventEmitter {
 			textRemaining: '',
 			duration: 0,
 			elapsedTime: 0,
+			currentChunkIndex: 0,
+			chunksArray: [],
 			/* Controls  */
 			isPaused: false,
 			isPlaying: false,
@@ -114,6 +116,7 @@ export class SpeechSynth extends EventEmitter {
 	async init(): Promise<SpeechSynth> {
 		/* Check if it's a mobile device */
 		this.state.isMobile = Utils.isMobile();
+
 		/* Get voices */
 
 		try {
@@ -162,6 +165,8 @@ export class SpeechSynth extends EventEmitter {
 				'[data-id]'
 			) as string[];
 
+			this.state.chunksArray = this.retrieveChunks();
+
 			/* -------------------------------------------------------------------- */
 
 			/* Attach click event listener to words */
@@ -195,8 +200,10 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
+		console.log(this.state.chunksArray);
+
 		this.utterance.text = this.state.isMobile
-			? this.state.wholeText.slice(0, 300)
+			? this.state.chunksArray[this.state.currentChunkIndex].text
 			: this.state.wholeText;
 		this.utterance.lang = this.settings.language as string;
 		this.utterance.voice = this.state.voice;
@@ -205,7 +212,63 @@ export class SpeechSynth extends EventEmitter {
 		this.utterance.volume = this.settings.volume as number;
 
 		/* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
-		this.utterance.onboundary = this.handleBoundary.bind(this);
+		if (!this.state.isMobile)
+			this.utterance.onboundary = this.handleBoundary.bind(this);
+
+		/* On mobile the end event is fired multiple times due to chunkification of text hence this is used to manage the highlight of chunks */
+		this.utterance.onend = (e) => {
+			console.log(
+				'Ending utterance',
+				this.state.currentWordIndex,
+				this.state.chunksArray[this.state.currentChunkIndex]
+			);
+			/* Emit the end event only when the whole text has finished to be read */
+			if (
+				(!this.state.isMobile &&
+					this.state.currentWordIndex >=
+						this.state.wholeTextArray.length) ||
+				(this.state.isMobile &&
+					this.state.currentChunkIndex >=
+						this.state.chunksArray.length)
+			)
+				this.emit('end');
+
+			/* Manage the chunckification for mobile devices */
+			if (this.state.isMobile && this.state.isPlaying)
+				this.handleChunkHighlighting();
+		};
+	}
+
+	private highlightChunk() {
+		const length =
+			this.state.currentWordIndex +
+			this.state.chunksArray[this.state.currentChunkIndex].length;
+		for (let i = this.state.currentWordIndex; i < length; i++)
+			this.highlightText(i);
+	}
+
+	private retrieveChunks() {
+		return this.state.wholeText
+			.split('.')
+			.map((c) => ({ text: c + '.', length: c.split(' ').length }));
+	}
+
+	private handleChunkHighlighting() {
+		const currentChunk =
+			this.state.chunksArray[this.state.currentChunkIndex];
+		const nextChunk =
+			this.state.chunksArray[++this.state.currentChunkIndex];
+
+		this.utterance.text = nextChunk.text;
+
+		/* Keep the currentWordIndex in sync */
+		this.state.currentWordIndex += currentChunk.length - 1;
+
+		/* Highlight the next chunk */
+		this.highlightChunk();
+
+		/* Finally play the nxt chunk */
+		this.play();
 	}
 
 	private scrollTo(idx: number): void {
@@ -226,23 +289,9 @@ export class SpeechSynth extends EventEmitter {
 			throw new Error('Frequency must be a multiple of 10');
 		this.state.elapsedTime += frequency;
 
-		/* Use this timer to perform the average highlighting in mobile devices */
-
-		if (
-			this.state.isMobile &&
-			this.state.elapsedTime % (310 * (this.settings.rate as number)) ===
-				0
-		) {
-			console.log('Event', e);
-			this.handleBoundary(
-				new SpeechSynthesisEvent('', {
-					utterance: this.utterance,
-				} as SpeechSynthesisEventInit)
-			);
-		} else if (this.state.elapsedTime % 1000 === 0) {
+		if (this.state.elapsedTime % 1000 === 0) {
 			/* Instructions executed every 1000ms when the reader is active */
 			this.emit('time-tick', this, this.state.elapsedTime);
-			console.log(this.synth, this.utterance);
 		}
 
 		this.timeoutRef = setTimeout(
@@ -528,6 +577,7 @@ export class SpeechSynth extends EventEmitter {
 	/* Public Methods to control the player state */
 
 	play(): Promise<null> {
+		this.synth.cancel(); // Makes sure the queue is empty when starting
 		this.synth.speak(this.utterance);
 
 		this.state.isPaused = false;
@@ -539,8 +589,18 @@ export class SpeechSynth extends EventEmitter {
 
 		return new Promise((resolve) => {
 			this.utterance.onstart = (e) => {
-				this.timeCount(e, 20);
-				resolve(null);
+				/*  Make sure to start the timer only on the first "start" event to prevent mobile play/resume bugs */
+
+				if (
+					this.state.currentWordIndex === 0 &&
+					this.state.currentChunkIndex === 0
+				) {
+					this.timeCount(e, 20);
+					resolve(null);
+				}
+				/* Highlight the first chunk on first start if on mobile devices */
+				if (this.state.isMobile && this.state.currentChunkIndex === 0)
+					this.highlightChunk();
 			};
 		});
 	}
@@ -556,7 +616,8 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	resume() {
-		this.synth.resume();
+		if (!this.state.isMobile) this.synth.resume();
+		else this.play();
 		this.state.isPaused = false;
 		this.state.isPlaying = true;
 		this.emit('resume');
@@ -578,7 +639,8 @@ export class SpeechSynth extends EventEmitter {
 		this.state = {
 			...this.state,
 			textRemaining: this.state.wholeText,
-			currentWordIndex: 1,
+			currentWordIndex: 0,
+			currentChunkIndex: 0,
 			highlightedWords: [],
 			lastWordPosition: 0,
 			isPaused: false,
@@ -660,8 +722,7 @@ export class SpeechSynth extends EventEmitter {
 					// wrap in a data-id html tag only plain words ( exclude html tags )
 
 					if (!Utils.isTag(el)) {
-						index++;
-						return `<span data-id="${index}">${el}</span>`;
+						return `<span data-id="${index++}">${el}</span>`;
 					}
 
 					return el;

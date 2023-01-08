@@ -39,6 +39,8 @@ declare global {
 
 	type Events = IEvent[];
 
+	type Chunk = { text: string; length: number };
+
 	interface IState {
 		isMobile: boolean;
 		/* Internal properties */
@@ -56,6 +58,8 @@ declare global {
 		textRemaining: string;
 		duration: number;
 		elapsedTime: number;
+		currentChunkIndex: number;
+		chunksArray: Chunk[];
 		/* Controls  */
 		isPaused: boolean;
 		isPlaying: boolean;
