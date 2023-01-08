@@ -36,7 +36,7 @@ export declare class SpeechSynth extends EventEmitter {
     private getTextDuration;
     private getAverageTextElapsedTime;
     editUtterance(obj: Partial<ISettings>): void;
-    seekTo(index: number): void;
+    seekTo(idx: number): void;
     play(): Promise<null>;
     pause(): void;
     resume(): void;

@@ -39,7 +39,13 @@ declare global {
 
 	type Events = IEvent[];
 
-	type Chunk = { text: string; length: number };
+	type Chunk = {
+		text: string;
+		length: number;
+		start: number;
+		end: number;
+		idx: number;
+	};
 
 	interface IState {
 		isMobile: boolean;

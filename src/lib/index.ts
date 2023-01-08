@@ -217,40 +217,44 @@ export class SpeechSynth extends EventEmitter {
 
 		/* On mobile the end event is fired multiple times due to chunkification of text hence this is used to manage the highlight of chunks */
 		this.utterance.onend = (e) => {
-			console.log(
-				'Ending utterance',
-				this.state.currentWordIndex,
-				this.state.chunksArray[this.state.currentChunkIndex]
-			);
 			/* Emit the end event only when the whole text has finished to be read */
 			if (
 				(!this.state.isMobile &&
 					this.state.currentWordIndex >=
-						this.state.wholeTextArray.length) ||
+						this.state.wholeTextArray.length - 1) ||
 				(this.state.isMobile &&
 					this.state.currentChunkIndex >=
-						this.state.chunksArray.length)
+						this.state.chunksArray.length - 1)
 			)
 				this.emit('end');
 
-			/* Manage the chunckification for mobile devices */
+			/* Manage the chunkification for mobile devices */
 			if (this.state.isMobile && this.state.isPlaying)
 				this.handleChunkHighlighting();
 		};
 	}
 
-	private highlightChunk() {
+	private highlightChunk(idx: number) {
 		const length =
-			this.state.currentWordIndex +
-			this.state.chunksArray[this.state.currentChunkIndex].length;
+			this.state.currentWordIndex + this.state.chunksArray[idx].length;
 		for (let i = this.state.currentWordIndex; i < length; i++)
 			this.highlightText(i);
 	}
 
-	private retrieveChunks() {
-		return this.state.wholeText
-			.split('.')
-			.map((c) => ({ text: c + '.', length: c.split(' ').length }));
+	private retrieveChunks(): Chunk[] {
+		let previousEnd = 0;
+		return this.state.wholeText.split(/[.?!;]/).map((c, i) => {
+			const length = c.trim().split(' ').length;
+			const result: Chunk = {
+				text: c + '.',
+				length: length,
+				start: previousEnd,
+				end: previousEnd + length - 1,
+				idx: i,
+			};
+			previousEnd = previousEnd + length;
+			return result;
+		});
 	}
 
 	private handleChunkHighlighting() {
@@ -262,10 +266,10 @@ export class SpeechSynth extends EventEmitter {
 		this.utterance.text = nextChunk.text;
 
 		/* Keep the currentWordIndex in sync */
-		this.state.currentWordIndex += currentChunk.length - 1;
+		this.state.currentWordIndex += currentChunk.length;
 
 		/* Highlight the next chunk */
-		this.highlightChunk();
+		this.highlightChunk(this.state.currentChunkIndex);
 
 		/* Finally play the nxt chunk */
 		this.play();
@@ -501,7 +505,9 @@ export class SpeechSynth extends EventEmitter {
 
 		this.utterance = Object.assign(this.utterance, {
 			...obj,
-			text: this.getRemainingText(this.state.currentWordIndex),
+			text: !this.state.isMobile
+				? this.getRemainingText(this.state.currentWordIndex)
+				: this.state.chunksArray[this.state.currentChunkIndex].text,
 		});
 
 		/* Update instance settings object to keep them in sync with utterance settings */
@@ -522,10 +528,10 @@ export class SpeechSynth extends EventEmitter {
 
 	/* Control methods */
 
-	seekTo(index: number) {
+	seekTo(idx: number) {
 		const isPlaying = this.isPlaying();
 		const isPaused = this.isPaused();
-		this.emit('seek', this, index);
+		this.emit('seek', this, idx);
 
 		/* Cancel synth instance */
 
@@ -536,23 +542,38 @@ export class SpeechSynth extends EventEmitter {
 		clearTimeout(this.timeoutRef);
 		clearTimeout(this.seekTimeoutRef);
 
-		/* Set the new text slice */
+		if (!this.state.isMobile) {
+			/* Set the new text slice */
 
-		this.state.textRemaining = this.getRemainingText(index);
+			this.state.textRemaining = this.getRemainingText(idx);
 
-		/* Update current word index */
-		/* Need to increase the index by 1 */
+			/* Update current word index */
+			/* Need to increase the index by 1 */
 
-		this.state.currentWordIndex = index + 1;
+			this.state.currentWordIndex = idx + 1;
 
-		/* Update utterance instance with  the new text slice */
+			/* Update utterance instance with  the new text slice */
 
-		this.utterance.text = this.state.textRemaining;
+			this.utterance.text = this.state.textRemaining;
 
-		/* Highlight */
+			/* Highlight */
 
-		this.resetHighlight();
-		this.highlightText(this.state.currentWordIndex);
+			this.resetHighlight();
+			this.highlightText(this.state.currentWordIndex);
+		} else {
+			const chunk = this.state.chunksArray.find(
+				(c) => idx >= c.start && idx <= c.end
+			) as Chunk;
+			this.state.currentChunkIndex = chunk.idx as number;
+			this.state.currentWordIndex = chunk.start;
+
+			this.utterance.text = chunk.text;
+
+			/* Highlight */
+
+			this.resetHighlight();
+			this.highlightChunk(this.state.currentChunkIndex);
+		}
 
 		/* Recalculate time elapsed */
 
@@ -578,10 +599,14 @@ export class SpeechSynth extends EventEmitter {
 
 	play(): Promise<null> {
 		this.synth.cancel(); // Makes sure the queue is empty when starting
+		clearTimeout(this.timeoutRef); // Makes sure to not trigger multiple timeouts
+
 		this.synth.speak(this.utterance);
 
 		this.state.isPaused = false;
 		this.state.isPlaying = true;
+
+		this.timeCount(null, 20);
 
 		/* Emit start event */
 
@@ -591,16 +616,17 @@ export class SpeechSynth extends EventEmitter {
 			this.utterance.onstart = (e) => {
 				/*  Make sure to start the timer only on the first "start" event to prevent mobile play/resume bugs */
 
-				if (
+				/* if (
 					this.state.currentWordIndex === 0 &&
 					this.state.currentChunkIndex === 0
 				) {
 					this.timeCount(e, 20);
-					resolve(null);
-				}
+				} */
 				/* Highlight the first chunk on first start if on mobile devices */
 				if (this.state.isMobile && this.state.currentChunkIndex === 0)
-					this.highlightChunk();
+					this.highlightChunk(this.state.currentChunkIndex);
+
+				resolve(null);
 			};
 		});
 	}

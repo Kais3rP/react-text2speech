@@ -48,9 +48,9 @@ function App() {
 					ut modi inventore. Sed totam iste et dolorem autem{' '}
 					<em>
 						Eum magni sit quaerat voluptate et officiis tempora in
-						laborum modi
+						laborum modi.
 					</em>
-					. Ad dolorem illum qui quibusdam veritatisEum nihil rem quod
+					Ad dolorem illum qui quibusdam veritatisEum nihil rem quod
 					laborum hic doloremque nesciunt rem beatae iusto. Sit esse
 					libero non enim ametEum quidem et dignissimos repellat qui
 					voluptatem possimus. Et aperiam sapienteQui dignissimos ut

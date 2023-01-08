@@ -215,7 +215,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 			onWordClick: (reader: SpeechSynth, e: MouseEvent) => {
 				const target: HTMLElement = e.target as HTMLElement;
 				const idx: number = +(target.dataset.id as string);
-				handleGenericSeek(idx - 1);
+				handleGenericSeek(idx);
 			},
 		});
 
