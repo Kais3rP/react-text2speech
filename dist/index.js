@@ -159,7 +159,17 @@ class Utils {
     }
     static isMobile() {
         /* Dev mode */
-        return true;
+        // return true;
+        // check the user agent string
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+            return true;
+        // check the platform string
+        if (/iPad|iPhone|iPod/.test(navigator.platform))
+            return true;
+        // check the screen size and pixel density
+        if (window.innerWidth < 768 || window.devicePixelRatio > 1)
+            return true;
+        return false;
     }
     /* Regex Utils */
     static isPunctuation(str) {
@@ -562,7 +572,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
             this.state.textRemaining = this.getRemainingText(idx);
             /* Update current word index */
             /* Need to increase the index by 1 */
-            this.state.currentWordIndex = idx + 1;
+            this.state.currentWordIndex = idx;
             /* Update utterance instance with  the new text slice */
             this.utterance.text = this.state.textRemaining;
             /* Highlight */

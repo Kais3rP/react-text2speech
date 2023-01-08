@@ -22,7 +22,7 @@ export class Utils {
 
 	static isMobile() {
 		/* Dev mode */
-		return true;
+		// return true;
 		// check the user agent string
 		if (
 			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(

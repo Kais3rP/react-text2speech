@@ -550,7 +550,7 @@ export class SpeechSynth extends EventEmitter {
 			/* Update current word index */
 			/* Need to increase the index by 1 */
 
-			this.state.currentWordIndex = idx + 1;
+			this.state.currentWordIndex = idx;
 
 			/* Update utterance instance with  the new text slice */
 
