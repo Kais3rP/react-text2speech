@@ -19,6 +19,7 @@ declare global {
 	interface IOptions {
 		isHighlightTextOn?: boolean;
 		isPreserveHighlighting?: boolean;
+		isChunksModeOn?: boolean;
 		isSSROn?: boolean;
 	}
 

@@ -39,9 +39,10 @@ export class SpeechSynth extends EventEmitter {
 			onWordClick = () => null,
 			onSeek = () => null,
 			/* Options */
-			isHighlightTextOn = true,
+			isHighlightTextOn = false,
 			isPreserveHighlighting = true,
 			isSSROn = false,
+			isChunksModeOn = false,
 		}: Params
 	) {
 		super();
@@ -82,6 +83,7 @@ export class SpeechSynth extends EventEmitter {
 
 		this.options = {
 			isHighlightTextOn,
+			isChunksModeOn,
 			isPreserveHighlighting,
 			isSSROn,
 		};
@@ -258,8 +260,10 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private handleChunkHighlighting() {
+		// eslint-disable-next-line prettier/prettier
 		const currentChunk =
 			this.state.chunksArray[this.state.currentChunkIndex];
+		// eslint-disable-next-line prettier/prettier
 		const nextChunk =
 			this.state.chunksArray[++this.state.currentChunkIndex];
 
@@ -320,7 +324,6 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private handleBoundary(e: SpeechSynthesisEvent) {
-		console.log('Handle boundary', this.state.currentWordIndex);
 		/* Highlight the current word */
 
 		this.highlightText(this.state.currentWordIndex);
@@ -354,6 +357,7 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private highlightText(wordIndex: number): void {
+		// eslint-disable-next-line prettier/prettier
 		const wordToHighlight: HTMLElement | null =
 			this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
 

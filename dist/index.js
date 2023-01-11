@@ -206,7 +206,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     /* Ev handlers */
     onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, 
     /* Options */
-    isHighlightTextOn = true, isPreserveHighlighting = true, isSSROn = false, }) {
+    isHighlightTextOn = false, isPreserveHighlighting = true, isSSROn = false, isChunksModeOn = false, }) {
         super();
         this.textContainer = textContainer;
         this.style = { color1, color2 };
@@ -237,6 +237,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         ];
         this.options = {
             isHighlightTextOn,
+            isChunksModeOn,
             isPreserveHighlighting,
             isSSROn,
         };
@@ -363,7 +364,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
         });
     }
     handleChunkHighlighting() {
+        // eslint-disable-next-line prettier/prettier
         const currentChunk = this.state.chunksArray[this.state.currentChunkIndex];
+        // eslint-disable-next-line prettier/prettier
         const nextChunk = this.state.chunksArray[++this.state.currentChunkIndex];
         this.utterance.text = nextChunk.text;
         /* Keep the currentWordIndex in sync */
@@ -405,7 +408,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
     }
     handleBoundary(e) {
-        console.log('Handle boundary', this.state.currentWordIndex);
         /* Highlight the current word */
         this.highlightText(this.state.currentWordIndex);
         /* Increase the current index of word read */
@@ -432,6 +434,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         });
     }
     highlightText(wordIndex) {
+        // eslint-disable-next-line prettier/prettier
         const wordToHighlight = this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
         if (!wordToHighlight)
             return;
