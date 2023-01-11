@@ -266,6 +266,8 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				setDuration(reader.state.duration);
 				if (reader.state.isMobile) {
 					reader.options.isChunksModeOn = true;
+					reader.editUtterance({});
+
 					enableChunksMode();
 				}
 			})
