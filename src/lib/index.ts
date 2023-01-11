@@ -377,6 +377,7 @@ export class SpeechSynth extends EventEmitter {
 			if (!this.options.isPreserveHighlighting) {
 				this.state.highlightedWords.forEach((el) => {
 					el.style.backgroundColor = '';
+					el.style.boxShadow = '';
 				});
 				this.state.highlightedWords = [wordToHighlight];
 			}
