@@ -58,6 +58,12 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		duration,
 		numberOfWords,
 		isLoading,
+		isHighlightTextOn,
+		isChunksModeOn,
+		enableChunksMode,
+		disableChunksMode,
+		enableHighlightText,
+		disableHighlightText,
 		stopReading,
 		startReading,
 		setRate,
@@ -137,19 +143,6 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		maximize();
 	};
 
-	const handlePreserveHighlighting: ChangeEventHandler = (e) => {
-		const reader = textReaderRef.current;
-		const target = e.target as HTMLInputElement;
-		if (!reader) return;
-		if (target.checked) {
-			enablePreserveHighlighting();
-			reader.options.isPreserveHighlighting = true;
-		} else {
-			disablePreserveHighlighting();
-			reader.options.isPreserveHighlighting = false;
-		}
-	};
-
 	const toggleSettings = () => {
 		if (isSettingsVisible) hideSettings();
 		else showSettings();
@@ -174,6 +167,51 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	const handleGenericSeek = (val: number) => {
 		const reader = textReaderRef.current;
 		reader?.seekTo(val);
+	};
+
+	/* Options Handlers */
+
+	const handlePreserveHighlighting: ChangeEventHandler = (e) => {
+		const reader = textReaderRef.current;
+		const target = e.target as HTMLInputElement;
+		if (!reader) return;
+		if (target.checked) {
+			enablePreserveHighlighting();
+			reader.options.isPreserveHighlighting = true;
+		} else {
+			disablePreserveHighlighting();
+			reader.options.isPreserveHighlighting = false;
+		}
+	};
+
+	const handleIsHighlightTextOn: ChangeEventHandler = (e) => {
+		const reader = textReaderRef.current;
+		const target = e.target as HTMLInputElement;
+		if (!reader) return;
+		if (target.checked) {
+			enableHighlightText();
+			reader.options.isHighlightTextOn = true;
+		} else {
+			disableHighlightText();
+			reader.options.isHighlightTextOn = false;
+		}
+	};
+
+	const handleIsChunksModeOn: ChangeEventHandler = (e) => {
+		const reader = textReaderRef.current;
+		const target = e.target as HTMLInputElement;
+		if (!reader || reader.state.isMobile) return;
+
+		if (target.checked) {
+			enableChunksMode();
+			reader.options.isChunksModeOn = true;
+		} else {
+			disableChunksMode();
+			reader.options.isChunksModeOn = false;
+		}
+
+		/* Use the editUtterance method to update the utterance text  */
+		reader.editUtterance({});
 	};
 
 	useEffect(() => {
@@ -226,6 +264,10 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				setVoice(reader.state.voices[0].voiceURI);
 				setNumberOfWords(reader.state.numberOfWords);
 				setDuration(reader.state.duration);
+				if (reader.state.isMobile) {
+					reader.options.isChunksModeOn = true;
+					enableChunksMode();
+				}
 			})
 			.catch((e) => console.log(e));
 
@@ -429,16 +471,40 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 						onPointerDown={toggleSettings}
 					>
 						<label
-							htmlFor="is-row-check"
+							htmlFor="preserve-option"
 							onPointerDown={(e) => e.stopPropagation()}
 						>
 							<CheckBox
-								id="is-row-check"
+								id="preserve-option"
 								type="checkbox"
 								checked={isPreserveHighlighting}
 								onChange={handlePreserveHighlighting}
 							/>
 							<h5>Preserve Highlighting</h5>
+						</label>
+						<label
+							htmlFor="highlight-option"
+							onPointerDown={(e) => e.stopPropagation()}
+						>
+							<CheckBox
+								id="highlight-option"
+								type="checkbox"
+								checked={isHighlightTextOn}
+								onChange={handleIsHighlightTextOn}
+							/>
+							<h5>Highlight Text</h5>
+						</label>
+						<label
+							htmlFor="mode-option"
+							onPointerDown={(e) => e.stopPropagation()}
+						>
+							<CheckBox
+								id="mode-option"
+								type="checkbox"
+								checked={isChunksModeOn}
+								onChange={handleIsChunksModeOn}
+							/>
+							<h5>Chunks Mode</h5>
 						</label>
 					</ExtraSettings>
 				</>

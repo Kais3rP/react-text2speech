@@ -159,7 +159,17 @@ class Utils {
     }
     static isMobile() {
         /* Dev mode */
-        return true;
+        //	return true;
+        // check the user agent string
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+            return true;
+        // check the platform string
+        if (/iPad|iPhone|iPod/.test(navigator.platform))
+            return true;
+        // check the screen size and pixel density
+        if (window.innerWidth < 768 || window.devicePixelRatio > 1)
+            return true;
+        return false;
     }
     /* Regex Utils */
     static isPunctuation(str) {
@@ -206,7 +216,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     /* Ev handlers */
     onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, 
     /* Options */
-    isHighlightTextOn = false, isPreserveHighlighting = true, isSSROn = false, isChunksModeOn = false, }) {
+    isHighlightTextOn = true, isPreserveHighlighting = true, isSSROn = false, isChunksModeOn = false, }) {
         super();
         this.textContainer = textContainer;
         this.style = { color1, color2 };
@@ -277,7 +287,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 this.state.voice = this.state.voices[0];
                 /* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags"
         on stringified HTML */
-                if (this.options.isHighlightTextOn && !this.options.isSSROn)
+                if (!this.options.isSSROn)
                     SpeechSynth.addHTMLHighlightTags(this.textContainer);
                 /* Add basic style to the words that have just been tagged wit HTML tags */
                 this.applyBasicStyleToWords(this.textContainer, '[data-id]');
@@ -316,8 +326,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
-        console.log(this.state.chunksArray);
-        this.utterance.text = this.state.isMobile
+        console.log('IS chunks mode on', this.options.isChunksModeOn);
+        this.utterance.text = this.options.isChunksModeOn
             ? this.state.chunksArray[this.state.currentChunkIndex].text
             : this.state.wholeText;
         this.utterance.lang = this.settings.language;
@@ -326,21 +336,23 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.utterance.rate = this.settings.rate;
         this.utterance.volume = this.settings.volume;
         /* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
-        if (!this.state.isMobile)
-            this.utterance.onboundary = this.handleBoundary.bind(this);
+        this.utterance.onboundary = this.handleBoundary.bind(this);
         /* On mobile the end event is fired multiple times due to chunkification of text hence this is used to manage the highlight of chunks */
         this.utterance.onend = (e) => {
+            console.log('Handle highlighting chunk END');
             /* Emit the end event only when the whole text has finished to be read */
-            if ((!this.state.isMobile &&
+            if ((!this.options.isChunksModeOn &&
                 this.state.currentWordIndex >=
                     this.state.wholeTextArray.length - 1) ||
-                (this.state.isMobile &&
+                (this.options.isChunksModeOn &&
                     this.state.currentChunkIndex >=
                         this.state.chunksArray.length - 1))
-                this.emit('end');
+                return this.emit('end');
             /* Manage the chunkification for mobile devices */
-            if (this.state.isMobile && this.state.isPlaying)
+            if (this.options.isChunksModeOn && this.state.isPlaying)
                 this.handleChunkHighlighting();
+            /* Finally play the nxt chunk */
+            this.play();
         };
     }
     highlightChunk(idx) {
@@ -364,6 +376,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         });
     }
     handleChunkHighlighting() {
+        console.log('Handle highlighting chunk');
         // eslint-disable-next-line prettier/prettier
         const currentChunk = this.state.chunksArray[this.state.currentChunkIndex];
         // eslint-disable-next-line prettier/prettier
@@ -372,9 +385,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Keep the currentWordIndex in sync */
         this.state.currentWordIndex += currentChunk.length;
         /* Highlight the next chunk */
+        /* Do not highlight if the option is disabled */
         this.highlightChunk(this.state.currentChunkIndex);
-        /* Finally play the nxt chunk */
-        this.play();
     }
     scrollTo(idx) {
         const el = this.textContainer.querySelector(`[data-id="${idx}"]`);
@@ -408,10 +420,17 @@ class SpeechSynth extends EventEmitter__default["default"] {
         return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
     }
     handleBoundary(e) {
+        console.log('Boundary', /[.?!;]/.test(this.state.wholeTextArray[this.state.currentWordIndex]), this.state.wholeTextArray[this.state.currentWordIndex]);
+        /* Disable boundary if it's in chunk mode */
+        if (this.options.isChunksModeOn)
+            return;
         /* Highlight the current word */
         this.highlightText(this.state.currentWordIndex);
         /* Increase the current index of word read */
         this.state.currentWordIndex += 1;
+        /* Synchronize the chunk index */
+        if (/[.?!;]/.test(this.state.wholeTextArray[this.state.currentWordIndex]))
+            this.state.currentChunkIndex++;
         /* Emit boundary event */
         this.emit('boundary', this, e);
     }
@@ -434,6 +453,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
         });
     }
     highlightText(wordIndex) {
+        /* Do not highlight if the option is disabled */
+        if (!this.options.isHighlightTextOn)
+            return;
         // eslint-disable-next-line prettier/prettier
         const wordToHighlight = this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
         if (!wordToHighlight)
@@ -512,6 +534,11 @@ class SpeechSynth extends EventEmitter__default["default"] {
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PUBLIC METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+    /* 	setUtteranceText() {
+        this.utterance.text = this.options.isChunksModeOn
+            ? this.state.chunksArray[this.state.currentChunkIndex].text
+            : this.getRemainingText(this.state.currentWordIndex);
+    } */
     editUtterance(obj) {
         const isPlaying = this.isPlaying();
         const isPaused = this.isPaused();
@@ -535,9 +562,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
             this.emit('time-tick', this, this.state.elapsedTime);
         }
         /* Update utterance object, adding the remaining settings and remaining text left to be played */
-        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: !this.state.isMobile
-                ? this.getRemainingText(this.state.currentWordIndex)
-                : this.state.chunksArray[this.state.currentChunkIndex].text }));
+        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.options.isChunksModeOn
+                ? this.state.chunksArray[this.state.currentChunkIndex].text
+                : this.getRemainingText(this.state.currentWordIndex) }));
         /* Update instance settings object to keep them in sync with utterance settings */
         this.settings = Object.assign(Object.assign({}, this.settings), obj);
         /*  Debounce to handle volume change properly */
@@ -561,7 +588,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Reset timeouts  */
         clearTimeout(this.timeoutRef);
         clearTimeout(this.seekTimeoutRef);
-        if (!this.state.isMobile) {
+        if (!this.options.isChunksModeOn) {
             /* Set the new text slice */
             this.state.textRemaining = this.getRemainingText(idx);
             /* Update current word index */
@@ -608,15 +635,10 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.emit('start', this);
         return new Promise((resolve) => {
             this.utterance.onstart = (e) => {
-                /*  Make sure to start the timer only on the first "start" event to prevent mobile play/resume bugs */
-                /* if (
-                    this.state.currentWordIndex === 0 &&
-                    this.state.currentChunkIndex === 0
-                ) {
-                    this.timeCount(e, 20);
-                } */
+                console.log('TEXT', this.utterance.text);
                 /* Highlight the first chunk on first start if on mobile devices */
-                if (this.state.isMobile && this.state.currentChunkIndex === 0)
+                if (this.options.isChunksModeOn &&
+                    this.state.currentChunkIndex === 0)
                     this.highlightChunk(this.state.currentChunkIndex);
                 resolve(null);
             };
@@ -631,7 +653,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.pauseTimeCount();
     }
     resume() {
-        if (!this.state.isMobile)
+        if (!this.options.isChunksModeOn)
             this.synth.resume();
         else
             this.play();
@@ -1719,12 +1741,32 @@ const useTextReaderStore = create()(middleware_2(middleware_3((set) => ({
     volume: '0.5',
     elapsedTime: 0,
     isPreserveHighlighting: true,
+    isHighlightTextOn: true,
+    isChunksModeOn: false,
     isMinimized: true,
     isVisible: true,
     isSettingsVisible: false,
     numberOfWords: 0,
     currentWordIndex: 1,
     duration: 0,
+    enablePreserveHighlighting: () => set(fn((state) => {
+        state.isPreserveHighlighting = true;
+    })),
+    disablePreserveHighlighting: () => set(fn((state) => {
+        state.isPreserveHighlighting = false;
+    })),
+    enableHighlightText: () => set(fn((state) => {
+        state.isHighlightTextOn = true;
+    })),
+    disableHighlightText: () => set(fn((state) => {
+        state.isHighlightTextOn = false;
+    })),
+    enableChunksMode: () => set(fn((state) => {
+        state.isChunksModeOn = true;
+    })),
+    disableChunksMode: () => set(fn((state) => {
+        state.isChunksModeOn = false;
+    })),
     setIsLoading: (b) => set(fn((state) => {
         state.isLoading = b;
     })),
@@ -1736,12 +1778,6 @@ const useTextReaderStore = create()(middleware_2(middleware_3((set) => ({
     })),
     setNumberOfWords: (n) => set(fn((state) => {
         state.numberOfWords = n;
-    })),
-    enablePreserveHighlighting: () => set(fn((state) => {
-        state.isPreserveHighlighting = true;
-    })),
-    disablePreserveHighlighting: () => set(fn((state) => {
-        state.isPreserveHighlighting = false;
     })),
     showSettings: () => set(fn((state) => {
         state.isSettingsVisible = true;
@@ -1788,6 +1824,9 @@ const useTextReaderStore = create()(middleware_2(middleware_3((set) => ({
         'elapsedTime',
         'isReading',
         'currentWordIndex',
+        'isPreserveHighlighting',
+        'isHighlightTextOn',
+        'isChunksModeOn',
     ].includes(key))),
 })));
 
@@ -3717,7 +3756,7 @@ const CheckBox = styled.input `
 
 const TextReader = ({ textContainer, options, styleOptions }) => {
     const isFirstRender = useIsFirstRender();
-    const { isReading, rate, voice, voices, volume, elapsedTime, currentWordIndex, duration, numberOfWords, isLoading, stopReading, startReading, setRate, setVoice, setVoices, setVolume, setElapsedTime, isMinimized, minimize, maximize, hideTextReader, isVisible, isSettingsVisible, showSettings, hideSettings, isPreserveHighlighting, enablePreserveHighlighting, disablePreserveHighlighting, setNumberOfWords, setCurrentWordIndex, setDuration, setIsLoading, } = useTextReaderStore();
+    const { isReading, rate, voice, voices, volume, elapsedTime, currentWordIndex, duration, numberOfWords, isLoading, isHighlightTextOn, isChunksModeOn, enableChunksMode, disableChunksMode, enableHighlightText, disableHighlightText, stopReading, startReading, setRate, setVoice, setVoices, setVolume, setElapsedTime, isMinimized, minimize, maximize, hideTextReader, isVisible, isSettingsVisible, showSettings, hideSettings, isPreserveHighlighting, enablePreserveHighlighting, disablePreserveHighlighting, setNumberOfWords, setCurrentWordIndex, setDuration, setIsLoading, } = useTextReaderStore();
     const textReaderRef = React.useRef();
     /* Handlers */
     const handleTextReadPlay = () => {
@@ -3764,20 +3803,6 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
     const handleMaximizeReader = () => {
         maximize();
     };
-    const handlePreserveHighlighting = (e) => {
-        const reader = textReaderRef.current;
-        const target = e.target;
-        if (!reader)
-            return;
-        if (target.checked) {
-            enablePreserveHighlighting();
-            reader.options.isPreserveHighlighting = true;
-        }
-        else {
-            disablePreserveHighlighting();
-            reader.options.isPreserveHighlighting = false;
-        }
-    };
     const toggleSettings = () => {
         if (isSettingsVisible)
             hideSettings();
@@ -3799,6 +3824,51 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
     const handleGenericSeek = (val) => {
         const reader = textReaderRef.current;
         reader === null || reader === void 0 ? void 0 : reader.seekTo(val);
+    };
+    /* Options Handlers */
+    const handlePreserveHighlighting = (e) => {
+        const reader = textReaderRef.current;
+        const target = e.target;
+        if (!reader)
+            return;
+        if (target.checked) {
+            enablePreserveHighlighting();
+            reader.options.isPreserveHighlighting = true;
+        }
+        else {
+            disablePreserveHighlighting();
+            reader.options.isPreserveHighlighting = false;
+        }
+    };
+    const handleIsHighlightTextOn = (e) => {
+        const reader = textReaderRef.current;
+        const target = e.target;
+        if (!reader)
+            return;
+        if (target.checked) {
+            enableHighlightText();
+            reader.options.isHighlightTextOn = true;
+        }
+        else {
+            disableHighlightText();
+            reader.options.isHighlightTextOn = false;
+        }
+    };
+    const handleIsChunksModeOn = (e) => {
+        const reader = textReaderRef.current;
+        const target = e.target;
+        if (!reader || reader.state.isMobile)
+            return;
+        if (target.checked) {
+            enableChunksMode();
+            reader.options.isChunksModeOn = true;
+        }
+        else {
+            disableChunksMode();
+            reader.options.isChunksModeOn = false;
+        }
+        /* Use the editUtterance method to update the utterance text  */
+        reader.editUtterance({});
     };
     React.useEffect(() => {
         /* Reset browser active speech synth queue on refresh or new load */
@@ -3834,6 +3904,10 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             setVoice(reader.state.voices[0].voiceURI);
             setNumberOfWords(reader.state.numberOfWords);
             setDuration(reader.state.duration);
+            if (reader.state.isMobile) {
+                reader.options.isChunksModeOn = true;
+                enableChunksMode();
+            }
         })
             .catch((e) => console.log(e));
         return () => {
@@ -3922,9 +3996,15 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                                 unit: '%',
                             }, styleOptions: styleOptions })))),
             React__default["default"].createElement(ExtraSettings, { styleoptions: styleOptions, issettingsvisible: isSettingsVisible.toString(), onPointerDown: toggleSettings },
-                React__default["default"].createElement("label", { htmlFor: "is-row-check", onPointerDown: (e) => e.stopPropagation() },
-                    React__default["default"].createElement(CheckBox, { id: "is-row-check", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
-                    React__default["default"].createElement("h5", null, "Preserve Highlighting")))))));
+                React__default["default"].createElement("label", { htmlFor: "preserve-option", onPointerDown: (e) => e.stopPropagation() },
+                    React__default["default"].createElement(CheckBox, { id: "preserve-option", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
+                    React__default["default"].createElement("h5", null, "Preserve Highlighting")),
+                React__default["default"].createElement("label", { htmlFor: "highlight-option", onPointerDown: (e) => e.stopPropagation() },
+                    React__default["default"].createElement(CheckBox, { id: "highlight-option", type: "checkbox", checked: isHighlightTextOn, onChange: handleIsHighlightTextOn }),
+                    React__default["default"].createElement("h5", null, "Highlight Text")),
+                React__default["default"].createElement("label", { htmlFor: "mode-option", onPointerDown: (e) => e.stopPropagation() },
+                    React__default["default"].createElement(CheckBox, { id: "mode-option", type: "checkbox", checked: isChunksModeOn, onChange: handleIsChunksModeOn }),
+                    React__default["default"].createElement("h5", null, "Chunks Mode")))))));
 };
 TextReader.defaultProps = {
     options: {
