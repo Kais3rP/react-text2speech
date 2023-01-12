@@ -78,6 +78,8 @@ const [node, setNode] = useState(null);
 | styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" }                                                                                                                | false    |
 | options       | { language: 'en', isSSROn: false, } | false    |
 
+*** Remember to set the language accordingly to the language of the text that it's going to be read, it's enough you type the first locale letters e.g. "en", "de", "fr", etc... ***
+
 ## License
 
 MIT © [react-text2speech](https://github.com/Kais3rP/react-text2speech)

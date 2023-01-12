@@ -24,7 +24,7 @@ function App() {
 				react-text2speech
 			</a>
 			{node && (
-				<TextReader textContainer={node} options={{ language: 'it' }} />
+				<TextReader textContainer={node} options={{ language: 'fr' }} />
 			)}
 			<button
 				className={styles.play}
