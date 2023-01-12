@@ -20,11 +20,7 @@ export class SpeechSynth extends EventEmitter {
 		textContainer: HTMLElement,
 		{
 			/* Settings */
-			pitch = 1,
-			rate = 1,
 			language = 'en',
-			voiceURI = '',
-			volume = 1,
 			/* Style */
 			color1 = '#DEE',
 			color2 = '#9DE',
@@ -39,10 +35,7 @@ export class SpeechSynth extends EventEmitter {
 			onWordClick = () => null,
 			onSeek = () => null,
 			/* Options */
-			isHighlightTextOn = true,
-			isPreserveHighlighting = true,
 			isSSROn = false,
-			isChunksModeOn = false,
 		}: Params
 	) {
 		super();
@@ -58,16 +51,19 @@ export class SpeechSynth extends EventEmitter {
 
 		this.timeoutRef = undefined;
 		this.seekTimeoutRef = undefined;
+		this.editTimeoutRef = undefined;
 
 		/* Utterance settings */
 
 		this.settings = {
-			pitch: pitch,
-			voiceURI: voiceURI,
+			pitch: 1,
+			voiceURI: '',
 			language: language,
-			rate: rate,
-			volume: volume,
+			rate: 1,
+			volume: 1,
 		};
+
+		/* Events */
 
 		this.events = [
 			{ type: 'boundary', handler: onBoundary },
@@ -81,10 +77,12 @@ export class SpeechSynth extends EventEmitter {
 			{ type: 'end', handler: onEnd },
 		];
 
+		/* Options */
+
 		this.options = {
-			isHighlightTextOn,
-			isChunksModeOn,
-			isPreserveHighlighting,
+			isHighlightTextOn: true,
+			isChunksModeOn: false,
+			isPreserveHighlighting: true,
 			isSSROn,
 		};
 
@@ -202,7 +200,6 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
-		console.log('IS chunks mode on', this.options.isChunksModeOn);
 		this.utterance.text = this.options.isChunksModeOn
 			? this.state.chunksArray[this.state.currentChunkIndex].text
 			: this.state.wholeText;
@@ -217,8 +214,6 @@ export class SpeechSynth extends EventEmitter {
 
 		/* On mobile the end event is fired multiple times due to chunkification of text hence this is used to manage the highlight of chunks */
 		this.utterance.onend = (e) => {
-			console.log('Handle highlighting chunk END');
-
 			/* Emit the end event only when the whole text has finished to be read */
 			if (
 				(!this.options.isChunksModeOn &&
@@ -235,7 +230,7 @@ export class SpeechSynth extends EventEmitter {
 				this.handleChunkHighlighting();
 
 			/* Finally play the nxt chunk */
-			this.play();
+			this.play('next-chunk-start');
 		};
 	}
 
@@ -263,7 +258,13 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private handleChunkHighlighting() {
-		console.log('Handle highlighting chunk');
+		console.log(
+			'Highlight chunk',
+			this.state.chunksArray[this.state.currentChunkIndex],
+			'Current word',
+			this.state.wholeTextArray[this.state.currentWordIndex]
+		);
+
 		// eslint-disable-next-line prettier/prettier
 		const currentChunk =
 			this.state.chunksArray[this.state.currentChunkIndex];
@@ -326,14 +327,11 @@ export class SpeechSynth extends EventEmitter {
 		return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
 	}
 
+	private getCurrentChunkText() {
+		return this.state.chunksArray[this.state.currentChunkIndex].text;
+	}
+
 	private handleBoundary(e: SpeechSynthesisEvent) {
-		console.log(
-			'Boundary',
-			/[.?!;]/.test(
-				this.state.wholeTextArray[this.state.currentWordIndex]
-			),
-			this.state.wholeTextArray[this.state.currentWordIndex]
-		);
 		/* Disable boundary if it's in chunk mode */
 		if (this.options.isChunksModeOn) return;
 
@@ -418,7 +416,7 @@ export class SpeechSynth extends EventEmitter {
 		/* Apply highlight style */
 
 		wordToHighlight.style.backgroundColor = this.style.color1 as string;
-		wordToHighlight.style.boxShadow = `8px 0px 0px 0px ${this.style.color1}`;
+		wordToHighlight.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
 		wordToHighlight.style.textDecoration = 'underline';
 	}
 
@@ -486,20 +484,22 @@ export class SpeechSynth extends EventEmitter {
 		return (rate: number) => this.getTextDuration(_text, rate);
 	}
 
+	private delayRestart(type: string, delay: number) {
+		return setTimeout(() => {
+			this.synth.cancel();
+			if (this.isPlaying()) this.play(type);
+			if (this.isPaused()) {
+				this.play(type).then(() => this.pause());
+				this.pause();
+			}
+		}, 500);
+	}
+
 	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PUBLIC METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
-	/* 	setUtteranceText() {
-		this.utterance.text = this.options.isChunksModeOn
-			? this.state.chunksArray[this.state.currentChunkIndex].text
-			: this.getRemainingText(this.state.currentWordIndex);
-	} */
-
 	editUtterance(obj: Partial<ISettings>) {
-		const isPlaying = this.isPlaying();
-		const isPaused = this.isPaused();
-
 		/* Reset timeouts  */
 
 		clearTimeout(this.timeoutRef);
@@ -541,7 +541,7 @@ export class SpeechSynth extends EventEmitter {
 		this.utterance = Object.assign(this.utterance, {
 			...obj,
 			text: this.options.isChunksModeOn
-				? this.state.chunksArray[this.state.currentChunkIndex].text
+				? this.getCurrentChunkText()
 				: this.getRemainingText(this.state.currentWordIndex),
 		});
 
@@ -551,21 +551,22 @@ export class SpeechSynth extends EventEmitter {
 
 		/*  Debounce to handle volume change properly */
 
-		this.editTimeoutRef = setTimeout(() => {
-			this.synth.cancel();
-			if (isPlaying) this.play();
-			if (isPaused) {
-				this.play().then(() => this.pause());
-				this.pause();
-			}
-		}, 500);
+		this.editTimeoutRef = this.delayRestart('edit-utterance', 500);
+	}
+
+	changeChunkMode(b: boolean) {
+		clearTimeout(this.timeoutRef);
+		this.options.isChunksModeOn = b;
+
+		this.utterance.text = this.options.isChunksModeOn
+			? this.getCurrentChunkText()
+			: this.getRemainingText(this.state.currentWordIndex);
+		this.delayRestart('edit-chunk-mode', 500);
 	}
 
 	/* Control methods */
 
 	seekTo(idx: number) {
-		const isPlaying = this.isPlaying();
-		const isPaused = this.isPaused();
 		this.emit('seek', this, idx);
 
 		/* Cancel synth instance */
@@ -576,6 +577,14 @@ export class SpeechSynth extends EventEmitter {
 
 		clearTimeout(this.timeoutRef);
 		clearTimeout(this.seekTimeoutRef);
+
+		/* Sync the current chunk in both cases that the seeking is performed in chunk or non chunk mode */
+
+		const chunk = this.state.chunksArray.find(
+			(c) => idx >= c.start && idx <= c.end
+		) as Chunk;
+		this.state.currentChunkIndex = chunk.idx as number;
+		this.state.currentWordIndex = chunk.start;
 
 		if (!this.options.isChunksModeOn) {
 			/* Set the new text slice */
@@ -596,12 +605,6 @@ export class SpeechSynth extends EventEmitter {
 			this.resetHighlight();
 			this.highlightText(this.state.currentWordIndex);
 		} else {
-			const chunk = this.state.chunksArray.find(
-				(c) => idx >= c.start && idx <= c.end
-			) as Chunk;
-			this.state.currentChunkIndex = chunk.idx as number;
-			this.state.currentWordIndex = chunk.start;
-
 			this.utterance.text = chunk.text;
 
 			/* Highlight */
@@ -619,20 +622,13 @@ export class SpeechSynth extends EventEmitter {
 
 		this.emit('time-tick', this, this.state.elapsedTime);
 
-		this.seekTimeoutRef = setTimeout(() => {
-			this.synth.cancel();
-			if (isPlaying) this.play();
-			if (isPaused) {
-				this.play().then(() => this.pause());
-				this.pause(); // fire pause both sync and async to ensure the time counter does not get started since the play() method triggers the start event which is fired asynchronously
-			}
-		}, 500);
+		this.seekTimeoutRef = this.delayRestart('seek', 500);
 	}
 
 	/* ------------------------------------------------------------------------------------ */
 	/* Public Methods to control the player state */
 
-	play(): Promise<null> {
+	play(type?: string): Promise<null> {
 		this.synth.cancel(); // Makes sure the queue is empty when starting
 		clearTimeout(this.timeoutRef); // Makes sure to not trigger multiple timeouts
 
@@ -643,23 +639,74 @@ export class SpeechSynth extends EventEmitter {
 
 		this.timeCount(null, 20);
 
-		/* Emit start event */
+		switch (type) {
+			case 'start': {
+				this.emit('start', this);
+				return new Promise((resolve) => {
+					this.utterance.onstart = (e) => {
+						resolve(null);
+					};
+				});
+			}
+			case 'resume-chunk-mode': {
+				this.emit('start', this);
+				return new Promise((resolve) => {
+					this.utterance.onstart = (e) => {
+						resolve(null);
+					};
+				});
+			}
+			case 'next-chunk-start': {
+				this.emit('start', this);
+				return new Promise((resolve) => {
+					this.utterance.onstart = (e) => {
+						resolve(null);
+					};
+				});
+			}
+			case 'edit-utterance-settings': {
+				return new Promise((resolve) => {
+					this.utterance.onstart = (e) => {
+						resolve(null);
+					};
+				});
+			}
+			case 'edit-chunk-mode': {
+				return new Promise((resolve) => {
+					this.utterance.onstart = (e) => {
+						resolve(null);
+						/* When the utterance is restarted due to chunk mode change, and the current word index corresponds to a word in the middle of a sentence, 
+						make sure the current word index gets synchronized with the current chunk index start word */
 
-		this.emit('start', this);
+						if (
+							this.options.isChunksModeOn &&
+							this.state.currentWordIndex !==
+								this.state.chunksArray[
+									this.state.currentChunkIndex
+								].start
+						)
+							this.state.currentWordIndex =
+								this.state.chunksArray[
+									this.state.currentChunkIndex
+								].start;
 
-		return new Promise((resolve) => {
-			this.utterance.onstart = (e) => {
-				console.log('TEXT', this.utterance.text);
-				/* Highlight the first chunk on first start if on mobile devices */
-				if (
-					this.options.isChunksModeOn &&
-					this.state.currentChunkIndex === 0
-				)
-					this.highlightChunk(this.state.currentChunkIndex);
+						/* This manages the starting highlight if chunk mode is on or off:
+						1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
+						2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
 
-				resolve(null);
-			};
-		});
+						if (this.options.isChunksModeOn)
+							this.highlightChunk(this.state.currentChunkIndex);
+						else if (this) this.resetHighlight();
+					};
+				});
+			}
+			default:
+				return new Promise((resolve) => {
+					this.utterance.onstart = (e) => {
+						resolve(null);
+					};
+				});
+		}
 	}
 
 	pause() {
@@ -674,7 +721,7 @@ export class SpeechSynth extends EventEmitter {
 
 	resume() {
 		if (!this.options.isChunksModeOn) this.synth.resume();
-		else this.play();
+		else this.play('resume-chunk-mode');
 		this.state.isPaused = false;
 		this.state.isPlaying = true;
 		this.emit('resume');

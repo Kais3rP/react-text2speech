@@ -83,6 +83,8 @@ const OptionsContainer = styled.div<IOptionsContainer>`
 	overflow-x: hidden;
 `;
 
+/* React Components */
+
 export const Button: FC<IButtonProps> = ({
 	children,
 	styleOptions,

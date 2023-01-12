@@ -202,16 +202,11 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		const target = e.target as HTMLInputElement;
 		if (!reader || reader.state.isMobile) return;
 
-		if (target.checked) {
-			enableChunksMode();
-			reader.options.isChunksModeOn = true;
-		} else {
-			disableChunksMode();
-			reader.options.isChunksModeOn = false;
-		}
+		if (target.checked) enableChunksMode();
+		else disableChunksMode();
 
 		/* Use the editUtterance method to update the utterance text  */
-		reader.editUtterance({});
+		reader.changeChunkMode(target.checked);
 	};
 
 	useEffect(() => {
