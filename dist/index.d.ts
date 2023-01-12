@@ -1,7 +1,10 @@
 import { FC } from 'react';
 interface IProps {
     children?: JSX.Element | string;
-    options: ISettings & IOptions & IStyle;
+    options: {
+        language: string;
+        isSSROn: boolean;
+    };
     styleOptions: IStyleOptions;
     textContainer: HTMLElement;
 }

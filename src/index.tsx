@@ -39,7 +39,7 @@ import {
 
 interface IProps {
 	children?: JSX.Element | string;
-	options: ISettings & IOptions & IStyle;
+	options: { language: string; isSSROn: boolean };
 	styleOptions: IStyleOptions;
 	textContainer: HTMLElement;
 }
@@ -513,15 +513,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 TextReader.defaultProps = {
 	options: {
-		/* Voice settings */
-		pitch: 1,
-		rate: 1,
 		language: 'en',
-		voiceURI: 'Microsoft Aria Online (Natural) - English (United States)',
-		volume: 1,
-		/* Options */
-		isHighlightTextOn: true,
-		isPreserveHighlighting: true,
 		isSSROn: false,
 	},
 	styleOptions: {

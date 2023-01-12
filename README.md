@@ -76,7 +76,7 @@ const [node, setNode] = useState(null);
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
 | textContainer | undefined                                                                                                                                                                                         | true     |
 | styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" }                                                                                                                | false    |
-| options       | { pitch: 1, rate: 1, language: 'en',voiceURI: 'Microsoft Aria Online (Natural) - English (United States)', volume: 1, isHighlightTextOn: true, isPreserveHighlighting: true, isSSROn: false, } | false    |
+| options       | { language: 'en', isSSROn: false, } | false    |
 
 ## License
 
