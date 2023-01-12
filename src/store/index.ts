@@ -17,6 +17,12 @@ interface ITextReaderState {
 	currentWordIndex: number;
 	duration: number;
 	isLoading: boolean;
+	isHighlightTextOn: boolean;
+	isChunksModeOn: boolean;
+	enableHighlightText: () => void;
+	disableHighlightText: () => void;
+	enableChunksMode: () => void;
+	disableChunksMode: () => void;
 	setDuration: (n: number) => void;
 	setCurrentWordIndex: (n: number) => void;
 	setNumberOfWords: (n: number) => void;
@@ -50,12 +56,50 @@ export const useTextReaderStore = create<ITextReaderState>()(
 				volume: '0.5',
 				elapsedTime: 0,
 				isPreserveHighlighting: true,
+				isHighlightTextOn: true,
+				isChunksModeOn: false,
 				isMinimized: true,
 				isVisible: true,
 				isSettingsVisible: false,
 				numberOfWords: 0,
 				currentWordIndex: 1,
 				duration: 0,
+				enablePreserveHighlighting: () =>
+					set(
+						produce((state) => {
+							state.isPreserveHighlighting = true;
+						})
+					),
+				disablePreserveHighlighting: () =>
+					set(
+						produce((state) => {
+							state.isPreserveHighlighting = false;
+						})
+					),
+				enableHighlightText: () =>
+					set(
+						produce((state) => {
+							state.isHighlightTextOn = true;
+						})
+					),
+				disableHighlightText: () =>
+					set(
+						produce((state) => {
+							state.isHighlightTextOn = false;
+						})
+					),
+				enableChunksMode: () =>
+					set(
+						produce((state) => {
+							state.isChunksModeOn = true;
+						})
+					),
+				disableChunksMode: () =>
+					set(
+						produce((state) => {
+							state.isChunksModeOn = false;
+						})
+					),
 				setIsLoading: (b: boolean) =>
 					set(
 						produce((state) => {
@@ -78,18 +122,6 @@ export const useTextReaderStore = create<ITextReaderState>()(
 					set(
 						produce((state) => {
 							state.numberOfWords = n;
-						})
-					),
-				enablePreserveHighlighting: () =>
-					set(
-						produce((state) => {
-							state.isPreserveHighlighting = true;
-						})
-					),
-				disablePreserveHighlighting: () =>
-					set(
-						produce((state) => {
-							state.isPreserveHighlighting = false;
 						})
 					),
 				showSettings: () =>
@@ -181,6 +213,9 @@ export const useTextReaderStore = create<ITextReaderState>()(
 									'elapsedTime',
 									'isReading',
 									'currentWordIndex',
+									'isPreserveHighlighting',
+									'isHighlightTextOn',
+									'isChunksModeOn',
 								].includes(key)
 						)
 					),

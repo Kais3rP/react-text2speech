@@ -58,6 +58,12 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		duration,
 		numberOfWords,
 		isLoading,
+		isHighlightTextOn,
+		isChunksModeOn,
+		enableChunksMode,
+		disableChunksMode,
+		enableHighlightText,
+		disableHighlightText,
 		stopReading,
 		startReading,
 		setRate,
@@ -97,9 +103,6 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	const handleReset = () => {
 		const reader = textReaderRef.current;
 		reader?.reset();
-		stopReading();
-		setElapsedTime(0);
-		setCurrentWordIndex(1);
 	};
 
 	const handleRateChange = (value: string) => {
@@ -137,19 +140,6 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		maximize();
 	};
 
-	const handlePreserveHighlighting: ChangeEventHandler = (e) => {
-		const reader = textReaderRef.current;
-		const target = e.target as HTMLInputElement;
-		if (!reader) return;
-		if (target.checked) {
-			enablePreserveHighlighting();
-			reader.options.isPreserveHighlighting = true;
-		} else {
-			disablePreserveHighlighting();
-			reader.options.isPreserveHighlighting = false;
-		}
-	};
-
 	const toggleSettings = () => {
 		if (isSettingsVisible) hideSettings();
 		else showSettings();
@@ -176,6 +166,46 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		reader?.seekTo(val);
 	};
 
+	/* Options Handlers */
+
+	const handlePreserveHighlighting: ChangeEventHandler = (e) => {
+		const reader = textReaderRef.current;
+		const target = e.target as HTMLInputElement;
+		if (!reader) return;
+		if (target.checked) {
+			enablePreserveHighlighting();
+			reader.options.isPreserveHighlighting = true;
+		} else {
+			disablePreserveHighlighting();
+			reader.options.isPreserveHighlighting = false;
+		}
+	};
+
+	const handleIsHighlightTextOn: ChangeEventHandler = (e) => {
+		const reader = textReaderRef.current;
+		const target = e.target as HTMLInputElement;
+		if (!reader) return;
+		if (target.checked) {
+			enableHighlightText();
+			reader.options.isHighlightTextOn = true;
+		} else {
+			disableHighlightText();
+			reader.options.isHighlightTextOn = false;
+		}
+	};
+
+	const handleIsChunksModeOn: ChangeEventHandler = (e) => {
+		const reader = textReaderRef.current;
+		const target = e.target as HTMLInputElement;
+		if (!reader || reader.state.isMobile) return;
+
+		if (target.checked) enableChunksMode();
+		else disableChunksMode();
+
+		/* Use the editUtterance method to update the utterance text  */
+		reader.changeChunkMode(target.checked);
+	};
+
 	useEffect(() => {
 		/* Reset browser active speech synth queue on refresh or new load */
 
@@ -197,7 +227,10 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				console.log('Resume');
 			},
 			onReset: (reader: SpeechSynth) => {
-				console.log('Reset');
+				console.log('Reset Event called', reader?.state.elapsedTime);
+				stopReading();
+				setElapsedTime(reader?.state.elapsedTime as number);
+				setCurrentWordIndex(reader?.state.currentWordIndex as number);
 			},
 			onEnd: () => {
 				console.log('End');
@@ -226,6 +259,13 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				setVoice(reader.state.voices[0].voiceURI);
 				setNumberOfWords(reader.state.numberOfWords);
 				setDuration(reader.state.duration);
+				/* Automatically set chunks mode ON on mobile devices since single word highlighting engine is not supported on mobile browsers */
+				if (reader.state.isMobile) {
+					reader.options.isChunksModeOn = true;
+					reader.editUtterance({});
+
+					enableChunksMode();
+				}
 			})
 			.catch((e) => console.log(e));
 
@@ -243,16 +283,16 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		if (!reader || isFirstRender) return setIsLoading(false);
 		if (isReading) {
 			if (reader.isPaused()) {
-				console.log('Resuming');
+				/* Play button pressed and Reader in pause state case */
 				reader.resume();
 			} else {
-				console.log('Playing');
+				/* Play button pressed and Reader not yet started case */
 				setIsLoading(true);
-				reader.play().then(() => {
-					console.log('Effectively starts to speak');
+				reader.play('start').then(() => {
 					setIsLoading(false);
 				});
 			}
+			/* Pause button pressed and Reader in play state case */
 		} else if (reader.isPlaying()) reader.pause();
 	}, [isReading, textContainer, isFirstRender, setIsLoading]);
 
@@ -429,16 +469,40 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 						onPointerDown={toggleSettings}
 					>
 						<label
-							htmlFor="is-row-check"
+							htmlFor="preserve-option"
 							onPointerDown={(e) => e.stopPropagation()}
 						>
 							<CheckBox
-								id="is-row-check"
+								id="preserve-option"
 								type="checkbox"
 								checked={isPreserveHighlighting}
 								onChange={handlePreserveHighlighting}
 							/>
 							<h5>Preserve Highlighting</h5>
+						</label>
+						<label
+							htmlFor="highlight-option"
+							onPointerDown={(e) => e.stopPropagation()}
+						>
+							<CheckBox
+								id="highlight-option"
+								type="checkbox"
+								checked={isHighlightTextOn}
+								onChange={handleIsHighlightTextOn}
+							/>
+							<h5>Highlight Text</h5>
+						</label>
+						<label
+							htmlFor="mode-option"
+							onPointerDown={(e) => e.stopPropagation()}
+						>
+							<CheckBox
+								id="mode-option"
+								type="checkbox"
+								checked={isChunksModeOn}
+								onChange={handleIsChunksModeOn}
+							/>
+							<h5>Chunks Mode</h5>
 						</label>
 					</ExtraSettings>
 				</>

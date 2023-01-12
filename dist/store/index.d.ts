@@ -13,6 +13,12 @@ interface ITextReaderState {
     currentWordIndex: number;
     duration: number;
     isLoading: boolean;
+    isHighlightTextOn: boolean;
+    isChunksModeOn: boolean;
+    enableHighlightText: () => void;
+    disableHighlightText: () => void;
+    enableChunksMode: () => void;
+    disableChunksMode: () => void;
     setDuration: (n: number) => void;
     setCurrentWordIndex: (n: number) => void;
     setNumberOfWords: (n: number) => void;

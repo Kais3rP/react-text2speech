@@ -1,6 +1,6 @@
 {
 	"name": "react-text2speech",
-	"version": "1.0.0",
+	"version": "1.2.0",
 	"keywords": [],
 	"description": "",
 	"main": "dist/index.min.js",
@@ -11,7 +11,7 @@
 	],
 	"author": "https://www.cesarepolonara.com",
 	"repository": {
-		"url": "",
+		"url": "https://github.com/Kais3rP/react-text2speech",
 		"type": "git"
 	},
 	"license": "MIT",

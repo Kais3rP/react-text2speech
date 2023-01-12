@@ -1,4 +1,5 @@
-import { BiDotsHorizontal, BiReset } from 'react-icons/bi';
+import { BiReset } from 'react-icons/bi';
+import { FcSettings } from 'react-icons/fc';
 import styled from 'styled-components';
 
 interface IContainerProps {
@@ -174,6 +175,7 @@ export const ControlsContainer = styled.div<IControlsContainer>`
 
 export const ControlButton = styled.div<IControlButton>`
 	border-radius: 50%;
+	margin: 2px;
 	background-color: ${(props: any) => props.styleoptions.bgColor};
 	color: ${(props: any) => props.styleoptions.primaryColor};
 	font-weight: normal !important;
@@ -208,14 +210,15 @@ export const OptionsContainer = styled.div`
 	}
 `;
 
-export const Dots = styled(BiDotsHorizontal)<IDots>`
-	font-size: 0.8em;
-	color: ${(props) => props.styleoptions.primaryColor};
-	margin-bottom: 3px;
+export const Dots = styled(FcSettings)<IDots>`
+	font-size: 1.1em;
 	padding: 0px;
 	cursor: pointer;
-	&:hover {
-		color: ${(props) => props.styleoptions.secondaryColor};
+	& path {
+		fill: ${(props) => props.styleoptions.primaryColor};
+	}
+	&:hover path {
+		fill: ${(props) => props.styleoptions.secondaryColor};
 	}
 `;
 
@@ -251,9 +254,12 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 	z-index: 100;
 	display: flex;
 	justify-content: start;
-	align-items: center;
+	flex-direction: column;
+	align-items: start;
+	flex-wrap: wrap;
 	transition: all 0.2s linear;
 	padding: 0px 0px 0px 10px;
+	overflow-y: auto;
 	& label {
 		display: flex;
 		padding: 0px;
@@ -267,7 +273,7 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 	& h5 {
 		padding: 0px;
 		margin: 0px;
-		font-size: 0.8em;
+		font-size: 0.6em;
 		margin-left: 1px;
 		font-weight: normal !important;
 		line-height: 20px !important;
