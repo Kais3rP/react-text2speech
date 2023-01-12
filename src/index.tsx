@@ -103,9 +103,6 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 	const handleReset = () => {
 		const reader = textReaderRef.current;
 		reader?.reset();
-		stopReading();
-		setElapsedTime(0);
-		setCurrentWordIndex(1);
 	};
 
 	const handleRateChange = (value: string) => {
@@ -230,7 +227,10 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				console.log('Resume');
 			},
 			onReset: (reader: SpeechSynth) => {
-				console.log('Reset');
+				console.log('Reset Event called', reader?.state.elapsedTime);
+				stopReading();
+				setElapsedTime(reader?.state.elapsedTime as number);
+				setCurrentWordIndex(reader?.state.currentWordIndex as number);
 			},
 			onEnd: () => {
 				console.log('End');
@@ -259,6 +259,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				setVoice(reader.state.voices[0].voiceURI);
 				setNumberOfWords(reader.state.numberOfWords);
 				setDuration(reader.state.duration);
+				/* Automatically set chunks mode ON on mobile devices since single word highlighting engine is not supported on mobile browsers */
 				if (reader.state.isMobile) {
 					reader.options.isChunksModeOn = true;
 					reader.editUtterance({});
@@ -282,16 +283,16 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		if (!reader || isFirstRender) return setIsLoading(false);
 		if (isReading) {
 			if (reader.isPaused()) {
-				console.log('Resuming');
+				/* Play button pressed and Reader in pause state case */
 				reader.resume();
 			} else {
-				console.log('Playing');
+				/* Play button pressed and Reader not yet started case */
 				setIsLoading(true);
-				reader.play().then(() => {
-					console.log('Effectively starts to speak');
+				reader.play('start').then(() => {
 					setIsLoading(false);
 				});
 			}
+			/* Pause button pressed and Reader in play state case */
 		} else if (reader.isPlaying()) reader.pause();
 	}, [isReading, textContainer, isFirstRender, setIsLoading]);
 

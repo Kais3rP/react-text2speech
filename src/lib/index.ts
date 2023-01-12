@@ -214,6 +214,10 @@ export class SpeechSynth extends EventEmitter {
 
 		/* On mobile the end event is fired multiple times due to chunkification of text hence this is used to manage the highlight of chunks */
 		this.utterance.onend = (e) => {
+			console.log('Utterance end event');
+			/* This prevents the execution of code if the end event is called after the reset method has been called */
+			if (this.state.isPlaying === false && this.state.isPaused === false)
+				return;
 			/* Emit the end event only when the whole text has finished to be read */
 			if (
 				(!this.options.isChunksModeOn &&
@@ -223,7 +227,7 @@ export class SpeechSynth extends EventEmitter {
 					this.state.currentChunkIndex >=
 						this.state.chunksArray.length - 1)
 			)
-				return this.emit('end');
+				return this.emit('end', this);
 
 			/* Manage the chunkification for mobile devices */
 			if (this.options.isChunksModeOn && this.state.isPlaying)
@@ -558,6 +562,21 @@ export class SpeechSynth extends EventEmitter {
 		clearTimeout(this.timeoutRef);
 		this.options.isChunksModeOn = b;
 
+		/* Since che chunk mode change triggers a restart of the utterance playing,
+		make sure the current word index gets synchronized with the current chunk index start word,
+		since the sentence is restarted from the first word of the sentence itself */
+
+		this.state.currentWordIndex =
+			this.state.chunksArray[this.state.currentChunkIndex].start;
+
+		/* This manages the starting highlight if chunk mode is on or off:
+			1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
+			2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
+
+		if (this.options.isChunksModeOn)
+			this.highlightChunk(this.state.currentChunkIndex);
+		else this.resetHighlight();
+
 		this.utterance.text = this.options.isChunksModeOn
 			? this.getCurrentChunkText()
 			: this.getRemainingText(this.state.currentWordIndex);
@@ -649,7 +668,6 @@ export class SpeechSynth extends EventEmitter {
 				});
 			}
 			case 'resume-chunk-mode': {
-				this.emit('start', this);
 				return new Promise((resolve) => {
 					this.utterance.onstart = (e) => {
 						resolve(null);
@@ -657,7 +675,6 @@ export class SpeechSynth extends EventEmitter {
 				});
 			}
 			case 'next-chunk-start': {
-				this.emit('start', this);
 				return new Promise((resolve) => {
 					this.utterance.onstart = (e) => {
 						resolve(null);
@@ -675,28 +692,6 @@ export class SpeechSynth extends EventEmitter {
 				return new Promise((resolve) => {
 					this.utterance.onstart = (e) => {
 						resolve(null);
-						/* When the utterance is restarted due to chunk mode change, and the current word index corresponds to a word in the middle of a sentence, 
-						make sure the current word index gets synchronized with the current chunk index start word */
-
-						if (
-							this.options.isChunksModeOn &&
-							this.state.currentWordIndex !==
-								this.state.chunksArray[
-									this.state.currentChunkIndex
-								].start
-						)
-							this.state.currentWordIndex =
-								this.state.chunksArray[
-									this.state.currentChunkIndex
-								].start;
-
-						/* This manages the starting highlight if chunk mode is on or off:
-						1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
-						2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
-
-						if (this.options.isChunksModeOn)
-							this.highlightChunk(this.state.currentChunkIndex);
-						else if (this) this.resetHighlight();
 					};
 				});
 			}
@@ -724,7 +719,7 @@ export class SpeechSynth extends EventEmitter {
 		else this.play('resume-chunk-mode');
 		this.state.isPaused = false;
 		this.state.isPlaying = true;
-		this.emit('resume');
+		this.emit('resume', this);
 
 		/* Restart timer */
 
@@ -733,7 +728,6 @@ export class SpeechSynth extends EventEmitter {
 
 	reset() {
 		this.synth.cancel();
-		this.emit('reset');
 		this.resetHighlight();
 
 		/* Reset timer */
@@ -754,6 +748,8 @@ export class SpeechSynth extends EventEmitter {
 		this.initUtterance();
 		/* Scroll back to top word */
 		this.scrollTo(1);
+
+		this.emit('reset', this);
 	}
 
 	/* State check */

@@ -341,6 +341,10 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.utterance.onboundary = this.handleBoundary.bind(this);
         /* On mobile the end event is fired multiple times due to chunkification of text hence this is used to manage the highlight of chunks */
         this.utterance.onend = (e) => {
+            console.log('Utterance end event');
+            /* This prevents the execution of code if the end event is called after the reset method has been called */
+            if (this.state.isPlaying === false && this.state.isPaused === false)
+                return;
             /* Emit the end event only when the whole text has finished to be read */
             if ((!this.options.isChunksModeOn &&
                 this.state.currentWordIndex >=
@@ -348,7 +352,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 (this.options.isChunksModeOn &&
                     this.state.currentChunkIndex >=
                         this.state.chunksArray.length - 1))
-                return this.emit('end');
+                return this.emit('end', this);
             /* Manage the chunkification for mobile devices */
             if (this.options.isChunksModeOn && this.state.isPlaying)
                 this.handleChunkHighlighting();
@@ -580,6 +584,17 @@ class SpeechSynth extends EventEmitter__default["default"] {
     changeChunkMode(b) {
         clearTimeout(this.timeoutRef);
         this.options.isChunksModeOn = b;
+        /* Since che chunk mode change triggers a restart of the utterance playing,
+        make sure the current word index gets synchronized with the current chunk index start word,
+        since the sentence is restarted from the first word of the sentence itself */
+        this.state.currentWordIndex = this.state.chunksArray[this.state.currentChunkIndex].start;
+        /* This manages the starting highlight if chunk mode is on or off:
+            1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
+            2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
+        if (this.options.isChunksModeOn)
+            this.highlightChunk(this.state.currentChunkIndex);
+        else
+            this.resetHighlight();
         this.utterance.text = this.options.isChunksModeOn
             ? this.getCurrentChunkText()
             : this.getRemainingText(this.state.currentWordIndex);
@@ -639,7 +654,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 });
             }
             case 'resume-chunk-mode': {
-                this.emit('start', this);
                 return new Promise((resolve) => {
                     this.utterance.onstart = (e) => {
                         resolve(null);
@@ -647,7 +661,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 });
             }
             case 'next-chunk-start': {
-                this.emit('start', this);
                 return new Promise((resolve) => {
                     this.utterance.onstart = (e) => {
                         resolve(null);
@@ -665,20 +678,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 return new Promise((resolve) => {
                     this.utterance.onstart = (e) => {
                         resolve(null);
-                        /* When the utterance is restarted due to chunk mode change, and the current word index corresponds to a word in the middle of a sentence,
-                        make sure the current word index gets synchronized with the current chunk index start word */
-                        if (this.options.isChunksModeOn &&
-                            this.state.currentWordIndex !==
-                                this.state.chunksArray[this.state.currentChunkIndex].start)
-                            this.state.currentWordIndex =
-                                this.state.chunksArray[this.state.currentChunkIndex].start;
-                        /* This manages the starting highlight if chunk mode is on or off:
-                        1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
-                        2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
-                        if (this.options.isChunksModeOn)
-                            this.highlightChunk(this.state.currentChunkIndex);
-                        else if (this)
-                            this.resetHighlight();
                     };
                 });
             }
@@ -705,13 +704,12 @@ class SpeechSynth extends EventEmitter__default["default"] {
             this.play('resume-chunk-mode');
         this.state.isPaused = false;
         this.state.isPlaying = true;
-        this.emit('resume');
+        this.emit('resume', this);
         /* Restart timer */
         this.timeCount(null, 20);
     }
     reset() {
         this.synth.cancel();
-        this.emit('reset');
         this.resetHighlight();
         /* Reset timer */
         this.resetTimeCount();
@@ -720,6 +718,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.initUtterance();
         /* Scroll back to top word */
         this.scrollTo(1);
+        this.emit('reset', this);
     }
     /* State check */
     isPlaying() {
@@ -3823,9 +3822,6 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
     const handleReset = () => {
         const reader = textReaderRef.current;
         reader === null || reader === void 0 ? void 0 : reader.reset();
-        stopReading();
-        setElapsedTime(0);
-        setCurrentWordIndex(1);
     };
     const handleRateChange = (value) => {
         const reader = textReaderRef.current;
@@ -3933,7 +3929,10 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             }, onResume: (reader) => {
                 console.log('Resume');
             }, onReset: (reader) => {
-                console.log('Reset');
+                console.log('Reset Event called', reader === null || reader === void 0 ? void 0 : reader.state.elapsedTime);
+                stopReading();
+                setElapsedTime(reader === null || reader === void 0 ? void 0 : reader.state.elapsedTime);
+                setCurrentWordIndex(reader === null || reader === void 0 ? void 0 : reader.state.currentWordIndex);
             }, onEnd: () => {
                 console.log('End');
                 handleReset();
@@ -3955,6 +3954,7 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             setVoice(reader.state.voices[0].voiceURI);
             setNumberOfWords(reader.state.numberOfWords);
             setDuration(reader.state.duration);
+            /* Automatically set chunks mode ON on mobile devices since single word highlighting engine is not supported on mobile browsers */
             if (reader.state.isMobile) {
                 reader.options.isChunksModeOn = true;
                 reader.editUtterance({});
@@ -3975,17 +3975,17 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             return setIsLoading(false);
         if (isReading) {
             if (reader.isPaused()) {
-                console.log('Resuming');
+                /* Play button pressed and Reader in pause state case */
                 reader.resume();
             }
             else {
-                console.log('Playing');
+                /* Play button pressed and Reader not yet started case */
                 setIsLoading(true);
-                reader.play().then(() => {
-                    console.log('Effectively starts to speak');
+                reader.play('start').then(() => {
                     setIsLoading(false);
                 });
             }
+            /* Pause button pressed and Reader in play state case */
         }
         else if (reader.isPlaying())
             reader.pause();
