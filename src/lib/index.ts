@@ -89,7 +89,7 @@ export class SpeechSynth extends EventEmitter {
 		/* State */
 
 		this.state = {
-			isMobile: false,
+			isMobile: Utils.isMobile(),
 			/* Internal properties */
 			voice: {} as SpeechSynthesisVoice,
 			voices: [] as SpeechSynthesisVoice[],
@@ -114,9 +114,6 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	async init(): Promise<SpeechSynth> {
-		/* Check if it's a mobile device */
-		this.state.isMobile = Utils.isMobile();
-
 		/* Get voices */
 
 		try {
@@ -241,6 +238,7 @@ export class SpeechSynth extends EventEmitter {
 	private highlightChunk(idx: number) {
 		const length =
 			this.state.currentWordIndex + this.state.chunksArray[idx].length;
+		console.log('Length', length);
 		for (let i = this.state.currentWordIndex; i < length; i++)
 			this.highlightText(i);
 	}
@@ -282,7 +280,6 @@ export class SpeechSynth extends EventEmitter {
 		this.state.currentWordIndex += currentChunk.length;
 
 		/* Highlight the next chunk */
-		/* Do not highlight if the option is disabled */
 
 		this.highlightChunk(this.state.currentChunkIndex);
 	}
@@ -660,9 +657,11 @@ export class SpeechSynth extends EventEmitter {
 
 		switch (type) {
 			case 'start': {
+				console.log('STart mode');
 				this.emit('start', this);
 				return new Promise((resolve) => {
 					this.utterance.onstart = (e) => {
+						if (this.options.isChunksModeOn) this.highlightChunk(0);
 						resolve(null);
 					};
 				});

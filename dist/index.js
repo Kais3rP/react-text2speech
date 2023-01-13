@@ -256,7 +256,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         };
         /* State */
         this.state = {
-            isMobile: false,
+            isMobile: Utils.isMobile(),
             /* Internal properties */
             voice: {},
             voices: [],
@@ -281,8 +281,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
-            /* Check if it's a mobile device */
-            this.state.isMobile = Utils.isMobile();
             /* Get voices */
             try {
                 this.state.voices = yield this.getVoices();
@@ -362,6 +360,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     highlightChunk(idx) {
         const length = this.state.currentWordIndex + this.state.chunksArray[idx].length;
+        console.log('Length', length);
         for (let i = this.state.currentWordIndex; i < length; i++)
             this.highlightText(i);
     }
@@ -390,7 +389,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Keep the currentWordIndex in sync */
         this.state.currentWordIndex += currentChunk.length;
         /* Highlight the next chunk */
-        /* Do not highlight if the option is disabled */
         this.highlightChunk(this.state.currentChunkIndex);
     }
     scrollTo(idx) {
@@ -587,8 +585,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Since che chunk mode change triggers a restart of the utterance playing,
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
-        this.state.currentWordIndex =
-            this.state.chunksArray[this.state.currentChunkIndex].start;
+        this.state.currentWordIndex = this.state.chunksArray[this.state.currentChunkIndex].start;
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
             2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
@@ -647,9 +644,12 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.timeCount(null, 20);
         switch (type) {
             case 'start': {
+                console.log('STart mode');
                 this.emit('start', this);
                 return new Promise((resolve) => {
                     this.utterance.onstart = (e) => {
+                        if (this.options.isChunksModeOn)
+                            this.highlightChunk(0);
                         resolve(null);
                     };
                 });
