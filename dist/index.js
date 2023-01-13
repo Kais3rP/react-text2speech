@@ -585,7 +585,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Since che chunk mode change triggers a restart of the utterance playing,
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
-        this.state.currentWordIndex = this.state.chunksArray[this.state.currentChunkIndex].start;
+        this.state.currentWordIndex =
+            this.state.chunksArray[this.state.currentChunkIndex].start;
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
             2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
@@ -3877,6 +3878,29 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         const reader = textReaderRef.current;
         reader === null || reader === void 0 ? void 0 : reader.seekTo(val);
     };
+    const handleFastForward = () => {
+        const reader = textReaderRef.current;
+        if (reader === null || reader === void 0 ? void 0 : reader.options.isChunksModeOn) {
+            if (reader.state.currentChunkIndex + 1 <
+                reader.state.chunksArray.length)
+                /* Go to the next chunk */
+                handleGenericSeek(reader.state.chunksArray[reader.state.currentChunkIndex + 1]
+                    .start);
+        }
+        else if (reader.state.currentWordIndex + 5 <=
+            reader.state.wholeTextArray.length)
+            handleGenericSeek(reader.state.currentWordIndex + 5);
+    };
+    const handleFastBackward = () => {
+        const reader = textReaderRef.current;
+        if (reader === null || reader === void 0 ? void 0 : reader.options.isChunksModeOn) {
+            if (reader.state.currentChunkIndex - 1 >= 0)
+                handleGenericSeek(reader.state.chunksArray[reader.state.currentChunkIndex - 1]
+                    .start);
+        }
+        else if (reader.state.currentWordIndex - 5 >= 0)
+            handleGenericSeek(reader.state.currentWordIndex - 5);
+    };
     /* Options Handlers */
     const handlePreserveHighlighting = (e) => {
         const reader = textReaderRef.current;
@@ -4003,21 +4027,13 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                 "*")),
         React__default["default"].createElement(ControlsContainer, { isminimized: isMinimized.toString() },
             React__default["default"].createElement("div", null,
-                React__default["default"].createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: () => handleGenericSeek(currentWordIndex - 5 <= 0
-                        ? 0
-                        : currentWordIndex - 5), styleoptions: styleOptions, isloading: isLoading.toString() }),
+                React__default["default"].createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward, styleoptions: styleOptions, isloading: isLoading.toString() }),
                 !isReading ? (React__default["default"].createElement(ControlButton, { style: {
                         fontSize: '1.5em',
                     }, as: AiFillPlayCircle, title: "Play", onPointerDown: handleTextReadPlay, styleoptions: styleOptions, isloading: isLoading.toString() })) : (React__default["default"].createElement(ControlButton, { style: {
                         fontSize: '1.5em',
                     }, as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleTextReadPause, isloading: isLoading.toString() })),
-                React__default["default"].createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: () => {
-                        var _a, _b, _c;
-                        return handleGenericSeek(currentWordIndex + 5 >=
-                            ((_a = textReaderRef.current) === null || _a === void 0 ? void 0 : _a.state.wholeTextArray.length)
-                            ? (_c = (_b = textReaderRef.current) === null || _b === void 0 ? void 0 : _b.state.wholeTextArray) === null || _c === void 0 ? void 0 : _c.length
-                            : currentWordIndex + 5);
-                    }, styleoptions: styleOptions, isloading: isLoading.toString() }),
+                React__default["default"].createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: handleFastForward, styleoptions: styleOptions, isloading: isLoading.toString() }),
                 React__default["default"].createElement(Reset, { title: "reset", styleoptions: styleOptions, onClick: handleReset }))),
         !isMinimized && (React__default["default"].createElement(React__default["default"].Fragment, null,
             React__default["default"].createElement(OptionsContainer, null,

@@ -166,6 +166,39 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 		reader?.seekTo(val);
 	};
 
+	const handleFastForward = () => {
+		const reader = textReaderRef.current as SpeechSynth;
+
+		if (reader?.options.isChunksModeOn) {
+			if (
+				reader.state.currentChunkIndex + 1 <
+				reader.state.chunksArray.length
+			)
+				/* Go to the next chunk */
+				handleGenericSeek(
+					reader.state.chunksArray[reader.state.currentChunkIndex + 1]
+						.start
+				);
+		} else if (
+			reader.state.currentWordIndex + 5 <=
+			(reader.state.wholeTextArray.length as number)
+		)
+			handleGenericSeek(reader.state.currentWordIndex + 5);
+	};
+
+	const handleFastBackward = () => {
+		const reader = textReaderRef.current as SpeechSynth;
+
+		if (reader?.options.isChunksModeOn) {
+			if (reader.state.currentChunkIndex - 1 >= 0)
+				handleGenericSeek(
+					reader.state.chunksArray[reader.state.currentChunkIndex - 1]
+						.start
+				);
+		} else if (reader.state.currentWordIndex - 5 >= 0)
+			handleGenericSeek(reader.state.currentWordIndex - 5);
+	};
+
 	/* Options Handlers */
 
 	const handlePreserveHighlighting: ChangeEventHandler = (e) => {
@@ -347,13 +380,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 						as={AiFillFastBackward}
 						title="Fast backward"
 						onDoubleClick={(e) => e.preventDefault()}
-						onPointerDown={() =>
-							handleGenericSeek(
-								currentWordIndex - 5 <= 0
-									? 0
-									: currentWordIndex - 5
-							)
-						}
+						onPointerDown={handleFastBackward}
 						styleoptions={styleOptions}
 						isloading={isLoading.toString()}
 					/>
@@ -383,16 +410,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 					<ControlButton
 						as={AiFillFastForward}
 						title="Fast forsward"
-						onPointerDown={() =>
-							handleGenericSeek(
-								currentWordIndex + 5 >=
-									(textReaderRef.current?.state.wholeTextArray
-										.length as number)
-									? (textReaderRef.current?.state
-											.wholeTextArray?.length as number)
-									: currentWordIndex + 5
-							)
-						}
+						onPointerDown={handleFastForward}
 						styleoptions={styleOptions}
 						isloading={isLoading.toString()}
 					/>
