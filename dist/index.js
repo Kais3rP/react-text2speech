@@ -172,6 +172,15 @@ class Utils {
         return false;
     }
     /* Regex Utils */
+    static isSlashTextContent(str) {
+        return /<.+>\/<\/.+>/.test(str);
+    }
+    static isDigitTextContent(str) {
+        return /<.+>\d+<\/.+>/.test(str);
+    }
+    static isNumber(n) {
+        return !isNaN(n) && isFinite(n);
+    }
     static isURL(str) {
         return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(str);
     }
@@ -428,6 +437,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         return this.state.chunksArray[this.state.currentChunkIndex].text;
     }
     handleBoundary(e) {
+        console.log('Boundary');
         /* Disable boundary if it's in chunk mode */
         if (this.options.isChunksModeOn)
             return;
@@ -764,9 +774,11 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 // Add br break line in place of \n
                 .replace(/\(\s*(.+?)\s*\)/g, (_, b) => `(${b})`) // Fix extra spaces in () parens to avoid highlighting extra characters
                 .replace(/\s+([;.,:]+?)/g, (_, b) => b) // Fix extra spaces in [] parens to avoid highlighting extra characters
-                //	.replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
+                .replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
                 .replace(/<.+?>/g, (match) => '#' + match.replace(/\s/g, '@@') + '#') // Separate html tags and add @@ symbol to spaces inside HTML tags
                 .replace(/(\d+\.\d+)(\w*)/, (_, a, b) => a + ' ' + b) // Separate numbers from measures units e.g. 1.7k -> 1.7 k since the reader ha issues reading that format
+                .replace(/(\d(?=\d))/g, (_, a) => `${a} `)
+                // .replace(/\/(?=/\)/g, (_,a))
                 .split(/[#\s]/)
                 .filter((el) => el)
                 .map((el) => {
@@ -786,7 +798,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 // prevent punctuation and html entities to be assigned an highlight span tag
                 if (Utils.isSpecialCharacter(el) || Utils.isHTMLEntity(el))
                     return el;
-                /* Tag the elemenet as aspecial Link element */
+                /* Tag the element as a special Link element */
                 if (Utils.isURL(el))
                     return `<span data-type="LINK" data-id="${index++}">${el}</span>`;
                 /* wrap in a data-id html tag only plain words ( exclude html tags ) */
@@ -795,14 +807,22 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 }
                 return el;
             })
-                .__join__((_, i, arr) => {
+                .__join__((s, i, arr) => {
                 /* There are certain situations where punctuation is separated from the previous word
-      (e.g. if the previous word is wrapped in a <strong> tag). In this case we join the word
-      and the punctuation directly with no extra space. */
+                   (e.g. if the previous word is wrapped in a <strong> tag). In this case we join the word
+                   and the punctuation directly with no extra space. */
                 if (Utils.isPunctuation(arr[i + 1])) {
                     return '';
                 }
-                return ' '; // Space between HTML tags is interpreted as a &nbsp and the text content will render a space.
+                if (Utils.isDigitTextContent(s)) {
+                    return '';
+                }
+                /* Rejoin the slashes without extra spaces between them */
+                if (Utils.isSlashTextContent(s))
+                    return '';
+                /* Add a Space between HTML tags, since that is interpreted as a &nbsp and the text content will render
+                a space between words. */
+                return ' ';
             })
                 .replace(/@@/g, ' ');
             /* Apply the tags to the HTML DOM node if SSR is off */

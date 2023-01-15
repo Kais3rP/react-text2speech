@@ -41,7 +41,8 @@ function App() {
 			</button>
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
-				<h1>Ut vero dolorem ea illum fugit..... </h1>
+			<h1>213456789 1000</h1>
+				<h1>Ut vero dolorem ea illum fugit.....  12/12/2112 test/test/test </h1>
 				<a href="">
 					https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API
 				</a>

@@ -42,6 +42,18 @@ export class Utils {
 
 	/* Regex Utils */
 
+	static isSlashTextContent(str: string) {
+		return /<.+>\/<\/.+>/.test(str);
+	}
+
+	static isDigitTextContent(str: string) {
+		return /<.+>\d+<\/.+>/.test(str);
+	}
+
+	static isNumber(n: number) {
+		return !isNaN(n) && isFinite(n);
+	}
+
 	static isURL(str: string) {
 		return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(
 			str

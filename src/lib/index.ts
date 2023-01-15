@@ -332,6 +332,7 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private handleBoundary(e: SpeechSynthesisEvent) {
+		console.log('Boundary');
 		/* Disable boundary if it's in chunk mode */
 		if (this.options.isChunksModeOn) return;
 
@@ -803,12 +804,14 @@ export class SpeechSynth extends EventEmitter {
 				// Add br break line in place of \n
 				.replace(/\(\s*(.+?)\s*\)/g, (_, b) => `(${b})`) // Fix extra spaces in () parens to avoid highlighting extra characters
 				.replace(/\s+([;.,:]+?)/g, (_, b) => b) // Fix extra spaces in [] parens to avoid highlighting extra characters
-				//	.replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
+				.replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
 				.replace(
 					/<.+?>/g,
 					(match) => '#' + match.replace(/\s/g, '@@') + '#'
 				) // Separate html tags and add @@ symbol to spaces inside HTML tags
 				.replace(/(\d+\.\d+)(\w*)/, (_, a, b) => a + ' ' + b) // Separate numbers from measures units e.g. 1.7k -> 1.7 k since the reader ha issues reading that format
+				.replace(/(\d(?=\d))/g, (_, a) => `${a} `)
+				// .replace(/\/(?=/\)/g, (_,a))
 				.split(/[#\s]/)
 				.filter((el) => el)
 				.map((el) => {
@@ -829,7 +832,8 @@ export class SpeechSynth extends EventEmitter {
 
 					if (Utils.isSpecialCharacter(el) || Utils.isHTMLEntity(el))
 						return el;
-					/* Tag the elemenet as aspecial Link element */
+
+					/* Tag the element as a special Link element */
 					if (Utils.isURL(el))
 						return `<span data-type="LINK" data-id="${index++}">${el}</span>`;
 
@@ -841,14 +845,25 @@ export class SpeechSynth extends EventEmitter {
 
 					return el;
 				})
-				.__join__((_: string, i: number, arr: string[]): string => {
+				.__join__((s: string, i: number, arr: string[]): string => {
 					/* There are certain situations where punctuation is separated from the previous word 
-          (e.g. if the previous word is wrapped in a <strong> tag). In this case we join the word
-          and the punctuation directly with no extra space. */
+          			   (e.g. if the previous word is wrapped in a <strong> tag). In this case we join the word
+         			   and the punctuation directly with no extra space. */
+
 					if (Utils.isPunctuation(arr[i + 1])) {
 						return '';
 					}
-					return ' '; // Space between HTML tags is interpreted as a &nbsp and the text content will render a space.
+
+					if (Utils.isDigitTextContent(s)) {
+						return '';
+					}
+					/* Rejoin the slashes without extra spaces between them */
+					if (Utils.isSlashTextContent(s)) return '';
+
+					/* Add a Space between HTML tags, since that is interpreted as a &nbsp and the text content will render 
+					a space between words. */
+
+					return ' ';
 				})
 				.replace(/@@/g, ' ');
 
