@@ -24,7 +24,7 @@ function App() {
 				react-text2speech
 			</a>
 			{node && (
-				<TextReader textContainer={node} options={{ language: 'fr' }} />
+				<TextReader textContainer={node} options={{ language: 'en' }} />
 			)}
 			<button
 				className={styles.play}
@@ -41,7 +41,36 @@ function App() {
 			</button>
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
-				<h1>Ut vero dolorem ea illum fugit. </h1>
+				<h1>Ut vero dolorem ea illum fugit..... </h1>
+				<a href="">
+					https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API
+				</a>
+				{/* 				<pre>
+					<code>{`useEffect ( ( ) => {
+/ / / / / / / / 
+
+if ( ! socket || ! initPeerConnectionSender ) return ;
+
+const configuration = {
+offerToReceiveAudio : true ,
+offerToReceiveVideo : true ,
+} ;
+
+peerConnectionRef . current = new RTCPeerConnection ( {
+configuration : { } ,
+iceServers : [
+{
+urls : [
+"stun:stun.l.google.com:19302" ,
+"stun:stun1.l.google.com:19302" ,
+"stun:stun2.l.google.com:19302" ,
+"stun:stun3.l.google.com:19302" ,
+] ,
+} ,
+] ,
+} ) ;`}</code>
+				</pre> */}
+
 				<p>
 					Lorem dolor sit amet. Et animi debitis eos tenetur
 					inventoreQui totam qui iure ratione ab distinctio deleniti

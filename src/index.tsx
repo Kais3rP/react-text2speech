@@ -180,10 +180,10 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 						.start
 				);
 		} else if (
-			reader.state.currentWordIndex + 5 <=
+			reader.state.currentWordIndex + 1 <=
 			(reader.state.wholeTextArray.length as number)
 		)
-			handleGenericSeek(reader.state.currentWordIndex + 5);
+			handleGenericSeek(reader.state.currentWordIndex + 1);
 	};
 
 	const handleFastBackward = () => {
@@ -195,8 +195,8 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 					reader.state.chunksArray[reader.state.currentChunkIndex - 1]
 						.start
 				);
-		} else if (reader.state.currentWordIndex - 5 >= 0)
-			handleGenericSeek(reader.state.currentWordIndex - 5);
+		} else if (reader.state.currentWordIndex - 1 >= 0)
+			handleGenericSeek(reader.state.currentWordIndex - 1);
 	};
 
 	/* Options Handlers */

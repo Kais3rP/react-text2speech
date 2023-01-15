@@ -2,6 +2,7 @@ export declare class Utils {
     HTMLTags: string[];
     constructor();
     static isMobile(): boolean;
+    static isURL(str: string): boolean;
     static isPunctuation(str: string): boolean;
     static isTag(str: string): boolean;
     static isCodeOpenTag(str: string): boolean;

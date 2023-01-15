@@ -238,14 +238,13 @@ export class SpeechSynth extends EventEmitter {
 	private highlightChunk(idx: number) {
 		const length =
 			this.state.currentWordIndex + this.state.chunksArray[idx].length;
-		console.log('Length', length);
 		for (let i = this.state.currentWordIndex; i < length; i++)
 			this.highlightText(i);
 	}
 
 	private retrieveChunks(): Chunk[] {
 		let previousEnd = 0;
-		return this.state.wholeText.split(/[.?!;]/).map((c, i) => {
+		return this.state.wholeText.split(/[.?!;]+/).map((c, i) => {
 			const length = c.trim().split(' ').length;
 			const result: Chunk = {
 				text: c + '.',
@@ -346,7 +345,7 @@ export class SpeechSynth extends EventEmitter {
 		/* Synchronize the chunk index */
 
 		if (
-			/[.?!;]/.test(
+			/[.?!;]+/.test(
 				this.state.wholeTextArray[this.state.currentWordIndex]
 			)
 		)
@@ -454,13 +453,27 @@ export class SpeechSynth extends EventEmitter {
 
 	private retrieveWholeText(node: Element, selector: string) {
 		return [...node.querySelectorAll(selector)]
-			.map((el) => el.textContent)
+			.map((el) => {
+				switch ((el as HTMLElement).dataset.type) {
+					case 'LINK':
+						return 'Link.';
+					default:
+						return el.textContent;
+				}
+			})
 			.join(' ');
 	}
 
 	private retrieveWholeTextArray(node: Element, selector: string) {
 		return [...node.querySelectorAll(selector)]
-			.map((el) => el.textContent)
+			.map((el) => {
+				switch ((el as HTMLElement).dataset.type) {
+					case 'LINK':
+						return 'Link.';
+					default:
+						return el.textContent;
+				}
+			})
 			.filter((el) => el && !Utils.isPunctuation(el)); // Exclude punctuation and "" empty string characters
 	}
 
@@ -657,7 +670,6 @@ export class SpeechSynth extends EventEmitter {
 
 		switch (type) {
 			case 'start': {
-				console.log('STart mode');
 				this.emit('start', this);
 				return new Promise((resolve) => {
 					this.utterance.onstart = (e) => {
@@ -791,7 +803,7 @@ export class SpeechSynth extends EventEmitter {
 				// Add br break line in place of \n
 				.replace(/\(\s*(.+?)\s*\)/g, (_, b) => `(${b})`) // Fix extra spaces in () parens to avoid highlighting extra characters
 				.replace(/\s+([;.,:]+?)/g, (_, b) => b) // Fix extra spaces in [] parens to avoid highlighting extra characters
-				.replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
+				//	.replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
 				.replace(
 					/<.+?>/g,
 					(match) => '#' + match.replace(/\s/g, '@@') + '#'
@@ -817,11 +829,14 @@ export class SpeechSynth extends EventEmitter {
 
 					if (Utils.isSpecialCharacter(el) || Utils.isHTMLEntity(el))
 						return el;
+					/* Tag the elemenet as aspecial Link element */
+					if (Utils.isURL(el))
+						return `<span data-type="LINK" data-id="${index++}">${el}</span>`;
 
-					// wrap in a data-id html tag only plain words ( exclude html tags )
+					/* wrap in a data-id html tag only plain words ( exclude html tags ) */
 
 					if (!Utils.isTag(el)) {
-						return `<span data-id="${index++}">${el}</span>`;
+						return `<span data-type="WORD" data-id="${index++}">${el}</span>`;
 					}
 
 					return el;

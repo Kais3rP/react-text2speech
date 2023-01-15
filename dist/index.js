@@ -172,6 +172,9 @@ class Utils {
         return false;
     }
     /* Regex Utils */
+    static isURL(str) {
+        return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(str);
+    }
     static isPunctuation(str) {
         return /^\s*[.,;:]+\s*$/.test(str);
     }
@@ -360,13 +363,12 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     highlightChunk(idx) {
         const length = this.state.currentWordIndex + this.state.chunksArray[idx].length;
-        console.log('Length', length);
         for (let i = this.state.currentWordIndex; i < length; i++)
             this.highlightText(i);
     }
     retrieveChunks() {
         let previousEnd = 0;
-        return this.state.wholeText.split(/[.?!;]/).map((c, i) => {
+        return this.state.wholeText.split(/[.?!;]+/).map((c, i) => {
             const length = c.trim().split(' ').length;
             const result = {
                 text: c + '.',
@@ -434,7 +436,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Increase the current index of word read */
         this.state.currentWordIndex += 1;
         /* Synchronize the chunk index */
-        if (/[.?!;]/.test(this.state.wholeTextArray[this.state.currentWordIndex]))
+        if (/[.?!;]+/.test(this.state.wholeTextArray[this.state.currentWordIndex]))
             this.state.currentChunkIndex++;
         /* Emit boundary event */
         this.emit('boundary', this, e);
@@ -512,12 +514,26 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     retrieveWholeText(node, selector) {
         return [...node.querySelectorAll(selector)]
-            .map((el) => el.textContent)
+            .map((el) => {
+            switch (el.dataset.type) {
+                case 'LINK':
+                    return 'Link.';
+                default:
+                    return el.textContent;
+            }
+        })
             .join(' ');
     }
     retrieveWholeTextArray(node, selector) {
         return [...node.querySelectorAll(selector)]
-            .map((el) => el.textContent)
+            .map((el) => {
+            switch (el.dataset.type) {
+                case 'LINK':
+                    return 'Link.';
+                default:
+                    return el.textContent;
+            }
+        })
             .filter((el) => el && !Utils.isPunctuation(el)); // Exclude punctuation and "" empty string characters
     }
     applyBasicStyleToWords(node, selector) {
@@ -585,8 +601,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Since che chunk mode change triggers a restart of the utterance playing,
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
-        this.state.currentWordIndex =
-            this.state.chunksArray[this.state.currentChunkIndex].start;
+        this.state.currentWordIndex = this.state.chunksArray[this.state.currentChunkIndex].start;
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
             2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
@@ -645,7 +660,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.timeCount(null, 20);
         switch (type) {
             case 'start': {
-                console.log('STart mode');
                 this.emit('start', this);
                 return new Promise((resolve) => {
                     this.utterance.onstart = (e) => {
@@ -750,7 +764,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 // Add br break line in place of \n
                 .replace(/\(\s*(.+?)\s*\)/g, (_, b) => `(${b})`) // Fix extra spaces in () parens to avoid highlighting extra characters
                 .replace(/\s+([;.,:]+?)/g, (_, b) => b) // Fix extra spaces in [] parens to avoid highlighting extra characters
-                .replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
+                //	.replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
                 .replace(/<.+?>/g, (match) => '#' + match.replace(/\s/g, '@@') + '#') // Separate html tags and add @@ symbol to spaces inside HTML tags
                 .replace(/(\d+\.\d+)(\w*)/, (_, a, b) => a + ' ' + b) // Separate numbers from measures units e.g. 1.7k -> 1.7 k since the reader ha issues reading that format
                 .split(/[#\s]/)
@@ -772,9 +786,12 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 // prevent punctuation and html entities to be assigned an highlight span tag
                 if (Utils.isSpecialCharacter(el) || Utils.isHTMLEntity(el))
                     return el;
-                // wrap in a data-id html tag only plain words ( exclude html tags )
+                /* Tag the elemenet as aspecial Link element */
+                if (Utils.isURL(el))
+                    return `<span data-type="LINK" data-id="${index++}">${el}</span>`;
+                /* wrap in a data-id html tag only plain words ( exclude html tags ) */
                 if (!Utils.isTag(el)) {
-                    return `<span data-id="${index++}">${el}</span>`;
+                    return `<span data-type="WORD" data-id="${index++}">${el}</span>`;
                 }
                 return el;
             })
@@ -3887,9 +3904,9 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                 handleGenericSeek(reader.state.chunksArray[reader.state.currentChunkIndex + 1]
                     .start);
         }
-        else if (reader.state.currentWordIndex + 5 <=
+        else if (reader.state.currentWordIndex + 1 <=
             reader.state.wholeTextArray.length)
-            handleGenericSeek(reader.state.currentWordIndex + 5);
+            handleGenericSeek(reader.state.currentWordIndex + 1);
     };
     const handleFastBackward = () => {
         const reader = textReaderRef.current;
@@ -3898,8 +3915,8 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                 handleGenericSeek(reader.state.chunksArray[reader.state.currentChunkIndex - 1]
                     .start);
         }
-        else if (reader.state.currentWordIndex - 5 >= 0)
-            handleGenericSeek(reader.state.currentWordIndex - 5);
+        else if (reader.state.currentWordIndex - 1 >= 0)
+            handleGenericSeek(reader.state.currentWordIndex - 1);
     };
     /* Options Handlers */
     const handlePreserveHighlighting = (e) => {

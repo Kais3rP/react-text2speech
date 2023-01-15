@@ -42,6 +42,12 @@ export class Utils {
 
 	/* Regex Utils */
 
+	static isURL(str: string) {
+		return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(
+			str
+		);
+	}
+
 	static isPunctuation(str: string): boolean {
 		return /^\s*[.,;:]+\s*$/.test(str);
 	}
