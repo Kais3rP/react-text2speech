@@ -1,9 +1,20 @@
 import styles from './styles.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TextReader, { useTextReaderStore } from 'react-text2speech';
+import { highlightAll, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-css';
+import 'prismjs/themes/prism-tomorrow.css';
 
 function App() {
 	const [node, setNode] = useState(null);
+
+	useEffect(() => {
+		if (node) {
+			// highlightAll(languages.js);
+		}
+	}, [node]);
 
 	const {
 		isLoading,
@@ -41,37 +52,21 @@ function App() {
 			</button>
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
-				<h1>
-					Ut vero dolorem ea illum fugit... 12/12/2112
-					test/test/test{' '}
-				</h1>
-				<a href="">
-					https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API
-				</a>
-								<pre>
-					<code>{`useEffect ( ( ) => {
-/ / / / / / / / 
-
-if ( ! socket || ! initPeerConnectionSender ) return ;
-
-const configuration = {
-offerToReceiveAudio : true ,
-offerToReceiveVideo : true ,
-} ;
-
-peerConnectionRef . current = new RTCPeerConnection ( {
-configuration : { } ,
-iceServers : [
-{
-urls : [
-"stun:stun.l.google.com:19302" ,
-"stun:stun1.l.google.com:19302" ,
-"stun:stun2.l.google.com:19302" ,
-"stun:stun3.l.google.com:19302" ,
-] ,
-} ,
-] ,
-} ) ;`}</code>
+				<h4>{`Test parens ( parens ) (parens)  [ parens ] [parens] { parens } {parens}`}</h4>
+				<h4>{`Test punctuation : Test , Test : Test ; Test . Test ! Test ?`}</h4>
+				<h4>Test Date: 12/12/2112</h4>
+				<h4>Test slashes: test/test/test</h4>
+				<h4>Test ellipsis: Test...</h4>
+				<h4>
+					Test link:{' '}
+					<a href="">
+						https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API
+					</a>
+				</h4>
+				<h1>Ut vero dolorem ea illum fugit </h1>
+				<h4>Test code:</h4>
+				<pre>
+					<code class="language-javascript">{``}</code>
 				</pre>
 
 				<p>
