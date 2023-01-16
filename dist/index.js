@@ -178,6 +178,12 @@ class Utils {
     static isDigitTextContent(str) {
         return /<.+>\d+<\/.+>/.test(str);
     }
+    static isWordTextContent(str) {
+        return /<.+>[a-zA-Z]+<\/.+>/.test(str);
+    }
+    static isWord(str) {
+        return /^[a-zA-Z]/.test(str);
+    }
     static isNumber(n) {
         return !isNaN(n) && isFinite(n);
     }
@@ -814,7 +820,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 if (Utils.isPunctuation(arr[i + 1])) {
                     return '';
                 }
-                if (Utils.isDigitTextContent(s)) {
+                if (Utils.isDigitTextContent(s) &&
+                    !Utils.isWordTextContent(arr[i + 1])) {
                     return '';
                 }
                 /* Rejoin the slashes without extra spaces between them */

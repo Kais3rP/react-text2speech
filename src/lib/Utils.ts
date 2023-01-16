@@ -50,6 +50,14 @@ export class Utils {
 		return /<.+>\d+<\/.+>/.test(str);
 	}
 
+	static isWordTextContent(str: string) {
+		return /<.+>[a-zA-Z]+<\/.+>/.test(str);
+	}
+
+	static isWord(str: string) {
+		return /^[a-zA-Z]/.test(str);
+	}
+
 	static isNumber(n: number) {
 		return !isNaN(n) && isFinite(n);
 	}

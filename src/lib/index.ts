@@ -854,9 +854,13 @@ export class SpeechSynth extends EventEmitter {
 						return '';
 					}
 
-					if (Utils.isDigitTextContent(s)) {
+					if (
+						Utils.isDigitTextContent(s) &&
+						!Utils.isWordTextContent(arr[i + 1])
+					) {
 						return '';
 					}
+
 					/* Rejoin the slashes without extra spaces between them */
 					if (Utils.isSlashTextContent(s)) return '';
 

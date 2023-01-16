@@ -4,6 +4,8 @@ export declare class Utils {
     static isMobile(): boolean;
     static isSlashTextContent(str: string): boolean;
     static isDigitTextContent(str: string): boolean;
+    static isWordTextContent(str: string): boolean;
+    static isWord(str: string): boolean;
     static isNumber(n: number): boolean;
     static isURL(str: string): boolean;
     static isPunctuation(str: string): boolean;
