@@ -780,7 +780,7 @@ export class SpeechSynth extends EventEmitter {
 
 	static addHTMLHighlightTags(
 		node: Element | string,
-		options: IHighlightOptions = { excludeCodeTags: false }
+		options: IHighlightOptions = { excludeCodeTags: true }
 	) {
 		/* Add utils method to Array */
 		// eslint-disable-next-line no-extend-native

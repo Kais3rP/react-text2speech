@@ -617,7 +617,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Since che chunk mode change triggers a restart of the utterance playing,
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
-        this.state.currentWordIndex = this.state.chunksArray[this.state.currentChunkIndex].start;
+        this.state.currentWordIndex =
+            this.state.chunksArray[this.state.currentChunkIndex].start;
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
             2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
@@ -761,7 +762,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     /* Static public methods */
     /*  Highlight  */
-    static addHTMLHighlightTags(node, options = { excludeCodeTags: false }) {
+    static addHTMLHighlightTags(node, options = { excludeCodeTags: true }) {
         /* Add utils method to Array */
         // eslint-disable-next-line no-extend-native
         Array.prototype.__join__ = Utils.__join__;
