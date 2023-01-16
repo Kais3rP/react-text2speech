@@ -780,7 +780,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 // Add br break line in place of \n
                 .replace(/\(\s*(.+?)\s*\)/g, (_, b) => `(${b})`) // Fix extra spaces in () parens to avoid highlighting extra characters
                 .replace(/\s+([;.,:]+?)/g, (_, b) => b) // Fix extra spaces in [] parens to avoid highlighting extra characters
-                .replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
+                /* 	Add extra spaces to slashes so they are correctly highlighted since they are read as plain words.
+                    Omit slashes of HTML tags, and slashes of URLs after http(s): */
+                .replace(/(?<!http[^\s]*|<)(\/)/g, (_, b) => ` ${b} `)
                 .replace(/<.+?>/g, (match) => '#' + match.replace(/\s/g, '@@') + '#') // Separate html tags and add @@ symbol to spaces inside HTML tags
                 .replace(/(\d+\.\d+)(\w*)/, (_, a, b) => a + ' ' + b) // Separate numbers from measures units e.g. 1.7k -> 1.7 k since the reader ha issues reading that format
                 .replace(/(\d(?=\d))/g, (_, a) => `${a} `)

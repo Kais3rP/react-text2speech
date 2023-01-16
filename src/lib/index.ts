@@ -804,7 +804,11 @@ export class SpeechSynth extends EventEmitter {
 				// Add br break line in place of \n
 				.replace(/\(\s*(.+?)\s*\)/g, (_, b) => `(${b})`) // Fix extra spaces in () parens to avoid highlighting extra characters
 				.replace(/\s+([;.,:]+?)/g, (_, b) => b) // Fix extra spaces in [] parens to avoid highlighting extra characters
-				.replace(/(?<!<)(\/)/g, (_, b) => ` ${b} `) // Add extra spaces to slashes so they are correctly highlighted since they are read as plain words
+
+				/* 	Add extra spaces to slashes so they are correctly highlighted since they are read as plain words.
+					Omit slashes of HTML tags, and slashes of URLs after http(s): */
+
+				.replace(/(?<!http[^\s]*|<)(\/)/g, (_, b) => ` ${b} `)
 				.replace(
 					/<.+?>/g,
 					(match) => '#' + match.replace(/\s/g, '@@') + '#'
