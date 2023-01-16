@@ -21,6 +21,11 @@ A React Component that leverages WEB Speech API to implement a text reader for w
 -   Select voice type and language
 -   Optional methods to add Highlight tags during static generation of the page to speed up page loading.
 
+## Notes
+
+Since the speech engine behaves differently on mobile browsers or according to the selected language, there are some optimization workaround to prevent special characters like "/" or "-" to send out of sync the highlighting of text. There surely are some cases that have not yet been taken into account, if you are experiencing any problem you are kindly asked to open an issue.
+Stuff inside `<code>` tags won't be parsed and the engine is not going to read it, for the same reason stated above.
+
 ## Install
 
 ```bash
