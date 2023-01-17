@@ -59,7 +59,10 @@ function App() {
 				<h4>
 					{`Special unreadable characters: - () [] {} " ' < > \` "quotation" 'quotation' \`quotation\` <unreadablequotation> <<unreadablequotation>>.`}
 				</h4>
-				<h4>Test dot in the middle of text: some text.text.</h4>
+				<h4>
+					Test punctuation in the middle of text: sometext.text
+					sometext:text sometext;text sometext,text .
+				</h4>
 				<h4>Test email: test@email.com.</h4>
 				<h4>Test pound: # #hashtag # hash-tag.</h4>
 				<h4>{`Test parens: ( parens ) (parens)  [ parens ] [parens] { parens } {parens}.`}</h4>

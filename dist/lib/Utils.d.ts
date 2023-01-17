@@ -19,6 +19,7 @@ export declare class Utils {
     static isCodeOpenTag(str: string): boolean;
     static isCodeCloseTag(str: string): boolean;
     static isWordInsideAngularBrackets(str: string): boolean;
+    static isDotBetweenWords(str: string): boolean;
     static isSpecialReadableCharacter(str: string): boolean;
     static isSpecialUnreadableCharacter(str: string): boolean;
     static isSpecialCharacter(str: string): boolean;

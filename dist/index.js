@@ -173,21 +173,33 @@ class Utils {
     }
     /* Regex Utils */
     static isSlashTextContent(str) {
+        if (!str)
+            return false;
         return /<.+>\/<\/.+>/.test(str);
     }
     static isDigitTextContent(str) {
+        if (!str)
+            return false;
         return /<.+>\d+<\/.+>/.test(str);
     }
     static isWordTextContent(str) {
+        if (!str)
+            return false;
         return /<.+>[a-zA-Z]+<\/.+>/.test(str);
     }
     static isWord(str) {
+        if (!str)
+            return false;
         return /^[a-zA-Z]+[,;.:!?]?$/.test(str);
     }
     static isNumber(str) {
+        if (!str)
+            return false;
         return !isNaN(+str) && isFinite(+str);
     }
     static isURL(str) {
+        if (!str)
+            return false;
         return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(str);
     }
     static isSpace(str) {
@@ -200,6 +212,8 @@ class Utils {
         return str === '.';
     }
     static isPunctuation(str) {
+        if (!str)
+            return false;
         return /^[.,;:!?]+$/.test(str);
     }
     static isHashtag(str) {
@@ -209,30 +223,53 @@ class Utils {
         return str === '/';
     }
     static isParens(str) {
+        if (!str)
+            return false;
         return /^[()[\]{}]+$/.test(str);
     }
     static isTag(str) {
+        if (!str)
+            return false;
         return /<.+?>/.test(str);
     }
     static isCodeOpenTag(str) {
+        if (!str)
+            return false;
         return /<code(@@)?\s?([a-zA-Z-]+="[a-zA-Z-_@\s]+")?>/.test(str);
     }
     static isCodeCloseTag(str) {
+        if (!str)
+            return false;
         return /<\/code>/.test(str);
     }
     static isWordInsideAngularBrackets(str) {
+        if (!str)
+            return false;
         return /^<+.*>+\.?$/.test(str);
     }
+    static isDotBetweenWords(str) {
+        if (!str)
+            return false;
+        return /[a-zA-Z0-9-_]+/.test(str);
+    }
     static isSpecialReadableCharacter(str) {
+        if (!str)
+            return false;
         return /^[@#\\/_*^°]+$/.test(str);
     }
     static isSpecialUnreadableCharacter(str) {
+        if (!str)
+            return false;
         return /^[-()[\]{}'"<>`]+$/.test(str);
     }
     static isSpecialCharacter(str) {
+        if (!str)
+            return false;
         return /^([.,;:\-_`'"*+()[\]{}<>\s\n])$/.test(str);
     }
     static isHTMLEntity(str) {
+        if (!str)
+            return false;
         return /&[a-z]+?;+/.test(str);
     }
     /* Type Checks */
@@ -328,6 +365,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
+            /* Add custom methods to primitives */
+            // eslint-disable-next-line no-extend-native
+            Array.prototype.__join__ = Utils.__join__;
             /* Get voices */
             try {
                 this.state.voices = yield this.getVoices();
@@ -473,13 +513,21 @@ class SpeechSynth extends EventEmitter__default["default"] {
     getRemainingText(idx) {
         const length = this.state.wholeTextArray.length;
         /* Calculate and set the remaining text */
-        return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
+        return this.state.wholeTextArray
+            .slice(idx, length + 1)
+            .__join__((el, i, arr) => {
+            if (Utils.isDot(arr[i + 1]) || Utils.isDot(el)) {
+                return '';
+            }
+            else
+                return ' ';
+        });
     }
     getCurrentChunkText() {
         return this.state.chunksArray[this.state.currentChunkIndex].text;
     }
     handleBoundary(e) {
-        console.log('Boundary');
+        console.log('Boundary', this.state.wholeTextArray[this.state.currentWordIndex]);
         /* Disable boundary if it's in chunk mode */
         if (this.options.isChunksModeOn)
             return;
@@ -566,27 +614,17 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     retrieveWholeText(node, selector) {
         return [...node.querySelectorAll(selector)]
-            .map((el) => {
-            switch (el.dataset.type) {
-                case 'LINK':
-                    return 'Link.';
-                default:
-                    return el.textContent;
+            .map((el) => el.textContent)
+            .__join__((el, i, arr) => {
+            if (Utils.isDot(arr[i + 1]) || Utils.isDot(el)) {
+                return '';
             }
-        })
-            .join(' ');
+            else
+                return ' ';
+        });
     }
     retrieveWholeTextArray(node, selector) {
-        return [...node.querySelectorAll(selector)]
-            .map((el) => {
-            switch (el.dataset.type) {
-                case 'LINK':
-                    return 'Link.';
-                default:
-                    return el.textContent;
-            }
-        })
-            .filter((el) => el && !Utils.isPunctuation(el)); // Exclude punctuation and "" empty string characters
+        return [...node.querySelectorAll(selector)].map((el) => el.textContent);
     }
     applyBasicStyleToWords(node, selector) {
         [...node.querySelectorAll(selector)]
@@ -825,7 +863,20 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 })
                     /* Separate special characters and digit that will be read as single characters */
                     .map((c, i, arr) => {
+                    /* console.log(
+                        'Character',
+                        c,
+                        'Previous',
+                        arr[i - 1],
+                        'Next',
+                        arr[i + 1]
+                    ); */
                     if (Utils.isSpecialReadableCharacter(c))
+                        return ` ${c}  `;
+                    /* Handle dots in the middle of sentences e.g. some.text , since in this case they are read as a character */
+                    if (Utils.isDot(c) &&
+                        Utils.isWord(arr[i - 1]) &&
+                        Utils.isWord(arr[i + 1]))
                         return ` ${c}  `;
                     if (Utils.isNumber(c) && Utils.isNumber(arr[i + 1]))
                         return ` ${c} `;
@@ -851,7 +902,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
                         /* Do not add a space after the word if it's a number or a special readable character or if the next word is not a plain word */
                         if (Utils.isNumber(word) ||
                             Utils.isSpecialReadableCharacter(word) ||
-                            Utils.isSpecialReadableCharacter(arr[i + 1])) {
+                            Utils.isSpecialReadableCharacter(arr[i + 1]) ||
+                            Utils.isDot(word) ||
+                            Utils.isDot(arr[i + 1])) {
                             newEl.textContent = word;
                         }
                         else
@@ -865,9 +918,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         });
     }
     static addHTMLHighlightTags_(node, options = { excludeCodeTags: true }) {
-        /* Add utils method to Array */
-        // eslint-disable-next-line no-extend-native
-        Array.prototype.__join__ = Utils.__join__;
         let isCode = false;
         let index = 0;
         let code = '';

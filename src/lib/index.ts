@@ -119,6 +119,11 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	async init(): Promise<SpeechSynth> {
+		/* Add custom methods to primitives */
+
+		// eslint-disable-next-line no-extend-native
+		Array.prototype.__join__ = Utils.__join__;
+
 		/* Get voices */
 
 		try {
@@ -332,7 +337,13 @@ export class SpeechSynth extends EventEmitter {
 	private getRemainingText(idx: number): string {
 		const length = this.state.wholeTextArray.length;
 		/* Calculate and set the remaining text */
-		return this.state.wholeTextArray.slice(idx, length + 1).join(' ');
+		return this.state.wholeTextArray
+			.slice(idx, length + 1)
+			.__join__((el, i, arr) => {
+				if (Utils.isDot(arr[i + 1] as string) || Utils.isDot(el)) {
+					return '';
+				} else return ' ';
+			});
 	}
 
 	private getCurrentChunkText() {
@@ -340,7 +351,10 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private handleBoundary(e: SpeechSynthesisEvent) {
-		console.log('Boundary');
+		console.log(
+			'Boundary',
+			this.state.wholeTextArray[this.state.currentWordIndex]
+		);
 		/* Disable boundary if it's in chunk mode */
 		if (this.options.isChunksModeOn) return;
 
@@ -462,28 +476,16 @@ export class SpeechSynth extends EventEmitter {
 
 	private retrieveWholeText(node: Element, selector: string) {
 		return [...node.querySelectorAll(selector)]
-			.map((el) => {
-				switch ((el as HTMLElement).dataset.type) {
-					case 'LINK':
-						return 'Link.';
-					default:
-						return el.textContent;
-				}
-			})
-			.join(' ');
+			.map((el) => el.textContent)
+			.__join__((el, i, arr) => {
+				if (Utils.isDot(arr[i + 1] as string) || Utils.isDot(el)) {
+					return '';
+				} else return ' ';
+			});
 	}
 
 	private retrieveWholeTextArray(node: Element, selector: string) {
-		return [...node.querySelectorAll(selector)]
-			.map((el) => {
-				switch ((el as HTMLElement).dataset.type) {
-					case 'LINK':
-						return 'Link.';
-					default:
-						return el.textContent;
-				}
-			})
-			.filter((el) => el && !Utils.isPunctuation(el)); // Exclude punctuation and "" empty string characters
+		return [...node.querySelectorAll(selector)].map((el) => el.textContent);
 	}
 
 	private applyBasicStyleToWords(node: Element, selector: string) {
@@ -822,7 +824,22 @@ export class SpeechSynth extends EventEmitter {
 					})
 					/* Separate special characters and digit that will be read as single characters */
 					.map((c, i, arr) => {
+						/* console.log(
+							'Character',
+							c,
+							'Previous',
+							arr[i - 1],
+							'Next',
+							arr[i + 1]
+						); */
 						if (Utils.isSpecialReadableCharacter(c))
+							return ` ${c}  `;
+						/* Handle dots in the middle of sentences e.g. some.text , since in this case they are read as a character */
+						if (
+							Utils.isDot(c) &&
+							Utils.isWord(arr[i - 1]) &&
+							Utils.isWord(arr[i + 1])
+						)
 							return ` ${c}  `;
 						if (Utils.isNumber(c) && Utils.isNumber(arr[i + 1]))
 							return ` ${c} `;
@@ -864,7 +881,9 @@ export class SpeechSynth extends EventEmitter {
 							if (
 								Utils.isNumber(word) ||
 								Utils.isSpecialReadableCharacter(word) ||
-								Utils.isSpecialReadableCharacter(arr[i + 1])
+								Utils.isSpecialReadableCharacter(arr[i + 1]) ||
+								Utils.isDot(word) ||
+								Utils.isDot(arr[i + 1])
 							) {
 								newEl.textContent = word;
 							} else newEl.textContent = word + ' ';
@@ -882,10 +901,6 @@ export class SpeechSynth extends EventEmitter {
 		node: Element | string,
 		options: IHighlightOptions = { excludeCodeTags: true }
 	) {
-		/* Add utils method to Array */
-		// eslint-disable-next-line no-extend-native
-		Array.prototype.__join__ = Utils.__join__;
-
 		let isCode = false;
 		let index = 0;
 		let code = '';
