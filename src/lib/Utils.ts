@@ -108,8 +108,16 @@ export class Utils {
 		return /<\/code>/.test(str);
 	}
 
+	static isWordInsideAngularBrackets(str: string) {
+		return /^<+.*>+\.?$/.test(str);
+	}
+
 	static isSpecialReadableCharacter(str: string) {
-		return /[@#/]/.test(str);
+		return /^[@#\\/_*^°]+$/.test(str);
+	}
+
+	static isSpecialUnreadableCharacter(str: string) {
+		return /^[-()[\]{}'"<>`]+$/.test(str);
 	}
 
 	static isSpecialCharacter(str: string): boolean {

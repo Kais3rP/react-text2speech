@@ -220,8 +220,14 @@ class Utils {
     static isCodeCloseTag(str) {
         return /<\/code>/.test(str);
     }
+    static isWordInsideAngularBrackets(str) {
+        return /^<+.*>+\.?$/.test(str);
+    }
     static isSpecialReadableCharacter(str) {
-        return /[@#/]/.test(str);
+        return /^[@#\\/_*^°]+$/.test(str);
+    }
+    static isSpecialUnreadableCharacter(str) {
+        return /^[-()[\]{}'"<>`]+$/.test(str);
     }
     static isSpecialCharacter(str) {
         return /^([.,;:\-_`'"*+()[\]{}<>\s\n])$/.test(str);
@@ -647,6 +653,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Since che chunk mode change triggers a restart of the utterance playing,
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
+        // eslint-disable-next-line prettier/prettier
         this.state.currentWordIndex = this.state.chunksArray[this.state.currentChunkIndex].start;
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
@@ -820,8 +827,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
                     .map((c, i, arr) => {
                     if (Utils.isSpecialReadableCharacter(c))
                         return ` ${c}  `;
-                    /* 	if (Utils.isSlash(c)) return ` ${c}  `;
-                    if (Utils.isHashtag(c)) return ` ${c}  `; */
                     if (Utils.isNumber(c) && Utils.isNumber(arr[i + 1]))
                         return ` ${c} `;
                     return c;
@@ -833,8 +838,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
                         return;
                     console.log('Word', word, 'Next', arr[i + 1], 'Is next a word?', Utils.isWord(arr[i + 1]));
                     /* If it's a parens or a punctuation or a special character it does not add an highlight data-id since those characters won't  be read */
-                    if (Utils.isParens(word) || Utils.isPunctuation(word)) {
-                        const newEl = document.createTextNode(word);
+                    if (Utils.isSpecialUnreadableCharacter(word) ||
+                        Utils.isWordInsideAngularBrackets(word)) {
+                        const newEl = document.createTextNode(word + ' ');
                         wrapper.appendChild(newEl);
                     }
                     else {
@@ -842,7 +848,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
                         const newEl = document.createElement('span');
                         newEl.setAttribute('data-id', (this.tagIndex++).toString());
                         newEl.setAttribute('data-type', 'WORD');
-                        /* Do not add a space after the word if it's a number or a slash or if the next word is not a plain word */
+                        /* Do not add a space after the word if it's a number or a special readable character or if the next word is not a plain word */
                         if (Utils.isNumber(word) ||
                             Utils.isSpecialReadableCharacter(word) ||
                             Utils.isSpecialReadableCharacter(arr[i + 1])) {

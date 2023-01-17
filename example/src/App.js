@@ -53,11 +53,15 @@ function App() {
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
 				<h4>
-					Special readable characters: # @ / #@/ test@test test/test
-					test#test test.test
+					Special readable characters: # @ / \ _ #@/\_ test@test
+					test/test test\test test#test test_test.
 				</h4>
-				<h4>Test email: test@email.com</h4>
-				<h4>Test pound: # #hashtag # hash-tag</h4>
+				<h4>
+					{`Special unreadable characters: - () [] {} " ' < > \` "quotation" 'quotation' \`quotation\` <unreadablequotation> <<unreadablequotation>>.`}
+				</h4>
+				<h4>Test dot in the middle of text: some text.text.</h4>
+				<h4>Test email: test@email.com.</h4>
+				<h4>Test pound: # #hashtag # hash-tag.</h4>
 				<h4>{`Test parens: ( parens ) (parens)  [ parens ] [parens] { parens } {parens}.`}</h4>
 				<h4>{`Test punctuation  : Test , Test : Test ; Test . Test ! Test ?`}</h4>
 				Free text test.

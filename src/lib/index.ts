@@ -824,8 +824,6 @@ export class SpeechSynth extends EventEmitter {
 					.map((c, i, arr) => {
 						if (Utils.isSpecialReadableCharacter(c))
 							return ` ${c}  `;
-						/* 	if (Utils.isSlash(c)) return ` ${c}  `;
-						if (Utils.isHashtag(c)) return ` ${c}  `; */
 						if (Utils.isNumber(c) && Utils.isNumber(arr[i + 1]))
 							return ` ${c} `;
 						return c;
@@ -845,8 +843,11 @@ export class SpeechSynth extends EventEmitter {
 
 						/* If it's a parens or a punctuation or a special character it does not add an highlight data-id since those characters won't  be read */
 
-						if (Utils.isParens(word) || Utils.isPunctuation(word)) {
-							const newEl = document.createTextNode(word);
+						if (
+							Utils.isSpecialUnreadableCharacter(word) ||
+							Utils.isWordInsideAngularBrackets(word)
+						) {
+							const newEl = document.createTextNode(word + ' ');
 							wrapper.appendChild(newEl);
 						} else {
 							/* In all other cases, which is, "plain words or slashes or any other readable character" we add the data-id attribute */
@@ -859,7 +860,7 @@ export class SpeechSynth extends EventEmitter {
 							);
 							newEl.setAttribute('data-type', 'WORD');
 
-							/* Do not add a space after the word if it's a number or a slash or if the next word is not a plain word */
+							/* Do not add a space after the word if it's a number or a special readable character or if the next word is not a plain word */
 							if (
 								Utils.isNumber(word) ||
 								Utils.isSpecialReadableCharacter(word) ||
