@@ -69,7 +69,7 @@ function App() {
 				<pre>
 					<code class="language-javascript">{``}</code>
 				</pre>
-
+{/* 
 				<p>
 					Lorem dolor sit amet. Et animi debitis eos tenetur
 					inventoreQui totam qui iure ratione ab distinctio deleniti
@@ -194,7 +194,7 @@ function App() {
 					asperiores et possimus enim. Et distinctio officia qui
 					tempora fugaAut porro est recusandae repellat. Ea placeat
 					commodi quo excepturi enimId iste?{' '}
-				</p>
+				</p> */}
 				<dl>
 					<dt>
 						<dfn>Sed eius placeat sed repellat dicta. </dfn>
