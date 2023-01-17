@@ -52,11 +52,19 @@ function App() {
 			</button>
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
-				<h4>{`Test parens ( parens ) (parens)  [ parens ] [parens] { parens } {parens}`}</h4>
-				<h4>{`Test punctuation : Test , Test : Test ; Test . Test ! Test ?`}</h4>
-				Free text test
-				<h4>Test Date: 12/12/2112</h4>
-				<h4>Test slashes: test/test/test</h4>
+				<h4>
+					Special readable characters: # @ / #@/ test@test test/test
+					test#test test.test
+				</h4>
+				<h4>Test email: test@email.com</h4>
+				<h4>Test pound: # #hashtag # hash-tag</h4>
+				<h4>{`Test parens: ( parens ) (parens)  [ parens ] [parens] { parens } {parens}.`}</h4>
+				<h4>{`Test punctuation  : Test , Test : Test ; Test . Test ! Test ?`}</h4>
+				Free text test.
+				<h4>
+					Test <em>Date:</em> 12/12/2112.
+				</h4>
+				<h4>Test slashes: test/test/test.</h4>
 				<h4>Test ellipsis: Test...</h4>
 				<h4>
 					Test link:{' '}
@@ -69,7 +77,7 @@ function App() {
 				<pre>
 					<code class="language-javascript">{``}</code>
 				</pre>
-{/* 
+				{/* 
 				<p>
 					Lorem dolor sit amet. Et animi debitis eos tenetur
 					inventoreQui totam qui iure ratione ab distinctio deleniti

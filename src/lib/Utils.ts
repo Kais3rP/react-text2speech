@@ -55,11 +55,11 @@ export class Utils {
 	}
 
 	static isWord(str: string) {
-		return /^[a-zA-Z]/.test(str);
+		return /^[a-zA-Z]+[,;.:!?]?$/.test(str);
 	}
 
-	static isNumber(n: number) {
-		return !isNaN(n) && isFinite(n);
+	static isNumber(str: string) {
+		return !isNaN(+str) && isFinite(+str);
 	}
 
 	static isURL(str: string) {
@@ -68,8 +68,32 @@ export class Utils {
 		);
 	}
 
+	static isSpace(str: string) {
+		return str === ' ';
+	}
+
+	static isHat(str: string): boolean {
+		return str === '@';
+	}
+
+	static isDot(str: string): boolean {
+		return str === '.';
+	}
+
 	static isPunctuation(str: string): boolean {
-		return /^\s*[.,;:]+\s*$/.test(str);
+		return /^[.,;:!?]+$/.test(str);
+	}
+
+	static isHashtag(str: string): boolean {
+		return str === '#';
+	}
+
+	static isSlash(str: string): boolean {
+		return str === '/';
+	}
+
+	static isParens(str: string): boolean {
+		return /^[()[\]{}]+$/.test(str);
 	}
 
 	static isTag(str: string): boolean {
@@ -77,11 +101,15 @@ export class Utils {
 	}
 
 	static isCodeOpenTag(str: string): boolean {
-		return /<code>/.test(str);
+		return /<code(@@)?\s?([a-zA-Z-]+="[a-zA-Z-_@\s]+")?>/.test(str);
 	}
 
 	static isCodeCloseTag(str: string): boolean {
 		return /<\/code>/.test(str);
+	}
+
+	static isSpecialReadableCharacter(str: string) {
+		return /[@#/]/.test(str);
 	}
 
 	static isSpecialCharacter(str: string): boolean {

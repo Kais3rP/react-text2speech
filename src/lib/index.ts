@@ -15,6 +15,7 @@ export class SpeechSynth extends EventEmitter {
 	events: Events;
 	options: IOptions;
 	state: IState;
+	tagIndex: number;
 
 	constructor(
 		textContainer: HTMLElement,
@@ -39,6 +40,10 @@ export class SpeechSynth extends EventEmitter {
 		}: Params
 	) {
 		super();
+
+		/* Counters */
+		this.tagIndex = 0;
+
 		this.textContainer = textContainer;
 		this.style = { color1, color2 };
 
@@ -126,8 +131,7 @@ export class SpeechSynth extends EventEmitter {
 			/* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags" 
     on stringified HTML */
 
-			if (!this.options.isSSROn)
-				SpeechSynth.addHTMLHighlightTags(this.textContainer);
+			this.addHTMLHighlightTags(this.textContainer);
 
 			/* Add basic style to the words that have just been tagged wit HTML tags */
 
@@ -244,8 +248,12 @@ export class SpeechSynth extends EventEmitter {
 
 	private retrieveChunks(): Chunk[] {
 		let previousEnd = 0;
-		return this.state.wholeText.split(/[.?!;]+/).map((c, i) => {
-			const length = c.trim().split(' ').length;
+		return this.state.wholeText.split(/[.?!;]+(?=[\s\n])/).map((c, i) => {
+			const length = c
+				.trim()
+				.split(' ')
+				.filter((el) => el).length;
+
 			const result: Chunk = {
 				text: c + '.',
 				length: length,
@@ -259,12 +267,12 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private handleChunkHighlighting() {
-		console.log(
+		/* console.log(
 			'Highlight chunk',
 			this.state.chunksArray[this.state.currentChunkIndex],
 			'Current word',
 			this.state.wholeTextArray[this.state.currentWordIndex]
-		);
+		); */
 
 		// eslint-disable-next-line prettier/prettier
 		const currentChunk =
@@ -577,6 +585,7 @@ export class SpeechSynth extends EventEmitter {
 		make sure the current word index gets synchronized with the current chunk index start word,
 		since the sentence is restarted from the first word of the sentence itself */
 
+		// eslint-disable-next-line prettier/prettier
 		this.state.currentWordIndex =
 			this.state.chunksArray[this.state.currentChunkIndex].start;
 
@@ -778,7 +787,97 @@ export class SpeechSynth extends EventEmitter {
 
 	/*  Highlight  */
 
-	static addHTMLHighlightTags(
+	addHTMLHighlightTags(
+		node: Element,
+		options: IHighlightOptions = { excludeCodeTags: true }
+	) {
+		const tree = [...node.childNodes];
+		tree.forEach((el) => {
+			console.log('Element', el, 'TYPE:', el.nodeType);
+
+			if (el.nodeType === 1)
+				this.addHTMLHighlightTags(el as Element, options);
+
+			if (el.nodeType === 3) {
+				if (el.textContent === ' ' || el.textContent === '') return;
+				const wrapper = document.createElement('span');
+
+				(el as Text).data
+					.split('')
+					.filter((el, i, arr) => {
+						/* Dismiss empty strings or non valid elements */
+						if (!el) return false;
+
+						/* Get rid of spaces between words and punctuation */
+						if (
+							Utils.isSpace(el) &&
+							Utils.isPunctuation(arr[i + 1])
+						)
+							return false;
+						/* Get rid of multiple spaces to avoid inconsistencies */
+						if (Utils.isSpace(el) && Utils.isSpace(arr[i + 1]))
+							return false;
+
+						return true;
+					})
+					/* Separate special characters and digit that will be read as single characters */
+					.map((c, i, arr) => {
+						if (Utils.isSpecialReadableCharacter(c))
+							return ` ${c}  `;
+						/* 	if (Utils.isSlash(c)) return ` ${c}  `;
+						if (Utils.isHashtag(c)) return ` ${c}  `; */
+						if (Utils.isNumber(c) && Utils.isNumber(arr[i + 1]))
+							return ` ${c} `;
+						return c;
+					})
+					.join('')
+					.split(' ')
+					.forEach((word, i, arr) => {
+						if (!word) return;
+						console.log(
+							'Word',
+							word,
+							'Next',
+							arr[i + 1],
+							'Is next a word?',
+							Utils.isWord(arr[i + 1])
+						);
+
+						/* If it's a parens or a punctuation or a special character it does not add an highlight data-id since those characters won't  be read */
+
+						if (Utils.isParens(word) || Utils.isPunctuation(word)) {
+							const newEl = document.createTextNode(word);
+							wrapper.appendChild(newEl);
+						} else {
+							/* In all other cases, which is, "plain words or slashes or any other readable character" we add the data-id attribute */
+
+							const newEl = document.createElement('span');
+
+							newEl.setAttribute(
+								'data-id',
+								(this.tagIndex++).toString()
+							);
+							newEl.setAttribute('data-type', 'WORD');
+
+							/* Do not add a space after the word if it's a number or a slash or if the next word is not a plain word */
+							if (
+								Utils.isNumber(word) ||
+								Utils.isSpecialReadableCharacter(word) ||
+								Utils.isSpecialReadableCharacter(arr[i + 1])
+							) {
+								newEl.textContent = word;
+							} else newEl.textContent = word + ' ';
+							/* Add a space after the words that are Text words */
+
+							wrapper.appendChild(newEl);
+						}
+					});
+				node.replaceChild(wrapper, el);
+			}
+		});
+	}
+
+	static addHTMLHighlightTags_(
 		node: Element | string,
 		options: IHighlightOptions = { excludeCodeTags: true }
 	) {
@@ -799,26 +898,60 @@ export class SpeechSynth extends EventEmitter {
 				code = node.innerHTML;
 
 			code = code
+
+				/* Parse all code to HTML to be able to keep the correct text formatting replacing new lines with <br/> */
+
 				.split('\n')
 				.join('<br/>')
-				// Add br break line in place of \n
-				.replace(/\(\s*(.+?)\s*\)/g, (_, b) => `(${b})`) // Fix extra spaces in () parens to avoid highlighting extra characters
-				.replace(/\s+([;.,:]+?)/g, (_, b) => b) // Fix extra spaces in [] parens to avoid highlighting extra characters
+
+				/* Fix extra spaces in () [] {} parens to avoid highlighting extra characters e.g. ( Hello world ) -> (Hello World) */
+
+				.replace(
+					/([([{]{1,1})\s*(.+?)\s*([)\]}]{1,1})/gm,
+					(_, a, b, c) => `${a}${b}${c}`
+				)
+
+				/* Fix extra spaces before punctuation */
+
+				.replace(/\s+([;.,:!?]+?)/gm, (_, b) => b)
 
 				/* 	Add extra spaces to slashes so they are correctly highlighted since they are read as plain words.
 					Omit slashes of HTML tags, and slashes of URLs after http(s): */
 
-				.replace(/(?<!http[^\s]*|<)(\/)/g, (_, b) => ` ${b} `)
+				.replace(/(?<!http[^\s]*|<)(\/)/gm, (_, b) => ` ${b} `)
+
+				/* Separate html tags and add @@ symbol to spaces inside HTML tags */
+
 				.replace(
-					/<.+?>/g,
-					(match) => '#' + match.replace(/\s/g, '@@') + '#'
-				) // Separate html tags and add @@ symbol to spaces inside HTML tags
-				.replace(/(\d+\.\d+)(\w*)/, (_, a, b) => a + ' ' + b) // Separate numbers from measures units e.g. 1.7k -> 1.7 k since the reader ha issues reading that format
-				.replace(/(\d(?=\d))/g, (_, a) => `${a} `)
-				// .replace(/\/(?=/\)/g, (_,a))
+					/<.+?>/gm,
+					(match) => '#' + match.replace(/\s/gm, '@@') + '#'
+				)
+
+				/* Identify spaces inside pre tags as &nbsp; to keep the correct code indentation */
+
+				/* .replace(/<pre.*>(.+)<\/pre>/gm, (match) =>
+					match.replace(/\s/gm, '-')
+				) */
+
+				/*  Separate numbers from measures units e.g. 1.7k -> 1.7 k since the reader ha issues reading that format */
+
+				.replace(/(\d+\.\d+)(\w*)/, (_, a, b) => a + ' ' + b)
+
+				/* Read numbers as singular digits to prevent inconsistency e.g. ( some numbers trigger boundary during reading ) */
+
+				.replace(/(\d(?=\d))/gm, (_, a) => `${a} `)
+
+				/* Split on spaces and on pound sign ( pound sign identify HTML tags edges ) */
+
 				.split(/[#\s]/)
+
+				/* Delete non readable elements e.g. empty strings "", undefined, NaN, etc... */
+
 				.filter((el) => el)
-				.map((el) => {
+
+				/* Add the interactive HTML tags to the readable words */
+
+				.map((el, i) => {
 					// Exclude code tags
 					if (options?.excludeCodeTags) {
 						if (Utils.isCodeOpenTag(el)) {
@@ -832,16 +965,21 @@ export class SpeechSynth extends EventEmitter {
 						if (isCode) return el;
 					}
 
-					// prevent punctuation and html entities to be assigned an highlight span tag
+					/* Prevent punctuation and html entities to be assigned an highlight span tag */
 
-					if (Utils.isSpecialCharacter(el) || Utils.isHTMLEntity(el))
+					if (
+						Utils.isSpecialCharacter(el) ||
+						Utils.isHTMLEntity(el) ||
+						Utils.isParens(el) ||
+						Utils.isPunctuation(el)
+					)
 						return el;
 
 					/* Tag the element as a special Link element */
 					if (Utils.isURL(el))
 						return `<span data-type="LINK" data-id="${index++}">${el}</span>`;
 
-					/* wrap in a data-id html tag only plain words ( exclude html tags ) */
+					/* Wrap in a data-id html tag only plain words ( exclude html tags ) */
 
 					if (!Utils.isTag(el)) {
 						return `<span data-type="WORD" data-id="${index++}">${el}</span>`;
@@ -858,6 +996,12 @@ export class SpeechSynth extends EventEmitter {
 						return '';
 					}
 
+					/* 	if (Utils.isPunctuation(s) || Utils.isSpecialCharacter(s))
+						return ''; */
+
+					/* Handle numbers with multiple digits, they have been splitted to single digits to avoid inconsistencies, 
+					hence now they are rejoined with no extra spaces */
+
 					if (
 						Utils.isDigitTextContent(s) &&
 						!Utils.isWordTextContent(arr[i + 1])
@@ -873,7 +1017,7 @@ export class SpeechSynth extends EventEmitter {
 
 					return ' ';
 				})
-				.replace(/@@/g, ' ');
+				.replace(/@@/gm, ' ');
 
 			/* Apply the tags to the HTML DOM node if SSR is off */
 			if (typeof window !== 'undefined' && node instanceof HTMLElement) {
