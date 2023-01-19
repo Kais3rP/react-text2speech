@@ -12,7 +12,7 @@ function App() {
 
 	useEffect(() => {
 		if (node) {
-			// highlightAll(languages.js);
+			highlightAll(languages.js);
 		}
 	}, [node]);
 
@@ -35,7 +35,7 @@ function App() {
 				react-text2speech
 			</a>
 			{node && (
-				<TextReader textContainer={node} options={{ language: 'en' }} />
+				<TextReader textContainer={node} options={{ language: 'it' }} />
 			)}
 			<button
 				className={styles.play}
@@ -52,23 +52,7 @@ function App() {
 			</button>
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
-				<h4>{`Test parens ( parens ) (parens)  [ parens ] [parens] { parens } {parens}`}</h4>
-				<h4>{`Test punctuation : Test , Test : Test ; Test . Test ! Test ?`}</h4>
-				<h4>Test Date: 12/12/2112</h4>
-				<h4>Test slashes: test/test/test</h4>
-				<h4>Test ellipsis: Test...</h4>
-				<h4>
-					Test link:{' '}
-					<a href="">
-						https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API
-					</a>
-				</h4>
-				<h1>Ut vero dolorem ea illum fugit </h1>
-				<h4>Test code:</h4>
-				<pre>
-					<code class="language-javascript">{``}</code>
-				</pre>
-
+				<h1>Ut vero dolorem ea illum fugit.</h1>
 				<p>
 					Lorem dolor sit amet. Et animi debitis eos tenetur
 					inventoreQui totam qui iure ratione ab distinctio deleniti
@@ -206,6 +190,109 @@ function App() {
 					</dt>
 					<dd>Et expedita internos qui voluptatibus sint. </dd>
 				</dl>
+				<h2>Edge Cases:</h2>
+				<h4>Test code:</h4>
+				<pre>
+					<code class="language-javascript">{`
+function App() {
+	const [node, setNode] = useState(null);
+
+	useEffect(() => {
+		if (node) {
+			// highlightAll(languages.js);
+		}
+	}, [node]);
+
+	const {
+		isLoading,
+		isReading,
+		isVisible,
+		showTextReader,
+		startReading,
+		stopReading,
+	} = useTextReaderStore();
+
+	return (
+		<div className={styles.container}>
+			<a
+				href="https://github.com/Kais3rP/react-text2speech"
+				className={styles.title}
+				rel="no-referrer"
+			>
+				react-text2speech
+			</a>
+			{node && (
+				<TextReader textContainer={node} options={{ language: 'it' }} />
+			)}
+			<button
+				className={styles.play}
+				onClick={
+					isReading
+						? stopReading
+						: () => {
+								if (!isVisible) showTextReader();
+								startReading();
+						  }
+				}
+			>
+				{isReading ? 'Pause' : 'Play'}
+			</button>
+			{isLoading && <div className="loader"></div>}
+			<div className={styles.text} ref={setNode}>Some text</div>
+		</div>
+	);
+}
+					`}</code>
+				</pre>
+				<h4>Special readable characters:</h4>
+				<span>
+					# @ / \ _ = + $ £ % & #@/\_ test@test test/test test\test
+					test#test test_test °Test ^Test test°test test^test.
+				</span>
+				<h4>Special unreadable characters:</h4>
+				<span>{` - () [] {} " ' < > \` | "quotation" 'quotation' \`quotation\` <unreadablequotation> <<unreadablequotation>>.`}</span>
+				<h4>Test punctuation in the middle of text:</h4>
+				<span>
+					so.me.text.text so:me:text:text so;me;text;text
+					so,me,text,text.
+				</span>
+				<h4>Test pound:</h4>
+				<span> # #hashtag # hash-tag.</span>
+				<h4>Test email:</h4>
+				<span> test@email.com.</span>
+				<h4>Test parens:</h4>
+				<span>{`Test parens: ( parens ) (parens)  [ parens ] [parens] { parens } {parens}.`}</span>
+				<h4>Test punctuation </h4>
+				<span>{`Test punctuation  : Test , Test : Test ; Test . Test ! Test ?`}</span>
+				Free text test.
+				<h4>Test numbers: </h4>
+				<span>10 100 1000 1.000 1,000.</span>
+				<h4>Test Dates:</h4>
+				<span>12/12/2112 10/01/1001 06-02-1999</span>
+				<h4>Test time:</h4>
+				<span>14:12:12</span>
+				<h4>Test slashes: </h4>
+				<span>test/test/test.</span>
+				<h4>Test ellipsis:</h4>
+				<span>Test...</span>
+				<h4>Test nonsense random words: </h4>
+				<span>dfsdf sdfsdf.</span>
+				<h4>
+					Test numbers + units of measure: 1.2Kg 1.3Lb 300Km
+					100.000m/s .
+				</h4>
+				<p>
+					<em>Test punctuation outside an HTML element</em>.
+					<em>Test punctuation outside an HTML element</em>;
+					<em>Test punctuation outside an HTML element</em>!
+					<em>Test punctuation outside an HTML element</em>?
+				</p>
+				<h4>
+					Test link:
+					<a href="123">
+						https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API
+					</a>
+				</h4>
 			</div>
 		</div>
 	);

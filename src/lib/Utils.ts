@@ -43,52 +43,114 @@ export class Utils {
 	/* Regex Utils */
 
 	static isSlashTextContent(str: string) {
+		if (!str) return false;
 		return /<.+>\/<\/.+>/.test(str);
 	}
 
 	static isDigitTextContent(str: string) {
+		if (!str) return false;
 		return /<.+>\d+<\/.+>/.test(str);
 	}
 
 	static isWordTextContent(str: string) {
+		if (!str) return false;
 		return /<.+>[a-zA-Z]+<\/.+>/.test(str);
 	}
 
 	static isWord(str: string) {
+		if (!str) return false;
 		return /^[a-zA-Z]/.test(str);
 	}
 
-	static isNumber(n: number) {
-		return !isNaN(n) && isFinite(n);
+	static isWordWithNumbers(str: string) {
+		if (!str) return false;
+		return /^[a-zA-Z0-9]/.test(str);
+	}
+
+	static isNumber(str: string) {
+		if (!str) return false;
+		return !isNaN(+str) && isFinite(+str);
 	}
 
 	static isURL(str: string) {
+		if (!str) return false;
 		return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(
 			str
 		);
 	}
 
+	static isSpace(str: string) {
+		return str === ' ';
+	}
+
+	static isAt(str: string): boolean {
+		return str === '@';
+	}
+
+	static isDot(str: string): boolean {
+		return str === '.';
+	}
+
 	static isPunctuation(str: string): boolean {
-		return /^\s*[.,;:]+\s*$/.test(str);
+		if (!str) return false;
+		return /^[.,;:!?]+$/.test(str);
+	}
+
+	static isPunctuationButDot(str: string): boolean {
+		if (!str) return false;
+		return /^[,;:!?]+$/.test(str);
+	}
+
+	static isHashtag(str: string): boolean {
+		return str === '#';
+	}
+
+	static isSlash(str: string): boolean {
+		return str === '/';
+	}
+
+	static isParens(str: string): boolean {
+		if (!str) return false;
+		return /^[()[\]{}]+$/.test(str);
 	}
 
 	static isTag(str: string): boolean {
+		if (!str) return false;
 		return /<.+?>/.test(str);
 	}
 
 	static isCodeOpenTag(str: string): boolean {
-		return /<code>/.test(str);
+		if (!str) return false;
+		return /<code(@@)?\s?([a-zA-Z-]+="[a-zA-Z-_@\s]+")?>/.test(str);
 	}
 
 	static isCodeCloseTag(str: string): boolean {
+		if (!str) return false;
 		return /<\/code>/.test(str);
 	}
 
+	static isWordInsideAngularBrackets(str: string) {
+		if (!str) return false;
+		return /^<+.*>+\.?$/.test(str);
+	}
+
+	static isSpecialReadableCharacter(str: string) {
+		if (!str) return false;
+		return /^[@#\\/_*^°£$%&=+]+$/.test(str);
+	}
+
+	static isSpecialUnreadableCharacter(str: string) {
+		if (!str) return false;
+		return /^[()[\]{}'"<>`|]+$/.test(str);
+	}
+
 	static isSpecialCharacter(str: string): boolean {
+		if (!str) return false;
 		return /^([.,;:\-_`'"*+()[\]{}<>\s\n])$/.test(str);
 	}
 
 	static isHTMLEntity(str: string): boolean {
+		if (!str) return false;
 		return /&[a-z]+?;+/.test(str);
 	}
 
@@ -110,7 +172,7 @@ export class Utils {
 
 	/* Type Checks */
 
-	static isFunction(fn) {
+	static isFunction(fn: any) {
 		return fn && typeof fn === 'function';
 	}
 }

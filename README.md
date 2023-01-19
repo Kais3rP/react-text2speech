@@ -25,6 +25,7 @@ A React Component that leverages WEB Speech API to implement a text reader for w
 
 Since the speech engine behaves differently on mobile browsers or according to the selected language, there are some optimization workaround to prevent special characters like "/" or "-" to send out of sync the highlighting of text. There surely are some cases that have not yet been taken into account, if you are experiencing any problem you are kindly asked to open an issue.
 Stuff inside `<code>` tags won't be parsed and the engine is not going to read it, for the same reason stated above.
+More info are provided in the *Edge Cases* section.
 
 ## Install
 
@@ -77,13 +78,26 @@ const [node, setNode] = useState(null);
 
 ## API / Props
 
-| Props         | Default value                                                                                                                                                                                     | Required |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| textContainer | undefined                                                                                                                                                                                         | true     |
-| styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" }                                                                                                                | false    |
-| options       | { language: 'en', isSSROn: false, } | false    |
+| Props         | Default value                                                                      | Required |
+| ------------- | ---------------------------------------------------------------------------------- | -------- |
+| textContainer | undefined                                                                          | true     |
+| styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" } | false    |
+| options       | { language: 'en', isSSROn: false, }                                                | false    |
 
-*** Remember to set the language accordingly to the language of the text that it's going to be read, it's enough you type the first locale letters e.g. "en", "de", "fr", etc... ***
+**_ Remember to set the language accordingly to the language of the text that it's going to be read, it's enough you type the first locale letters e.g. "en", "de", "fr", etc... _**
+
+## Edge Cases
+
+There are some edge cases not yet covered and hardly coverable with extreme precision since the speech synth handles some special characters like "/" or "." and "," in numbers ( 1.000 , 1,000 ) in different ways depending on the language choosen, some locales use "." for decimals, others use ",".
+Some cases are automically covered during the content parsing, for example if you happen to have grammar inconstencies like "word , word" instead of "word, word", they are going to be fixed automatically.
+Some edge cases like dots in the middle of word like "some.word" are going to be parsed and read as "dot" in english, while dots used as punctuation marks won't be read by the synth.
+If you have many numbers in your text or you stick with the Chunk method of highlighting text.
+These are currently the issues and edge cases not yet covered:
+
+-   Punctuation marks directly after an HTML tag won't be taken into account as a chunk delimiter.
+-   Numbers that use delimiters e.g: 1,000 might lead to incosistencies since some locales interpret it as a decimal delimiter.
+-   Numbers that begin with 0 are read digits per digit
+-   English voice language sometimes fires more boundaries than needed while reading, hence the highlighting of single wwords might go out of sync.
 
 ## License
 
