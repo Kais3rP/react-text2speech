@@ -84,7 +84,7 @@ const [node, setNode] = useState(null);
 | styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" } | false    |
 | options       | { language: 'en', isSSROn: false, }                                                | false    |
 
-**_ Remember to set the language accordingly to the language of the text that it's going to be read, it's enough you type the first locale letters e.g. "en", "de", "fr", etc... _**
+***Remember to set the language accordingly to the language of the text that it's going to be read, it's enough you type the first locale letters e.g. "en", "de", "fr", etc... ***
 
 ## Edge Cases
 
@@ -97,7 +97,7 @@ These are currently the issues and edge cases not yet covered:
 -   Punctuation marks directly after an HTML tag won't be taken into account as a chunk delimiter.
 -   Numbers that use delimiters e.g: 1,000 might lead to incosistencies since some locales interpret it as a decimal delimiter.
 -   Numbers that begin with 0 are read digits per digit
--   English voice language sometimes fires more boundaries than needed while reading, hence the highlighting of single wwords might go out of sync.
+-   English voice language sometimes fires more boundaries than needed while reading, hence the highlighting of single words might go out of sync.
 
 ## License
 

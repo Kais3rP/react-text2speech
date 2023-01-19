@@ -729,7 +729,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
         // eslint-disable-next-line prettier/prettier
-        this.state.currentWordIndex = this.state.chunksArray[this.state.currentChunkIndex].start;
+        this.state.currentWordIndex =
+            this.state.chunksArray[this.state.currentChunkIndex].start;
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
             2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
@@ -961,6 +962,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
             }
         });
     }
+    /*
+    Legacy method to add tags that leverages regexp parsing instead of DOM traversing
+    */
     static addHTMLHighlightTags_(node, options = { excludeCodeTags: true }) {
         let isCode = false;
         let index = 0;
