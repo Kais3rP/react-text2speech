@@ -190,7 +190,12 @@ class Utils {
     static isWord(str) {
         if (!str)
             return false;
-        return /^[a-zA-Z]+[,;.:!?]?$/.test(str);
+        return /^[a-zA-Z]/.test(str);
+    }
+    static isWordWithNumbers(str) {
+        if (!str)
+            return false;
+        return /^[a-zA-Z0-9]/.test(str);
     }
     static isNumber(str) {
         if (!str)
@@ -205,7 +210,7 @@ class Utils {
     static isSpace(str) {
         return str === ' ';
     }
-    static isHat(str) {
+    static isAt(str) {
         return str === '@';
     }
     static isDot(str) {
@@ -215,6 +220,11 @@ class Utils {
         if (!str)
             return false;
         return /^[.,;:!?]+$/.test(str);
+    }
+    static isPunctuationButDot(str) {
+        if (!str)
+            return false;
+        return /^[,;:!?]+$/.test(str);
     }
     static isHashtag(str) {
         return str === '#';
@@ -247,20 +257,15 @@ class Utils {
             return false;
         return /^<+.*>+\.?$/.test(str);
     }
-    static isDotBetweenWords(str) {
-        if (!str)
-            return false;
-        return /[a-zA-Z0-9-_]+/.test(str);
-    }
     static isSpecialReadableCharacter(str) {
         if (!str)
             return false;
-        return /^[@#\\/_*^°]+$/.test(str);
+        return /^[@#\\/_*^°£$%&=+]+$/.test(str);
     }
     static isSpecialUnreadableCharacter(str) {
         if (!str)
             return false;
-        return /^[-()[\]{}'"<>`]+$/.test(str);
+        return /^[()[\]{}'"<>`|]+$/.test(str);
     }
     static isSpecialCharacter(str) {
         if (!str)
@@ -425,7 +430,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.utterance.onboundary = this.handleBoundary.bind(this);
         /* On mobile the end event is fired multiple times due to chunkification of text hence this is used to manage the highlight of chunks */
         this.utterance.onend = (e) => {
-            console.log('Utterance end event');
             /* This prevents the execution of code if the end event is called after the reset method has been called */
             if (this.state.isPlaying === false && this.state.isPaused === false)
                 return;
@@ -450,30 +454,63 @@ class SpeechSynth extends EventEmitter__default["default"] {
             this.highlightText(i);
     }
     retrieveChunks() {
+        let currentPunctuationSymbol = '.';
+        const chunks = [];
         let previousEnd = 0;
-        return this.state.wholeText.split(/[.?!;]+(?=[\s\n])/).map((c, i) => {
-            const length = c
-                .trim()
-                .split(' ')
-                .filter((el) => el).length;
-            const result = {
-                text: c + '.',
-                length: length,
-                start: previousEnd,
-                end: previousEnd + length - 1,
-                idx: i,
-            };
-            previousEnd = previousEnd + length;
-            return result;
+        /*
+        Take into account that all the special readable characters will be counted as plain words hence we need to:
+        - use the "wholeTextArray" which holds all the text elements that were wrapped in a span tag with a data-id attribute,
+          this ensures that it will contain all readable content, since only readable words/characters are given such a wrap tag in
+          "addHTMLHighlightTags" method.
+          This further ensures to have a unique source of truth to keep in sync reading content and visual highlighting.
+        - join with spaces every single character wrapped with a data-id attribute tag to be able to further split on given breakpoints
+        - split in segments relative to periods that have words ending with a punctuation mark, to do so we use this regexp "/(?<=[a-zA-Z0-9])[.?!;]/"
+          to make sure to select any punctuation mark that is preceeded by a word
+          ( to avoid to consider punctuation in the middle of words as chunk edges, we use the wholeTextArray array
+            which already owns all characters that will be read, included dots in the middle of words e.g. text.text -> "text dot text" ).
+        - for each of the chunk extracted we build an object containg all the info on the chunk, start,end,length, index and text.
+          The text is the content that will be passed to the speech synth
+        - The chunk text has to be further manipulated since now as we manipulated the chunk the dots in the middle of the word won't be read as they are detached from the previous and next words.
+          The strategy here is the same used in the "retrieveWholeText" method, which is: using the custom __join__ method
+          tho use a space " " to join all the plain words and a no space "" to join the words that have a punctuation element next to them and dots element themselves */
+        this.state.wholeTextArray
+            .join(' ')
+            /* Alternative regexps:
+            1- /(?<![\s])[.?!;]+(?=[\s\n])/ This is safer since it just checks if there are spaces before and after the dot
+            2- /(?<=[a-zA-Z0-9])[.?!;]/  This does not take into account dots placed after a special character like a parens e.g. (word). <-- That dot won't be matched
+            */
+            .split(/(?<![\s])[.?!;]+(?=[\s\n])/)
+            .forEach((c, i) => {
+            if (Utils.isPunctuation(c))
+                currentPunctuationSymbol = c;
+            else {
+                const length = c
+                    .trim()
+                    .split(/[\s]/)
+                    .filter((el) => el).length;
+                /*  */
+                const text = c.split(/\s+/).__join__((el, i, arr) => {
+                    if (Utils.isPunctuation(arr[i + 1]) ||
+                        Utils.isDot(el)) {
+                        return '';
+                    }
+                    else
+                        return ' ';
+                });
+                const result = {
+                    text: text + currentPunctuationSymbol,
+                    length: length,
+                    start: previousEnd,
+                    end: previousEnd + length - 1,
+                    idx: i,
+                };
+                previousEnd = previousEnd + length;
+                chunks.push(result);
+            }
         });
+        return chunks;
     }
     handleChunkHighlighting() {
-        /* console.log(
-            'Highlight chunk',
-            this.state.chunksArray[this.state.currentChunkIndex],
-            'Current word',
-            this.state.wholeTextArray[this.state.currentWordIndex]
-        ); */
         // eslint-disable-next-line prettier/prettier
         const currentChunk = this.state.chunksArray[this.state.currentChunkIndex];
         // eslint-disable-next-line prettier/prettier
@@ -527,7 +564,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         return this.state.chunksArray[this.state.currentChunkIndex].text;
     }
     handleBoundary(e) {
-        console.log('Boundary', this.state.wholeTextArray[this.state.currentWordIndex]);
         /* Disable boundary if it's in chunk mode */
         if (this.options.isChunksModeOn)
             return;
@@ -616,7 +652,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         return [...node.querySelectorAll(selector)]
             .map((el) => el.textContent)
             .__join__((el, i, arr) => {
-            if (Utils.isDot(arr[i + 1]) || Utils.isDot(el)) {
+            if (Utils.isPunctuation(arr[i + 1]) ||
+                Utils.isDot(el)) {
                 return '';
             }
             else
@@ -836,10 +873,20 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     /* Static public methods */
     /*  Highlight  */
+    /*
+    This method handles the DOM traversing to add the Highlightint tags to the readable elements and all the logic in it is responsible
+    for how the text content appears visually
+    e.g. alignment of punctuation, spaces, etc...
+    */
     addHTMLHighlightTags(node, options = { excludeCodeTags: true }) {
         const tree = [...node.childNodes];
         tree.forEach((el) => {
-            console.log('Element', el, 'TYPE:', el.nodeType);
+            /* Exclude code tags and its content from parsing */
+            if ((options.excludeCodeTags &&
+                el.nodeType === 1 &&
+                el.tagName === 'PRE') ||
+                el.tagName === 'CODE')
+                return;
             if (el.nodeType === 1)
                 this.addHTMLHighlightTags(el, options);
             if (el.nodeType === 3) {
@@ -848,38 +895,35 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 const wrapper = document.createElement('span');
                 el.data
                     .split('')
-                    .filter((el, i, arr) => {
-                    /* Dismiss empty strings or non valid elements */
-                    if (!el)
+                    .filter((char, i, arr) => {
+                    /* Dismiss empty strings or non valid values */
+                    if (!char)
                         return false;
                     /* Get rid of spaces between words and punctuation */
-                    if (Utils.isSpace(el) &&
+                    if (Utils.isSpace(char) &&
                         Utils.isPunctuation(arr[i + 1]))
                         return false;
                     /* Get rid of multiple spaces to avoid inconsistencies */
-                    if (Utils.isSpace(el) && Utils.isSpace(arr[i + 1]))
+                    if (Utils.isSpace(char) && Utils.isSpace(arr[i + 1]))
                         return false;
                     return true;
                 })
-                    /* Separate special characters and digit that will be read as single characters */
+                    /* Separate special characters that will be read as single characters */
                     .map((c, i, arr) => {
-                    /* console.log(
-                        'Character',
-                        c,
-                        'Previous',
-                        arr[i - 1],
-                        'Next',
-                        arr[i + 1]
-                    ); */
+                    /* Separate the special readable characters like @#^*° so they can be read accordingly */
                     if (Utils.isSpecialReadableCharacter(c))
                         return ` ${c}  `;
-                    /* Handle dots in the middle of sentences e.g. some.text , since in this case they are read as a character */
+                    /* Handle dots in the middle of words and numbers e.g. some.text e.g. 1.000 ,
+                    since in this case they are read as a character : "some dot text" "one dot zero zero zero" */
                     if (Utils.isDot(c) &&
+                        Utils.isWordWithNumbers(arr[i - 1]) &&
+                        Utils.isWordWithNumbers(arr[i + 1]))
+                        return ` ${c}  `;
+                    /* Handle the punctation characters apart dots placed in the middle of a word e.g. test:test --> test: test */
+                    if (Utils.isPunctuationButDot(c) &&
                         Utils.isWord(arr[i - 1]) &&
                         Utils.isWord(arr[i + 1]))
-                        return ` ${c}  `;
-                    if (Utils.isNumber(c) && Utils.isNumber(arr[i + 1]))
-                        return ` ${c} `;
+                        return `${c}  `;
                     return c;
                 })
                     .join('')
@@ -887,9 +931,10 @@ class SpeechSynth extends EventEmitter__default["default"] {
                     .forEach((word, i, arr) => {
                     if (!word)
                         return;
-                    console.log('Word', word, 'Next', arr[i + 1], 'Is next a word?', Utils.isWord(arr[i + 1]));
-                    /* If it's a parens or a punctuation or a special character it does not add an highlight data-id since those characters won't  be read */
-                    if (Utils.isSpecialUnreadableCharacter(word) ||
+                    /* If it's a special unreadable character or a dot it does not add an highlight data-id since those characters won't  be read */
+                    if (
+                    // Utils.isPunctuation(word) ||
+                    Utils.isSpecialUnreadableCharacter(word) ||
                         Utils.isWordInsideAngularBrackets(word)) {
                         const newEl = document.createTextNode(word + ' ');
                         wrapper.appendChild(newEl);
@@ -899,9 +944,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
                         const newEl = document.createElement('span');
                         newEl.setAttribute('data-id', (this.tagIndex++).toString());
                         newEl.setAttribute('data-type', 'WORD');
-                        /* Do not add a space after the word if it's a number or a special readable character or if the next word is not a plain word */
-                        if (Utils.isNumber(word) ||
-                            Utils.isSpecialReadableCharacter(word) ||
+                        /* Do not add a space after the word if it's a special readable character or if the next word is not a plain word */
+                        if (Utils.isSpecialReadableCharacter(word) ||
                             Utils.isSpecialReadableCharacter(arr[i + 1]) ||
                             Utils.isDot(word) ||
                             Utils.isDot(arr[i + 1])) {

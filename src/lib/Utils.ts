@@ -59,7 +59,12 @@ export class Utils {
 
 	static isWord(str: string) {
 		if (!str) return false;
-		return /^[a-zA-Z]+[,;.:!?]?$/.test(str);
+		return /^[a-zA-Z]/.test(str);
+	}
+
+	static isWordWithNumbers(str: string) {
+		if (!str) return false;
+		return /^[a-zA-Z0-9]/.test(str);
 	}
 
 	static isNumber(str: string) {
@@ -78,7 +83,7 @@ export class Utils {
 		return str === ' ';
 	}
 
-	static isHat(str: string): boolean {
+	static isAt(str: string): boolean {
 		return str === '@';
 	}
 
@@ -89,6 +94,11 @@ export class Utils {
 	static isPunctuation(str: string): boolean {
 		if (!str) return false;
 		return /^[.,;:!?]+$/.test(str);
+	}
+
+	static isPunctuationButDot(str: string): boolean {
+		if (!str) return false;
+		return /^[,;:!?]+$/.test(str);
 	}
 
 	static isHashtag(str: string): boolean {
@@ -124,19 +134,14 @@ export class Utils {
 		return /^<+.*>+\.?$/.test(str);
 	}
 
-	static isDotBetweenWords(str: string) {
-		if (!str) return false;
-		return /[a-zA-Z0-9-_]+/.test(str);
-	}
-
 	static isSpecialReadableCharacter(str: string) {
 		if (!str) return false;
-		return /^[@#\\/_*^°]+$/.test(str);
+		return /^[@#\\/_*^°£$%&=+]+$/.test(str);
 	}
 
 	static isSpecialUnreadableCharacter(str: string) {
 		if (!str) return false;
-		return /^[-()[\]{}'"<>`]+$/.test(str);
+		return /^[()[\]{}'"<>`|]+$/.test(str);
 	}
 
 	static isSpecialCharacter(str: string): boolean {

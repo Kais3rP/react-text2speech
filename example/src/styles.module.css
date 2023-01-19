@@ -53,6 +53,10 @@
 	color: #555;
 	text-align: justify;
 	padding: 0px 30px 0px 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .loader {
