@@ -88,7 +88,7 @@ export class Utils {
 	}
 
 	static isWhitespaceChar(str: string) {
-		return /^[\n\r\t]$/.test(str);
+		return /^[\n\r\t]+$/.test(str);
 	}
 
 	static isAt(str: string): boolean {

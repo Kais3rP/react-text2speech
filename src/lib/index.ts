@@ -834,7 +834,6 @@ export class SpeechSynth extends EventEmitter {
 	) {
 		const tree = [...node.childNodes];
 		tree.forEach((el) => {
-			console.log('Current eleemnt:', el);
 			/* Exclude code tags and its content from parsing */
 			if (
 				options.excludeCodeTags &&
@@ -852,6 +851,12 @@ export class SpeechSynth extends EventEmitter {
 			/* Begin text node parsing if node type is TextNode */
 
 			if (el.nodeType === 3) {
+				console.log(
+					'Text node',
+					el,
+					el.textContent,
+					el.textContent?.split('')
+				);
 				if (
 					Utils.isEmptyString(el.textContent as string) ||
 					Utils.isSpace(el.textContent as string) ||
@@ -880,6 +885,8 @@ export class SpeechSynth extends EventEmitter {
 					})
 					/* Separate special characters that will be read as single characters */
 					.map((c, i, arr) => {
+						/* Replace whitespace characters with common spaces */
+						if (Utils.isWhitespaceChar(c)) return ' ';
 						/* Separate the special readable characters like @#^*° so they can be read accordingly */
 						if (Utils.isSpecialReadableCharacter(c))
 							return ` ${c}  `;

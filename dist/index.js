@@ -214,7 +214,7 @@ class Utils {
         return str === '';
     }
     static isWhitespaceChar(str) {
-        return /^[\n\r\t]$/.test(str);
+        return /^[\n\r\t]+$/.test(str);
     }
     static isAt(str) {
         return str === '@';
@@ -887,7 +887,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     addHTMLHighlightTags(node, options = { excludeCodeTags: true }) {
         const tree = [...node.childNodes];
         tree.forEach((el) => {
-            console.log('Current eleemnt:', el);
+            var _a;
             /* Exclude code tags and its content from parsing */
             if (options.excludeCodeTags &&
                 el.nodeType === 1 &&
@@ -899,6 +899,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 this.addHTMLHighlightTags(el, options);
             /* Begin text node parsing if node type is TextNode */
             if (el.nodeType === 3) {
+                console.log('Text node', el, el.textContent, (_a = el.textContent) === null || _a === void 0 ? void 0 : _a.split(''));
                 if (Utils.isEmptyString(el.textContent) ||
                     Utils.isSpace(el.textContent) ||
                     Utils.isWhitespaceChar(el.textContent))
@@ -921,6 +922,9 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 })
                     /* Separate special characters that will be read as single characters */
                     .map((c, i, arr) => {
+                    /* Replace whitespace characters with common spaces */
+                    if (Utils.isWhitespaceChar(c))
+                        return ' ';
                     /* Separate the special readable characters like @#^*° so they can be read accordingly */
                     if (Utils.isSpecialReadableCharacter(c))
                         return ` ${c}  `;
