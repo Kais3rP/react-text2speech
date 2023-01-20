@@ -13,7 +13,8 @@ export declare class SpeechSynth extends EventEmitter {
     options: IOptions;
     state: IState;
     tagIndex: number;
-    constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, isSSROn, }: Params);
+    constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, }?: Params);
+    addHTMLHighlightTags(node: Element): void;
     init(): Promise<SpeechSynth>;
     private initUtterance;
     private highlightChunk;
@@ -47,7 +48,5 @@ export declare class SpeechSynth extends EventEmitter {
     reset(): void;
     isPlaying(): boolean;
     isPaused(): boolean;
-    addHTMLHighlightTags(node: Element, options?: IHighlightOptions): void;
-    static addHTMLHighlightTags_(node: Element | string, options?: IHighlightOptions): string;
 }
 //# sourceMappingURL=index.d.ts.map

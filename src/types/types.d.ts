@@ -2,7 +2,13 @@
 import { SpeechSynth } from '../lib';
 
 declare global {
-	type Params = IStyle & ISettings & IEvents & IOptions;
+	type Params = Partial<IEvents> &
+		Partial<IStyle> &
+		Partial<IGenericSettings>;
+
+	interface IGenericSettings {
+		language: string;
+	}
 
 	interface IEvents {
 		onEnd: (c: SpeechSynth, v?: any) => void;
@@ -17,18 +23,17 @@ declare global {
 	}
 
 	interface IOptions {
-		isHighlightTextOn?: boolean;
-		isPreserveHighlighting?: boolean;
-		isChunksModeOn?: boolean;
-		isSSROn?: boolean;
+		isHighlightTextOn: boolean;
+		isPreserveHighlighting: boolean;
+		isChunksModeOn: boolean;
 	}
 
 	interface ISettings {
-		pitch?: number;
-		rate?: number;
-		language?: string;
-		voiceURI?: string;
-		volume?: number;
+		pitch: number;
+		rate: number;
+		language: string;
+		voiceURI: string;
+		volume: number;
 	}
 
 	interface IEvent {
@@ -79,10 +84,6 @@ declare global {
 
 	type Interval = ReturnType<typeof setInterval>;
 	type Timeout = ReturnType<typeof setTimeout>;
-
-	interface IHighlightOptions {
-		excludeCodeTags?: boolean;
-	}
 
 	/* Extend Array prototype */
 

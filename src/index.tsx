@@ -20,7 +20,7 @@ import Slider from './CustomSlider';
 import format from 'format-duration';
 import { MdOutlineClose } from 'react-icons/md';
 import debounce from 'lodash.debounce';
-import { useIsFirstRender } from 'hooks';
+import { useIsFirstRender } from './hooks';
 import {
 	CheckBox,
 	Container,
@@ -36,7 +36,7 @@ import {
 	SliderContainer,
 	Time,
 	WindowButton,
-} from 'styledComponents';
+} from './styledComponents';
 
 interface IProps {
 	children?: JSX.Element | string;

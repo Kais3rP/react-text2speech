@@ -293,6 +293,8 @@ function App() {
 						https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API
 					</a>
 				</h4>
+				<h4>Emoji: </h4>
+				<p>😀 😃 😄 😁 😆 😅 😂 🤣</p>
 			</div>
 		</div>
 	);

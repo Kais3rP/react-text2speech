@@ -15,12 +15,18 @@ export class SpeechSynth extends EventEmitter {
 	events: Events;
 	options: IOptions;
 	state: IState;
+
 	tagIndex: number;
+
+	/* 
+	The constructor only required @Param is the TextContainer HTMLElement, 
+	the second @Param is an optional object and all its properties are optional as well 
+	*/
 
 	constructor(
 		textContainer: HTMLElement,
 		{
-			/* Settings */
+			/* Generic Settings */
 			language = 'en',
 			/* Style */
 			color1 = '#DEE',
@@ -35,9 +41,23 @@ export class SpeechSynth extends EventEmitter {
 			onTimeTick = () => null,
 			onWordClick = () => null,
 			onSeek = () => null,
-			/* Options */
-			isSSROn = false,
-		}: Params
+		}: Params = {
+			/* Generic Settings */
+			language: 'en',
+			/* Style */
+			color1: '#DEE',
+			color2: '#9DE',
+			/* Ev handlers */
+			onEnd: () => null,
+			onStart: () => null,
+			onPause: () => null,
+			onResume: () => null,
+			onReset: () => null,
+			onBoundary: () => null,
+			onTimeTick: () => null,
+			onWordClick: () => null,
+			onSeek: () => null,
+		}
 	) {
 		super();
 
@@ -88,7 +108,6 @@ export class SpeechSynth extends EventEmitter {
 			isHighlightTextOn: true,
 			isChunksModeOn: false,
 			isPreserveHighlighting: true,
-			isSSROn,
 		};
 
 		/* State */
@@ -116,6 +135,137 @@ export class SpeechSynth extends EventEmitter {
 			isPaused: false,
 			isPlaying: false,
 		};
+	}
+
+	/*
+	Public Testable methods
+	*/
+
+	/* 
+	This method handles the DOM traversing to add the Highlightint tags to the readable elements and all the logic in it is responsible
+	for how the text content appears visually
+	e.g. alignment of punctuation, spaces, etc...
+	*/
+
+	addHTMLHighlightTags(node: Element) {
+		const tree = [...node.childNodes];
+		tree.forEach((el) => {
+			/* Exclude code tags and its content from parsing */
+			if (
+				el.nodeType === 1 &&
+				((el as HTMLElement).tagName === 'PRE' ||
+					(el as HTMLElement).tagName === 'CODE')
+			)
+				return;
+
+			/* Recurse if the element is an HTMLElement */
+
+			if (el.nodeType === 1) this.addHTMLHighlightTags(el as Element);
+
+			/* Begin text node parsing if node type is TextNode */
+
+			if (el.nodeType === 3) {
+				console.log(
+					'Text node',
+					el,
+					el.textContent,
+					el.textContent?.split('')
+				);
+				if (
+					Utils.isEmptyString(el.textContent as string) ||
+					Utils.isSpace(el.textContent as string) ||
+					Utils.isWhitespaceChar(el.textContent as string)
+				)
+					return;
+				const wrapper = document.createElement('span');
+
+				(el as Text).data
+					.split('')
+					.filter((char, i, arr) => {
+						/* Dismiss empty strings or non valid values */
+						if (!char) return false;
+
+						/* Get rid of spaces between words and punctuation */
+						if (
+							Utils.isSpace(char) &&
+							Utils.isPunctuation(arr[i + 1])
+						)
+							return false;
+						/* Get rid of multiple spaces to avoid inconsistencies */
+						if (Utils.isSpace(char) && Utils.isSpace(arr[i + 1]))
+							return false;
+
+						return true;
+					})
+					/* Separate special characters that will be read as single characters */
+					.map((c, i, arr) => {
+						/* Replace whitespace characters with common spaces */
+						if (Utils.isWhitespaceChar(c)) return ' ';
+						/* Separate the special readable characters like @#^*° so they can be read accordingly */
+						if (Utils.isSpecialReadableCharacter(c))
+							return ` ${c}  `;
+
+						/* Handle dots in the middle of words and numbers e.g. some.text e.g. 1.000 , 
+						since in this case they are read as a character : "some dot text" "one dot zero zero zero" */
+						if (
+							Utils.isDot(c) &&
+							Utils.isWordWithNumbers(arr[i - 1]) &&
+							Utils.isWordWithNumbers(arr[i + 1])
+						)
+							return ` ${c}  `;
+
+						/* Handle the punctation characters apart dots placed in the middle of a word e.g. test:test --> test: test */
+						if (
+							Utils.isPunctuationButDot(c) &&
+							Utils.isWord(arr[i - 1]) &&
+							Utils.isWord(arr[i + 1])
+						)
+							return `${c}  `;
+
+						return c;
+					})
+					.join('')
+					.split(' ')
+					.forEach((word, i, arr) => {
+						if (!word) return;
+
+						/* If it's a special unreadable character or a dot it does not add an highlight data-id since those characters won't  be read */
+
+						if (
+							// Utils.isPunctuation(word) ||
+							Utils.isSpecialUnreadableCharacter(word) ||
+							Utils.isWordInsideAngularBrackets(word)
+						) {
+							const newEl = document.createTextNode(word + ' ');
+							wrapper.appendChild(newEl);
+						} else {
+							/* In all other cases, which is, "plain words or slashes or any other readable character" we add the data-id attribute */
+
+							const newEl = document.createElement('span');
+
+							newEl.setAttribute(
+								'data-id',
+								(this.tagIndex++).toString()
+							);
+							newEl.setAttribute('data-type', 'WORD');
+
+							/* Do not add a space after the word if it's a special readable character or if the next word is not a plain word */
+							if (
+								Utils.isSpecialReadableCharacter(word) ||
+								Utils.isSpecialReadableCharacter(arr[i + 1]) ||
+								Utils.isDot(word) ||
+								Utils.isDot(arr[i + 1])
+							) {
+								newEl.textContent = word;
+							} else newEl.textContent = word + ' ';
+							/* Add a space after the words that are Text words */
+
+							wrapper.appendChild(newEl);
+						}
+					});
+				node.replaceChild(wrapper, el);
+			}
+		});
 	}
 
 	async init(): Promise<SpeechSynth> {
@@ -259,6 +409,8 @@ export class SpeechSynth extends EventEmitter {
 			this.play('next-chunk-start');
 		};
 	}
+
+	/*  Highlight  */
 
 	private highlightChunk(idx: number) {
 		const length =
@@ -833,293 +985,5 @@ export class SpeechSynth extends EventEmitter {
 
 	isPaused() {
 		return this.state.isPaused;
-	}
-
-	/* Static public methods */
-
-	/*  Highlight  */
-
-	/* 
-	This method handles the DOM traversing to add the Highlightint tags to the readable elements and all the logic in it is responsible
-	for how the text content appears visually
-	e.g. alignment of punctuation, spaces, etc...
-	*/
-
-	addHTMLHighlightTags(
-		node: Element,
-		options: IHighlightOptions = { excludeCodeTags: true }
-	) {
-		const tree = [...node.childNodes];
-		tree.forEach((el) => {
-			/* Exclude code tags and its content from parsing */
-			if (
-				options.excludeCodeTags &&
-				el.nodeType === 1 &&
-				((el as HTMLElement).tagName === 'PRE' ||
-					(el as HTMLElement).tagName === 'CODE')
-			)
-				return;
-
-			/* Recurse if the element is an HTMLElement */
-
-			if (el.nodeType === 1)
-				this.addHTMLHighlightTags(el as Element, options);
-
-			/* Begin text node parsing if node type is TextNode */
-
-			if (el.nodeType === 3) {
-				console.log(
-					'Text node',
-					el,
-					el.textContent,
-					el.textContent?.split('')
-				);
-				if (
-					Utils.isEmptyString(el.textContent as string) ||
-					Utils.isSpace(el.textContent as string) ||
-					Utils.isWhitespaceChar(el.textContent as string)
-				)
-					return;
-				const wrapper = document.createElement('span');
-
-				(el as Text).data
-					.split('')
-					.filter((char, i, arr) => {
-						/* Dismiss empty strings or non valid values */
-						if (!char) return false;
-
-						/* Get rid of spaces between words and punctuation */
-						if (
-							Utils.isSpace(char) &&
-							Utils.isPunctuation(arr[i + 1])
-						)
-							return false;
-						/* Get rid of multiple spaces to avoid inconsistencies */
-						if (Utils.isSpace(char) && Utils.isSpace(arr[i + 1]))
-							return false;
-
-						return true;
-					})
-					/* Separate special characters that will be read as single characters */
-					.map((c, i, arr) => {
-						/* Replace whitespace characters with common spaces */
-						if (Utils.isWhitespaceChar(c)) return ' ';
-						/* Separate the special readable characters like @#^*° so they can be read accordingly */
-						if (Utils.isSpecialReadableCharacter(c))
-							return ` ${c}  `;
-
-						/* Handle dots in the middle of words and numbers e.g. some.text e.g. 1.000 , 
-						since in this case they are read as a character : "some dot text" "one dot zero zero zero" */
-						if (
-							Utils.isDot(c) &&
-							Utils.isWordWithNumbers(arr[i - 1]) &&
-							Utils.isWordWithNumbers(arr[i + 1])
-						)
-							return ` ${c}  `;
-
-						/* Handle the punctation characters apart dots placed in the middle of a word e.g. test:test --> test: test */
-						if (
-							Utils.isPunctuationButDot(c) &&
-							Utils.isWord(arr[i - 1]) &&
-							Utils.isWord(arr[i + 1])
-						)
-							return `${c}  `;
-
-						return c;
-					})
-					.join('')
-					.split(' ')
-					.forEach((word, i, arr) => {
-						if (!word) return;
-
-						/* If it's a special unreadable character or a dot it does not add an highlight data-id since those characters won't  be read */
-
-						if (
-							// Utils.isPunctuation(word) ||
-							Utils.isSpecialUnreadableCharacter(word) ||
-							Utils.isWordInsideAngularBrackets(word)
-						) {
-							const newEl = document.createTextNode(word + ' ');
-							wrapper.appendChild(newEl);
-						} else {
-							/* In all other cases, which is, "plain words or slashes or any other readable character" we add the data-id attribute */
-
-							const newEl = document.createElement('span');
-
-							newEl.setAttribute(
-								'data-id',
-								(this.tagIndex++).toString()
-							);
-							newEl.setAttribute('data-type', 'WORD');
-
-							/* Do not add a space after the word if it's a special readable character or if the next word is not a plain word */
-							if (
-								Utils.isSpecialReadableCharacter(word) ||
-								Utils.isSpecialReadableCharacter(arr[i + 1]) ||
-								Utils.isDot(word) ||
-								Utils.isDot(arr[i + 1])
-							) {
-								newEl.textContent = word;
-							} else newEl.textContent = word + ' ';
-							/* Add a space after the words that are Text words */
-
-							wrapper.appendChild(newEl);
-						}
-					});
-				node.replaceChild(wrapper, el);
-			}
-		});
-	}
-
-	/* 
-	Legacy method to add tags that leverages regexp parsing instead of DOM traversing
-	*/
-
-	static addHTMLHighlightTags_(
-		node: Element | string,
-		options: IHighlightOptions = { excludeCodeTags: true }
-	) {
-		let isCode = false;
-		let index = 0;
-		let code = '';
-
-		try {
-			if (typeof node === 'string') code = node;
-			else if (
-				typeof window !== 'undefined' &&
-				node instanceof HTMLElement
-			)
-				code = node.innerHTML;
-
-			code = code
-
-				/* Parse all code to HTML to be able to keep the correct text formatting replacing new lines with <br/> */
-
-				.split('\n')
-				.join('<br/>')
-
-				/* Fix extra spaces in () [] {} parens to avoid highlighting extra characters e.g. ( Hello world ) -> (Hello World) */
-
-				.replace(
-					/([([{]{1,1})\s*(.+?)\s*([)\]}]{1,1})/gm,
-					(_, a, b, c) => `${a}${b}${c}`
-				)
-
-				/* Fix extra spaces before punctuation */
-
-				.replace(/\s+([;.,:!?]+?)/gm, (_, b) => b)
-
-				/* 	Add extra spaces to slashes so they are correctly highlighted since they are read as plain words.
-					Omit slashes of HTML tags, and slashes of URLs after http(s): */
-
-				.replace(/(?<!http[^\s]*|<)(\/)/gm, (_, b) => ` ${b} `)
-
-				/* Separate html tags and add @@ symbol to spaces inside HTML tags */
-
-				.replace(
-					/<.+?>/gm,
-					(match) => '#' + match.replace(/\s/gm, '@@') + '#'
-				)
-
-				/* Identify spaces inside pre tags as &nbsp; to keep the correct code indentation */
-
-				/* .replace(/<pre.*>(.+)<\/pre>/gm, (match) =>
-					match.replace(/\s/gm, '-')
-				) */
-
-				/*  Separate numbers from measures units e.g. 1.7k -> 1.7 k since the reader ha issues reading that format */
-
-				.replace(/(\d+\.\d+)(\w*)/, (_, a, b) => a + ' ' + b)
-
-				/* Read numbers as singular digits to prevent inconsistency e.g. ( some numbers trigger boundary during reading ) */
-
-				.replace(/(\d(?=\d))/gm, (_, a) => `${a} `)
-
-				/* Split on spaces and on pound sign ( pound sign identify HTML tags edges ) */
-
-				.split(/[#\s]/)
-
-				/* Delete non readable elements e.g. empty strings "", undefined, NaN, etc... */
-
-				.filter((el) => el)
-
-				/* Add the interactive HTML tags to the readable words */
-
-				.map((el, i) => {
-					// Exclude code tags
-					if (options?.excludeCodeTags) {
-						if (Utils.isCodeOpenTag(el)) {
-							isCode = true;
-							return el;
-						}
-						if (Utils.isCodeCloseTag(el)) {
-							isCode = false;
-							return el;
-						}
-						if (isCode) return el;
-					}
-
-					/* Prevent punctuation and html entities to be assigned an highlight span tag */
-
-					if (
-						Utils.isSpecialCharacter(el) ||
-						Utils.isHTMLEntity(el) ||
-						Utils.isParens(el) ||
-						Utils.isPunctuation(el)
-					)
-						return el;
-
-					/* Tag the element as a special Link element */
-					if (Utils.isURL(el))
-						return `<span data-type="LINK" data-id="${index++}">${el}</span>`;
-
-					/* Wrap in a data-id html tag only plain words ( exclude html tags ) */
-
-					if (!Utils.isTag(el)) {
-						return `<span data-type="WORD" data-id="${index++}">${el}</span>`;
-					}
-
-					return el;
-				})
-				.__join__((s: string, i: number, arr: string[]): string => {
-					/* There are certain situations where punctuation is separated from the previous word 
-          			   (e.g. if the previous word is wrapped in a <strong> tag). In this case we join the word
-         			   and the punctuation directly with no extra space. */
-
-					if (Utils.isPunctuation(arr[i + 1])) {
-						return '';
-					}
-
-					/* 	if (Utils.isPunctuation(s) || Utils.isSpecialCharacter(s))
-						return ''; */
-
-					/* Handle numbers with multiple digits, they have been splitted to single digits to avoid inconsistencies, 
-					hence now they are rejoined with no extra spaces */
-
-					if (
-						Utils.isDigitTextContent(s) &&
-						!Utils.isWordTextContent(arr[i + 1])
-					) {
-						return '';
-					}
-
-					/* Rejoin the slashes without extra spaces between them */
-					if (Utils.isSlashTextContent(s)) return '';
-
-					/* Add a Space between HTML tags, since that is interpreted as a &nbsp and the text content will render 
-					a space between words. */
-
-					return ' ';
-				})
-				.replace(/@@/gm, ' ');
-
-			/* Apply the tags to the HTML DOM node if SSR is off */
-			if (typeof window !== 'undefined' && node instanceof HTMLElement) {
-				node.innerHTML = code;
-			}
-			return code;
-		} catch (e) {
-			throw new Error(e as string);
-		}
 	}
 }
