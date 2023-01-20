@@ -28,6 +28,7 @@ import {
 	ControlsContainer,
 	Dots,
 	ExtraSettings,
+	// GithubIcon,
 	OptionsContainer,
 	Reset,
 	Seekbar,
@@ -525,6 +526,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 					</ExtraSettings>
 				</>
 			)}
+			{/* <GithubIcon styleoptions={styleOptions} /> */}
 		</Container>
 	);
 };

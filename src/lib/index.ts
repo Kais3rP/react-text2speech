@@ -218,12 +218,18 @@ export class SpeechSynth extends EventEmitter {
 		/* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
 		this.utterance.onboundary = this.handleBoundary.bind(this);
 
-		/* On mobile the end event is fired multiple times due to chunkification of text hence this is used to manage the highlight of chunks */
+		/* 
+		When chunks mode is enabled this event is fired multiple times at the end of each chunk.
+		Use this to manage chunk highlighting and extra logic that concerns chunks management
+		*/
 		this.utterance.onend = (e) => {
-			/* This prevents the execution of code if the end event is called after the reset method has been called */
+			/* This prevents the execution of code if the end event is called in response to the reset method being called */
+
 			if (this.state.isPlaying === false && this.state.isPaused === false)
 				return;
-			/* Emit the end event only when the whole text has finished to be read */
+
+			/* Emit the "end" event which signals the end of the WHOLE text, only when the whole text has finished to be read */
+
 			if (
 				(!this.options.isChunksModeOn &&
 					this.state.currentWordIndex >=
@@ -234,11 +240,22 @@ export class SpeechSynth extends EventEmitter {
 			)
 				return this.emit('end', this);
 
-			/* Manage the chunkification for mobile devices */
+			/* Handle the highlight options change dynamically */
+			/* 
+			If the isPreserveHighlighting option is disabled, 
+			it has to reset the highlighting of the whole previous chunk while skipping to the next one 
+			*/
+			if (!this.options.isPreserveHighlighting) {
+				this.resetHighlight();
+			}
+
+			/* Manage the highlighting of the next chunk just before it starts */
+
 			if (this.options.isChunksModeOn && this.state.isPlaying)
 				this.handleChunkHighlighting();
 
-			/* Finally play the nxt chunk */
+			/* Finally play the next chunk */
+
 			this.play('next-chunk-start');
 		};
 	}
@@ -448,18 +465,18 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Scroll to the right row position */
 
-		if (position <= this.state.lastWordPosition) {
+		if (position <= this.state.lastWordPosition)
 			this.scrollTo(this.state.currentWordIndex);
 
-			/* Reset the row highlight */
+		/* Reset the row highlight only if it's not in chunks mode.
+		   In chunks mode, it has to be managed during the chunks switch ( in the "onend" handler) */
 
-			if (!this.options.isPreserveHighlighting) {
-				this.state.highlightedWords.forEach((el) => {
-					el.style.backgroundColor = '';
-					el.style.boxShadow = '';
-				});
-				this.state.highlightedWords = [wordToHighlight];
-			}
+		if (
+			!this.options.isPreserveHighlighting &&
+			!this.options.isChunksModeOn
+		) {
+			this.resetHighlight();
+			this.state.highlightedWords = [wordToHighlight];
 		}
 
 		/* Update last word position */

@@ -43,13 +43,6 @@ export default {
 		}),
 		// Allow json resolution
 		json(),
-		// Compile TypeScript files
-		typescript({
-			useTsconfigDeclarationDir: true,
-			rollupCommonJSResolveHack: true,
-			exclude: ['**/__tests__/**', '*.spec.*', '*.test.*'],
-			clean: true,
-		}),
 		// Allow node_modules resolution, so you can use 'external' to control
 		// which external modules to include in the bundle
 		// https://github.com/rollup/rollup-plugin-node-resolve#usage
@@ -67,5 +60,12 @@ export default {
 		sourceMaps(),
 		// analyze(),
 		visualizer(),
+		// Compile TypeScript files
+		typescript({
+			useTsconfigDeclarationDir: true,
+			rollupCommonJSResolveHack: true,
+			exclude: ['**/__tests__/**', '*.spec.*', '*.test.*'],
+			clean: true,
+		}),
 	],
 };

@@ -31,6 +31,9 @@ interface IExtraSettings {
 }
 interface ICheckBox {
 }
+interface IVscGithub {
+    styleoptions: IStyleOptions;
+}
 export declare const Container: import("styled-components").StyledComponent<"div", any, IContainerProps, never>;
 export declare const WindowButton: import("styled-components").StyledComponent<"div", any, IWindowButton, never>;
 export declare const SeekbarContainer: import("styled-components").StyledComponent<"div", any, ISeekbarContainer, never>;
@@ -44,5 +47,6 @@ export declare const Reset: import("styled-components").StyledComponent<import("
 export declare const SliderContainer: import("styled-components").StyledComponent<"div", any, {}, never>;
 export declare const ExtraSettings: import("styled-components").StyledComponent<"div", any, IExtraSettings, never>;
 export declare const CheckBox: import("styled-components").StyledComponent<"input", any, ICheckBox, never>;
+export declare const GithubIcon: import("styled-components").StyledComponent<import("react-icons/lib").IconType, any, IVscGithub, never>;
 export {};
 //# sourceMappingURL=styledComponents.d.ts.map

@@ -101,7 +101,7 @@ function AiFillFastBackward (props) {
   return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z"}}]})(props);
 }
 
-/*! *****************************************************************************
+/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -434,12 +434,15 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.utterance.volume = this.settings.volume;
         /* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
         this.utterance.onboundary = this.handleBoundary.bind(this);
-        /* On mobile the end event is fired multiple times due to chunkification of text hence this is used to manage the highlight of chunks */
+        /*
+        When chunks mode is enabled this event is fired multiple times at the end of each chunk.
+        Use this to manage chunk highlighting and extra logic that concerns chunks management
+        */
         this.utterance.onend = (e) => {
-            /* This prevents the execution of code if the end event is called after the reset method has been called */
+            /* This prevents the execution of code if the end event is called in response to the reset method being called */
             if (this.state.isPlaying === false && this.state.isPaused === false)
                 return;
-            /* Emit the end event only when the whole text has finished to be read */
+            /* Emit the "end" event which signals the end of the WHOLE text, only when the whole text has finished to be read */
             if ((!this.options.isChunksModeOn &&
                 this.state.currentWordIndex >=
                     this.state.wholeTextArray.length - 1) ||
@@ -447,10 +450,18 @@ class SpeechSynth extends EventEmitter__default["default"] {
                     this.state.currentChunkIndex >=
                         this.state.chunksArray.length - 1))
                 return this.emit('end', this);
-            /* Manage the chunkification for mobile devices */
+            /* Handle the highlight options change dynamically */
+            /*
+            If the isPreserveHighlighting option is disabled,
+            it has to reset the highlighting of the whole previous chunk while skipping to the next one
+            */
+            if (!this.options.isPreserveHighlighting) {
+                this.resetHighlight();
+            }
+            /* Manage the highlighting of the next chunk just before it starts */
             if (this.options.isChunksModeOn && this.state.isPlaying)
                 this.handleChunkHighlighting();
-            /* Finally play the nxt chunk */
+            /* Finally play the next chunk */
             this.play('next-chunk-start');
         };
     }
@@ -614,16 +625,14 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Calculate current word position */
         const position = wordToHighlight.getBoundingClientRect().x;
         /* Scroll to the right row position */
-        if (position <= this.state.lastWordPosition) {
+        if (position <= this.state.lastWordPosition)
             this.scrollTo(this.state.currentWordIndex);
-            /* Reset the row highlight */
-            if (!this.options.isPreserveHighlighting) {
-                this.state.highlightedWords.forEach((el) => {
-                    el.style.backgroundColor = '';
-                    el.style.boxShadow = '';
-                });
-                this.state.highlightedWords = [wordToHighlight];
-            }
+        /* Reset the row highlight only if it's not in chunks mode.
+           In chunks mode, it has to be managed during the chunks switch ( in the "onend" handler) */
+        if (!this.options.isPreserveHighlighting &&
+            !this.options.isChunksModeOn) {
+            this.resetHighlight();
+            this.state.highlightedWords = [wordToHighlight];
         }
         /* Update last word position */
         this.state.lastWordPosition = position;
@@ -3861,6 +3870,11 @@ function toNumber(value) {
 var lodash_debounce = debounce;
 
 // THIS FILE IS AUTO GENERATED
+function VscGithub (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"currentColor"},"child":[{"tag":"path","attr":{"d":"M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24zm3.163 21.783h-.093a.513.513 0 0 1-.382-.14.513.513 0 0 1-.14-.372v-1.406c.006-.467.01-.94.01-1.416a3.693 3.693 0 0 0-.151-1.028 1.832 1.832 0 0 0-.542-.875 8.014 8.014 0 0 0 2.038-.471 4.051 4.051 0 0 0 1.466-.964c.407-.427.71-.943.885-1.506a6.77 6.77 0 0 0 .3-2.13 4.138 4.138 0 0 0-.26-1.476 3.892 3.892 0 0 0-.795-1.284 2.81 2.81 0 0 0 .162-.582c.033-.2.05-.402.05-.604 0-.26-.03-.52-.09-.773a5.309 5.309 0 0 0-.221-.763.293.293 0 0 0-.111-.02h-.11c-.23.002-.456.04-.674.111a5.34 5.34 0 0 0-.703.26 6.503 6.503 0 0 0-.661.343c-.215.127-.405.249-.573.362a9.578 9.578 0 0 0-5.143 0 13.507 13.507 0 0 0-.572-.362 6.022 6.022 0 0 0-.672-.342 4.516 4.516 0 0 0-.705-.261 2.203 2.203 0 0 0-.662-.111h-.11a.29.29 0 0 0-.11.02 5.844 5.844 0 0 0-.23.763c-.054.254-.08.513-.081.773 0 .202.017.404.051.604.033.199.086.394.16.582A3.888 3.888 0 0 0 5.702 10a4.142 4.142 0 0 0-.263 1.476 6.871 6.871 0 0 0 .292 2.12c.181.563.483 1.08.884 1.516.415.422.915.75 1.466.964.653.25 1.337.41 2.033.476a1.828 1.828 0 0 0-.452.633 2.99 2.99 0 0 0-.2.744 2.754 2.754 0 0 1-1.175.27 1.788 1.788 0 0 1-1.065-.3 2.904 2.904 0 0 1-.752-.824 3.1 3.1 0 0 0-.292-.382 2.693 2.693 0 0 0-.372-.343 1.841 1.841 0 0 0-.432-.24 1.2 1.2 0 0 0-.481-.101c-.04.001-.08.005-.12.01a.649.649 0 0 0-.162.02.408.408 0 0 0-.13.06.116.116 0 0 0-.06.1.33.33 0 0 0 .14.242c.093.074.17.131.232.171l.03.021c.133.103.261.214.382.333.112.098.213.209.3.33.09.119.168.246.231.381.073.134.15.288.231.463.188.474.522.875.954 1.145.453.243.961.364 1.476.351.174 0 .349-.01.522-.03.172-.028.343-.057.515-.091v1.743a.5.5 0 0 1-.533.521h-.062a10.286 10.286 0 1 1 6.324 0v.005z"}}]})(props);
+}
+
+// THIS FILE IS AUTO GENERATED
 function FcSettings (props) {
   return GenIcon({"tag":"svg","attr":{"version":"1","viewBox":"0 0 48 48","enableBackground":"new 0 0 48 48"},"child":[{"tag":"path","attr":{"fill":"#607D8B","d":"M39.6,27.2c0.1-0.7,0.2-1.4,0.2-2.2s-0.1-1.5-0.2-2.2l4.5-3.2c0.4-0.3,0.6-0.9,0.3-1.4L40,10.8 c-0.3-0.5-0.8-0.7-1.3-0.4l-5,2.3c-1.2-0.9-2.4-1.6-3.8-2.2l-0.5-5.5c-0.1-0.5-0.5-0.9-1-0.9h-8.6c-0.5,0-1,0.4-1,0.9l-0.5,5.5 c-1.4,0.6-2.7,1.3-3.8,2.2l-5-2.3c-0.5-0.2-1.1,0-1.3,0.4l-4.3,7.4c-0.3,0.5-0.1,1.1,0.3,1.4l4.5,3.2c-0.1,0.7-0.2,1.4-0.2,2.2 s0.1,1.5,0.2,2.2L4,30.4c-0.4,0.3-0.6,0.9-0.3,1.4L8,39.2c0.3,0.5,0.8,0.7,1.3,0.4l5-2.3c1.2,0.9,2.4,1.6,3.8,2.2l0.5,5.5 c0.1,0.5,0.5,0.9,1,0.9h8.6c0.5,0,1-0.4,1-0.9l0.5-5.5c1.4-0.6,2.7-1.3,3.8-2.2l5,2.3c0.5,0.2,1.1,0,1.3-0.4l4.3-7.4 c0.3-0.5,0.1-1.1-0.3-1.4L39.6,27.2z M24,35c-5.5,0-10-4.5-10-10c0-5.5,4.5-10,10-10c5.5,0,10,4.5,10,10C34,30.5,29.5,35,24,35z"}},{"tag":"path","attr":{"fill":"#455A64","d":"M24,13c-6.6,0-12,5.4-12,12c0,6.6,5.4,12,12,12s12-5.4,12-12C36,18.4,30.6,13,24,13z M24,30 c-2.8,0-5-2.2-5-5c0-2.8,2.2-5,5-5s5,2.2,5,5C29,27.8,26.8,30,24,30z"}}]})(props);
 }
@@ -3878,7 +3892,7 @@ const Container = styled.div `
 	justify-content: center;
 	transition: all 200ms linear;
 	width: ${(props) => props.isminimized === 'true' ? '150px' : '300px'};
-	height: 125px;
+	height: 115px;
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
@@ -4087,6 +4101,14 @@ const ExtraSettings = styled.div `
 const CheckBox = styled.input `
 	margin: 0 !important;
 	padding: 0 !important;
+`;
+styled(VscGithub) `
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 17px;
+	height: 17px;
+	fill: ${(props) => props.styleoptions.primaryColor};
 `;
 
 const TextReader = ({ textContainer, options, styleOptions }) => {

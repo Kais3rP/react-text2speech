@@ -1,4 +1,6 @@
 import { BiReset } from 'react-icons/bi';
+import { VscGithub } from 'react-icons/vsc';
+// import { DiGithubFull } from 'react-icons/di';
 import { FcSettings } from 'react-icons/fc';
 import styled from 'styled-components';
 
@@ -44,6 +46,10 @@ interface IExtraSettings {
 
 interface ICheckBox {}
 
+interface IVscGithub {
+	styleoptions: IStyleOptions;
+}
+
 /* Styled Components */
 
 export const Container = styled.div<IContainerProps>`
@@ -59,7 +65,7 @@ export const Container = styled.div<IContainerProps>`
 	transition: all 200ms linear;
 	width: ${(props: any) =>
 		props.isminimized === 'true' ? '150px' : '300px'};
-	height: 125px;
+	height: 115px;
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
 	padding: 15px;
@@ -283,4 +289,13 @@ export const ExtraSettings = styled.div<IExtraSettings>`
 export const CheckBox = styled.input<ICheckBox>`
 	margin: 0 !important;
 	padding: 0 !important;
+`;
+
+export const GithubIcon = styled(VscGithub)<IVscGithub>`
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 17px;
+	height: 17px;
+	fill: ${(props) => props.styleoptions.primaryColor};
 `;
