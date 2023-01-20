@@ -42,6 +42,7 @@
 	cursor: pointer;
 	transition: all 0.2s linear;
 	margin-top: 50px;
+	margin-bottom: 30px;
 }
 
 .play:hover {

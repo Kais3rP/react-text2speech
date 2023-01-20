@@ -14,8 +14,26 @@ em {
 	display: block;
 }
 
+strong {
+	position: relative;
+}
+
+strong::before {
+	position: absolute;
+	top: 2px;
+	left: 0px;
+	content: '';
+	background: #dddd23;
+	width: 100%;
+	height: 0%;
+	padding: 10px;
+	z-index: 0;
+	opacity: 0.3;
+	border-radius: 2px;
+}
+
 pre {
-	width: min(98vw, 768px);
+	width: min(90vw, 768px);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -25,6 +43,7 @@ pre {
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
 		monospace;
+	width: 100%;
 }
 
 * {

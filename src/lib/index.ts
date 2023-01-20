@@ -834,19 +834,30 @@ export class SpeechSynth extends EventEmitter {
 	) {
 		const tree = [...node.childNodes];
 		tree.forEach((el) => {
+			console.log('Current eleemnt:', el);
 			/* Exclude code tags and its content from parsing */
 			if (
-				(options.excludeCodeTags &&
-					el.nodeType === 1 &&
-					(el as HTMLElement).tagName === 'PRE') ||
-				(el as HTMLElement).tagName === 'CODE'
+				options.excludeCodeTags &&
+				el.nodeType === 1 &&
+				((el as HTMLElement).tagName === 'PRE' ||
+					(el as HTMLElement).tagName === 'CODE')
 			)
 				return;
+
+			/* Recurse if the element is an HTMLElement */
+
 			if (el.nodeType === 1)
 				this.addHTMLHighlightTags(el as Element, options);
 
+			/* Begin text node parsing if node type is TextNode */
+
 			if (el.nodeType === 3) {
-				if (el.textContent === ' ' || el.textContent === '') return;
+				if (
+					Utils.isEmptyString(el.textContent as string) ||
+					Utils.isSpace(el.textContent as string) ||
+					Utils.isWhitespaceChar(el.textContent as string)
+				)
+					return;
 				const wrapper = document.createElement('span');
 
 				(el as Text).data

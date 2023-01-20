@@ -83,6 +83,14 @@ export class Utils {
 		return str === ' ';
 	}
 
+	static isEmptyString(str: string) {
+		return str === '';
+	}
+
+	static isWhitespaceChar(str: string) {
+		return /^[\n\r\t]$/.test(str);
+	}
+
 	static isAt(str: string): boolean {
 		return str === '@';
 	}

@@ -52,7 +52,7 @@ function App() {
 			</button>
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
-				<h1>Ut vero dolorem ea illum fugit.</h1>
+				<strong>Ut vero dolorem ea illum fugit.</strong>
 				<p>
 					Lorem dolor sit amet. Et animi debitis eos tenetur
 					inventoreQui totam qui iure ratione ab distinctio deleniti
@@ -78,8 +78,8 @@ function App() {
 						fugiat.{' '}
 					</li>
 					<li>
-						Qui tempore cumque non inventore culpa non adipisci
-						inventore.{' '}
+						Qui <strong>tempore</strong> cumque non inventore culpa
+						non adipisci inventore.{' '}
 					</li>
 					<li>
 						Et voluptatem voluptatem et recusandae eius At tenetur

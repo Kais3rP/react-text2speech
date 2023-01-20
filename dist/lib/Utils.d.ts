@@ -10,6 +10,8 @@ export declare class Utils {
     static isNumber(str: string): boolean;
     static isURL(str: string): boolean;
     static isSpace(str: string): boolean;
+    static isEmptyString(str: string): boolean;
+    static isWhitespaceChar(str: string): boolean;
     static isAt(str: string): boolean;
     static isDot(str: string): boolean;
     static isPunctuation(str: string): boolean;

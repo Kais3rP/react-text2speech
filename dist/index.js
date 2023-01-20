@@ -210,6 +210,12 @@ class Utils {
     static isSpace(str) {
         return str === ' ';
     }
+    static isEmptyString(str) {
+        return str === '';
+    }
+    static isWhitespaceChar(str) {
+        return /^[\n\r\t]$/.test(str);
+    }
     static isAt(str) {
         return str === '@';
     }
@@ -729,8 +735,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
         // eslint-disable-next-line prettier/prettier
-        this.state.currentWordIndex =
-            this.state.chunksArray[this.state.currentChunkIndex].start;
+        this.state.currentWordIndex = this.state.chunksArray[this.state.currentChunkIndex].start;
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
             2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
@@ -882,16 +887,21 @@ class SpeechSynth extends EventEmitter__default["default"] {
     addHTMLHighlightTags(node, options = { excludeCodeTags: true }) {
         const tree = [...node.childNodes];
         tree.forEach((el) => {
+            console.log('Current eleemnt:', el);
             /* Exclude code tags and its content from parsing */
-            if ((options.excludeCodeTags &&
+            if (options.excludeCodeTags &&
                 el.nodeType === 1 &&
-                el.tagName === 'PRE') ||
-                el.tagName === 'CODE')
+                (el.tagName === 'PRE' ||
+                    el.tagName === 'CODE'))
                 return;
+            /* Recurse if the element is an HTMLElement */
             if (el.nodeType === 1)
                 this.addHTMLHighlightTags(el, options);
+            /* Begin text node parsing if node type is TextNode */
             if (el.nodeType === 3) {
-                if (el.textContent === ' ' || el.textContent === '')
+                if (Utils.isEmptyString(el.textContent) ||
+                    Utils.isSpace(el.textContent) ||
+                    Utils.isWhitespaceChar(el.textContent))
                     return;
                 const wrapper = document.createElement('span');
                 el.data
