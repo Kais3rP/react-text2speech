@@ -64,12 +64,12 @@ export class Utils {
 
 	static isWordWithNumbers(str: string) {
 		if (!str) return false;
-		return /^[a-zA-Z0-9]/.test(str);
+		return /^[a-zA-Z0-9]+$/.test(str);
 	}
 
 	static isNumber(str: string) {
 		if (!str) return false;
-		return !isNaN(+str) && isFinite(+str);
+		return (!isNaN(+str) && isFinite(+str)) || parseFloat(str);
 	}
 
 	static isURL(str: string) {
@@ -97,6 +97,10 @@ export class Utils {
 
 	static isDot(str: string): boolean {
 		return str === '.';
+	}
+
+	static isZero(str: string): boolean {
+		return str === '0';
 	}
 
 	static isPunctuation(str: string): boolean {
@@ -149,7 +153,7 @@ export class Utils {
 
 	static isSpecialUnreadableCharacter(str: string) {
 		if (!str) return false;
-		return /^[()[\]{}'"<>`|]+$/.test(str);
+		return /^[()[\]{}'"<>`|-]+$/.test(str);
 	}
 
 	static isSpecialCharacter(str: string): boolean {
@@ -160,6 +164,11 @@ export class Utils {
 	static isHTMLEntity(str: string): boolean {
 		if (!str) return false;
 		return /&[a-z]+?;+/.test(str);
+	}
+
+	static isValidDate(str: string): boolean {
+		// @ts-expect-error
+		return new Date(str) > 0;
 	}
 
 	/* Array utils */

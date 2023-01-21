@@ -7,13 +7,14 @@ export declare class Utils {
     static isWordTextContent(str: string): boolean;
     static isWord(str: string): boolean;
     static isWordWithNumbers(str: string): boolean;
-    static isNumber(str: string): boolean;
+    static isNumber(str: string): number | boolean;
     static isURL(str: string): boolean;
     static isSpace(str: string): boolean;
     static isEmptyString(str: string): boolean;
     static isWhitespaceChar(str: string): boolean;
     static isAt(str: string): boolean;
     static isDot(str: string): boolean;
+    static isZero(str: string): boolean;
     static isPunctuation(str: string): boolean;
     static isPunctuationButDot(str: string): boolean;
     static isHashtag(str: string): boolean;
@@ -27,6 +28,7 @@ export declare class Utils {
     static isSpecialUnreadableCharacter(str: string): boolean;
     static isSpecialCharacter(str: string): boolean;
     static isHTMLEntity(str: string): boolean;
+    static isValidDate(str: string): boolean;
     static __join__: (fn: (el: any, i: number, arr: any[]) => string) => string;
     static isFunction(fn: any): any;
 }

@@ -195,12 +195,12 @@ class Utils {
     static isWordWithNumbers(str) {
         if (!str)
             return false;
-        return /^[a-zA-Z0-9]/.test(str);
+        return /^[a-zA-Z0-9]+$/.test(str);
     }
     static isNumber(str) {
         if (!str)
             return false;
-        return !isNaN(+str) && isFinite(+str);
+        return (!isNaN(+str) && isFinite(+str)) || parseFloat(str);
     }
     static isURL(str) {
         if (!str)
@@ -221,6 +221,9 @@ class Utils {
     }
     static isDot(str) {
         return str === '.';
+    }
+    static isZero(str) {
+        return str === '0';
     }
     static isPunctuation(str) {
         if (!str)
@@ -271,7 +274,7 @@ class Utils {
     static isSpecialUnreadableCharacter(str) {
         if (!str)
             return false;
-        return /^[()[\]{}'"<>`|]+$/.test(str);
+        return /^[()[\]{}'"<>`|-]+$/.test(str);
     }
     static isSpecialCharacter(str) {
         if (!str)
@@ -282,6 +285,10 @@ class Utils {
         if (!str)
             return false;
         return /&[a-z]+?;+/.test(str);
+    }
+    static isValidDate(str) {
+        // @ts-expect-error
+        return new Date(str) > 0;
     }
     /* Type Checks */
     static isFunction(fn) {
@@ -329,8 +336,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
         onSeek: () => null,
     }) {
         super();
-        /* Counters */
-        this.tagIndex = 0;
         this.textContainer = textContainer;
         this.style = { color1, color2 };
         /* Instances */
@@ -375,7 +380,10 @@ class SpeechSynth extends EventEmitter__default["default"] {
             /* UI */
             isLoading: true,
             /* Highlight & Reading time */
+            tagIndex: 0,
+            currentWord: '',
             currentWordIndex: 0,
+            currentWordProps: { charIndex: 0, charLength: 0 },
             highlightedWords: [],
             lastWordPosition: 0,
             numberOfWords: 0,
@@ -402,7 +410,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
     addHTMLHighlightTags(node) {
         const tree = [...node.childNodes];
         tree.forEach((el) => {
-            var _a;
             /* Exclude code tags and its content from parsing */
             if (el.nodeType === 1 &&
                 (el.tagName === 'PRE' ||
@@ -413,7 +420,6 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 this.addHTMLHighlightTags(el);
             /* Begin text node parsing if node type is TextNode */
             if (el.nodeType === 3) {
-                console.log('Text node', el, el.textContent, (_a = el.textContent) === null || _a === void 0 ? void 0 : _a.split(''));
                 if (Utils.isEmptyString(el.textContent) ||
                     Utils.isSpace(el.textContent) ||
                     Utils.isWhitespaceChar(el.textContent))
@@ -441,18 +447,24 @@ class SpeechSynth extends EventEmitter__default["default"] {
                         return ' ';
                     /* Separate the special readable characters like @#^*° so they can be read accordingly */
                     if (Utils.isSpecialReadableCharacter(c))
-                        return ` ${c}  `;
-                    /* Handle dots in the middle of words and numbers e.g. some.text e.g. 1.000 ,
+                        return ` ${c} `;
+                    /* Handle dots in the middle of numbers e.g. 1.000 1.23 */
+                    if (Utils.isDot(c) &&
+                        Utils.isNumber(arr[i - 1]) &&
+                        Utils.isNumber(arr[i + 1]))
+                        return `${c}`;
+                    /* Handle dots in the middle of words and numbers e.g. some.text e.g. abc33.bb32 ,
                     since in this case they are read as a character : "some dot text" "one dot zero zero zero" */
                     if (Utils.isDot(c) &&
                         Utils.isWordWithNumbers(arr[i - 1]) &&
                         Utils.isWordWithNumbers(arr[i + 1]))
-                        return ` ${c}  `;
+                        return ` ${c} `;
                     /* Handle the punctation characters apart dots placed in the middle of a word e.g. test:test --> test: test */
                     if (Utils.isPunctuationButDot(c) &&
                         Utils.isWord(arr[i - 1]) &&
                         Utils.isWord(arr[i + 1]))
-                        return `${c}  `;
+                        return `${c} `;
+                    /* Handle multiple zeroes in a row, since they are read a single separated words */
                     return c;
                 })
                     .join('')
@@ -471,13 +483,14 @@ class SpeechSynth extends EventEmitter__default["default"] {
                     else {
                         /* In all other cases, which is, "plain words or slashes or any other readable character" we add the data-id attribute */
                         const newEl = document.createElement('span');
-                        newEl.setAttribute('data-id', (this.tagIndex++).toString());
+                        newEl.setAttribute('data-id', (this.state.tagIndex++).toString());
                         newEl.setAttribute('data-type', 'WORD');
                         /* Do not add a space after the word if it's a special readable character or if the next word is not a plain word */
                         if (Utils.isSpecialReadableCharacter(word) ||
                             Utils.isSpecialReadableCharacter(arr[i + 1]) ||
                             Utils.isDot(word) ||
-                            Utils.isDot(arr[i + 1])) {
+                            Utils.isDot(arr[i + 1]) ||
+                            Utils.isZero(word)) {
                             newEl.textContent = word;
                         }
                         else
@@ -510,6 +523,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
                 this.state.numberOfWords = this.retrieveNumberOfWords(this.textContainer, '[data-id]');
                 /* Get the whole raw text */
                 this.state.wholeText = this.retrieveWholeText(this.textContainer, '[data-id]');
+                this.state.textRemaining = this.state.wholeText;
                 /* Get the total estimated duration of reading */
                 this.state.duration = this.getTextDuration(this.state.wholeText, this.settings.rate);
                 /* Get the array of words that will be read */
@@ -681,26 +695,30 @@ class SpeechSynth extends EventEmitter__default["default"] {
         this.state.elapsedTime = 0;
         clearTimeout(this.timeoutRef);
     }
-    getRemainingText(idx) {
-        const length = this.state.wholeTextArray.length;
-        /* Calculate and set the remaining text */
-        return this.state.wholeTextArray
-            .slice(idx, length + 1)
-            .__join__((el, i, arr) => {
-            if (Utils.isDot(arr[i + 1]) || Utils.isDot(el)) {
-                return '';
-            }
-            else
-                return ' ';
-        });
-    }
-    getCurrentChunkText() {
-        return this.state.chunksArray[this.state.currentChunkIndex].text;
-    }
     handleBoundary(e) {
         /* Disable boundary if it's in chunk mode */
         if (this.options.isChunksModeOn)
             return;
+        this.state.currentWord = this.state.wholeTextArray[this.state.currentWordIndex];
+        const previousWord = this.state.wholeTextArray[this.state.currentWordIndex - 1];
+        /* This is very important since it ensures the sync among words that are read
+        and those that are highlighted is not messed up  */
+        if (e.name !== 'word' || e.charLength === 0)
+            return;
+        /*
+        Disable boundary if the word is the repetition of the previous one, this happens in certain cases like numbers
+        e.g. 1000 is spelled "one thousand" even if it's just one word, hence the boundary is fired twice and dates.
+        This increase consistency in visual highlighting and audio sync.
+        */
+        if ((Utils.isNumber(previousWord) || Utils.isValidDate(previousWord)) &&
+            e.charIndex === this.state.currentWordProps.charIndex &&
+            e.charLength === this.state.currentWordProps.charLength)
+            return;
+        /* Sync current word props */
+        this.state.currentWordProps = {
+            charIndex: e.charIndex,
+            charLength: e.charLength,
+        };
         /* Highlight the current word */
         this.highlightText(this.state.currentWordIndex);
         /* Increase the current index of word read */
@@ -777,6 +795,22 @@ class SpeechSynth extends EventEmitter__default["default"] {
             el.addEventListener(type, fn);
         });
     }
+    getRemainingText(idx) {
+        const length = this.state.wholeTextArray.length;
+        /* Calculate and set the remaining text */
+        return this.state.wholeTextArray
+            .slice(idx, length + 1)
+            .__join__((el, i, arr) => {
+            if (Utils.isDot(arr[i + 1]) || Utils.isDot(el)) {
+                return '';
+            }
+            else
+                return ' ';
+        });
+    }
+    getCurrentChunkText(idx) {
+        return this.state.chunksArray[idx].text;
+    }
     retrieveNumberOfWords(node, selector) {
         return [...node.querySelectorAll(selector)].length;
     }
@@ -847,7 +881,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         }
         /* Update utterance object, adding the remaining settings and remaining text left to be played */
         this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.options.isChunksModeOn
-                ? this.getCurrentChunkText()
+                ? this.getCurrentChunkText(this.state.currentChunkIndex)
                 : this.getRemainingText(this.state.currentWordIndex) }));
         /* Update instance settings object to keep them in sync with utterance settings */
         this.settings = Object.assign(Object.assign({}, this.settings), obj);
@@ -870,7 +904,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
         else
             this.resetHighlight();
         this.utterance.text = this.options.isChunksModeOn
-            ? this.getCurrentChunkText()
+            ? this.getCurrentChunkText(this.state.currentChunkIndex)
             : this.getRemainingText(this.state.currentWordIndex);
         this.delayRestart('edit-chunk-mode', 500);
     }
@@ -911,6 +945,7 @@ class SpeechSynth extends EventEmitter__default["default"] {
     }
     /* ------------------------------------------------------------------------------------ */
     /* Public Methods to control the player state */
+    /* ------------------------------------------------------------------------------------ */
     play(type) {
         this.synth.cancel(); // Makes sure the queue is empty when starting
         clearTimeout(this.timeoutRef); // Makes sure to not trigger multiple timeouts

@@ -61,7 +61,10 @@ declare global {
 		/* UI */
 		isLoading: boolean;
 		/* Highlight & Reading time */
+		tagIndex: number;
+		currentWord: string;
 		currentWordIndex: number;
+		currentWordProps: ICurrentWordProps;
 		highlightedWords: HTMLElement[];
 		lastWordPosition: number;
 		numberOfWords: number;
@@ -98,5 +101,10 @@ declare global {
 		textColor: string;
 		highlightColor1: string;
 		highlightColor2: string;
+	}
+
+	interface ICurrentWordProps {
+		charIndex: number;
+		charLength: number;
 	}
 }

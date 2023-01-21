@@ -12,7 +12,6 @@ export declare class SpeechSynth extends EventEmitter {
     events: Events;
     options: IOptions;
     state: IState;
-    tagIndex: number;
     constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, }?: Params);
     addHTMLHighlightTags(node: Element): void;
     init(): Promise<SpeechSynth>;
@@ -24,14 +23,14 @@ export declare class SpeechSynth extends EventEmitter {
     private timeCount;
     private pauseTimeCount;
     private resetTimeCount;
-    private getRemainingText;
-    private getCurrentChunkText;
     private handleBoundary;
     private getVoices;
     private highlightText;
     private resetHighlight;
     private addCustomEventListeners;
     private attachEventListenersToWords;
+    private getRemainingText;
+    private getCurrentChunkText;
     private retrieveNumberOfWords;
     private retrieveWholeText;
     private retrieveWholeTextArray;

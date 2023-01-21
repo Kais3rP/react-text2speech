@@ -246,14 +246,14 @@ function App() {
 				</pre>
 				<h4>Special readable characters:</h4>
 				<span>
-					# @ / \ _ = + $ £ % & #@/\_ test@test test/test test\test
+					# @ / \ _ = + $ £ % &    #@/\_    test@test test/test test\test
 					test#test test_test °Test ^Test test°test test^test.
 				</span>
 				<h4>Special unreadable characters:</h4>
 				<span>{` - () [] {} " ' < > \` | "quotation" 'quotation' \`quotation\` <unreadablequotation> <<unreadablequotation>>.`}</span>
 				<h4>Test punctuation in the middle of text:</h4>
 				<span>
-					so.me.text.text so:me:text:text so;me;text;text
+					so.me.text.text so.it so.org so.vercel.app so.com so.me.text www.com abc33.bc32 test.com http://test.com www.test.com so:me:text:text so;me;text;text
 					so,me,text,text.
 				</span>
 				<h4>Test pound:</h4>
@@ -266,7 +266,9 @@ function App() {
 				<span>{`Test punctuation  : Test , Test : Test ; Test . Test ! Test ?`}</span>
 				Free text test.
 				<h4>Test numbers: </h4>
-				<span>10 100 1000 1.000 1,000.</span>
+				<span>10 100 1000 1,000 </span>
+				<h4>Test decimals</h4>
+				<span>0.001 10.1001 10.100</span>
 				<h4>Test Dates:</h4>
 				<span>12/12/2112 10/01/1001 06-02-1999</span>
 				<h4>Test time:</h4>
