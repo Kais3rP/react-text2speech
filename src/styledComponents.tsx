@@ -1,6 +1,7 @@
 import { BiReset } from 'react-icons/bi';
 import { VscGithub } from 'react-icons/vsc';
 // import { DiGithubFull } from 'react-icons/di';
+import { ImInfo } from 'react-icons/im';
 import { FcSettings } from 'react-icons/fc';
 import styled from 'styled-components';
 
@@ -31,7 +32,7 @@ interface IControlButton {
 	isloading: string;
 }
 
-interface IDots {
+interface ISettingsIcon {
 	styleoptions: IStyleOptions;
 }
 
@@ -46,7 +47,11 @@ interface IExtraSettings {
 
 interface ICheckBox {}
 
-interface IVscGithub {
+interface IGIthubIcon {
+	styleoptions: IStyleOptions;
+}
+
+interface IInfoIcon {
 	styleoptions: IStyleOptions;
 }
 
@@ -134,17 +139,13 @@ export const Seekbar = styled.input<ISeekBar>`
 		width: 14px; /* Set a specific slider handle width */
 		height: 14px; /* Slider handle height */
 		background: ${(props: any) => props.styleoptions.bgColor};
-		cursor: pointer; /* Cursor on hover */
+		cursor: grab; /* Cursor on hover */
 		border: 2px solid ${(props: any) => props.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-		cursor: pointer;
+		box-shadow: 0 2px 5px
+			${(props: any) => props.styleoptions.secondaryColor};
 		transition: transform 0.1s ease-out;
-	}
-	&::-webkit-slider-thumb:hover {
-		transform: scale(1.1);
-		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 	}
 	::-moz-range-thumb {
 		appearance: none;
@@ -155,9 +156,17 @@ export const Seekbar = styled.input<ISeekBar>`
 		border: 2px solid ${(props: any) => props.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-		cursor: pointer;
-		transition: transform 0.1s ease-out;
+		box-shadow: 0 2px 5px
+			${(props: any) => props.styleoptions.secondaryColor};
+		transition: transform 0.4s ease-out;
+	}
+	&::-webkit-slider-thumb:hover {
+		transform: scale(1.1);
+		box-shadow: 0 2px 10px ${(props: any) => props.styleoptions.bgColor};
+	}
+
+	&::-webkit-slider-thumb:active {
+		cursor: grabbing;
 	}
 `;
 
@@ -216,10 +225,25 @@ export const OptionsContainer = styled.div`
 	}
 `;
 
-export const Dots = styled(FcSettings)<IDots>`
+export const SettingsIcon = styled(FcSettings)<ISettingsIcon>`
 	font-size: 1.1em;
 	padding: 0px;
 	cursor: pointer;
+	transition: all 0.4s ease-out;
+	& path {
+		fill: ${(props) => props.styleoptions.primaryColor};
+	}
+	&:hover path {
+		fill: ${(props) => props.styleoptions.secondaryColor};
+	}
+`;
+
+export const InfoIcon = styled(ImInfo)<IInfoIcon>`
+	font-size: 1.05em;
+	padding: 0px;
+	cursor: pointer;
+	transition: all 0.4s ease-out;
+	margin: 0px 0px 0px 10px;
 	& path {
 		fill: ${(props) => props.styleoptions.primaryColor};
 	}
@@ -291,7 +315,7 @@ export const CheckBox = styled.input<ICheckBox>`
 	padding: 0 !important;
 `;
 
-export const GithubIcon = styled(VscGithub)<IVscGithub>`
+export const GithubIcon = styled(VscGithub)<IGIthubIcon>`
 	position: absolute;
 	top: 3px;
 	left: 3px;

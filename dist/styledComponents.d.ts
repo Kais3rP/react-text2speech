@@ -19,7 +19,7 @@ interface IControlButton {
     styleoptions: IStyleOptions;
     isloading: string;
 }
-interface IDots {
+interface ISettingsIcon {
     styleoptions: IStyleOptions;
 }
 interface IReset {
@@ -31,7 +31,10 @@ interface IExtraSettings {
 }
 interface ICheckBox {
 }
-interface IVscGithub {
+interface IGIthubIcon {
+    styleoptions: IStyleOptions;
+}
+interface IInfoIcon {
     styleoptions: IStyleOptions;
 }
 export declare const Container: import("styled-components").StyledComponent<"div", any, IContainerProps, never>;
@@ -42,11 +45,12 @@ export declare const Seekbar: import("styled-components").StyledComponent<"input
 export declare const ControlsContainer: import("styled-components").StyledComponent<"div", any, IControlsContainer, never>;
 export declare const ControlButton: import("styled-components").StyledComponent<"div", any, IControlButton, never>;
 export declare const OptionsContainer: import("styled-components").StyledComponent<"div", any, {}, never>;
-export declare const Dots: import("styled-components").StyledComponent<import("react-icons/lib").IconType, any, IDots, never>;
+export declare const SettingsIcon: import("styled-components").StyledComponent<import("react-icons/lib").IconType, any, ISettingsIcon, never>;
+export declare const InfoIcon: import("styled-components").StyledComponent<import("react-icons/lib").IconType, any, IInfoIcon, never>;
 export declare const Reset: import("styled-components").StyledComponent<import("react-icons/lib").IconType, any, IReset, never>;
 export declare const SliderContainer: import("styled-components").StyledComponent<"div", any, {}, never>;
 export declare const ExtraSettings: import("styled-components").StyledComponent<"div", any, IExtraSettings, never>;
 export declare const CheckBox: import("styled-components").StyledComponent<"input", any, ICheckBox, never>;
-export declare const GithubIcon: import("styled-components").StyledComponent<import("react-icons/lib").IconType, any, IVscGithub, never>;
+export declare const GithubIcon: import("styled-components").StyledComponent<import("react-icons/lib").IconType, any, IGIthubIcon, never>;
 export {};
 //# sourceMappingURL=styledComponents.d.ts.map

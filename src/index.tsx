@@ -16,7 +16,7 @@ import { useTextReaderStore } from './store';
 import { BiVolumeFull } from 'react-icons/bi';
 import { FiMinimize, FiMaximize } from 'react-icons/fi';
 import CustomSelect from './CustomSelect';
-import Slider from './CustomSlider';
+import VolumeSlider from './VolumeSlider';
 import format from 'format-duration';
 import { MdOutlineClose } from 'react-icons/md';
 import debounce from 'lodash.debounce';
@@ -26,8 +26,9 @@ import {
 	Container,
 	ControlButton,
 	ControlsContainer,
-	Dots,
+	SettingsIcon,
 	ExtraSettings,
+	InfoIcon,
 	// GithubIcon,
 	OptionsContainer,
 	Reset,
@@ -458,7 +459,11 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 								title="Voices"
 								styleOptions={styleOptions}
 							/>
-							<Dots
+							<SettingsIcon
+								styleoptions={styleOptions}
+								onPointerDown={toggleSettings}
+							/>
+							<InfoIcon
 								styleoptions={styleOptions}
 								onPointerDown={toggleSettings}
 							/>
@@ -466,7 +471,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 
 						<div id="options-wrapper-2">
 							<SliderContainer>
-								<Slider
+								<VolumeSlider
 									icon={<BiVolumeFull />}
 									onChange={handleVolumeChange}
 									data={{
@@ -527,6 +532,7 @@ const TextReader: FC<IProps> = ({ textContainer, options, styleOptions }) => {
 				</>
 			)}
 			{/* <GithubIcon styleoptions={styleOptions} /> */}
+			<InfoIcon styleoptions={styleOptions} />
 		</Container>
 	);
 };

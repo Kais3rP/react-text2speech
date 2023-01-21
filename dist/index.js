@@ -699,7 +699,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         /* Disable boundary if it's in chunk mode */
         if (this.options.isChunksModeOn)
             return;
-        this.state.currentWord = this.state.wholeTextArray[this.state.currentWordIndex];
+        this.state.currentWord =
+            this.state.wholeTextArray[this.state.currentWordIndex];
         const previousWord = this.state.wholeTextArray[this.state.currentWordIndex - 1];
         /* This is very important since it ensures the sync among words that are read
         and those that are highlighted is not messed up  */
@@ -895,7 +896,8 @@ class SpeechSynth extends EventEmitter__default["default"] {
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
         // eslint-disable-next-line prettier/prettier
-        this.state.currentWordIndex = this.state.chunksArray[this.state.currentChunkIndex].start;
+        this.state.currentWordIndex =
+            this.state.chunksArray[this.state.currentChunkIndex].start;
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
             2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
@@ -3340,36 +3342,49 @@ const StyledSlider = styled.input `
 	&:hover {
 		opacity: 1;
 	}
-	&::-webkit-slider-thumb {
+	::-webkit-slider-thumb {
 		appearance: none;
-		width: 8px; /* Set a specific slider handle width */
-		height: 17px; /* Slider handle height */
+		width: 10px; /* Set a specific slider handle width */
+		height: 10px; /* Slider handle height */
+		background: ${(props) => props.styleoptions.bgColor};
+		cursor: grab; /* Cursor on hover */
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
+		border-radius: 50%;
+		z-index: 1;
+		box-shadow: 0 2px 5px
+			${(props) => props.styleoptions.secondaryColor};
+		transition: transform 0.1s ease-out;
+	}
+	::-moz-range-thumb {
+		appearance: none;
+		width: 10px; /* Set a specific slider handle width */
+		height: 10px; /* Slider handle height */
 		background: ${(props) => props.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
-		width: 3px;
 		border: 2px solid ${(props) => props.styleoptions.primaryColor};
-		border-radius: 2px;
+		border-radius: 50%;
 		z-index: 1;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-		cursor: pointer;
-		transition: transform 0.1s ease-out;
+		box-shadow: 0 2px 5px
+			${(props) => props.styleoptions.secondaryColor};
+		transition: transform 0.4s ease-out;
 	}
+
 	&::-webkit-slider-thumb:hover {
-		transform: scale(2, 1.1);
+		transform: scale(1.1);
+		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
 	}
-	&::-moz-range-thumb {
-		appearance: none;
-		width: 8px; /* Set a specific slider handle width */
-		height: 20px; /* Slider handle height */
-		background: ${(props) => props.styleoptions.primaryColor};
-		cursor: pointer; /* Cursor on hover */
-		width: 3px;
-		border: 2px solid ${(props) => props.styleoptions.primaryColor};
-		border-radius: 2px;
-		z-index: 1;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-		cursor: pointer;
-		transition: transform 0.1s ease-out;
+
+	::-moz-range-thumb:hover {
+		transform: scale(1.1);
+		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
+	}
+
+	&::-webkit-slider-thumb:active {
+		cursor: grabbing;
+	}
+
+	::-moz-range-thumb:active {
+		cursor: grabbing;
 	}
 `;
 const Icon = styled.div `
@@ -3827,6 +3842,11 @@ function VscGithub (props) {
 }
 
 // THIS FILE IS AUTO GENERATED
+function ImInfo (props) {
+  return GenIcon({"tag":"svg","attr":{"version":"1.1","viewBox":"0 0 16 16"},"child":[{"tag":"path","attr":{"d":"M7 4.75c0-0.412 0.338-0.75 0.75-0.75h0.5c0.412 0 0.75 0.338 0.75 0.75v0.5c0 0.412-0.338 0.75-0.75 0.75h-0.5c-0.412 0-0.75-0.338-0.75-0.75v-0.5z"}},{"tag":"path","attr":{"d":"M10 12h-4v-1h1v-3h-1v-1h3v4h1z"}},{"tag":"path","attr":{"d":"M8 0c-4.418 0-8 3.582-8 8s3.582 8 8 8 8-3.582 8-8-3.582-8-8-8zM8 14.5c-3.59 0-6.5-2.91-6.5-6.5s2.91-6.5 6.5-6.5 6.5 2.91 6.5 6.5-2.91 6.5-6.5 6.5z"}}]})(props);
+}
+
+// THIS FILE IS AUTO GENERATED
 function FcSettings (props) {
   return GenIcon({"tag":"svg","attr":{"version":"1","viewBox":"0 0 48 48","enableBackground":"new 0 0 48 48"},"child":[{"tag":"path","attr":{"fill":"#607D8B","d":"M39.6,27.2c0.1-0.7,0.2-1.4,0.2-2.2s-0.1-1.5-0.2-2.2l4.5-3.2c0.4-0.3,0.6-0.9,0.3-1.4L40,10.8 c-0.3-0.5-0.8-0.7-1.3-0.4l-5,2.3c-1.2-0.9-2.4-1.6-3.8-2.2l-0.5-5.5c-0.1-0.5-0.5-0.9-1-0.9h-8.6c-0.5,0-1,0.4-1,0.9l-0.5,5.5 c-1.4,0.6-2.7,1.3-3.8,2.2l-5-2.3c-0.5-0.2-1.1,0-1.3,0.4l-4.3,7.4c-0.3,0.5-0.1,1.1,0.3,1.4l4.5,3.2c-0.1,0.7-0.2,1.4-0.2,2.2 s0.1,1.5,0.2,2.2L4,30.4c-0.4,0.3-0.6,0.9-0.3,1.4L8,39.2c0.3,0.5,0.8,0.7,1.3,0.4l5-2.3c1.2,0.9,2.4,1.6,3.8,2.2l0.5,5.5 c0.1,0.5,0.5,0.9,1,0.9h8.6c0.5,0,1-0.4,1-0.9l0.5-5.5c1.4-0.6,2.7-1.3,3.8-2.2l5,2.3c0.5,0.2,1.1,0,1.3-0.4l4.3-7.4 c0.3-0.5,0.1-1.1-0.3-1.4L39.6,27.2z M24,35c-5.5,0-10-4.5-10-10c0-5.5,4.5-10,10-10c5.5,0,10,4.5,10,10C34,30.5,29.5,35,24,35z"}},{"tag":"path","attr":{"fill":"#455A64","d":"M24,13c-6.6,0-12,5.4-12,12c0,6.6,5.4,12,12,12s12-5.4,12-12C36,18.4,30.6,13,24,13z M24,30 c-2.8,0-5-2.2-5-5c0-2.8,2.2-5,5-5s5,2.2,5,5C29,27.8,26.8,30,24,30z"}}]})(props);
 }
@@ -3909,17 +3929,13 @@ const Seekbar = styled.input `
 		width: 14px; /* Set a specific slider handle width */
 		height: 14px; /* Slider handle height */
 		background: ${(props) => props.styleoptions.bgColor};
-		cursor: pointer; /* Cursor on hover */
+		cursor: grab; /* Cursor on hover */
 		border: 2px solid ${(props) => props.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-		cursor: pointer;
+		box-shadow: 0 2px 5px
+			${(props) => props.styleoptions.secondaryColor};
 		transition: transform 0.1s ease-out;
-	}
-	&::-webkit-slider-thumb:hover {
-		transform: scale(1.1);
-		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 	}
 	::-moz-range-thumb {
 		appearance: none;
@@ -3930,9 +3946,17 @@ const Seekbar = styled.input `
 		border: 2px solid ${(props) => props.styleoptions.primaryColor};
 		border-radius: 50%;
 		z-index: 1;
-		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-		cursor: pointer;
-		transition: transform 0.1s ease-out;
+		box-shadow: 0 2px 5px
+			${(props) => props.styleoptions.secondaryColor};
+		transition: transform 0.4s ease-out;
+	}
+	&::-webkit-slider-thumb:hover {
+		transform: scale(1.1);
+		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
+	}
+
+	&::-webkit-slider-thumb:active {
+		cursor: grabbing;
 	}
 `;
 const ControlsContainer = styled.div `
@@ -3985,10 +4009,24 @@ const OptionsContainer = styled.div `
 		align-items: center;
 	}
 `;
-const Dots = styled(FcSettings) `
+const SettingsIcon = styled(FcSettings) `
 	font-size: 1.1em;
 	padding: 0px;
 	cursor: pointer;
+	transition: all 0.4s ease-out;
+	& path {
+		fill: ${(props) => props.styleoptions.primaryColor};
+	}
+	&:hover path {
+		fill: ${(props) => props.styleoptions.secondaryColor};
+	}
+`;
+const InfoIcon = styled(ImInfo) `
+	font-size: 1.05em;
+	padding: 0px;
+	cursor: pointer;
+	transition: all 0.4s ease-out;
+	margin: 0px 0px 0px 10px;
 	& path {
 		fill: ${(props) => props.styleoptions.primaryColor};
 	}
@@ -4307,7 +4345,8 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                                 value: voice.voiceURI,
                             });
                         }), onChange: handleVoiceChange, value: voice, defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
-                    React__default["default"].createElement(Dots, { styleoptions: styleOptions, onPointerDown: toggleSettings })),
+                    React__default["default"].createElement(SettingsIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings }),
+                    React__default["default"].createElement(InfoIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings })),
                 React__default["default"].createElement("div", { id: "options-wrapper-2" },
                     React__default["default"].createElement(SliderContainer, null,
                         React__default["default"].createElement(Slider, { icon: React__default["default"].createElement(BiVolumeFull, null), onChange: handleVolumeChange, data: {
@@ -4326,7 +4365,8 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                     React__default["default"].createElement("h5", null, "Highlight Text")),
                 React__default["default"].createElement("label", { htmlFor: "mode-option", onPointerDown: (e) => e.stopPropagation() },
                     React__default["default"].createElement(CheckBox, { id: "mode-option", type: "checkbox", checked: isChunksModeOn, onChange: handleIsChunksModeOn }),
-                    React__default["default"].createElement("h5", null, "Chunks Mode")))))));
+                    React__default["default"].createElement("h5", null, "Chunks Mode"))))),
+        React__default["default"].createElement(InfoIcon, { styleoptions: styleOptions })));
 };
 TextReader.defaultProps = {
     options: {
