@@ -5,28 +5,32 @@ import {
 	OptionsContainer,
 	SettingsIcon,
 } from './styles';
-import React, { ChangeEventHandler, FC } from 'react';
+import React, { ChangeEventHandler, FC, useContext } from 'react';
 import { useTextReaderStore } from 'store';
 import { ISecondaryControlsProps } from './types';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
 import { BiVolumeFull } from 'react-icons/bi';
 import VolumeSlider from 'components/VolumeSlider/VolumeSlider';
+import { GlobalStateContext } from 'components/TextReader/TextReader';
+import { setVoice } from 'store/actions';
 
 const SecondaryControls: FC<ISecondaryControlsProps> = ({
 	readerRef,
 	styleOptions,
 }) => {
+	const { state, dispatch } = useContext(GlobalStateContext);
+	const { voice, voices } = state;
 	const {
 		setRate,
 		setDuration,
-		setVoice,
+		// setVoice,
 		setVolume,
 		isSettingsVisible,
 		hideSettings,
 		showSettings,
-		voice,
+		// voice,
 		rate,
-		voices,
+		// voices,
 		volume,
 		enablePreserveHighlighting,
 		disablePreserveHighlighting,
@@ -49,7 +53,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = ({
 
 	const handleVoiceChange = (value: string) => {
 		reader?.editUtterance({ voiceURI: value });
-		setVoice(value);
+		dispatch(setVoice(value));
 	};
 
 	const handleVolumeChange: ChangeEventHandler = (e) => {
@@ -123,13 +127,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = ({
 					/>
 					<CustomSelect
 						name="voice"
-						options={voices?.map((voice) => ({
-							name: voice.name?.replace(
-								/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
-								''
-							),
-							value: voice.voiceURI,
-						}))}
+						options={voices}
 						onChange={handleVoiceChange}
 						value={voice}
 						defaultValue="1"

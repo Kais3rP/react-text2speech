@@ -1,4 +1,4 @@
-import React, { FC, useRef, useEffect } from 'react';
+import React, { FC, useRef, useEffect, useReducer, Dispatch } from 'react';
 import { SpeechSynth } from '../../lib';
 import { useTextReaderStore } from '../../store';
 
@@ -9,21 +9,102 @@ import MainControls from 'components/MainControls/MainControls';
 import WindowControls from 'components/WindowControls/WindowControls';
 import SeekBar from 'components/SeekBar/SeekBar';
 import SecondaryControls from 'components/SecondaryControls/SecondaryControls';
+import {
+	setElapsedTime,
+	setVoice,
+	setVoices,
+	stopReading,
+} from 'store/actions';
+
+interface IGlobalState {
+	isReading: boolean;
+	rate: string;
+	voice: string;
+	voices: IVoiceInfo[];
+	volume: string;
+	elapsedTime: number;
+	isPreserveHighlighting: boolean;
+	isMinimized: boolean;
+	isVisible: boolean;
+	isSettingsVisible: boolean;
+	numberOfWords: number;
+	currentWordIndex: number;
+	duration: number;
+	isLoading: boolean;
+	isHighlightTextOn: boolean;
+	isChunksModeOn: boolean;
+}
+
+const globalState: IGlobalState = {
+	isReading: false,
+	isLoading: false,
+	rate: '1',
+	voice: '',
+	voices: [],
+	volume: '0.5',
+	elapsedTime: 0,
+	isPreserveHighlighting: true,
+	isHighlightTextOn: true,
+	isChunksModeOn: false,
+	isMinimized: true,
+	isVisible: true,
+	isSettingsVisible: false,
+	numberOfWords: 0,
+	currentWordIndex: 1,
+	duration: 0,
+};
+
+const rootReducer = (state: IGlobalState, action: ActionType) => {
+	const { type, payload } = action;
+	switch (type) {
+		case 'START_READING': {
+			return { ...state, isReading: true };
+		}
+		case 'STOP_READING': {
+			return { ...state, isReading: false };
+		}
+		case 'SET_VOICE': {
+			return { ...state, voice: payload };
+		}
+		case 'SET_VOICES': {
+			return { ...state, voices: payload };
+		}
+		case 'SET_ELAPSED_TIME': {
+			return { ...state, elapsedTime: payload };
+		}
+		default:
+			return { ...state };
+	}
+};
+
+interface IGlobalStateContext {
+	state: IGlobalState;
+	dispatch: Dispatch<ActionType>;
+}
+
+export const GlobalStateContext = React.createContext<IGlobalStateContext>({
+	state: globalState,
+	dispatch: () => null,
+});
 
 const TextReader: FC<ITextReaderProps> = ({
 	textContainer,
 	options,
 	styleOptions,
 }) => {
+	/* Initialize store */
+	const [state, dispatch] = useReducer(rootReducer, globalState);
+	const { isReading } = state;
+
 	const isFirstRender = useIsFirstRender();
 
 	const {
-		isReading,
+		// isReading,
 		enableChunksMode,
-		stopReading,
-		setVoice,
-		setVoices,
-		setElapsedTime,
+		// stopReading,
+		// setVoice,
+		// setVoices,
+		// setElapsedTime,
 		isMinimized,
 		isVisible,
 		setNumberOfWords,
@@ -56,8 +137,8 @@ const TextReader: FC<ITextReaderProps> = ({
 			},
 			onReset: (reader: SpeechSynth) => {
 				console.log('Reset Event called', reader?.state.elapsedTime);
-				stopReading();
-				setElapsedTime(reader?.state.elapsedTime as number);
+				dispatch(stopReading());
+				dispatch(setElapsedTime(reader?.state.elapsedTime as number));
 				setCurrentWordIndex(reader?.state.currentWordIndex as number);
 			},
 			onEnd: (reader: SpeechSynth) => {
@@ -71,7 +152,7 @@ const TextReader: FC<ITextReaderProps> = ({
 				setCurrentWordIndex(value);
 			},
 			onTimeTick: (reader: SpeechSynth, value: number) => {
-				setElapsedTime(reader.state.elapsedTime);
+				dispatch(setElapsedTime(reader.state.elapsedTime));
 			},
 			onWordClick: (reader: SpeechSynth, e: MouseEvent) => {
 				const target: HTMLElement = e.target as HTMLElement;
@@ -83,8 +164,18 @@ const TextReader: FC<ITextReaderProps> = ({
 		textReaderRef.current
 			.init()
 			.then((reader) => {
-				setVoices(reader.state.voices);
-				setVoice(reader.state.voices[0].voiceURI);
+				const formattedVoices: IVoiceInfo[] = reader.state.voices?.map(
+					(voice) => ({
+						name: voice.name?.replace(
+							/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
+							''
+						),
+						value: voice.voiceURI,
+					})
+				);
+
+				dispatch(setVoices(formattedVoices));
+				dispatch(setVoice(reader.state.voices[0].voiceURI));
 				setNumberOfWords(reader.state.numberOfWords);
 				setDuration(reader.state.duration);
 				/* Automatically set chunks mode ON on mobile devices since single word highlighting engine is not supported on mobile browsers */
@@ -125,25 +216,30 @@ const TextReader: FC<ITextReaderProps> = ({
 	}, [isReading, textContainer, isFirstRender, setIsLoading]);
 
 	return (
-		<Container
-			isvisible={isVisible.toString()}
-			isminimized={isMinimized.toString()}
-			styleoptions={styleOptions}
-		>
-			<WindowControls styleOptions={styleOptions} />
-			<SeekBar readerRef={textReaderRef} styleOptions={styleOptions} />
-			<MainControls
-				readerRef={textReaderRef}
-				styleOptions={styleOptions}
-			/>
-			{/* Settings unit */}
-			{!isMinimized && (
-				<SecondaryControls
+		<GlobalStateContext.Provider value={{ state, dispatch }}>
+			<Container
+				isvisible={isVisible.toString()}
+				isminimized={isMinimized.toString()}
+				styleoptions={styleOptions}
+			>
+				<WindowControls styleOptions={styleOptions} />
+				<SeekBar
 					readerRef={textReaderRef}
 					styleOptions={styleOptions}
 				/>
-			)}
-		</Container>
+				<MainControls
+					readerRef={textReaderRef}
+					styleOptions={styleOptions}
+				/>
+				{/* Settings unit */}
+				{!isMinimized && (
+					<SecondaryControls
+						readerRef={textReaderRef}
+						styleOptions={styleOptions}
+					/>
+				)}
+			</Container>
+		</GlobalStateContext.Provider>
 	);
 };
 

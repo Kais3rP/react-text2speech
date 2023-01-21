@@ -3246,6 +3246,17 @@ styled(VscGithub) `
 `;
 
 // THIS FILE IS AUTO GENERATED
+function AiFillFastBackward (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M517.6 273.5L230.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm320 0L550.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm-620-25.5h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
+}function AiFillFastForward (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M793.8 499.3L506.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.6c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8a16.14 16.14 0 0 0 0-25.4zm-320 0L186.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.5c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8c4.1-3.2 6.2-8 6.2-12.7 0-4.6-2.1-9.4-6.2-12.6zM857.6 248h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
+}function AiFillPauseCircle (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-80 600c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304zm224 0c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304z"}}]})(props);
+}function AiFillPlayCircle (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z"}}]})(props);
+}
+
+// THIS FILE IS AUTO GENERATED
 function BiReset (props) {
   return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M12 16c1.671 0 3-1.331 3-3s-1.329-3-3-3-3 1.331-3 3 1.329 3 3 3z"}},{"tag":"path","attr":{"d":"M20.817 11.186a8.94 8.94 0 0 0-1.355-3.219 9.053 9.053 0 0 0-2.43-2.43 8.95 8.95 0 0 0-3.219-1.355 9.028 9.028 0 0 0-1.838-.18V2L8 5l3.975 3V6.002c.484-.002.968.044 1.435.14a6.961 6.961 0 0 1 2.502 1.053 7.005 7.005 0 0 1 1.892 1.892A6.967 6.967 0 0 1 19 13a7.032 7.032 0 0 1-.55 2.725 7.11 7.11 0 0 1-.644 1.188 7.2 7.2 0 0 1-.858 1.039 7.028 7.028 0 0 1-3.536 1.907 7.13 7.13 0 0 1-2.822 0 6.961 6.961 0 0 1-2.503-1.054 7.002 7.002 0 0 1-1.89-1.89A6.996 6.996 0 0 1 5 13H3a9.02 9.02 0 0 0 1.539 5.034 9.096 9.096 0 0 0 2.428 2.428A8.95 8.95 0 0 0 12 22a9.09 9.09 0 0 0 1.814-.183 9.014 9.014 0 0 0 3.218-1.355 8.886 8.886 0 0 0 1.331-1.099 9.228 9.228 0 0 0 1.1-1.332A8.952 8.952 0 0 0 21 13a9.09 9.09 0 0 0-.183-1.814z"}}]})(props);
 }function BiVolumeFull (props) {
@@ -3299,25 +3310,31 @@ const Reset = styled(BiReset) `
 	}
 `;
 
-// THIS FILE IS AUTO GENERATED
-function AiFillFastBackward (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M517.6 273.5L230.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm320 0L550.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm-620-25.5h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
-}function AiFillFastForward (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M793.8 499.3L506.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.6c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8a16.14 16.14 0 0 0 0-25.4zm-320 0L186.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.5c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8c4.1-3.2 6.2-8 6.2-12.7 0-4.6-2.1-9.4-6.2-12.6zM857.6 248h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
-}function AiFillPauseCircle (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-80 600c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304zm224 0c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304z"}}]})(props);
-}function AiFillPlayCircle (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z"}}]})(props);
-}
+const createAction = (type, payload) => ({
+    type,
+    payload,
+});
+const startReading = () => createAction('START_READING');
+const stopReading = () => createAction('STOP_READING');
+const setVoice = (payload) => createAction('SET_VOICE', payload);
+const setVoices = (payload) => createAction('SET_VOICES', payload);
+const setElapsedTime = (payload) => createAction('SET_ELAPSED_TIME', payload);
 
 const MainControls = ({ readerRef, styleOptions }) => {
-    const { isReading, isLoading, isMinimized, startReading, stopReading, } = useTextReaderStore();
+    const { state, dispatch } = React.useContext(GlobalStateContext);
+    const { isReading } = state;
+    const { 
+    // isReading,
+    isLoading, isMinimized,
+    // startReading,
+    // stopReading,
+     } = useTextReaderStore();
     const reader = readerRef.current;
     const handleTextReadPlay = () => {
-        startReading();
+        dispatch(startReading());
     };
     const handleTextReadPause = () => {
-        stopReading();
+        dispatch(stopReading());
     };
     const handleReset = () => {
         reader === null || reader === void 0 ? void 0 : reader.reset();
@@ -3393,7 +3410,7 @@ function FiMaximize (props) {
 }
 
 const WindowControls = ({ styleOptions }) => {
-    const { isMinimized, stopReading, hideTextReader, minimize, maximize, } = useTextReaderStore();
+    const { isMinimized, stopReading, hideTextReader, minimize, maximize } = useTextReaderStore();
     const handleHideReader = () => {
         hideTextReader();
         stopReading();
@@ -3905,7 +3922,11 @@ function toNumber(value) {
 var lodash_debounce = debounce;
 
 const SeekBar = ({ readerRef, styleOptions }) => {
-    const { isMinimized, elapsedTime, numberOfWords, currentWordIndex, duration, } = useTextReaderStore();
+    const { state } = React.useContext(GlobalStateContext);
+    const { elapsedTime } = state;
+    const { isMinimized, 
+    // elapsedTime,
+    numberOfWords, currentWordIndex, duration, } = useTextReaderStore();
     const debouncedHandleManualSeek = lodash_debounce((value) => {
         const reader = readerRef.current;
         if (!reader)
@@ -4188,7 +4209,15 @@ const VolumeSlider = (_a) => {
 };
 
 const SecondaryControls = ({ readerRef, styleOptions, }) => {
-    const { setRate, setDuration, setVoice, setVolume, isSettingsVisible, hideSettings, showSettings, voice, rate, voices, volume, enablePreserveHighlighting, disablePreserveHighlighting, enableHighlightText, disableHighlightText, enableChunksMode, disableChunksMode, isPreserveHighlighting, isHighlightTextOn, isChunksModeOn, } = useTextReaderStore();
+    const { state, dispatch } = React.useContext(GlobalStateContext);
+    const { voice, voices } = state;
+    const { setRate, setDuration, 
+    // setVoice,
+    setVolume, isSettingsVisible, hideSettings, showSettings, 
+    // voice,
+    rate, 
+    // voices,
+    volume, enablePreserveHighlighting, disablePreserveHighlighting, enableHighlightText, disableHighlightText, enableChunksMode, disableChunksMode, isPreserveHighlighting, isHighlightTextOn, isChunksModeOn, } = useTextReaderStore();
     const reader = readerRef.current;
     const handleRateChange = (value) => {
         if (!reader)
@@ -4199,7 +4228,7 @@ const SecondaryControls = ({ readerRef, styleOptions, }) => {
     };
     const handleVoiceChange = (value) => {
         reader === null || reader === void 0 ? void 0 : reader.editUtterance({ voiceURI: value });
-        setVoice(value);
+        dispatch(setVoice(value));
     };
     const handleVolumeChange = (e) => {
         const target = e.target;
@@ -4263,14 +4292,7 @@ const SecondaryControls = ({ readerRef, styleOptions, }) => {
                         { value: '1.5', name: '1.5x' },
                         { value: '2', name: '2x' },
                     ], onChange: handleRateChange, value: rate, defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
-                React.createElement(CustomSelect, { name: "voice", options: voices === null || voices === void 0 ? void 0 : voices.map((voice) => {
-                        var _a;
-                        return ({
-                            name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
-                            ''),
-                            value: voice.voiceURI,
-                        });
-                    }), onChange: handleVoiceChange, value: voice, defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
+                React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voice, defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
                 React.createElement(SettingsIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings }),
                 React.createElement(InfoIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings })),
             React.createElement("div", { id: "options-wrapper-2" },
@@ -4293,9 +4315,63 @@ const SecondaryControls = ({ readerRef, styleOptions, }) => {
                     React.createElement("h5", null, "Chunks Mode"))))));
 };
 
+const globalState = {
+    isReading: false,
+    isLoading: false,
+    rate: '1',
+    voice: '',
+    voices: [],
+    volume: '0.5',
+    elapsedTime: 0,
+    isPreserveHighlighting: true,
+    isHighlightTextOn: true,
+    isChunksModeOn: false,
+    isMinimized: true,
+    isVisible: true,
+    isSettingsVisible: false,
+    numberOfWords: 0,
+    currentWordIndex: 1,
+    duration: 0,
+};
+const rootReducer = (state, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case 'START_READING': {
+            return Object.assign(Object.assign({}, state), { isReading: true });
+        }
+        case 'STOP_READING': {
+            return Object.assign(Object.assign({}, state), { isReading: false });
+        }
+        case 'SET_VOICE': {
+            return Object.assign(Object.assign({}, state), { voice: payload });
+        }
+        case 'SET_VOICES': {
+            return Object.assign(Object.assign({}, state), { voices: payload });
+        }
+        case 'SET_ELAPSED_TIME': {
+            return Object.assign(Object.assign({}, state), { elapsedTime: payload });
+        }
+        default:
+            return Object.assign({}, state);
+    }
+};
+const GlobalStateContext = React.createContext({
+    state: globalState,
+    dispatch: () => null,
+});
 const TextReader = ({ textContainer, options, styleOptions, }) => {
+    /* Initialize store */
+    const [state, dispatch] = React.useReducer(rootReducer, globalState);
+    const { isReading } = state;
     const isFirstRender = useIsFirstRender();
-    const { isReading, enableChunksMode, stopReading, setVoice, setVoices, setElapsedTime, isMinimized, isVisible, setNumberOfWords, setCurrentWordIndex, setDuration, setIsLoading, } = useTextReaderStore();
+    const { 
+    // isReading,
+    enableChunksMode, 
+    // stopReading,
+    // setVoice,
+    // setVoices,
+    // setElapsedTime,
+    isMinimized, isVisible, setNumberOfWords, setCurrentWordIndex, setDuration, setIsLoading, } = useTextReaderStore();
     const textReaderRef = React.useRef();
     React.useEffect(() => {
         /* Reset browser active speech synth queue on refresh or new load */
@@ -4310,8 +4386,8 @@ const TextReader = ({ textContainer, options, styleOptions, }) => {
                 console.log('Resume');
             }, onReset: (reader) => {
                 console.log('Reset Event called', reader === null || reader === void 0 ? void 0 : reader.state.elapsedTime);
-                stopReading();
-                setElapsedTime(reader === null || reader === void 0 ? void 0 : reader.state.elapsedTime);
+                dispatch(stopReading());
+                dispatch(setElapsedTime(reader === null || reader === void 0 ? void 0 : reader.state.elapsedTime));
                 setCurrentWordIndex(reader === null || reader === void 0 ? void 0 : reader.state.currentWordIndex);
             }, onEnd: (reader) => {
                 console.log('End');
@@ -4321,7 +4397,7 @@ const TextReader = ({ textContainer, options, styleOptions, }) => {
             }, onSeek: (reader, value) => {
                 setCurrentWordIndex(value);
             }, onTimeTick: (reader, value) => {
-                setElapsedTime(reader.state.elapsedTime);
+                dispatch(setElapsedTime(reader.state.elapsedTime));
             }, onWordClick: (reader, e) => {
                 const target = e.target;
                 const idx = +target.dataset.id;
@@ -4330,8 +4406,17 @@ const TextReader = ({ textContainer, options, styleOptions, }) => {
         textReaderRef.current
             .init()
             .then((reader) => {
-            setVoices(reader.state.voices);
-            setVoice(reader.state.voices[0].voiceURI);
+            var _a;
+            const formattedVoices = (_a = reader.state.voices) === null || _a === void 0 ? void 0 : _a.map((voice) => {
+                var _a;
+                return ({
+                    name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
+                    ''),
+                    value: voice.voiceURI,
+                });
+            });
+            dispatch(setVoices(formattedVoices));
+            dispatch(setVoice(reader.state.voices[0].voiceURI));
             setNumberOfWords(reader.state.numberOfWords);
             setDuration(reader.state.duration);
             /* Automatically set chunks mode ON on mobile devices since single word highlighting engine is not supported on mobile browsers */
@@ -4370,11 +4455,12 @@ const TextReader = ({ textContainer, options, styleOptions, }) => {
         else if (reader.isPlaying())
             reader.pause();
     }, [isReading, textContainer, isFirstRender, setIsLoading]);
-    return (React.createElement(Container$1, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
-        React.createElement(WindowControls, { styleOptions: styleOptions }),
-        React.createElement(SeekBar, { readerRef: textReaderRef, styleOptions: styleOptions }),
-        React.createElement(MainControls, { readerRef: textReaderRef, styleOptions: styleOptions }),
-        !isMinimized && (React.createElement(SecondaryControls, { readerRef: textReaderRef, styleOptions: styleOptions }))));
+    return (React.createElement(GlobalStateContext.Provider, { value: { state, dispatch } },
+        React.createElement(Container$1, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
+            React.createElement(WindowControls, { styleOptions: styleOptions }),
+            React.createElement(SeekBar, { readerRef: textReaderRef, styleOptions: styleOptions }),
+            React.createElement(MainControls, { readerRef: textReaderRef, styleOptions: styleOptions }),
+            !isMinimized && (React.createElement(SecondaryControls, { readerRef: textReaderRef, styleOptions: styleOptions })))));
 };
 TextReader.defaultProps = {
     options: {

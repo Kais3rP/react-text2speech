@@ -1,26 +1,35 @@
-import { ControlButton, ControlsContainer, Reset } from './styles';
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import {
 	AiFillFastBackward,
 	AiFillFastForward,
 	AiFillPauseCircle,
 	AiFillPlayCircle,
 } from 'react-icons/ai';
+import { ControlButton, ControlsContainer, Reset } from './styles';
 import { useTextReaderStore } from 'store';
 import { IMainControlsProps } from './types';
+import { GlobalStateContext } from 'components/TextReader/TextReader';
+import { startReading, stopReading } from 'store/actions';
 
 const MainControls: FC<IMainControlsProps> = ({ readerRef, styleOptions }) => {
-	const { isReading, isLoading, isMinimized, startReading, stopReading } =
-		useTextReaderStore();
+	const { state, dispatch } = useContext(GlobalStateContext);
+	const { isReading } = state;
+	const {
+		// isReading,
+		isLoading,
+		isMinimized,
+		// startReading,
+		// stopReading,
+	} = useTextReaderStore();
 
 	const reader = readerRef.current;
 
 	const handleTextReadPlay = () => {
-		startReading();
+		dispatch(startReading());
 	};
 
 	const handleTextReadPause = () => {
-		stopReading();
+		dispatch(stopReading());
 	};
 
 	const handleReset = () => {

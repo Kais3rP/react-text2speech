@@ -107,4 +107,13 @@ declare global {
 		charIndex: number;
 		charLength: number;
 	}
+
+	interface IVoiceInfo {
+		name: string;
+		value: string;
+	}
+
+	/* Store */
+
+	type ActionType = { type: string; payload: any };
 }

@@ -1,15 +1,18 @@
-import React, { ChangeEventHandler, FC } from 'react';
+import React, { ChangeEventHandler, FC, useContext } from 'react';
 
 import { useTextReaderStore } from 'store';
 import { ISeekBarProps } from './types';
 import { Seekbar, SeekbarContainer, Time } from './styles';
 import format from 'format-duration';
 import debounce from 'lodash.debounce';
+import { GlobalStateContext } from 'components/TextReader/TextReader';
 
 const SeekBar: FC<ISeekBarProps> = ({ readerRef, styleOptions }) => {
+	const { state } = useContext(GlobalStateContext);
+	const { elapsedTime } = state;
 	const {
 		isMinimized,
-		elapsedTime,
+		// elapsedTime,
 		numberOfWords,
 		currentWordIndex,
 		duration,
