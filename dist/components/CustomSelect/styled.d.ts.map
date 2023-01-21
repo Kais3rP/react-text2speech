@@ -1,0 +1,1 @@
+{"version":3,"file":"styled.d.ts","sourceRoot":"","sources":["../../../src/components/CustomSelect/styled.ts"],"names":[],"mappings":"AAEA,UAAU,kBAAkB;IAC3B,YAAY,EAAE,aAAa,CAAC;CAC5B;AAED,UAAU,iBAAiB;IAC1B,YAAY,EAAE,aAAa,CAAC;IAC5B,WAAW,EAAE,OAAO,CAAC;CACrB;AAED,eAAO,MAAM,SAAS,oEAErB,CAAC;AAEF,eAAO,MAAM,YAAY,uFA0BxB,CAAC;AAEF,eAAO,MAAM,gBAAgB,mFAgB5B,CAAC"}

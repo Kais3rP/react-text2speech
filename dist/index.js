@@ -5,102 +5,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var React = require('react');
 var EventEmitter = require('events');
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
-var EventEmitter__default = /*#__PURE__*/_interopDefaultLegacy(EventEmitter);
-
-var DefaultContext = {
-  color: undefined,
-  size: undefined,
-  className: undefined,
-  style: undefined,
-  attr: undefined
-};
-var IconContext = React__default["default"].createContext && React__default["default"].createContext(DefaultContext);
-
-var __assign = undefined && undefined.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
-var __rest$1 = undefined && undefined.__rest || function (s, e) {
-  var t = {};
-
-  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-
-  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
-  }
-  return t;
-};
-
-function Tree2Element(tree) {
-  return tree && tree.map(function (node, i) {
-    return React__default["default"].createElement(node.tag, __assign({
-      key: i
-    }, node.attr), Tree2Element(node.child));
-  });
-}
-
-function GenIcon(data) {
-  return function (props) {
-    return React__default["default"].createElement(IconBase, __assign({
-      attr: __assign({}, data.attr)
-    }, props), Tree2Element(data.child));
-  };
-}
-function IconBase(props) {
-  var elem = function (conf) {
-    var attr = props.attr,
-        size = props.size,
-        title = props.title,
-        svgProps = __rest$1(props, ["attr", "size", "title"]);
-
-    var computedSize = size || conf.size || "1em";
-    var className;
-    if (conf.className) className = conf.className;
-    if (props.className) className = (className ? className + ' ' : '') + props.className;
-    return React__default["default"].createElement("svg", __assign({
-      stroke: "currentColor",
-      fill: "currentColor",
-      strokeWidth: "0"
-    }, conf.attr, attr, svgProps, {
-      className: className,
-      style: __assign(__assign({
-        color: props.color || conf.color
-      }, conf.style), props.style),
-      height: computedSize,
-      width: computedSize,
-      xmlns: "http://www.w3.org/2000/svg"
-    }), title && React__default["default"].createElement("title", null, title), props.children);
-  };
-
-  return IconContext !== undefined ? React__default["default"].createElement(IconContext.Consumer, null, function (conf) {
-    return elem(conf);
-  }) : elem(DefaultContext);
-}
-
-// THIS FILE IS AUTO GENERATED
-function AiFillFastBackward (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M517.6 273.5L230.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm320 0L550.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm-620-25.5h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
-}function AiFillFastForward (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M793.8 499.3L506.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.6c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8a16.14 16.14 0 0 0 0-25.4zm-320 0L186.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.5c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8c4.1-3.2 6.2-8 6.2-12.7 0-4.6-2.1-9.4-6.2-12.6zM857.6 248h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
-}function AiFillPauseCircle (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-80 600c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304zm224 0c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304z"}}]})(props);
-}function AiFillPlayCircle (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z"}}]})(props);
-}
-
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -116,7 +20,7 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-function __rest(s, e) {
+function __rest$1(s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
         t[p] = s[p];
@@ -307,7 +211,7 @@ Utils.__join__ = function (fn) {
     return str;
 };
 
-class SpeechSynth extends EventEmitter__default["default"] {
+class SpeechSynth extends EventEmitter {
     /*
     The constructor only required @Param is the TextContainer HTMLElement,
     the second @Param is an optional object and all its properties are optional as well
@@ -1104,8 +1008,8 @@ exports["default"] = createStore;
 
 unwrapExports(vanilla);
 
-function h$2(a,b){return a===b&&(0!==a||1/a===1/b)||a!==a&&b!==b}var k$3="function"===typeof Object.is?Object.is:h$2,l$2=React__default["default"].useState,m$1=React__default["default"].useEffect,n$2=React__default["default"].useLayoutEffect,p$3=React__default["default"].useDebugValue;function q$4(a,b){var d=b(),f=l$2({inst:{value:d,getSnapshot:b}}),c=f[0].inst,g=f[1];n$2(function(){c.value=d;c.getSnapshot=b;r$3(c)&&g({inst:c});},[a,d,b]);m$1(function(){r$3(c)&&g({inst:c});return a(function(){r$3(c)&&g({inst:c});})},[a]);p$3(d);return d}
-function r$3(a){var b=a.getSnapshot;a=a.value;try{var d=b();return !k$3(a,d)}catch(f){return !0}}function t$3(a,b){return b()}var u$2="undefined"===typeof window||"undefined"===typeof window.document||"undefined"===typeof window.document.createElement?t$3:q$4;var useSyncExternalStore=void 0!==React__default["default"].useSyncExternalStore?React__default["default"].useSyncExternalStore:u$2;
+function h$2(a,b){return a===b&&(0!==a||1/a===1/b)||a!==a&&b!==b}var k$3="function"===typeof Object.is?Object.is:h$2,l$2=React.useState,m$1=React.useEffect,n$2=React.useLayoutEffect,p$3=React.useDebugValue;function q$4(a,b){var d=b(),f=l$2({inst:{value:d,getSnapshot:b}}),c=f[0].inst,g=f[1];n$2(function(){c.value=d;c.getSnapshot=b;r$3(c)&&g({inst:c});},[a,d,b]);m$1(function(){r$3(c)&&g({inst:c});return a(function(){r$3(c)&&g({inst:c});})},[a]);p$3(d);return d}
+function r$3(a){var b=a.getSnapshot;a=a.value;try{var d=b();return !k$3(a,d)}catch(f){return !0}}function t$3(a,b){return b()}var u$2="undefined"===typeof window||"undefined"===typeof window.document||"undefined"===typeof window.document.createElement?t$3:q$4;var useSyncExternalStore=void 0!==React.useSyncExternalStore?React.useSyncExternalStore:u$2;
 
 var useSyncExternalStoreShim_production_min = {
 	useSyncExternalStore: useSyncExternalStore
@@ -1124,9 +1028,9 @@ if (
 ) {
   __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
 }
-          var React = React__default["default"];
+          var React$1 = React;
 
-var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+var ReactSharedInternals = React$1.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
 function error(format) {
   {
@@ -1178,10 +1082,10 @@ var objectIs = typeof Object.is === 'function' ? Object.is : is;
 
 // dispatch for CommonJS interop named imports.
 
-var useState = React.useState,
-    useEffect = React.useEffect,
-    useLayoutEffect = React.useLayoutEffect,
-    useDebugValue = React.useDebugValue;
+var useState = React$1.useState,
+    useEffect = React$1.useEffect,
+    useLayoutEffect = React$1.useLayoutEffect,
+    useDebugValue = React$1.useDebugValue;
 var didWarnOld18Alpha = false;
 var didWarnUncachedGetSnapshot = false; // Disclaimer: This shim breaks many of the rules of React, and only works
 // because of a very particular set of implementation details and assumptions
@@ -1201,7 +1105,7 @@ function useSyncExternalStore(subscribe, getSnapshot, // Note: The shim does not
 getServerSnapshot) {
   {
     if (!didWarnOld18Alpha) {
-      if (React.startTransition !== undefined) {
+      if (React$1.startTransition !== undefined) {
         didWarnOld18Alpha = true;
 
         error('You are using an outdated, pre-release alpha of React 18 that ' + 'does not support useSyncExternalStore. The ' + 'use-sync-external-store shim will not work correctly. Upgrade ' + 'to a newer pre-release.');
@@ -1324,7 +1228,7 @@ var canUseDOM = !!(typeof window !== 'undefined' && typeof window.document !== '
 var isServerEnvironment = !canUseDOM;
 
 var shim = isServerEnvironment ? useSyncExternalStore$1 : useSyncExternalStore;
-var useSyncExternalStore$2 = React.useSyncExternalStore !== undefined ? React.useSyncExternalStore : shim;
+var useSyncExternalStore$2 = React$1.useSyncExternalStore !== undefined ? React$1.useSyncExternalStore : shim;
 
 exports.useSyncExternalStore = useSyncExternalStore$2;
           /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
@@ -1350,7 +1254,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 });
 
-function p$2(a,b){return a===b&&(0!==a||1/a===1/b)||a!==a&&b!==b}var q$3="function"===typeof Object.is?Object.is:p$2,r$2=shim.useSyncExternalStore,t$2=React__default["default"].useRef,u$1=React__default["default"].useEffect,v$3=React__default["default"].useMemo,w$3=React__default["default"].useDebugValue;
+function p$2(a,b){return a===b&&(0!==a||1/a===1/b)||a!==a&&b!==b}var q$3="function"===typeof Object.is?Object.is:p$2,r$2=shim.useSyncExternalStore,t$2=React.useRef,u$1=React.useEffect,v$3=React.useMemo,w$3=React.useDebugValue;
 var useSyncExternalStoreWithSelector=function(a,b,e,l,g){var c=t$2(null);if(null===c.current){var f={hasValue:!1,value:null};c.current=f;}else f=c.current;c=v$3(function(){function a(a){if(!c){c=!0;d=a;a=l(a);if(void 0!==g&&f.hasValue){var b=f.value;if(g(b,a))return k=b}return k=a}b=k;if(q$3(d,a))return b;var e=l(a);if(void 0!==g&&g(b,e))return b;d=a;return k=e}var c=!1,d,k,m=void 0===e?null:e;return [function(){return a(b())},null===m?void 0:function(){return a(m())}]},[b,e,l,g]);var d=r$2(a,c[0],c[1]);
 u$1(function(){f.hasValue=!0;f.value=d;},[d]);w$3(d);return d};
 
@@ -1371,7 +1275,7 @@ if (
 ) {
   __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
 }
-          var React = React__default["default"];
+          var React$1 = React;
 var shim$1 = shim;
 
 /**
@@ -1389,10 +1293,10 @@ var useSyncExternalStore = shim$1.useSyncExternalStore;
 
 // for CommonJS interop.
 
-var useRef = React.useRef,
-    useEffect = React.useEffect,
-    useMemo = React.useMemo,
-    useDebugValue = React.useDebugValue; // Same as useSyncExternalStore, but supports selector and isEqual arguments.
+var useRef = React$1.useRef,
+    useEffect = React$1.useEffect,
+    useMemo = React$1.useMemo,
+    useDebugValue = React$1.useDebugValue; // Same as useSyncExternalStore, but supports selector and isEqual arguments.
 
 function useSyncExternalStoreWithSelector(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
   // Use this to track the rendered snapshot.
@@ -1545,7 +1449,7 @@ function useStore(api, selector, equalityFn) {
   }
 
   var slice = useSyncExternalStoreWithSelector(api.subscribe, api.getState, api.getServerState || api.getState, selector, equalityFn);
-  React__default["default"].useDebugValue(slice);
+  React.useDebugValue(slice);
   return slice;
 }
 
@@ -2119,18 +2023,121 @@ const useTextReaderStore = create()(middleware_2(middleware_3((set) => ({
     ].includes(key))),
 })));
 
-// THIS FILE IS AUTO GENERATED
-function BiReset (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M12 16c1.671 0 3-1.331 3-3s-1.329-3-3-3-3 1.331-3 3 1.329 3 3 3z"}},{"tag":"path","attr":{"d":"M20.817 11.186a8.94 8.94 0 0 0-1.355-3.219 9.053 9.053 0 0 0-2.43-2.43 8.95 8.95 0 0 0-3.219-1.355 9.028 9.028 0 0 0-1.838-.18V2L8 5l3.975 3V6.002c.484-.002.968.044 1.435.14a6.961 6.961 0 0 1 2.502 1.053 7.005 7.005 0 0 1 1.892 1.892A6.967 6.967 0 0 1 19 13a7.032 7.032 0 0 1-.55 2.725 7.11 7.11 0 0 1-.644 1.188 7.2 7.2 0 0 1-.858 1.039 7.028 7.028 0 0 1-3.536 1.907 7.13 7.13 0 0 1-2.822 0 6.961 6.961 0 0 1-2.503-1.054 7.002 7.002 0 0 1-1.89-1.89A6.996 6.996 0 0 1 5 13H3a9.02 9.02 0 0 0 1.539 5.034 9.096 9.096 0 0 0 2.428 2.428A8.95 8.95 0 0 0 12 22a9.09 9.09 0 0 0 1.814-.183 9.014 9.014 0 0 0 3.218-1.355 8.886 8.886 0 0 0 1.331-1.099 9.228 9.228 0 0 0 1.1-1.332A8.952 8.952 0 0 0 21 13a9.09 9.09 0 0 0-.183-1.814z"}}]})(props);
-}function BiVolumeFull (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M16 21c3.527-1.547 5.999-4.909 5.999-9S19.527 4.547 16 3v2c2.387 1.386 3.999 4.047 3.999 7S18.387 17.614 16 19v2z"}},{"tag":"path","attr":{"d":"M16 7v10c1.225-1.1 2-3.229 2-5s-.775-3.9-2-5zM4 17h2.697l5.748 3.832a1.004 1.004 0 0 0 1.027.05A1 1 0 0 0 14 20V4a1 1 0 0 0-1.554-.832L6.697 7H4c-1.103 0-2 .897-2 2v6c0 1.103.897 2 2 2zm0-8h3c.033 0 .061-.016.093-.019a1.027 1.027 0 0 0 .38-.116c.026-.015.057-.017.082-.033L12 5.868v12.264l-4.445-2.964c-.025-.017-.056-.02-.082-.033a.986.986 0 0 0-.382-.116C7.059 15.016 7.032 15 7 15H4V9z"}}]})(props);
+const useOnClickOutside = (ref, handler) => {
+    React.useEffect(() => {
+        const listener = (event) => {
+            // Do nothing if clicking ref's element or descendent elements
+            if (!ref.current || ref.current.contains(event === null || event === void 0 ? void 0 : event.target)) {
+                return;
+            }
+            handler(event);
+        };
+        document.addEventListener('mousedown', listener);
+        document.addEventListener('touchstart', listener);
+        return () => {
+            document.removeEventListener('mousedown', listener);
+            document.removeEventListener('touchstart', listener);
+        };
+    }, 
+    // Add ref and handler to effect dependencies
+    // It's worth noting that because passed in handler is a new ...
+    // ... function on every render that will cause this effect ...
+    // ... callback/cleanup to run every render. It's not a big deal ...
+    // ... but to optimize you can wrap handler in useCallback before ...
+    // ... passing it into this hook.
+    [ref, handler]);
+};
+const useIsFirstRender = () => {
+    const ref = React.useRef(true);
+    React.useEffect(() => {
+        ref.current = false;
+    }, []);
+    return ref.current;
+};
+
+var DefaultContext = {
+  color: undefined,
+  size: undefined,
+  className: undefined,
+  style: undefined,
+  attr: undefined
+};
+var IconContext = React.createContext && React.createContext(DefaultContext);
+
+var __assign = undefined && undefined.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __rest = undefined && undefined.__rest || function (s, e) {
+  var t = {};
+
+  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+
+  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  }
+  return t;
+};
+
+function Tree2Element(tree) {
+  return tree && tree.map(function (node, i) {
+    return React.createElement(node.tag, __assign({
+      key: i
+    }, node.attr), Tree2Element(node.child));
+  });
+}
+
+function GenIcon(data) {
+  return function (props) {
+    return React.createElement(IconBase, __assign({
+      attr: __assign({}, data.attr)
+    }, props), Tree2Element(data.child));
+  };
+}
+function IconBase(props) {
+  var elem = function (conf) {
+    var attr = props.attr,
+        size = props.size,
+        title = props.title,
+        svgProps = __rest(props, ["attr", "size", "title"]);
+
+    var computedSize = size || conf.size || "1em";
+    var className;
+    if (conf.className) className = conf.className;
+    if (props.className) className = (className ? className + ' ' : '') + props.className;
+    return React.createElement("svg", __assign({
+      stroke: "currentColor",
+      fill: "currentColor",
+      strokeWidth: "0"
+    }, conf.attr, attr, svgProps, {
+      className: className,
+      style: __assign(__assign({
+        color: props.color || conf.color
+      }, conf.style), props.style),
+      height: computedSize,
+      width: computedSize,
+      xmlns: "http://www.w3.org/2000/svg"
+    }), title && React.createElement("title", null, title), props.children);
+  };
+
+  return IconContext !== undefined ? React.createElement(IconContext.Consumer, null, function (conf) {
+    return elem(conf);
+  }) : elem(DefaultContext);
 }
 
 // THIS FILE IS AUTO GENERATED
-function FiMaximize (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"}}]})(props);
-}function FiMinimize (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"}}]})(props);
+function VscGithub (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"currentColor"},"child":[{"tag":"path","attr":{"d":"M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24zm3.163 21.783h-.093a.513.513 0 0 1-.382-.14.513.513 0 0 1-.14-.372v-1.406c.006-.467.01-.94.01-1.416a3.693 3.693 0 0 0-.151-1.028 1.832 1.832 0 0 0-.542-.875 8.014 8.014 0 0 0 2.038-.471 4.051 4.051 0 0 0 1.466-.964c.407-.427.71-.943.885-1.506a6.77 6.77 0 0 0 .3-2.13 4.138 4.138 0 0 0-.26-1.476 3.892 3.892 0 0 0-.795-1.284 2.81 2.81 0 0 0 .162-.582c.033-.2.05-.402.05-.604 0-.26-.03-.52-.09-.773a5.309 5.309 0 0 0-.221-.763.293.293 0 0 0-.111-.02h-.11c-.23.002-.456.04-.674.111a5.34 5.34 0 0 0-.703.26 6.503 6.503 0 0 0-.661.343c-.215.127-.405.249-.573.362a9.578 9.578 0 0 0-5.143 0 13.507 13.507 0 0 0-.572-.362 6.022 6.022 0 0 0-.672-.342 4.516 4.516 0 0 0-.705-.261 2.203 2.203 0 0 0-.662-.111h-.11a.29.29 0 0 0-.11.02 5.844 5.844 0 0 0-.23.763c-.054.254-.08.513-.081.773 0 .202.017.404.051.604.033.199.086.394.16.582A3.888 3.888 0 0 0 5.702 10a4.142 4.142 0 0 0-.263 1.476 6.871 6.871 0 0 0 .292 2.12c.181.563.483 1.08.884 1.516.415.422.915.75 1.466.964.653.25 1.337.41 2.033.476a1.828 1.828 0 0 0-.452.633 2.99 2.99 0 0 0-.2.744 2.754 2.754 0 0 1-1.175.27 1.788 1.788 0 0 1-1.065-.3 2.904 2.904 0 0 1-.752-.824 3.1 3.1 0 0 0-.292-.382 2.693 2.693 0 0 0-.372-.343 1.841 1.841 0 0 0-.432-.24 1.2 1.2 0 0 0-.481-.101c-.04.001-.08.005-.12.01a.649.649 0 0 0-.162.02.408.408 0 0 0-.13.06.116.116 0 0 0-.06.1.33.33 0 0 0 .14.242c.093.074.17.131.232.171l.03.021c.133.103.261.214.382.333.112.098.213.209.3.33.09.119.168.246.231.381.073.134.15.288.231.463.188.474.522.875.954 1.145.453.243.961.364 1.476.351.174 0 .349-.01.522-.03.172-.028.343-.057.515-.091v1.743a.5.5 0 0 1-.533.521h-.062a10.286 10.286 0 1 1 6.324 0v.005z"}}]})(props);
 }
 
 /** @license React v16.13.1
@@ -3200,138 +3207,217 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 
 var hoistNonReactStatics_cjs = hoistNonReactStatics;
 
-function y(){return (y=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r]);}return e}).apply(this,arguments)}var v=function(e,t){for(var n=[e[0]],r=0,o=t.length;r<o;r+=1)n.push(t[r],e[r+1]);return n},g=function(t){return null!==t&&"object"==typeof t&&"[object Object]"===(t.toString?t.toString():Object.prototype.toString.call(t))&&!reactIs_28(t)},S=Object.freeze([]),w=Object.freeze({});function E(e){return "function"==typeof e}function b(e){return "production"!==process.env.NODE_ENV&&"string"==typeof e&&e||e.displayName||e.name||"Component"}function _(e){return e&&"string"==typeof e.styledComponentId}var N="undefined"!=typeof process&&(process.env.REACT_APP_SC_ATTR||process.env.SC_ATTR)||"data-styled",C="undefined"!=typeof window&&"HTMLElement"in window,I=Boolean("boolean"==typeof SC_DISABLE_SPEEDY?SC_DISABLE_SPEEDY:"undefined"!=typeof process&&void 0!==process.env.REACT_APP_SC_DISABLE_SPEEDY&&""!==process.env.REACT_APP_SC_DISABLE_SPEEDY?"false"!==process.env.REACT_APP_SC_DISABLE_SPEEDY&&process.env.REACT_APP_SC_DISABLE_SPEEDY:"undefined"!=typeof process&&void 0!==process.env.SC_DISABLE_SPEEDY&&""!==process.env.SC_DISABLE_SPEEDY?"false"!==process.env.SC_DISABLE_SPEEDY&&process.env.SC_DISABLE_SPEEDY:"production"!==process.env.NODE_ENV),O="production"!==process.env.NODE_ENV?{1:"Cannot create styled-component for component: %s.\n\n",2:"Can't collect styles once you've consumed a `ServerStyleSheet`'s styles! `ServerStyleSheet` is a one off instance for each server-side render cycle.\n\n- Are you trying to reuse it across renders?\n- Are you accidentally calling collectStyles twice?\n\n",3:"Streaming SSR is only supported in a Node.js environment; Please do not try to call this method in the browser.\n\n",4:"The `StyleSheetManager` expects a valid target or sheet prop!\n\n- Does this error occur on the client and is your target falsy?\n- Does this error occur on the server and is the sheet falsy?\n\n",5:"The clone method cannot be used on the client!\n\n- Are you running in a client-like environment on the server?\n- Are you trying to run SSR on the client?\n\n",6:"Trying to insert a new style tag, but the given Node is unmounted!\n\n- Are you using a custom target that isn't mounted?\n- Does your document not have a valid head element?\n- Have you accidentally removed a style tag manually?\n\n",7:'ThemeProvider: Please return an object from your "theme" prop function, e.g.\n\n```js\ntheme={() => ({})}\n```\n\n',8:'ThemeProvider: Please make your "theme" prop an object.\n\n',9:"Missing document `<head>`\n\n",10:"Cannot find a StyleSheet instance. Usually this happens if there are multiple copies of styled-components loaded at once. Check out this issue for how to troubleshoot and fix the common cases where this situation can happen: https://github.com/styled-components/styled-components/issues/1941#issuecomment-417862021\n\n",11:"_This error was replaced with a dev-time warning, it will be deleted for v4 final._ [createGlobalStyle] received children which will not be rendered. Please use the component without passing children elements.\n\n",12:"It seems you are interpolating a keyframe declaration (%s) into an untagged string. This was supported in styled-components v3, but is not longer supported in v4 as keyframes are now injected on-demand. Please wrap your string in the css\\`\\` helper which ensures the styles are injected correctly. See https://www.styled-components.com/docs/api#css\n\n",13:"%s is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details.\n\n",14:'ThemeProvider: "theme" prop is required.\n\n',15:"A stylis plugin has been supplied that is not named. We need a name for each plugin to be able to prevent styling collisions between different stylis configurations within the same app. Before you pass your plugin to `<StyleSheetManager stylisPlugins={[]}>`, please make sure each plugin is uniquely-named, e.g.\n\n```js\nObject.defineProperty(importedPlugin, 'name', { value: 'some-unique-name' });\n```\n\n",16:"Reached the limit of how many styled components may be created at group %s.\nYou may only create up to 1,073,741,824 components. If you're creating components dynamically,\nas for instance in your render method then you may be running into this limitation.\n\n",17:"CSSStyleSheet could not be found on HTMLStyleElement.\nHas styled-components' style tag been unmounted or altered by another script?\n"}:{};function R(){for(var e=arguments.length<=0?void 0:arguments[0],t=[],n=1,r=arguments.length;n<r;n+=1)t.push(n<0||arguments.length<=n?void 0:arguments[n]);return t.forEach((function(t){e=e.replace(/%[a-z]/,t);})),e}function D(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];throw "production"===process.env.NODE_ENV?new Error("An error occurred. See https://git.io/JUIaE#"+e+" for more information."+(n.length>0?" Args: "+n.join(", "):"")):new Error(R.apply(void 0,[O[e]].concat(n)).trim())}var j=function(){function e(e){this.groupSizes=new Uint32Array(512),this.length=512,this.tag=e;}var t=e.prototype;return t.indexOfGroup=function(e){for(var t=0,n=0;n<e;n++)t+=this.groupSizes[n];return t},t.insertRules=function(e,t){if(e>=this.groupSizes.length){for(var n=this.groupSizes,r=n.length,o=r;e>=o;)(o<<=1)<0&&D(16,""+e);this.groupSizes=new Uint32Array(o),this.groupSizes.set(n),this.length=o;for(var s=r;s<o;s++)this.groupSizes[s]=0;}for(var i=this.indexOfGroup(e+1),a=0,c=t.length;a<c;a++)this.tag.insertRule(i,t[a])&&(this.groupSizes[e]++,i++);},t.clearGroup=function(e){if(e<this.length){var t=this.groupSizes[e],n=this.indexOfGroup(e),r=n+t;this.groupSizes[e]=0;for(var o=n;o<r;o++)this.tag.deleteRule(n);}},t.getGroup=function(e){var t="";if(e>=this.length||0===this.groupSizes[e])return t;for(var n=this.groupSizes[e],r=this.indexOfGroup(e),o=r+n,s=r;s<o;s++)t+=this.tag.getRule(s)+"/*!sc*/\n";return t},e}(),T=new Map,x=new Map,k=1,V=function(e){if(T.has(e))return T.get(e);for(;x.has(k);)k++;var t=k++;return "production"!==process.env.NODE_ENV&&((0|t)<0||t>1<<30)&&D(16,""+t),T.set(e,t),x.set(t,e),t},z=function(e){return x.get(e)},B=function(e,t){t>=k&&(k=t+1),T.set(e,t),x.set(t,e);},M="style["+N+'][data-styled-version="5.3.5"]',G=new RegExp("^"+N+'\\.g(\\d+)\\[id="([\\w\\d-]+)"\\].*?"([^"]*)'),L=function(e,t,n){for(var r,o=n.split(","),s=0,i=o.length;s<i;s++)(r=o[s])&&e.registerName(t,r);},F=function(e,t){for(var n=(t.textContent||"").split("/*!sc*/\n"),r=[],o=0,s=n.length;o<s;o++){var i=n[o].trim();if(i){var a=i.match(G);if(a){var c=0|parseInt(a[1],10),u=a[2];0!==c&&(B(u,c),L(e,u,a[3]),e.getTag().insertRules(c,r)),r.length=0;}else r.push(i);}}},Y=function(){return "undefined"!=typeof window&&void 0!==window.__webpack_nonce__?window.__webpack_nonce__:null},q=function(e){var t=document.head,n=e||t,r=document.createElement("style"),o=function(e){for(var t=e.childNodes,n=t.length;n>=0;n--){var r=t[n];if(r&&1===r.nodeType&&r.hasAttribute(N))return r}}(n),s=void 0!==o?o.nextSibling:null;r.setAttribute(N,"active"),r.setAttribute("data-styled-version","5.3.5");var i=Y();return i&&r.setAttribute("nonce",i),n.insertBefore(r,s),r},H=function(){function e(e){var t=this.element=q(e);t.appendChild(document.createTextNode("")),this.sheet=function(e){if(e.sheet)return e.sheet;for(var t=document.styleSheets,n=0,r=t.length;n<r;n++){var o=t[n];if(o.ownerNode===e)return o}D(17);}(t),this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){try{return this.sheet.insertRule(t,e),this.length++,!0}catch(e){return !1}},t.deleteRule=function(e){this.sheet.deleteRule(e),this.length--;},t.getRule=function(e){var t=this.sheet.cssRules[e];return void 0!==t&&"string"==typeof t.cssText?t.cssText:""},e}(),$=function(){function e(e){var t=this.element=q(e);this.nodes=t.childNodes,this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){if(e<=this.length&&e>=0){var n=document.createTextNode(t),r=this.nodes[e];return this.element.insertBefore(n,r||null),this.length++,!0}return !1},t.deleteRule=function(e){this.element.removeChild(this.nodes[e]),this.length--;},t.getRule=function(e){return e<this.length?this.nodes[e].textContent:""},e}(),W=function(){function e(e){this.rules=[],this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){return e<=this.length&&(this.rules.splice(e,0,t),this.length++,!0)},t.deleteRule=function(e){this.rules.splice(e,1),this.length--;},t.getRule=function(e){return e<this.length?this.rules[e]:""},e}(),U=C,J={isServer:!C,useCSSOMInjection:!I},X=function(){function e(e,t,n){void 0===e&&(e=w),void 0===t&&(t={}),this.options=y({},J,{},e),this.gs=t,this.names=new Map(n),this.server=!!e.isServer,!this.server&&C&&U&&(U=!1,function(e){for(var t=document.querySelectorAll(M),n=0,r=t.length;n<r;n++){var o=t[n];o&&"active"!==o.getAttribute(N)&&(F(e,o),o.parentNode&&o.parentNode.removeChild(o));}}(this));}e.registerId=function(e){return V(e)};var t=e.prototype;return t.reconstructWithOptions=function(t,n){return void 0===n&&(n=!0),new e(y({},this.options,{},t),this.gs,n&&this.names||void 0)},t.allocateGSInstance=function(e){return this.gs[e]=(this.gs[e]||0)+1},t.getTag=function(){return this.tag||(this.tag=(n=(t=this.options).isServer,r=t.useCSSOMInjection,o=t.target,e=n?new W(o):r?new H(o):new $(o),new j(e)));var e,t,n,r,o;},t.hasNameForId=function(e,t){return this.names.has(e)&&this.names.get(e).has(t)},t.registerName=function(e,t){if(V(e),this.names.has(e))this.names.get(e).add(t);else {var n=new Set;n.add(t),this.names.set(e,n);}},t.insertRules=function(e,t,n){this.registerName(e,t),this.getTag().insertRules(V(e),n);},t.clearNames=function(e){this.names.has(e)&&this.names.get(e).clear();},t.clearRules=function(e){this.getTag().clearGroup(V(e)),this.clearNames(e);},t.clearTag=function(){this.tag=void 0;},t.toString=function(){return function(e){for(var t=e.getTag(),n=t.length,r="",o=0;o<n;o++){var s=z(o);if(void 0!==s){var i=e.names.get(s),a=t.getGroup(o);if(i&&a&&i.size){var c=N+".g"+o+'[id="'+s+'"]',u="";void 0!==i&&i.forEach((function(e){e.length>0&&(u+=e+",");})),r+=""+a+c+'{content:"'+u+'"}/*!sc*/\n';}}}return r}(this)},e}(),Z=/(a)(d)/gi,K=function(e){return String.fromCharCode(e+(e>25?39:97))};function Q(e){var t,n="";for(t=Math.abs(e);t>52;t=t/52|0)n=K(t%52)+n;return (K(t%52)+n).replace(Z,"$1-$2")}var ee=function(e,t){for(var n=t.length;n;)e=33*e^t.charCodeAt(--n);return e},te=function(e){return ee(5381,e)};function ne(e){for(var t=0;t<e.length;t+=1){var n=e[t];if(E(n)&&!_(n))return !1}return !0}var re=te("5.3.5"),oe=function(){function e(e,t,n){this.rules=e,this.staticRulesId="",this.isStatic="production"===process.env.NODE_ENV&&(void 0===n||n.isStatic)&&ne(e),this.componentId=t,this.baseHash=ee(re,t),this.baseStyle=n,X.registerId(t);}return e.prototype.generateAndInjectStyles=function(e,t,n){var r=this.componentId,o=[];if(this.baseStyle&&o.push(this.baseStyle.generateAndInjectStyles(e,t,n)),this.isStatic&&!n.hash)if(this.staticRulesId&&t.hasNameForId(r,this.staticRulesId))o.push(this.staticRulesId);else {var s=_e(this.rules,e,t,n).join(""),i=Q(ee(this.baseHash,s)>>>0);if(!t.hasNameForId(r,i)){var a=n(s,"."+i,void 0,r);t.insertRules(r,i,a);}o.push(i),this.staticRulesId=i;}else {for(var c=this.rules.length,u=ee(this.baseHash,n.hash),l="",d=0;d<c;d++){var h=this.rules[d];if("string"==typeof h)l+=h,"production"!==process.env.NODE_ENV&&(u=ee(u,h+d));else if(h){var p=_e(h,e,t,n),f=Array.isArray(p)?p.join(""):p;u=ee(u,f+d),l+=f;}}if(l){var m=Q(u>>>0);if(!t.hasNameForId(r,m)){var y=n(l,"."+m,void 0,r);t.insertRules(r,m,y);}o.push(m);}}return o.join(" ")},e}(),se=/^\s*\/\/.*$/gm,ie=[":","[",".","#"];function ae(e){var t,n,r,o,s=void 0===e?w:e,i=s.options,a=void 0===i?w:i,c=s.plugins,u=void 0===c?S:c,l=new stylis_min(a),d=[],p=function(e){function t(t){if(t)try{e(t+"}");}catch(e){}}return function(n,r,o,s,i,a,c,u,l,d){switch(n){case 1:if(0===l&&64===r.charCodeAt(0))return e(r+";"),"";break;case 2:if(0===u)return r+"/*|*/";break;case 3:switch(u){case 102:case 112:return e(o[0]+r),"";default:return r+(0===d?"/*|*/":"")}case-2:r.split("/*|*/}").forEach(t);}}}((function(e){d.push(e);})),f=function(e,r,s){return 0===r&&-1!==ie.indexOf(s[n.length])||s.match(o)?e:"."+t};function m(e,s,i,a){void 0===a&&(a="&");var c=e.replace(se,""),u=s&&i?i+" "+s+" { "+c+" }":c;return t=a,n=s,r=new RegExp("\\"+n+"\\b","g"),o=new RegExp("(\\"+n+"\\b){2,}"),l(i||!s?"":s,u)}return l.use([].concat(u,[function(e,t,o){2===e&&o.length&&o[0].lastIndexOf(n)>0&&(o[0]=o[0].replace(r,f));},p,function(e){if(-2===e){var t=d;return d=[],t}}])),m.hash=u.length?u.reduce((function(e,t){return t.name||D(15),ee(e,t.name)}),5381).toString():"",m}var ce=React__default["default"].createContext();ce.Consumer;var le=React__default["default"].createContext(),de=(le.Consumer,new X),he=ae();function pe(){return React.useContext(ce)||de}function fe(){return React.useContext(le)||he}var ye=function(){function e(e,t){var n=this;this.inject=function(e,t){void 0===t&&(t=he);var r=n.name+t.hash;e.hasNameForId(n.id,r)||e.insertRules(n.id,r,t(n.rules,r,"@keyframes"));},this.toString=function(){return D(12,String(n.name))},this.name=e,this.id="sc-keyframes-"+e,this.rules=t;}return e.prototype.getName=function(e){return void 0===e&&(e=he),this.name+e.hash},e}(),ve=/([A-Z])/,ge=/([A-Z])/g,Se=/^ms-/,we=function(e){return "-"+e.toLowerCase()};function Ee(e){return ve.test(e)?e.replace(ge,we).replace(Se,"-ms-"):e}var be=function(e){return null==e||!1===e||""===e};function _e(e,n,r,o){if(Array.isArray(e)){for(var s,i=[],a=0,c=e.length;a<c;a+=1)""!==(s=_e(e[a],n,r,o))&&(Array.isArray(s)?i.push.apply(i,s):i.push(s));return i}if(be(e))return "";if(_(e))return "."+e.styledComponentId;if(E(e)){if("function"!=typeof(l=e)||l.prototype&&l.prototype.isReactComponent||!n)return e;var u=e(n);return "production"!==process.env.NODE_ENV&&reactIs_18(u)&&console.warn(b(e)+" is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details."),_e(u,n,r,o)}var l;return e instanceof ye?r?(e.inject(r,o),e.getName(o)):e:g(e)?function e(t,n){var r,o,s=[];for(var i in t)t.hasOwnProperty(i)&&!be(t[i])&&(Array.isArray(t[i])&&t[i].isCss||E(t[i])?s.push(Ee(i)+":",t[i],";"):g(t[i])?s.push.apply(s,e(t[i],i)):s.push(Ee(i)+": "+(r=i,null==(o=t[i])||"boolean"==typeof o||""===o?"":"number"!=typeof o||0===o||r in unitlessKeys?String(o).trim():o+"px")+";"));return n?[n+" {"].concat(s,["}"]):s}(e):e.toString()}var Ne=function(e){return Array.isArray(e)&&(e.isCss=!0),e};function Ae(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];return E(e)||g(e)?Ne(_e(v(S,[e].concat(n)))):0===n.length&&1===e.length&&"string"==typeof e[0]?e:Ne(_e(v(e,n)))}var Ce=/invalid hook call/i,Ie=new Set,Pe=function(e,t){if("production"!==process.env.NODE_ENV){var n="The component "+e+(t?' with the id of "'+t+'"':"")+" has been created dynamically.\nYou may see this warning because you've called styled inside another component.\nTo resolve this only create new StyledComponents outside of any render method and function component.",r=console.error;try{var o=!0;console.error=function(e){if(Ce.test(e))o=!1,Ie.delete(n);else {for(var t=arguments.length,s=new Array(t>1?t-1:0),i=1;i<t;i++)s[i-1]=arguments[i];r.apply(void 0,[e].concat(s));}},React.useRef(),o&&!Ie.has(n)&&(console.warn(n),Ie.add(n));}catch(e){Ce.test(e.message)&&Ie.delete(n);}finally{console.error=r;}}},Oe=function(e,t,n){return void 0===n&&(n=w),e.theme!==n.theme&&e.theme||t||n.theme},Re=/[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+/g,De=/(^-|-$)/g;function je(e){return e.replace(Re,"-").replace(De,"")}var Te=function(e){return Q(te(e)>>>0)};function xe(e){return "string"==typeof e&&("production"===process.env.NODE_ENV||e.charAt(0)===e.charAt(0).toLowerCase())}var ke=function(e){return "function"==typeof e||"object"==typeof e&&null!==e&&!Array.isArray(e)},Ve=function(e){return "__proto__"!==e&&"constructor"!==e&&"prototype"!==e};function ze(e,t,n){var r=e[n];ke(t)&&ke(r)?Be(r,t):e[n]=t;}function Be(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];for(var o=0,s=n;o<s.length;o++){var i=s[o];if(ke(i))for(var a in i)Ve(a)&&ze(e,i[a],a);}return e}var Me=React__default["default"].createContext();Me.Consumer;var Fe={};function Ye(e,t,n){var o=_(e),i=!xe(e),a=t.attrs,c=void 0===a?S:a,d=t.componentId,h=void 0===d?function(e,t){var n="string"!=typeof e?"sc":je(e);Fe[n]=(Fe[n]||0)+1;var r=n+"-"+Te("5.3.5"+n+Fe[n]);return t?t+"-"+r:r}(t.displayName,t.parentComponentId):d,p=t.displayName,v=void 0===p?function(e){return xe(e)?"styled."+e:"Styled("+b(e)+")"}(e):p,g=t.displayName&&t.componentId?je(t.displayName)+"-"+t.componentId:t.componentId||h,N=o&&e.attrs?Array.prototype.concat(e.attrs,c).filter(Boolean):c,A=t.shouldForwardProp;o&&e.shouldForwardProp&&(A=t.shouldForwardProp?function(n,r,o){return e.shouldForwardProp(n,r,o)&&t.shouldForwardProp(n,r,o)}:e.shouldForwardProp);var C,I=new oe(n,g,o?e.componentStyle:void 0),P=I.isStatic&&0===c.length,O=function(e,t){return function(e,t,n,r){var o=e.attrs,i=e.componentStyle,a=e.defaultProps,c=e.foldedComponentIds,d=e.shouldForwardProp,h=e.styledComponentId,p=e.target;"production"!==process.env.NODE_ENV&&React.useDebugValue(h);var m=function(e,t,n){void 0===e&&(e=w);var r=y({},t,{theme:e}),o={};return n.forEach((function(e){var t,n,s,i=e;for(t in E(i)&&(i=i(r)),i)r[t]=o[t]="className"===t?(n=o[t],s=i[t],n&&s?n+" "+s:n||s):i[t];})),[r,o]}(Oe(t,React.useContext(Me),a)||w,t,o),v=m[0],g=m[1],S=function(e,t,n,r){var o=pe(),s=fe(),i=t?e.generateAndInjectStyles(w,o,s):e.generateAndInjectStyles(n,o,s);return "production"!==process.env.NODE_ENV&&React.useDebugValue(i),"production"!==process.env.NODE_ENV&&!t&&r&&r(i),i}(i,r,v,"production"!==process.env.NODE_ENV?e.warnTooManyClasses:void 0),b=n,_=g.$as||t.$as||g.as||t.as||p,N=xe(_),A=g!==t?y({},t,{},g):t,C={};for(var I in A)"$"!==I[0]&&"as"!==I&&("forwardedAs"===I?C.as=A[I]:(d?d(I,isPropValid,_):!N||isPropValid(I))&&(C[I]=A[I]));return t.style&&g.style!==t.style&&(C.style=y({},t.style,{},g.style)),C.className=Array.prototype.concat(c,h,S!==h?S:null,t.className,g.className).filter(Boolean).join(" "),C.ref=b,React.createElement(_,C)}(C,e,t,P)};return O.displayName=v,(C=React__default["default"].forwardRef(O)).attrs=N,C.componentStyle=I,C.displayName=v,C.shouldForwardProp=A,C.foldedComponentIds=o?Array.prototype.concat(e.foldedComponentIds,e.styledComponentId):S,C.styledComponentId=g,C.target=o?e.target:e,C.withComponent=function(e){var r=t.componentId,o=function(e,t){if(null==e)return {};var n,r,o={},s=Object.keys(e);for(r=0;r<s.length;r++)n=s[r],t.indexOf(n)>=0||(o[n]=e[n]);return o}(t,["componentId"]),s=r&&r+"-"+(xe(e)?e:je(b(e)));return Ye(e,y({},o,{attrs:N,componentId:s}),n)},Object.defineProperty(C,"defaultProps",{get:function(){return this._foldedDefaultProps},set:function(t){this._foldedDefaultProps=o?Be({},e.defaultProps,t):t;}}),"production"!==process.env.NODE_ENV&&(Pe(v,g),C.warnTooManyClasses=function(e,t){var n={},r=!1;return function(o){if(!r&&(n[o]=!0,Object.keys(n).length>=200)){var s=t?' with the id of "'+t+'"':"";console.warn("Over 200 classes were generated for component "+e+s+".\nConsider using the attrs method, together with a style object for frequently changed styles.\nExample:\n  const Component = styled.div.attrs(props => ({\n    style: {\n      background: props.background,\n    },\n  }))`width: 100%;`\n\n  <Component />"),r=!0,n={};}}}(v,g)),C.toString=function(){return "."+C.styledComponentId},i&&hoistNonReactStatics_cjs(C,e,{attrs:!0,componentStyle:!0,displayName:!0,foldedComponentIds:!0,shouldForwardProp:!0,styledComponentId:!0,target:!0,withComponent:!0}),C}var qe=function(e){return function e(t,r,o){if(void 0===o&&(o=w),!reactIs_27(r))return D(1,String(r));var s=function(){return t(r,o,Ae.apply(void 0,arguments))};return s.withConfig=function(n){return e(t,r,y({},o,{},n))},s.attrs=function(n){return e(t,r,y({},o,{attrs:Array.prototype.concat(o.attrs,n).filter(Boolean)}))},s}(Ye,e)};["a","abbr","address","area","article","aside","audio","b","base","bdi","bdo","big","blockquote","body","br","button","canvas","caption","cite","code","col","colgroup","data","datalist","dd","del","details","dfn","dialog","div","dl","dt","em","embed","fieldset","figcaption","figure","footer","form","h1","h2","h3","h4","h5","h6","head","header","hgroup","hr","html","i","iframe","img","input","ins","kbd","keygen","label","legend","li","link","main","map","mark","marquee","menu","menuitem","meta","meter","nav","noscript","object","ol","optgroup","option","output","p","param","picture","pre","progress","q","rp","rt","ruby","s","samp","script","section","select","small","source","span","strong","style","sub","summary","sup","table","tbody","td","textarea","tfoot","th","thead","time","title","tr","track","u","ul","var","video","wbr","circle","clipPath","defs","ellipse","foreignObject","g","image","line","linearGradient","marker","mask","path","pattern","polygon","polyline","radialGradient","rect","stop","svg","text","textPath","tspan"].forEach((function(e){qe[e]=qe(e);}));"production"!==process.env.NODE_ENV&&"undefined"!=typeof navigator&&"ReactNative"===navigator.product&&console.warn("It looks like you've imported 'styled-components' on React Native.\nPerhaps you're looking to import 'styled-components/native'?\nRead more about this at https://www.styled-components.com/docs/basics#react-native"),"production"!==process.env.NODE_ENV&&"test"!==process.env.NODE_ENV&&"undefined"!=typeof window&&(window["__styled-components-init__"]=window["__styled-components-init__"]||0,1===window["__styled-components-init__"]&&console.warn("It looks like there are several instances of 'styled-components' initialized in this application. This may cause dynamic styles to not render properly, errors during the rehydration process, a missing theme prop, and makes your application bigger without good reason.\n\nSee https://s-c.sh/2BAXzed for more info."),window["__styled-components-init__"]+=1);var styled = qe;
+function y(){return (y=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r]);}return e}).apply(this,arguments)}var v=function(e,t){for(var n=[e[0]],r=0,o=t.length;r<o;r+=1)n.push(t[r],e[r+1]);return n},g=function(t){return null!==t&&"object"==typeof t&&"[object Object]"===(t.toString?t.toString():Object.prototype.toString.call(t))&&!reactIs_28(t)},S=Object.freeze([]),w=Object.freeze({});function E(e){return "function"==typeof e}function b(e){return "production"!==process.env.NODE_ENV&&"string"==typeof e&&e||e.displayName||e.name||"Component"}function _(e){return e&&"string"==typeof e.styledComponentId}var N="undefined"!=typeof process&&(process.env.REACT_APP_SC_ATTR||process.env.SC_ATTR)||"data-styled",C="undefined"!=typeof window&&"HTMLElement"in window,I=Boolean("boolean"==typeof SC_DISABLE_SPEEDY?SC_DISABLE_SPEEDY:"undefined"!=typeof process&&void 0!==process.env.REACT_APP_SC_DISABLE_SPEEDY&&""!==process.env.REACT_APP_SC_DISABLE_SPEEDY?"false"!==process.env.REACT_APP_SC_DISABLE_SPEEDY&&process.env.REACT_APP_SC_DISABLE_SPEEDY:"undefined"!=typeof process&&void 0!==process.env.SC_DISABLE_SPEEDY&&""!==process.env.SC_DISABLE_SPEEDY?"false"!==process.env.SC_DISABLE_SPEEDY&&process.env.SC_DISABLE_SPEEDY:"production"!==process.env.NODE_ENV),O="production"!==process.env.NODE_ENV?{1:"Cannot create styled-component for component: %s.\n\n",2:"Can't collect styles once you've consumed a `ServerStyleSheet`'s styles! `ServerStyleSheet` is a one off instance for each server-side render cycle.\n\n- Are you trying to reuse it across renders?\n- Are you accidentally calling collectStyles twice?\n\n",3:"Streaming SSR is only supported in a Node.js environment; Please do not try to call this method in the browser.\n\n",4:"The `StyleSheetManager` expects a valid target or sheet prop!\n\n- Does this error occur on the client and is your target falsy?\n- Does this error occur on the server and is the sheet falsy?\n\n",5:"The clone method cannot be used on the client!\n\n- Are you running in a client-like environment on the server?\n- Are you trying to run SSR on the client?\n\n",6:"Trying to insert a new style tag, but the given Node is unmounted!\n\n- Are you using a custom target that isn't mounted?\n- Does your document not have a valid head element?\n- Have you accidentally removed a style tag manually?\n\n",7:'ThemeProvider: Please return an object from your "theme" prop function, e.g.\n\n```js\ntheme={() => ({})}\n```\n\n',8:'ThemeProvider: Please make your "theme" prop an object.\n\n',9:"Missing document `<head>`\n\n",10:"Cannot find a StyleSheet instance. Usually this happens if there are multiple copies of styled-components loaded at once. Check out this issue for how to troubleshoot and fix the common cases where this situation can happen: https://github.com/styled-components/styled-components/issues/1941#issuecomment-417862021\n\n",11:"_This error was replaced with a dev-time warning, it will be deleted for v4 final._ [createGlobalStyle] received children which will not be rendered. Please use the component without passing children elements.\n\n",12:"It seems you are interpolating a keyframe declaration (%s) into an untagged string. This was supported in styled-components v3, but is not longer supported in v4 as keyframes are now injected on-demand. Please wrap your string in the css\\`\\` helper which ensures the styles are injected correctly. See https://www.styled-components.com/docs/api#css\n\n",13:"%s is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details.\n\n",14:'ThemeProvider: "theme" prop is required.\n\n',15:"A stylis plugin has been supplied that is not named. We need a name for each plugin to be able to prevent styling collisions between different stylis configurations within the same app. Before you pass your plugin to `<StyleSheetManager stylisPlugins={[]}>`, please make sure each plugin is uniquely-named, e.g.\n\n```js\nObject.defineProperty(importedPlugin, 'name', { value: 'some-unique-name' });\n```\n\n",16:"Reached the limit of how many styled components may be created at group %s.\nYou may only create up to 1,073,741,824 components. If you're creating components dynamically,\nas for instance in your render method then you may be running into this limitation.\n\n",17:"CSSStyleSheet could not be found on HTMLStyleElement.\nHas styled-components' style tag been unmounted or altered by another script?\n"}:{};function R(){for(var e=arguments.length<=0?void 0:arguments[0],t=[],n=1,r=arguments.length;n<r;n+=1)t.push(n<0||arguments.length<=n?void 0:arguments[n]);return t.forEach((function(t){e=e.replace(/%[a-z]/,t);})),e}function D(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];throw "production"===process.env.NODE_ENV?new Error("An error occurred. See https://git.io/JUIaE#"+e+" for more information."+(n.length>0?" Args: "+n.join(", "):"")):new Error(R.apply(void 0,[O[e]].concat(n)).trim())}var j=function(){function e(e){this.groupSizes=new Uint32Array(512),this.length=512,this.tag=e;}var t=e.prototype;return t.indexOfGroup=function(e){for(var t=0,n=0;n<e;n++)t+=this.groupSizes[n];return t},t.insertRules=function(e,t){if(e>=this.groupSizes.length){for(var n=this.groupSizes,r=n.length,o=r;e>=o;)(o<<=1)<0&&D(16,""+e);this.groupSizes=new Uint32Array(o),this.groupSizes.set(n),this.length=o;for(var s=r;s<o;s++)this.groupSizes[s]=0;}for(var i=this.indexOfGroup(e+1),a=0,c=t.length;a<c;a++)this.tag.insertRule(i,t[a])&&(this.groupSizes[e]++,i++);},t.clearGroup=function(e){if(e<this.length){var t=this.groupSizes[e],n=this.indexOfGroup(e),r=n+t;this.groupSizes[e]=0;for(var o=n;o<r;o++)this.tag.deleteRule(n);}},t.getGroup=function(e){var t="";if(e>=this.length||0===this.groupSizes[e])return t;for(var n=this.groupSizes[e],r=this.indexOfGroup(e),o=r+n,s=r;s<o;s++)t+=this.tag.getRule(s)+"/*!sc*/\n";return t},e}(),T=new Map,x=new Map,k=1,V=function(e){if(T.has(e))return T.get(e);for(;x.has(k);)k++;var t=k++;return "production"!==process.env.NODE_ENV&&((0|t)<0||t>1<<30)&&D(16,""+t),T.set(e,t),x.set(t,e),t},z=function(e){return x.get(e)},B=function(e,t){t>=k&&(k=t+1),T.set(e,t),x.set(t,e);},M="style["+N+'][data-styled-version="5.3.5"]',G=new RegExp("^"+N+'\\.g(\\d+)\\[id="([\\w\\d-]+)"\\].*?"([^"]*)'),L=function(e,t,n){for(var r,o=n.split(","),s=0,i=o.length;s<i;s++)(r=o[s])&&e.registerName(t,r);},F=function(e,t){for(var n=(t.textContent||"").split("/*!sc*/\n"),r=[],o=0,s=n.length;o<s;o++){var i=n[o].trim();if(i){var a=i.match(G);if(a){var c=0|parseInt(a[1],10),u=a[2];0!==c&&(B(u,c),L(e,u,a[3]),e.getTag().insertRules(c,r)),r.length=0;}else r.push(i);}}},Y=function(){return "undefined"!=typeof window&&void 0!==window.__webpack_nonce__?window.__webpack_nonce__:null},q=function(e){var t=document.head,n=e||t,r=document.createElement("style"),o=function(e){for(var t=e.childNodes,n=t.length;n>=0;n--){var r=t[n];if(r&&1===r.nodeType&&r.hasAttribute(N))return r}}(n),s=void 0!==o?o.nextSibling:null;r.setAttribute(N,"active"),r.setAttribute("data-styled-version","5.3.5");var i=Y();return i&&r.setAttribute("nonce",i),n.insertBefore(r,s),r},H=function(){function e(e){var t=this.element=q(e);t.appendChild(document.createTextNode("")),this.sheet=function(e){if(e.sheet)return e.sheet;for(var t=document.styleSheets,n=0,r=t.length;n<r;n++){var o=t[n];if(o.ownerNode===e)return o}D(17);}(t),this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){try{return this.sheet.insertRule(t,e),this.length++,!0}catch(e){return !1}},t.deleteRule=function(e){this.sheet.deleteRule(e),this.length--;},t.getRule=function(e){var t=this.sheet.cssRules[e];return void 0!==t&&"string"==typeof t.cssText?t.cssText:""},e}(),$=function(){function e(e){var t=this.element=q(e);this.nodes=t.childNodes,this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){if(e<=this.length&&e>=0){var n=document.createTextNode(t),r=this.nodes[e];return this.element.insertBefore(n,r||null),this.length++,!0}return !1},t.deleteRule=function(e){this.element.removeChild(this.nodes[e]),this.length--;},t.getRule=function(e){return e<this.length?this.nodes[e].textContent:""},e}(),W=function(){function e(e){this.rules=[],this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){return e<=this.length&&(this.rules.splice(e,0,t),this.length++,!0)},t.deleteRule=function(e){this.rules.splice(e,1),this.length--;},t.getRule=function(e){return e<this.length?this.rules[e]:""},e}(),U=C,J={isServer:!C,useCSSOMInjection:!I},X=function(){function e(e,t,n){void 0===e&&(e=w),void 0===t&&(t={}),this.options=y({},J,{},e),this.gs=t,this.names=new Map(n),this.server=!!e.isServer,!this.server&&C&&U&&(U=!1,function(e){for(var t=document.querySelectorAll(M),n=0,r=t.length;n<r;n++){var o=t[n];o&&"active"!==o.getAttribute(N)&&(F(e,o),o.parentNode&&o.parentNode.removeChild(o));}}(this));}e.registerId=function(e){return V(e)};var t=e.prototype;return t.reconstructWithOptions=function(t,n){return void 0===n&&(n=!0),new e(y({},this.options,{},t),this.gs,n&&this.names||void 0)},t.allocateGSInstance=function(e){return this.gs[e]=(this.gs[e]||0)+1},t.getTag=function(){return this.tag||(this.tag=(n=(t=this.options).isServer,r=t.useCSSOMInjection,o=t.target,e=n?new W(o):r?new H(o):new $(o),new j(e)));var e,t,n,r,o;},t.hasNameForId=function(e,t){return this.names.has(e)&&this.names.get(e).has(t)},t.registerName=function(e,t){if(V(e),this.names.has(e))this.names.get(e).add(t);else {var n=new Set;n.add(t),this.names.set(e,n);}},t.insertRules=function(e,t,n){this.registerName(e,t),this.getTag().insertRules(V(e),n);},t.clearNames=function(e){this.names.has(e)&&this.names.get(e).clear();},t.clearRules=function(e){this.getTag().clearGroup(V(e)),this.clearNames(e);},t.clearTag=function(){this.tag=void 0;},t.toString=function(){return function(e){for(var t=e.getTag(),n=t.length,r="",o=0;o<n;o++){var s=z(o);if(void 0!==s){var i=e.names.get(s),a=t.getGroup(o);if(i&&a&&i.size){var c=N+".g"+o+'[id="'+s+'"]',u="";void 0!==i&&i.forEach((function(e){e.length>0&&(u+=e+",");})),r+=""+a+c+'{content:"'+u+'"}/*!sc*/\n';}}}return r}(this)},e}(),Z=/(a)(d)/gi,K=function(e){return String.fromCharCode(e+(e>25?39:97))};function Q(e){var t,n="";for(t=Math.abs(e);t>52;t=t/52|0)n=K(t%52)+n;return (K(t%52)+n).replace(Z,"$1-$2")}var ee=function(e,t){for(var n=t.length;n;)e=33*e^t.charCodeAt(--n);return e},te=function(e){return ee(5381,e)};function ne(e){for(var t=0;t<e.length;t+=1){var n=e[t];if(E(n)&&!_(n))return !1}return !0}var re=te("5.3.5"),oe=function(){function e(e,t,n){this.rules=e,this.staticRulesId="",this.isStatic="production"===process.env.NODE_ENV&&(void 0===n||n.isStatic)&&ne(e),this.componentId=t,this.baseHash=ee(re,t),this.baseStyle=n,X.registerId(t);}return e.prototype.generateAndInjectStyles=function(e,t,n){var r=this.componentId,o=[];if(this.baseStyle&&o.push(this.baseStyle.generateAndInjectStyles(e,t,n)),this.isStatic&&!n.hash)if(this.staticRulesId&&t.hasNameForId(r,this.staticRulesId))o.push(this.staticRulesId);else {var s=_e(this.rules,e,t,n).join(""),i=Q(ee(this.baseHash,s)>>>0);if(!t.hasNameForId(r,i)){var a=n(s,"."+i,void 0,r);t.insertRules(r,i,a);}o.push(i),this.staticRulesId=i;}else {for(var c=this.rules.length,u=ee(this.baseHash,n.hash),l="",d=0;d<c;d++){var h=this.rules[d];if("string"==typeof h)l+=h,"production"!==process.env.NODE_ENV&&(u=ee(u,h+d));else if(h){var p=_e(h,e,t,n),f=Array.isArray(p)?p.join(""):p;u=ee(u,f+d),l+=f;}}if(l){var m=Q(u>>>0);if(!t.hasNameForId(r,m)){var y=n(l,"."+m,void 0,r);t.insertRules(r,m,y);}o.push(m);}}return o.join(" ")},e}(),se=/^\s*\/\/.*$/gm,ie=[":","[",".","#"];function ae(e){var t,n,r,o,s=void 0===e?w:e,i=s.options,a=void 0===i?w:i,c=s.plugins,u=void 0===c?S:c,l=new stylis_min(a),d=[],p=function(e){function t(t){if(t)try{e(t+"}");}catch(e){}}return function(n,r,o,s,i,a,c,u,l,d){switch(n){case 1:if(0===l&&64===r.charCodeAt(0))return e(r+";"),"";break;case 2:if(0===u)return r+"/*|*/";break;case 3:switch(u){case 102:case 112:return e(o[0]+r),"";default:return r+(0===d?"/*|*/":"")}case-2:r.split("/*|*/}").forEach(t);}}}((function(e){d.push(e);})),f=function(e,r,s){return 0===r&&-1!==ie.indexOf(s[n.length])||s.match(o)?e:"."+t};function m(e,s,i,a){void 0===a&&(a="&");var c=e.replace(se,""),u=s&&i?i+" "+s+" { "+c+" }":c;return t=a,n=s,r=new RegExp("\\"+n+"\\b","g"),o=new RegExp("(\\"+n+"\\b){2,}"),l(i||!s?"":s,u)}return l.use([].concat(u,[function(e,t,o){2===e&&o.length&&o[0].lastIndexOf(n)>0&&(o[0]=o[0].replace(r,f));},p,function(e){if(-2===e){var t=d;return d=[],t}}])),m.hash=u.length?u.reduce((function(e,t){return t.name||D(15),ee(e,t.name)}),5381).toString():"",m}var ce=React.createContext();ce.Consumer;var le=React.createContext(),de=(le.Consumer,new X),he=ae();function pe(){return React.useContext(ce)||de}function fe(){return React.useContext(le)||he}var ye=function(){function e(e,t){var n=this;this.inject=function(e,t){void 0===t&&(t=he);var r=n.name+t.hash;e.hasNameForId(n.id,r)||e.insertRules(n.id,r,t(n.rules,r,"@keyframes"));},this.toString=function(){return D(12,String(n.name))},this.name=e,this.id="sc-keyframes-"+e,this.rules=t;}return e.prototype.getName=function(e){return void 0===e&&(e=he),this.name+e.hash},e}(),ve=/([A-Z])/,ge=/([A-Z])/g,Se=/^ms-/,we=function(e){return "-"+e.toLowerCase()};function Ee(e){return ve.test(e)?e.replace(ge,we).replace(Se,"-ms-"):e}var be=function(e){return null==e||!1===e||""===e};function _e(e,n,r,o){if(Array.isArray(e)){for(var s,i=[],a=0,c=e.length;a<c;a+=1)""!==(s=_e(e[a],n,r,o))&&(Array.isArray(s)?i.push.apply(i,s):i.push(s));return i}if(be(e))return "";if(_(e))return "."+e.styledComponentId;if(E(e)){if("function"!=typeof(l=e)||l.prototype&&l.prototype.isReactComponent||!n)return e;var u=e(n);return "production"!==process.env.NODE_ENV&&reactIs_18(u)&&console.warn(b(e)+" is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details."),_e(u,n,r,o)}var l;return e instanceof ye?r?(e.inject(r,o),e.getName(o)):e:g(e)?function e(t,n){var r,o,s=[];for(var i in t)t.hasOwnProperty(i)&&!be(t[i])&&(Array.isArray(t[i])&&t[i].isCss||E(t[i])?s.push(Ee(i)+":",t[i],";"):g(t[i])?s.push.apply(s,e(t[i],i)):s.push(Ee(i)+": "+(r=i,null==(o=t[i])||"boolean"==typeof o||""===o?"":"number"!=typeof o||0===o||r in unitlessKeys?String(o).trim():o+"px")+";"));return n?[n+" {"].concat(s,["}"]):s}(e):e.toString()}var Ne=function(e){return Array.isArray(e)&&(e.isCss=!0),e};function Ae(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];return E(e)||g(e)?Ne(_e(v(S,[e].concat(n)))):0===n.length&&1===e.length&&"string"==typeof e[0]?e:Ne(_e(v(e,n)))}var Ce=/invalid hook call/i,Ie=new Set,Pe=function(e,t){if("production"!==process.env.NODE_ENV){var n="The component "+e+(t?' with the id of "'+t+'"':"")+" has been created dynamically.\nYou may see this warning because you've called styled inside another component.\nTo resolve this only create new StyledComponents outside of any render method and function component.",r=console.error;try{var o=!0;console.error=function(e){if(Ce.test(e))o=!1,Ie.delete(n);else {for(var t=arguments.length,s=new Array(t>1?t-1:0),i=1;i<t;i++)s[i-1]=arguments[i];r.apply(void 0,[e].concat(s));}},React.useRef(),o&&!Ie.has(n)&&(console.warn(n),Ie.add(n));}catch(e){Ce.test(e.message)&&Ie.delete(n);}finally{console.error=r;}}},Oe=function(e,t,n){return void 0===n&&(n=w),e.theme!==n.theme&&e.theme||t||n.theme},Re=/[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+/g,De=/(^-|-$)/g;function je(e){return e.replace(Re,"-").replace(De,"")}var Te=function(e){return Q(te(e)>>>0)};function xe(e){return "string"==typeof e&&("production"===process.env.NODE_ENV||e.charAt(0)===e.charAt(0).toLowerCase())}var ke=function(e){return "function"==typeof e||"object"==typeof e&&null!==e&&!Array.isArray(e)},Ve=function(e){return "__proto__"!==e&&"constructor"!==e&&"prototype"!==e};function ze(e,t,n){var r=e[n];ke(t)&&ke(r)?Be(r,t):e[n]=t;}function Be(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];for(var o=0,s=n;o<s.length;o++){var i=s[o];if(ke(i))for(var a in i)Ve(a)&&ze(e,i[a],a);}return e}var Me=React.createContext();Me.Consumer;var Fe={};function Ye(e,t,n){var o=_(e),i=!xe(e),a=t.attrs,c=void 0===a?S:a,d=t.componentId,h=void 0===d?function(e,t){var n="string"!=typeof e?"sc":je(e);Fe[n]=(Fe[n]||0)+1;var r=n+"-"+Te("5.3.5"+n+Fe[n]);return t?t+"-"+r:r}(t.displayName,t.parentComponentId):d,p=t.displayName,v=void 0===p?function(e){return xe(e)?"styled."+e:"Styled("+b(e)+")"}(e):p,g=t.displayName&&t.componentId?je(t.displayName)+"-"+t.componentId:t.componentId||h,N=o&&e.attrs?Array.prototype.concat(e.attrs,c).filter(Boolean):c,A=t.shouldForwardProp;o&&e.shouldForwardProp&&(A=t.shouldForwardProp?function(n,r,o){return e.shouldForwardProp(n,r,o)&&t.shouldForwardProp(n,r,o)}:e.shouldForwardProp);var C,I=new oe(n,g,o?e.componentStyle:void 0),P=I.isStatic&&0===c.length,O=function(e,t){return function(e,t,n,r){var o=e.attrs,i=e.componentStyle,a=e.defaultProps,c=e.foldedComponentIds,d=e.shouldForwardProp,h=e.styledComponentId,p=e.target;"production"!==process.env.NODE_ENV&&React.useDebugValue(h);var m=function(e,t,n){void 0===e&&(e=w);var r=y({},t,{theme:e}),o={};return n.forEach((function(e){var t,n,s,i=e;for(t in E(i)&&(i=i(r)),i)r[t]=o[t]="className"===t?(n=o[t],s=i[t],n&&s?n+" "+s:n||s):i[t];})),[r,o]}(Oe(t,React.useContext(Me),a)||w,t,o),v=m[0],g=m[1],S=function(e,t,n,r){var o=pe(),s=fe(),i=t?e.generateAndInjectStyles(w,o,s):e.generateAndInjectStyles(n,o,s);return "production"!==process.env.NODE_ENV&&React.useDebugValue(i),"production"!==process.env.NODE_ENV&&!t&&r&&r(i),i}(i,r,v,"production"!==process.env.NODE_ENV?e.warnTooManyClasses:void 0),b=n,_=g.$as||t.$as||g.as||t.as||p,N=xe(_),A=g!==t?y({},t,{},g):t,C={};for(var I in A)"$"!==I[0]&&"as"!==I&&("forwardedAs"===I?C.as=A[I]:(d?d(I,isPropValid,_):!N||isPropValid(I))&&(C[I]=A[I]));return t.style&&g.style!==t.style&&(C.style=y({},t.style,{},g.style)),C.className=Array.prototype.concat(c,h,S!==h?S:null,t.className,g.className).filter(Boolean).join(" "),C.ref=b,React.createElement(_,C)}(C,e,t,P)};return O.displayName=v,(C=React.forwardRef(O)).attrs=N,C.componentStyle=I,C.displayName=v,C.shouldForwardProp=A,C.foldedComponentIds=o?Array.prototype.concat(e.foldedComponentIds,e.styledComponentId):S,C.styledComponentId=g,C.target=o?e.target:e,C.withComponent=function(e){var r=t.componentId,o=function(e,t){if(null==e)return {};var n,r,o={},s=Object.keys(e);for(r=0;r<s.length;r++)n=s[r],t.indexOf(n)>=0||(o[n]=e[n]);return o}(t,["componentId"]),s=r&&r+"-"+(xe(e)?e:je(b(e)));return Ye(e,y({},o,{attrs:N,componentId:s}),n)},Object.defineProperty(C,"defaultProps",{get:function(){return this._foldedDefaultProps},set:function(t){this._foldedDefaultProps=o?Be({},e.defaultProps,t):t;}}),"production"!==process.env.NODE_ENV&&(Pe(v,g),C.warnTooManyClasses=function(e,t){var n={},r=!1;return function(o){if(!r&&(n[o]=!0,Object.keys(n).length>=200)){var s=t?' with the id of "'+t+'"':"";console.warn("Over 200 classes were generated for component "+e+s+".\nConsider using the attrs method, together with a style object for frequently changed styles.\nExample:\n  const Component = styled.div.attrs(props => ({\n    style: {\n      background: props.background,\n    },\n  }))`width: 100%;`\n\n  <Component />"),r=!0,n={};}}}(v,g)),C.toString=function(){return "."+C.styledComponentId},i&&hoistNonReactStatics_cjs(C,e,{attrs:!0,componentStyle:!0,displayName:!0,foldedComponentIds:!0,shouldForwardProp:!0,styledComponentId:!0,target:!0,withComponent:!0}),C}var qe=function(e){return function e(t,r,o){if(void 0===o&&(o=w),!reactIs_27(r))return D(1,String(r));var s=function(){return t(r,o,Ae.apply(void 0,arguments))};return s.withConfig=function(n){return e(t,r,y({},o,{},n))},s.attrs=function(n){return e(t,r,y({},o,{attrs:Array.prototype.concat(o.attrs,n).filter(Boolean)}))},s}(Ye,e)};["a","abbr","address","area","article","aside","audio","b","base","bdi","bdo","big","blockquote","body","br","button","canvas","caption","cite","code","col","colgroup","data","datalist","dd","del","details","dfn","dialog","div","dl","dt","em","embed","fieldset","figcaption","figure","footer","form","h1","h2","h3","h4","h5","h6","head","header","hgroup","hr","html","i","iframe","img","input","ins","kbd","keygen","label","legend","li","link","main","map","mark","marquee","menu","menuitem","meta","meter","nav","noscript","object","ol","optgroup","option","output","p","param","picture","pre","progress","q","rp","rt","ruby","s","samp","script","section","select","small","source","span","strong","style","sub","summary","sup","table","tbody","td","textarea","tfoot","th","thead","time","title","tr","track","u","ul","var","video","wbr","circle","clipPath","defs","ellipse","foreignObject","g","image","line","linearGradient","marker","mask","path","pattern","polygon","polyline","radialGradient","rect","stop","svg","text","textPath","tspan"].forEach((function(e){qe[e]=qe(e);}));"production"!==process.env.NODE_ENV&&"undefined"!=typeof navigator&&"ReactNative"===navigator.product&&console.warn("It looks like you've imported 'styled-components' on React Native.\nPerhaps you're looking to import 'styled-components/native'?\nRead more about this at https://www.styled-components.com/docs/basics#react-native"),"production"!==process.env.NODE_ENV&&"test"!==process.env.NODE_ENV&&"undefined"!=typeof window&&(window["__styled-components-init__"]=window["__styled-components-init__"]||0,1===window["__styled-components-init__"]&&console.warn("It looks like there are several instances of 'styled-components' initialized in this application. This may cause dynamic styles to not render properly, errors during the rehydration process, a missing theme prop, and makes your application bigger without good reason.\n\nSee https://s-c.sh/2BAXzed for more info."),window["__styled-components-init__"]+=1);var styled = qe;
 
-const useOnClickOutside = (ref, handler) => {
-    React.useEffect(() => {
-        const listener = (event) => {
-            // Do nothing if clicking ref's element or descendent elements
-            if (!ref.current || ref.current.contains(event === null || event === void 0 ? void 0 : event.target)) {
-                return;
-            }
-            handler(event);
-        };
-        document.addEventListener('mousedown', listener);
-        document.addEventListener('touchstart', listener);
-        return () => {
-            document.removeEventListener('mousedown', listener);
-            document.removeEventListener('touchstart', listener);
-        };
-    }, 
-    // Add ref and handler to effect dependencies
-    // It's worth noting that because passed in handler is a new ...
-    // ... function on every render that will cause this effect ...
-    // ... callback/cleanup to run every render. It's not a big deal ...
-    // ... but to optimize you can wrap handler in useCallback before ...
-    // ... passing it into this hook.
-    [ref, handler]);
-};
-const useIsFirstRender = () => {
-    const ref = React.useRef(true);
-    React.useEffect(() => {
-        ref.current = false;
-    }, []);
-    return ref.current;
-};
-
+/* Styled Components */
 const Container$1 = styled.div `
-	margin-right: 10px;
+	font-size: 16px;
+	position: fixed;
+	z-index: 1000;
+	bottom: 5px;
+	right: ${(props) => (props.isvisible === 'true' ? '10px' : '-2000px')};
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: all 200ms linear;
+	width: ${(props) => props.isminimized === 'true' ? '150px' : '300px'};
+	height: 115px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 10px 2px #aaa;
+	padding: 15px;
+	background-color: ${(props) => props.styleoptions.bgColor};
+	font-family: Arial, sans-serif !important;
+	box-sizing: border-box;
+	& * {
+		box-sizing: border-box;
+	}
 `;
-const StyledButton = styled.button `
+styled.div `
+	width: 70px;
+`;
+styled(VscGithub) `
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 17px;
+	height: 17px;
+	fill: ${(props) => props.styleoptions.primaryColor};
+`;
+
+// THIS FILE IS AUTO GENERATED
+function BiReset (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M12 16c1.671 0 3-1.331 3-3s-1.329-3-3-3-3 1.331-3 3 1.329 3 3 3z"}},{"tag":"path","attr":{"d":"M20.817 11.186a8.94 8.94 0 0 0-1.355-3.219 9.053 9.053 0 0 0-2.43-2.43 8.95 8.95 0 0 0-3.219-1.355 9.028 9.028 0 0 0-1.838-.18V2L8 5l3.975 3V6.002c.484-.002.968.044 1.435.14a6.961 6.961 0 0 1 2.502 1.053 7.005 7.005 0 0 1 1.892 1.892A6.967 6.967 0 0 1 19 13a7.032 7.032 0 0 1-.55 2.725 7.11 7.11 0 0 1-.644 1.188 7.2 7.2 0 0 1-.858 1.039 7.028 7.028 0 0 1-3.536 1.907 7.13 7.13 0 0 1-2.822 0 6.961 6.961 0 0 1-2.503-1.054 7.002 7.002 0 0 1-1.89-1.89A6.996 6.996 0 0 1 5 13H3a9.02 9.02 0 0 0 1.539 5.034 9.096 9.096 0 0 0 2.428 2.428A8.95 8.95 0 0 0 12 22a9.09 9.09 0 0 0 1.814-.183 9.014 9.014 0 0 0 3.218-1.355 8.886 8.886 0 0 0 1.331-1.099 9.228 9.228 0 0 0 1.1-1.332A8.952 8.952 0 0 0 21 13a9.09 9.09 0 0 0-.183-1.814z"}}]})(props);
+}function BiVolumeFull (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M16 21c3.527-1.547 5.999-4.909 5.999-9S19.527 4.547 16 3v2c2.387 1.386 3.999 4.047 3.999 7S18.387 17.614 16 19v2z"}},{"tag":"path","attr":{"d":"M16 7v10c1.225-1.1 2-3.229 2-5s-.775-3.9-2-5zM4 17h2.697l5.748 3.832a1.004 1.004 0 0 0 1.027.05A1 1 0 0 0 14 20V4a1 1 0 0 0-1.554-.832L6.697 7H4c-1.103 0-2 .897-2 2v6c0 1.103.897 2 2 2zm0-8h3c.033 0 .061-.016.093-.019a1.027 1.027 0 0 0 .38-.116c.026-.015.057-.017.082-.033L12 5.868v12.264l-4.445-2.964c-.025-.017-.056-.02-.082-.033a.986.986 0 0 0-.382-.116C7.059 15.016 7.032 15 7 15H4V9z"}}]})(props);
+}
+
+const ControlsContainer = styled.div `
+	width: 100%;
+	display: flex;
+	flex-direction: column;
 	position: relative;
-	font-size: 0.7em;
-	font-weight: bold;
+	z-index: 1;
+	margin: 5px 0px 5px 0px;
+	& div {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	${(props) => props.isminimized === 'true'
+    ? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
+    : 'padding-top: 2px'}
+`;
+const ControlButton = styled.div `
+	border-radius: 50%;
+	margin: 2px;
+	background-color: ${(props) => props.styleoptions.bgColor};
 	color: ${(props) => props.styleoptions.primaryColor};
+	font-weight: normal !important;
 	cursor: pointer;
-	transition: all 0.5s linear;
-	border: none;
-	background: none;
-	padding: 1px 6px !important;
+	border: 2px solid ${(props) => props.styleoptions.secondaryColor};
+	&:hover {
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
+		background-color: ${(props) => props.styleoptions.bgColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
+	}
+	transition: all 0.2s;
+	font-size: 1.1em;
+	pointer-events: ${(props) => props.isloading === 'true' ? 'none' : 'auto'};
+`;
+const Reset = styled(BiReset) `
+	position: absolute;
+	top: 50%;
+	right: 5px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: 0.2s ease-in;
+	font-size: 0.9em;
+	color: ${(props) => props.styleoptions.primaryColor};
 	&:hover {
 		color: ${(props) => props.styleoptions.secondaryColor};
 	}
-	&::after {
-		content: '';
-		position: absolute;
-		left: 0;
-		bottom: -2px;
-		width: 0px;
-		height: 1.2px;
-		background-color: ${(props) => props.styleoptions.primaryColor};
-		transition: all 0.2s ease-in;
-	}
-	&:hover::after {
-		width: 100%;
-	}
 `;
-const OptionsContainer$1 = styled.div `
-	opacity: ${(props) => (props.showOptions ? 1 : 0)};
-	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
-	position: absolute;
-	width: 100%;
-	height: 46px;
-	bottom: 0px;
-	right: 0;
-	background-color: ${(props) => props.styleoptions.bgColor};
-	color: ${(props) => props.styleoptions.primaryColor};
-	z-index: 100;
+
+// THIS FILE IS AUTO GENERATED
+function AiFillFastBackward (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M517.6 273.5L230.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm320 0L550.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm-620-25.5h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
+}function AiFillFastForward (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M793.8 499.3L506.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.6c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8a16.14 16.14 0 0 0 0-25.4zm-320 0L186.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.5c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8c4.1-3.2 6.2-8 6.2-12.7 0-4.6-2.1-9.4-6.2-12.6zM857.6 248h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
+}function AiFillPauseCircle (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-80 600c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304zm224 0c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304z"}}]})(props);
+}function AiFillPlayCircle (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z"}}]})(props);
+}
+
+const MainControls = ({ readerRef, styleOptions }) => {
+    const { isReading, isLoading, isMinimized, startReading, stopReading, } = useTextReaderStore();
+    const reader = readerRef.current;
+    const handleTextReadPlay = () => {
+        startReading();
+    };
+    const handleTextReadPause = () => {
+        stopReading();
+    };
+    const handleReset = () => {
+        reader === null || reader === void 0 ? void 0 : reader.reset();
+    };
+    const handleFastBackward = () => {
+        if (!reader)
+            return;
+        if (reader === null || reader === void 0 ? void 0 : reader.options.isChunksModeOn) {
+            if (reader.state.currentChunkIndex - 1 >= 0)
+                reader.seekTo(reader.state.chunksArray[reader.state.currentChunkIndex - 1]
+                    .start);
+        }
+        else if (reader.state.currentWordIndex - 1 >= 0)
+            reader.seekTo(reader.state.currentWordIndex - 1);
+    };
+    const handleFastForward = () => {
+        if (!reader)
+            return;
+        if (reader === null || reader === void 0 ? void 0 : reader.options.isChunksModeOn) {
+            if (reader.state.currentChunkIndex + 1 <
+                reader.state.chunksArray.length)
+                /* Go to the next chunk */
+                reader.seekTo(reader.state.chunksArray[reader.state.currentChunkIndex + 1]
+                    .start);
+        }
+        else if (reader.state.currentWordIndex + 1 <=
+            reader.state.wholeTextArray.length)
+            reader.seekTo(reader.state.currentWordIndex + 1);
+    };
+    return (React.createElement(ControlsContainer, { isminimized: isMinimized.toString() },
+        React.createElement("div", null,
+            React.createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward, styleoptions: styleOptions, isloading: isLoading.toString() }),
+            !isReading ? (React.createElement(ControlButton, { style: {
+                    fontSize: '1.5em',
+                }, as: AiFillPlayCircle, title: "Play", onPointerDown: handleTextReadPlay, styleoptions: styleOptions, isloading: isLoading.toString() })) : (React.createElement(ControlButton, { style: {
+                    fontSize: '1.5em',
+                }, as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleTextReadPause, isloading: isLoading.toString() })),
+            React.createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: handleFastForward, styleoptions: styleOptions, isloading: isLoading.toString() }),
+            React.createElement(Reset, { title: "reset", styleoptions: styleOptions, onClick: handleReset }))));
+};
+
+const WindowButton = styled.div `
 	display: flex;
-	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
-	overflow-x: hidden;
+	z-index: 100;
+	font-size: 1em !important;
+	width: 20px;
+	height: 20px;
+	border-radius: 3px;
+	border: 2px solid ${(props) => props.styleoptions.primaryColor};
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.textColor};
+	font-weight: bold !important;
+	cursor: pointer;
+	transition: all 0.2s linear;
+	&:hover {
+		backgroundcolor: ${(props) => props.styleoptions.bgColor};
+		color: ${(props) => props.styleoptions.secondaryColor};
+	}
 `;
-/* React Components */
-const Button = (_a) => {
-    var { children, styleOptions } = _a, props = __rest(_a, ["children", "styleOptions"]);
-    return (React__default["default"].createElement(StyledButton, Object.assign({ styleoptions: styleOptions }, props), children));
-};
-const CustomSelect = (_a) => {
-    var _b;
-    var { options, value, title, onChange, styleOptions, style } = _a, props = __rest(_a, ["options", "value", "title", "onChange", "styleOptions", "style"]);
-    const [showOptions, setShowOptions] = React.useState(false);
-    const ref = React.useRef(null);
-    const show = () => {
-        setShowOptions(true);
+
+// THIS FILE IS AUTO GENERATED
+function MdOutlineClose (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"fill":"none","d":"M0 0h24v24H0V0z"}},{"tag":"path","attr":{"d":"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"}}]})(props);
+}
+
+// THIS FILE IS AUTO GENERATED
+function FiMaximize (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"}}]})(props);
+}function FiMinimize (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"}}]})(props);
+}
+
+const WindowControls = ({ styleOptions }) => {
+    const { isMinimized, stopReading, hideTextReader, minimize, maximize, } = useTextReaderStore();
+    const handleHideReader = () => {
+        hideTextReader();
+        stopReading();
     };
-    const hide = React.useCallback(() => {
-        setShowOptions(false);
-    }, []);
-    const onOptionClick = (val) => {
-        onChange(val);
-        hide();
+    const handleMinimizeReader = () => {
+        minimize();
     };
-    useOnClickOutside(ref, hide);
-    return (React__default["default"].createElement(Container$1, Object.assign({}, props),
-        React__default["default"].createElement(StyledButton, { type: "button", onClick: show, styleoptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
-        React__default["default"].createElement(OptionsContainer$1, { ref: ref, styleoptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React__default["default"].createElement(Button, { key: opt.value, onClick: () => {
-                onOptionClick(opt.value);
-            }, styleOptions: styleOptions }, opt.name))))));
+    const handleMaximizeReader = () => {
+        maximize();
+    };
+    return (React.createElement(React.Fragment, null,
+        React.createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '3px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },
+            React.createElement(MdOutlineClose, { title: "Close" })),
+        React.createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', styleoptions: styleOptions, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React.createElement(FiMaximize, null) : React.createElement(FiMinimize, null))));
 };
 
-/* Styled Components */
-const SliderContainer$1 = styled.div `
+const SeekbarContainer = styled.div `
+	text-align: center;
+	width: ${(props) => (props.isminimized === 'true' ? '100%' : '90%')};
 	position: relative;
-	display: flex;
-	align-items: center;
-	width: 100%;
-	& input {
-		width: 100%;
-	}
-
-	& label {
-		position: absolute;
-		top: 0;
-		font-size: 0.7rem;
-		right: 0%;
-	}
-
-	& label.value {
-		top: -1rem;
-		color: var(--color-extra1);
-	}
+	z-index: 2;
+	margin-top: 10px;
 `;
-const StyledSlider = styled.input `
+const Seekbar = styled.input `
 	width: 100%;
 	appearance: none;
 	height: 2px;
@@ -3339,13 +3425,10 @@ const StyledSlider = styled.input `
 	outline: none;
 	opacity: 0.7;
 	transition: opacity 0.2s;
-	&:hover {
-		opacity: 1;
-	}
 	::-webkit-slider-thumb {
 		appearance: none;
-		width: 10px; /* Set a specific slider handle width */
-		height: 10px; /* Slider handle height */
+		width: 14px; /* Set a specific slider handle width */
+		height: 14px; /* Slider handle height */
 		background: ${(props) => props.styleoptions.bgColor};
 		cursor: grab; /* Cursor on hover */
 		border: 2px solid ${(props) => props.styleoptions.primaryColor};
@@ -3357,8 +3440,8 @@ const StyledSlider = styled.input `
 	}
 	::-moz-range-thumb {
 		appearance: none;
-		width: 10px; /* Set a specific slider handle width */
-		height: 10px; /* Slider handle height */
+		width: 12px; /* Set a specific slider handle width */
+		height: 12px; /* Slider handle height */
 		background: ${(props) => props.styleoptions.bgColor};
 		cursor: pointer; /* Cursor on hover */
 		border: 2px solid ${(props) => props.styleoptions.primaryColor};
@@ -3368,13 +3451,7 @@ const StyledSlider = styled.input `
 			${(props) => props.styleoptions.secondaryColor};
 		transition: transform 0.4s ease-out;
 	}
-
 	&::-webkit-slider-thumb:hover {
-		transform: scale(1.1);
-		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
-	}
-
-	::-moz-range-thumb:hover {
 		transform: scale(1.1);
 		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
 	}
@@ -3382,25 +3459,21 @@ const StyledSlider = styled.input `
 	&::-webkit-slider-thumb:active {
 		cursor: grabbing;
 	}
-
-	::-moz-range-thumb:active {
-		cursor: grabbing;
-	}
 `;
-const Icon = styled.div `
-	font-size: 0.9rem;
-	margin-right: 5px;
-	& * {
-		stroke: ${(props) => props.styleoptions.primaryColor};
-		color: ${(props) => props.styleoptions.primaryColor};
-	}
+const Time = styled.h5 `
+	width: 50px;
+	font-size: 0.7em !important;
+	font-weight: normal !important;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 19px;
+	left: -15px;
+	z-index: 100 !important;
+	color: #111;
+	margin: 0 !important;
 `;
-const Slider = (_a) => {
-    var { data, onChange, icon, styleOptions } = _a, props = __rest(_a, ["data", "onChange", "icon", "styleOptions"]);
-    return (React__default["default"].createElement(SliderContainer$1, Object.assign({}, props),
-        icon && React__default["default"].createElement(Icon, { styleoptions: styleOptions }, icon),
-        React__default["default"].createElement(StyledSlider, { min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange, styleoptions: styleOptions })));
-};
 
 // adapted from https://github.com/sindresorhus/parse-ms.
 // moved to internal function because parse-ms is now pure ESM.
@@ -3452,11 +3525,6 @@ function formatDuration (ms, options) {
 }
 
 var formatDuration_1 = formatDuration;
-
-// THIS FILE IS AUTO GENERATED
-function MdOutlineClose (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"fill":"none","d":"M0 0h24v24H0V0z"}},{"tag":"path","attr":{"d":"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"}}]})(props);
-}
 
 /**
  * lodash (Custom Build) <https://lodash.com/>
@@ -3836,9 +3904,28 @@ function toNumber(value) {
 
 var lodash_debounce = debounce;
 
+const SeekBar = ({ readerRef, styleOptions }) => {
+    const { isMinimized, elapsedTime, numberOfWords, currentWordIndex, duration, } = useTextReaderStore();
+    const debouncedHandleManualSeek = lodash_debounce((value) => {
+        const reader = readerRef.current;
+        if (!reader)
+            return;
+        reader.seekTo(value);
+    }, 5);
+    const handleManualSeek = (e) => {
+        debouncedHandleManualSeek(+e.target.value);
+    };
+    return (React.createElement(SeekbarContainer, { isminimized: isMinimized.toString() },
+        React.createElement(Time, null, formatDuration_1(elapsedTime)),
+        React.createElement(Seekbar, { styleoptions: styleOptions, type: "range", min: "0", max: numberOfWords, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
+        React.createElement(Time, { style: { left: 'auto', right: '-15px' } },
+            formatDuration_1(duration),
+            "*")));
+};
+
 // THIS FILE IS AUTO GENERATED
-function VscGithub (props) {
-  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"currentColor"},"child":[{"tag":"path","attr":{"d":"M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24zm3.163 21.783h-.093a.513.513 0 0 1-.382-.14.513.513 0 0 1-.14-.372v-1.406c.006-.467.01-.94.01-1.416a3.693 3.693 0 0 0-.151-1.028 1.832 1.832 0 0 0-.542-.875 8.014 8.014 0 0 0 2.038-.471 4.051 4.051 0 0 0 1.466-.964c.407-.427.71-.943.885-1.506a6.77 6.77 0 0 0 .3-2.13 4.138 4.138 0 0 0-.26-1.476 3.892 3.892 0 0 0-.795-1.284 2.81 2.81 0 0 0 .162-.582c.033-.2.05-.402.05-.604 0-.26-.03-.52-.09-.773a5.309 5.309 0 0 0-.221-.763.293.293 0 0 0-.111-.02h-.11c-.23.002-.456.04-.674.111a5.34 5.34 0 0 0-.703.26 6.503 6.503 0 0 0-.661.343c-.215.127-.405.249-.573.362a9.578 9.578 0 0 0-5.143 0 13.507 13.507 0 0 0-.572-.362 6.022 6.022 0 0 0-.672-.342 4.516 4.516 0 0 0-.705-.261 2.203 2.203 0 0 0-.662-.111h-.11a.29.29 0 0 0-.11.02 5.844 5.844 0 0 0-.23.763c-.054.254-.08.513-.081.773 0 .202.017.404.051.604.033.199.086.394.16.582A3.888 3.888 0 0 0 5.702 10a4.142 4.142 0 0 0-.263 1.476 6.871 6.871 0 0 0 .292 2.12c.181.563.483 1.08.884 1.516.415.422.915.75 1.466.964.653.25 1.337.41 2.033.476a1.828 1.828 0 0 0-.452.633 2.99 2.99 0 0 0-.2.744 2.754 2.754 0 0 1-1.175.27 1.788 1.788 0 0 1-1.065-.3 2.904 2.904 0 0 1-.752-.824 3.1 3.1 0 0 0-.292-.382 2.693 2.693 0 0 0-.372-.343 1.841 1.841 0 0 0-.432-.24 1.2 1.2 0 0 0-.481-.101c-.04.001-.08.005-.12.01a.649.649 0 0 0-.162.02.408.408 0 0 0-.13.06.116.116 0 0 0-.06.1.33.33 0 0 0 .14.242c.093.074.17.131.232.171l.03.021c.133.103.261.214.382.333.112.098.213.209.3.33.09.119.168.246.231.381.073.134.15.288.231.463.188.474.522.875.954 1.145.453.243.961.364 1.476.351.174 0 .349-.01.522-.03.172-.028.343-.057.515-.091v1.743a.5.5 0 0 1-.533.521h-.062a10.286 10.286 0 1 1 6.324 0v.005z"}}]})(props);
+function FcSettings (props) {
+  return GenIcon({"tag":"svg","attr":{"version":"1","viewBox":"0 0 48 48","enableBackground":"new 0 0 48 48"},"child":[{"tag":"path","attr":{"fill":"#607D8B","d":"M39.6,27.2c0.1-0.7,0.2-1.4,0.2-2.2s-0.1-1.5-0.2-2.2l4.5-3.2c0.4-0.3,0.6-0.9,0.3-1.4L40,10.8 c-0.3-0.5-0.8-0.7-1.3-0.4l-5,2.3c-1.2-0.9-2.4-1.6-3.8-2.2l-0.5-5.5c-0.1-0.5-0.5-0.9-1-0.9h-8.6c-0.5,0-1,0.4-1,0.9l-0.5,5.5 c-1.4,0.6-2.7,1.3-3.8,2.2l-5-2.3c-0.5-0.2-1.1,0-1.3,0.4l-4.3,7.4c-0.3,0.5-0.1,1.1,0.3,1.4l4.5,3.2c-0.1,0.7-0.2,1.4-0.2,2.2 s0.1,1.5,0.2,2.2L4,30.4c-0.4,0.3-0.6,0.9-0.3,1.4L8,39.2c0.3,0.5,0.8,0.7,1.3,0.4l5-2.3c1.2,0.9,2.4,1.6,3.8,2.2l0.5,5.5 c0.1,0.5,0.5,0.9,1,0.9h8.6c0.5,0,1-0.4,1-0.9l0.5-5.5c1.4-0.6,2.7-1.3,3.8-2.2l5,2.3c0.5,0.2,1.1,0,1.3-0.4l4.3-7.4 c0.3-0.5,0.1-1.1-0.3-1.4L39.6,27.2z M24,35c-5.5,0-10-4.5-10-10c0-5.5,4.5-10,10-10c5.5,0,10,4.5,10,10C34,30.5,29.5,35,24,35z"}},{"tag":"path","attr":{"fill":"#455A64","d":"M24,13c-6.6,0-12,5.4-12,12c0,6.6,5.4,12,12,12s12-5.4,12-12C36,18.4,30.6,13,24,13z M24,30 c-2.8,0-5-2.2-5-5c0-2.8,2.2-5,5-5s5,2.2,5,5C29,27.8,26.8,30,24,30z"}}]})(props);
 }
 
 // THIS FILE IS AUTO GENERATED
@@ -3846,153 +3933,7 @@ function ImInfo (props) {
   return GenIcon({"tag":"svg","attr":{"version":"1.1","viewBox":"0 0 16 16"},"child":[{"tag":"path","attr":{"d":"M7 4.75c0-0.412 0.338-0.75 0.75-0.75h0.5c0.412 0 0.75 0.338 0.75 0.75v0.5c0 0.412-0.338 0.75-0.75 0.75h-0.5c-0.412 0-0.75-0.338-0.75-0.75v-0.5z"}},{"tag":"path","attr":{"d":"M10 12h-4v-1h1v-3h-1v-1h3v4h1z"}},{"tag":"path","attr":{"d":"M8 0c-4.418 0-8 3.582-8 8s3.582 8 8 8 8-3.582 8-8-3.582-8-8-8zM8 14.5c-3.59 0-6.5-2.91-6.5-6.5s2.91-6.5 6.5-6.5 6.5 2.91 6.5 6.5-2.91 6.5-6.5 6.5z"}}]})(props);
 }
 
-// THIS FILE IS AUTO GENERATED
-function FcSettings (props) {
-  return GenIcon({"tag":"svg","attr":{"version":"1","viewBox":"0 0 48 48","enableBackground":"new 0 0 48 48"},"child":[{"tag":"path","attr":{"fill":"#607D8B","d":"M39.6,27.2c0.1-0.7,0.2-1.4,0.2-2.2s-0.1-1.5-0.2-2.2l4.5-3.2c0.4-0.3,0.6-0.9,0.3-1.4L40,10.8 c-0.3-0.5-0.8-0.7-1.3-0.4l-5,2.3c-1.2-0.9-2.4-1.6-3.8-2.2l-0.5-5.5c-0.1-0.5-0.5-0.9-1-0.9h-8.6c-0.5,0-1,0.4-1,0.9l-0.5,5.5 c-1.4,0.6-2.7,1.3-3.8,2.2l-5-2.3c-0.5-0.2-1.1,0-1.3,0.4l-4.3,7.4c-0.3,0.5-0.1,1.1,0.3,1.4l4.5,3.2c-0.1,0.7-0.2,1.4-0.2,2.2 s0.1,1.5,0.2,2.2L4,30.4c-0.4,0.3-0.6,0.9-0.3,1.4L8,39.2c0.3,0.5,0.8,0.7,1.3,0.4l5-2.3c1.2,0.9,2.4,1.6,3.8,2.2l0.5,5.5 c0.1,0.5,0.5,0.9,1,0.9h8.6c0.5,0,1-0.4,1-0.9l0.5-5.5c1.4-0.6,2.7-1.3,3.8-2.2l5,2.3c0.5,0.2,1.1,0,1.3-0.4l4.3-7.4 c0.3-0.5,0.1-1.1-0.3-1.4L39.6,27.2z M24,35c-5.5,0-10-4.5-10-10c0-5.5,4.5-10,10-10c5.5,0,10,4.5,10,10C34,30.5,29.5,35,24,35z"}},{"tag":"path","attr":{"fill":"#455A64","d":"M24,13c-6.6,0-12,5.4-12,12c0,6.6,5.4,12,12,12s12-5.4,12-12C36,18.4,30.6,13,24,13z M24,30 c-2.8,0-5-2.2-5-5c0-2.8,2.2-5,5-5s5,2.2,5,5C29,27.8,26.8,30,24,30z"}}]})(props);
-}
-
-/* Styled Components */
-const Container = styled.div `
-	font-size: 16px;
-	position: fixed;
-	z-index: 1000;
-	bottom: 5px;
-	right: ${(props) => (props.isvisible === 'true' ? '10px' : '-2000px')};
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	transition: all 200ms linear;
-	width: ${(props) => props.isminimized === 'true' ? '150px' : '300px'};
-	height: 115px;
-	border-radius: 5px;
-	box-shadow: 0px 0px 10px 2px #aaa;
-	padding: 15px;
-	background-color: ${(props) => props.styleoptions.bgColor};
-	font-family: Arial, sans-serif !important;
-	box-sizing: border-box;
-	& * {
-		box-sizing: border-box;
-	}
-`;
-const WindowButton = styled.div `
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	z-index: 100;
-	font-size: 1em !important;
-	width: 20px;
-	height: 20px;
-	border-radius: 3px;
-	border: 2px solid ${(props) => props.styleoptions.primaryColor};
-	background-color: ${(props) => props.styleoptions.bgColor};
-	color: ${(props) => props.styleoptions.textColor};
-	font-weight: bold !important;
-	cursor: pointer;
-	transition: all 0.2s linear;
-	&:hover {
-		backgroundcolor: ${(props) => props.styleoptions.bgColor};
-		color: ${(props) => props.styleoptions.secondaryColor};
-	}
-`;
-const SeekbarContainer = styled.div `
-	text-align: center;
-	width: ${(props) => (props.isminimized === 'true' ? '100%' : '90%')};
-	position: relative;
-	z-index: 2;
-	margin-top: 10px;
-`;
-const Time = styled.h5 `
-	width: 50px;
-	font-size: 0.7em !important;
-	font-weight: normal !important;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: absolute;
-	top: 19px;
-	left: -15px;
-	z-index: 100 !important;
-	color: #111;
-	margin: 0 !important;
-`;
-const Seekbar = styled.input `
-	width: 100%;
-	appearance: none;
-	height: 2px;
-	background: ${(props) => props.styleoptions.primaryColor};
-	outline: none;
-	opacity: 0.7;
-	transition: opacity 0.2s;
-	::-webkit-slider-thumb {
-		appearance: none;
-		width: 14px; /* Set a specific slider handle width */
-		height: 14px; /* Slider handle height */
-		background: ${(props) => props.styleoptions.bgColor};
-		cursor: grab; /* Cursor on hover */
-		border: 2px solid ${(props) => props.styleoptions.primaryColor};
-		border-radius: 50%;
-		z-index: 1;
-		box-shadow: 0 2px 5px
-			${(props) => props.styleoptions.secondaryColor};
-		transition: transform 0.1s ease-out;
-	}
-	::-moz-range-thumb {
-		appearance: none;
-		width: 12px; /* Set a specific slider handle width */
-		height: 12px; /* Slider handle height */
-		background: ${(props) => props.styleoptions.bgColor};
-		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props) => props.styleoptions.primaryColor};
-		border-radius: 50%;
-		z-index: 1;
-		box-shadow: 0 2px 5px
-			${(props) => props.styleoptions.secondaryColor};
-		transition: transform 0.4s ease-out;
-	}
-	&::-webkit-slider-thumb:hover {
-		transform: scale(1.1);
-		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
-	}
-
-	&::-webkit-slider-thumb:active {
-		cursor: grabbing;
-	}
-`;
-const ControlsContainer = styled.div `
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	position: relative;
-	z-index: 1;
-	margin: 5px 0px 5px 0px;
-	& div {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-	${(props) => props.isminimized === 'true'
-    ? 'border-bottom: 1px; padding: 2px 0px 2px 0px;'
-    : 'padding-top: 2px'}
-`;
-const ControlButton = styled.div `
-	border-radius: 50%;
-	margin: 2px;
-	background-color: ${(props) => props.styleoptions.bgColor};
-	color: ${(props) => props.styleoptions.primaryColor};
-	font-weight: normal !important;
-	cursor: pointer;
-	border: 2px solid ${(props) => props.styleoptions.secondaryColor};
-	&:hover {
-		border: 2px solid ${(props) => props.styleoptions.primaryColor};
-		background-color: ${(props) => props.styleoptions.bgColor};
-		color: ${(props) => props.styleoptions.secondaryColor};
-	}
-	transition: all 0.2s;
-	font-size: 1.1em;
-	pointer-events: ${(props) => props.isloading === 'true' ? 'none' : 'auto'};
-`;
-const OptionsContainer = styled.div `
+const OptionsContainer$1 = styled.div `
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
@@ -4034,23 +3975,7 @@ const InfoIcon = styled(ImInfo) `
 		fill: ${(props) => props.styleoptions.secondaryColor};
 	}
 `;
-const Reset = styled(BiReset) `
-	position: absolute;
-	top: 50%;
-	right: 5px;
-	font-weight: bold;
-	cursor: pointer;
-	transition: 0.2s ease-in;
-	font-size: 0.9em;
-	color: ${(props) => props.styleoptions.primaryColor};
-	&:hover {
-		color: ${(props) => props.styleoptions.secondaryColor};
-	}
-`;
-const SliderContainer = styled.div `
-	width: 70px;
-`;
-const ExtraSettings = styled.div `
+const ExtraSettingsContainer = styled.div `
 	opacity: ${(props) => (props.issettingsvisible === 'true' ? 1 : 0)};
 	pointer-events: ${(props) => props.issettingsvisible === 'true' ? 'all' : 'none'};
 	position: absolute;
@@ -4092,32 +4017,180 @@ const CheckBox = styled.input `
 	margin: 0 !important;
 	padding: 0 !important;
 `;
-styled(VscGithub) `
+
+const Container = styled.div `
+	margin-right: 10px;
+`;
+const StyledButton = styled.button `
+	position: relative;
+	font-size: 0.7em;
+	font-weight: bold;
+	color: ${(props) => props.styleoptions.primaryColor};
+	cursor: pointer;
+	transition: all 0.5s linear;
+	border: none;
+	background: none;
+	padding: 1px 6px !important;
+	&:hover {
+		color: ${(props) => props.styleoptions.secondaryColor};
+	}
+	&::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: -2px;
+		width: 0px;
+		height: 1.2px;
+		background-color: ${(props) => props.styleoptions.primaryColor};
+		transition: all 0.2s ease-in;
+	}
+	&:hover::after {
+		width: 100%;
+	}
+`;
+const OptionsContainer = styled.div `
+	opacity: ${(props) => (props.showOptions ? 1 : 0)};
+	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
 	position: absolute;
-	top: 3px;
-	left: 3px;
-	width: 17px;
-	height: 17px;
-	fill: ${(props) => props.styleoptions.primaryColor};
+	width: 100%;
+	height: 46px;
+	bottom: 0px;
+	right: 0;
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.primaryColor};
+	z-index: 100;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	overflow-x: hidden;
 `;
 
-const TextReader = ({ textContainer, options, styleOptions }) => {
-    const isFirstRender = useIsFirstRender();
-    const { isReading, rate, voice, voices, volume, elapsedTime, currentWordIndex, duration, numberOfWords, isLoading, isHighlightTextOn, isChunksModeOn, enableChunksMode, disableChunksMode, enableHighlightText, disableHighlightText, stopReading, startReading, setRate, setVoice, setVoices, setVolume, setElapsedTime, isMinimized, minimize, maximize, hideTextReader, isVisible, isSettingsVisible, showSettings, hideSettings, isPreserveHighlighting, enablePreserveHighlighting, disablePreserveHighlighting, setNumberOfWords, setCurrentWordIndex, setDuration, setIsLoading, } = useTextReaderStore();
-    const textReaderRef = React.useRef();
-    /* Handlers */
-    const handleTextReadPlay = () => {
-        startReading();
+/* React Components */
+const Button = (_a) => {
+    var { children, styleOptions } = _a, props = __rest$1(_a, ["children", "styleOptions"]);
+    return (React.createElement(StyledButton, Object.assign({ styleoptions: styleOptions }, props), children));
+};
+
+const CustomSelect = (_a) => {
+    var _b;
+    var { options, value, title, onChange, styleOptions, style } = _a, props = __rest$1(_a, ["options", "value", "title", "onChange", "styleOptions", "style"]);
+    const [showOptions, setShowOptions] = React.useState(false);
+    const ref = React.useRef(null);
+    const show = () => {
+        setShowOptions(true);
     };
-    const handleTextReadPause = () => {
-        stopReading();
+    const hide = React.useCallback(() => {
+        setShowOptions(false);
+    }, []);
+    const onOptionClick = (val) => {
+        onChange(val);
+        hide();
     };
-    const handleReset = () => {
-        const reader = textReaderRef.current;
-        reader === null || reader === void 0 ? void 0 : reader.reset();
-    };
+    useOnClickOutside(ref, hide);
+    return (React.createElement(Container, Object.assign({}, props),
+        React.createElement(StyledButton, { type: "button", onClick: show, styleoptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
+        React.createElement(OptionsContainer, { ref: ref, styleoptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React.createElement(Button, { key: opt.value, onClick: () => {
+                onOptionClick(opt.value);
+            }, styleOptions: styleOptions }, opt.name))))));
+};
+
+/* Styled Components */
+const SliderContainer = styled.div `
+	position: relative;
+	display: flex;
+	align-items: center;
+	width: 70px;
+	& input {
+		width: 100%;
+	}
+
+	& label {
+		position: absolute;
+		top: 0;
+		font-size: 0.7rem;
+		right: 0%;
+	}
+
+	& label.value {
+		top: -1rem;
+		color: var(--color-extra1);
+	}
+`;
+const StyledSlider = styled.input `
+	width: 100%;
+	appearance: none;
+	height: 2px;
+	background: ${(props) => props.styleoptions.primaryColor};
+	outline: none;
+	opacity: 0.7;
+	transition: opacity 0.2s;
+	&:hover {
+		opacity: 1;
+	}
+	::-webkit-slider-thumb {
+		appearance: none;
+		width: 10px; /* Set a specific slider handle width */
+		height: 10px; /* Slider handle height */
+		background: ${(props) => props.styleoptions.bgColor};
+		cursor: pointer; /* Cursor on hover */
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
+		border-radius: 50%;
+		z-index: 1;
+		box-shadow: 0 2px 5px
+			${(props) => props.styleoptions.secondaryColor};
+		transition: transform 0.1s ease-out;
+	}
+	::-moz-range-thumb {
+		appearance: none;
+		width: 10px; /* Set a specific slider handle width */
+		height: 10px; /* Slider handle height */
+		background: ${(props) => props.styleoptions.bgColor};
+		cursor: pointer; /* Cursor on hover */
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
+		border-radius: 50%;
+		z-index: 1;
+		box-shadow: 0 2px 5px
+			${(props) => props.styleoptions.secondaryColor};
+		transition: transform 0.4s ease-out;
+	}
+
+	&::-webkit-slider-thumb:hover {
+		transform: scale(1.1);
+		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
+	}
+
+	::-moz-range-thumb:hover {
+		transform: scale(1.1);
+		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
+	}
+
+	&::-webkit-slider-thumb:active {
+	}
+
+	::-moz-range-thumb:active {
+	}
+`;
+const Icon = styled.div `
+	font-size: 0.9rem;
+	margin-right: 5px;
+	& * {
+		stroke: ${(props) => props.styleoptions.primaryColor};
+		color: ${(props) => props.styleoptions.primaryColor};
+	}
+`;
+
+const VolumeSlider = (_a) => {
+    var { data, onChange, icon, styleOptions } = _a, props = __rest$1(_a, ["data", "onChange", "icon", "styleOptions"]);
+    return (React.createElement(SliderContainer, Object.assign({}, props),
+        icon && React.createElement(Icon, { styleoptions: styleOptions }, icon),
+        React.createElement(StyledSlider, { min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange, styleoptions: styleOptions })));
+};
+
+const SecondaryControls = ({ readerRef, styleOptions, }) => {
+    const { setRate, setDuration, setVoice, setVolume, isSettingsVisible, hideSettings, showSettings, voice, rate, voices, volume, enablePreserveHighlighting, disablePreserveHighlighting, enableHighlightText, disableHighlightText, enableChunksMode, disableChunksMode, isPreserveHighlighting, isHighlightTextOn, isChunksModeOn, } = useTextReaderStore();
+    const reader = readerRef.current;
     const handleRateChange = (value) => {
-        const reader = textReaderRef.current;
         if (!reader)
             return;
         reader.editUtterance({ rate: +value });
@@ -4125,27 +4198,15 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         setDuration(reader.state.duration);
     };
     const handleVoiceChange = (value) => {
-        const reader = textReaderRef.current;
         reader === null || reader === void 0 ? void 0 : reader.editUtterance({ voiceURI: value });
         setVoice(value);
     };
     const handleVolumeChange = (e) => {
-        const reader = textReaderRef.current;
         const target = e.target;
         if (!reader)
             return;
         reader.editUtterance({ volume: +target.value });
         setVolume(target.value);
-    };
-    const handleHideReader = () => {
-        hideTextReader();
-        handleTextReadPause();
-    };
-    const handleMinimizeReader = () => {
-        minimize();
-    };
-    const handleMaximizeReader = () => {
-        maximize();
     };
     const toggleSettings = () => {
         if (isSettingsVisible)
@@ -4153,48 +4214,8 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         else
             showSettings();
     };
-    /* Seeking handlers */
-    const debouncedHandleManualSeek = lodash_debounce((value) => {
-        const reader = textReaderRef.current;
-        if (!reader)
-            return;
-        reader.seekTo(value);
-    }, 5);
-    const handleManualSeek = React.useMemo(() => (e) => {
-        debouncedHandleManualSeek(+e.target.value);
-    }, 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []);
-    const handleGenericSeek = (val) => {
-        const reader = textReaderRef.current;
-        reader === null || reader === void 0 ? void 0 : reader.seekTo(val);
-    };
-    const handleFastForward = () => {
-        const reader = textReaderRef.current;
-        if (reader === null || reader === void 0 ? void 0 : reader.options.isChunksModeOn) {
-            if (reader.state.currentChunkIndex + 1 <
-                reader.state.chunksArray.length)
-                /* Go to the next chunk */
-                handleGenericSeek(reader.state.chunksArray[reader.state.currentChunkIndex + 1]
-                    .start);
-        }
-        else if (reader.state.currentWordIndex + 1 <=
-            reader.state.wholeTextArray.length)
-            handleGenericSeek(reader.state.currentWordIndex + 1);
-    };
-    const handleFastBackward = () => {
-        const reader = textReaderRef.current;
-        if (reader === null || reader === void 0 ? void 0 : reader.options.isChunksModeOn) {
-            if (reader.state.currentChunkIndex - 1 >= 0)
-                handleGenericSeek(reader.state.chunksArray[reader.state.currentChunkIndex - 1]
-                    .start);
-        }
-        else if (reader.state.currentWordIndex - 1 >= 0)
-            handleGenericSeek(reader.state.currentWordIndex - 1);
-    };
     /* Options Handlers */
     const handlePreserveHighlighting = (e) => {
-        const reader = textReaderRef.current;
         const target = e.target;
         if (!reader)
             return;
@@ -4208,7 +4229,6 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         }
     };
     const handleIsHighlightTextOn = (e) => {
-        const reader = textReaderRef.current;
         const target = e.target;
         if (!reader)
             return;
@@ -4222,7 +4242,6 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         }
     };
     const handleIsChunksModeOn = (e) => {
-        const reader = textReaderRef.current;
         const target = e.target;
         if (!reader || reader.state.isMobile)
             return;
@@ -4233,6 +4252,51 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         /* Use the editUtterance method to update the utterance text  */
         reader.changeChunkMode(target.checked);
     };
+    return (React.createElement(React.Fragment, null,
+        React.createElement(OptionsContainer$1, null,
+            React.createElement("div", { id: "options-wrapper-1" },
+                React.createElement(CustomSelect, { name: "rate", options: [
+                        { value: '0.5', name: '0.5x' },
+                        { value: '0.75', name: '0.75x' },
+                        { value: '1', name: '1x' },
+                        { value: '1.25', name: '1.25x' },
+                        { value: '1.5', name: '1.5x' },
+                        { value: '2', name: '2x' },
+                    ], onChange: handleRateChange, value: rate, defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
+                React.createElement(CustomSelect, { name: "voice", options: voices === null || voices === void 0 ? void 0 : voices.map((voice) => {
+                        var _a;
+                        return ({
+                            name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
+                            ''),
+                            value: voice.voiceURI,
+                        });
+                    }), onChange: handleVoiceChange, value: voice, defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
+                React.createElement(SettingsIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings }),
+                React.createElement(InfoIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings })),
+            React.createElement("div", { id: "options-wrapper-2" },
+                React.createElement(VolumeSlider, { icon: React.createElement(BiVolumeFull, null), onChange: handleVolumeChange, data: {
+                        min: '0.1',
+                        max: '1',
+                        step: '0.1',
+                        value: +volume,
+                        unit: '%',
+                    }, styleOptions: styleOptions })),
+            React.createElement(ExtraSettingsContainer, { styleoptions: styleOptions, issettingsvisible: isSettingsVisible.toString(), onPointerDown: toggleSettings },
+                React.createElement("label", { htmlFor: "preserve-option", onPointerDown: (e) => e.stopPropagation() },
+                    React.createElement(CheckBox, { id: "preserve-option", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
+                    React.createElement("h5", null, "Preserve Highlighting")),
+                React.createElement("label", { htmlFor: "highlight-option", onPointerDown: (e) => e.stopPropagation() },
+                    React.createElement(CheckBox, { id: "highlight-option", type: "checkbox", checked: isHighlightTextOn, onChange: handleIsHighlightTextOn }),
+                    React.createElement("h5", null, "Highlight Text")),
+                React.createElement("label", { htmlFor: "mode-option", onPointerDown: (e) => e.stopPropagation() },
+                    React.createElement(CheckBox, { id: "mode-option", type: "checkbox", checked: isChunksModeOn, onChange: handleIsChunksModeOn }),
+                    React.createElement("h5", null, "Chunks Mode"))))));
+};
+
+const TextReader = ({ textContainer, options, styleOptions, }) => {
+    const isFirstRender = useIsFirstRender();
+    const { isReading, enableChunksMode, stopReading, setVoice, setVoices, setElapsedTime, isMinimized, isVisible, setNumberOfWords, setCurrentWordIndex, setDuration, setIsLoading, } = useTextReaderStore();
+    const textReaderRef = React.useRef();
     React.useEffect(() => {
         /* Reset browser active speech synth queue on refresh or new load */
         window.speechSynthesis.cancel();
@@ -4249,9 +4313,9 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
                 stopReading();
                 setElapsedTime(reader === null || reader === void 0 ? void 0 : reader.state.elapsedTime);
                 setCurrentWordIndex(reader === null || reader === void 0 ? void 0 : reader.state.currentWordIndex);
-            }, onEnd: () => {
+            }, onEnd: (reader) => {
                 console.log('End');
-                handleReset();
+                reader.reset();
             }, onBoundary: (reader, e) => {
                 setCurrentWordIndex(reader.state.currentWordIndex);
             }, onSeek: (reader, value) => {
@@ -4261,7 +4325,7 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
             }, onWordClick: (reader, e) => {
                 const target = e.target;
                 const idx = +target.dataset.id;
-                handleGenericSeek(idx);
+                reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
             } }));
         textReaderRef.current
             .init()
@@ -4284,7 +4348,7 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [textContainer]);
-    /* Play */
+    /* Declarative management of play/pause/resume logic */
     React.useEffect(() => {
         const reader = textReaderRef.current;
         if (!reader || isFirstRender)
@@ -4306,72 +4370,15 @@ const TextReader = ({ textContainer, options, styleOptions }) => {
         else if (reader.isPlaying())
             reader.pause();
     }, [isReading, textContainer, isFirstRender, setIsLoading]);
-    return (React__default["default"].createElement(Container, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
-        React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '3px' }, styleoptions: styleOptions, onPointerDown: handleHideReader },
-            React__default["default"].createElement(MdOutlineClose, { title: "Close" })),
-        React__default["default"].createElement(WindowButton, { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', styleoptions: styleOptions, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React__default["default"].createElement(FiMaximize, null) : React__default["default"].createElement(FiMinimize, null)),
-        React__default["default"].createElement(SeekbarContainer, { isminimized: isMinimized.toString() },
-            React__default["default"].createElement(Time, null, formatDuration_1(elapsedTime)),
-            React__default["default"].createElement(Seekbar, { styleoptions: styleOptions, type: "range", min: "0", max: numberOfWords, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
-            React__default["default"].createElement(Time, { style: { left: 'auto', right: '-15px' } },
-                formatDuration_1(duration),
-                "*")),
-        React__default["default"].createElement(ControlsContainer, { isminimized: isMinimized.toString() },
-            React__default["default"].createElement("div", null,
-                React__default["default"].createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward, styleoptions: styleOptions, isloading: isLoading.toString() }),
-                !isReading ? (React__default["default"].createElement(ControlButton, { style: {
-                        fontSize: '1.5em',
-                    }, as: AiFillPlayCircle, title: "Play", onPointerDown: handleTextReadPlay, styleoptions: styleOptions, isloading: isLoading.toString() })) : (React__default["default"].createElement(ControlButton, { style: {
-                        fontSize: '1.5em',
-                    }, as: AiFillPauseCircle, title: "Pause", styleoptions: styleOptions, onPointerDown: handleTextReadPause, isloading: isLoading.toString() })),
-                React__default["default"].createElement(ControlButton, { as: AiFillFastForward, title: "Fast forsward", onPointerDown: handleFastForward, styleoptions: styleOptions, isloading: isLoading.toString() }),
-                React__default["default"].createElement(Reset, { title: "reset", styleoptions: styleOptions, onClick: handleReset }))),
-        !isMinimized && (React__default["default"].createElement(React__default["default"].Fragment, null,
-            React__default["default"].createElement(OptionsContainer, null,
-                React__default["default"].createElement("div", { id: "options-wrapper-1" },
-                    React__default["default"].createElement(CustomSelect, { name: "rate", options: [
-                            { value: '0.5', name: '0.5x' },
-                            { value: '0.75', name: '0.75x' },
-                            { value: '1', name: '1x' },
-                            { value: '1.25', name: '1.25x' },
-                            { value: '1.5', name: '1.5x' },
-                            { value: '2', name: '2x' },
-                        ], onChange: handleRateChange, value: rate, defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
-                    React__default["default"].createElement(CustomSelect, { name: "voice", options: voices === null || voices === void 0 ? void 0 : voices.map((voice) => {
-                            var _a;
-                            return ({
-                                name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
-                                ''),
-                                value: voice.voiceURI,
-                            });
-                        }), onChange: handleVoiceChange, value: voice, defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
-                    React__default["default"].createElement(SettingsIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings }),
-                    React__default["default"].createElement(InfoIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings })),
-                React__default["default"].createElement("div", { id: "options-wrapper-2" },
-                    React__default["default"].createElement(SliderContainer, null,
-                        React__default["default"].createElement(Slider, { icon: React__default["default"].createElement(BiVolumeFull, null), onChange: handleVolumeChange, data: {
-                                min: '0.1',
-                                max: '1',
-                                step: '0.1',
-                                value: +volume,
-                                unit: '%',
-                            }, styleOptions: styleOptions })))),
-            React__default["default"].createElement(ExtraSettings, { styleoptions: styleOptions, issettingsvisible: isSettingsVisible.toString(), onPointerDown: toggleSettings },
-                React__default["default"].createElement("label", { htmlFor: "preserve-option", onPointerDown: (e) => e.stopPropagation() },
-                    React__default["default"].createElement(CheckBox, { id: "preserve-option", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
-                    React__default["default"].createElement("h5", null, "Preserve Highlighting")),
-                React__default["default"].createElement("label", { htmlFor: "highlight-option", onPointerDown: (e) => e.stopPropagation() },
-                    React__default["default"].createElement(CheckBox, { id: "highlight-option", type: "checkbox", checked: isHighlightTextOn, onChange: handleIsHighlightTextOn }),
-                    React__default["default"].createElement("h5", null, "Highlight Text")),
-                React__default["default"].createElement("label", { htmlFor: "mode-option", onPointerDown: (e) => e.stopPropagation() },
-                    React__default["default"].createElement(CheckBox, { id: "mode-option", type: "checkbox", checked: isChunksModeOn, onChange: handleIsChunksModeOn }),
-                    React__default["default"].createElement("h5", null, "Chunks Mode"))))),
-        React__default["default"].createElement(InfoIcon, { styleoptions: styleOptions })));
+    return (React.createElement(Container$1, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
+        React.createElement(WindowControls, { styleOptions: styleOptions }),
+        React.createElement(SeekBar, { readerRef: textReaderRef, styleOptions: styleOptions }),
+        React.createElement(MainControls, { readerRef: textReaderRef, styleOptions: styleOptions }),
+        !isMinimized && (React.createElement(SecondaryControls, { readerRef: textReaderRef, styleOptions: styleOptions }))));
 };
 TextReader.defaultProps = {
     options: {
         language: 'en',
-        isSSROn: false,
     },
     styleOptions: {
         primaryColor: '#00D',
@@ -4383,7 +4390,6 @@ TextReader.defaultProps = {
     },
 };
 
-exports.SpeechSynth = SpeechSynth;
-exports["default"] = TextReader;
+exports.default = TextReader;
 exports.useTextReaderStore = useTextReaderStore;
 //# sourceMappingURL=index.js.map

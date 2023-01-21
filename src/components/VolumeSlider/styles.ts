@@ -1,13 +1,4 @@
-import React, { FC, ChangeEventHandler } from 'react';
 import styled from 'styled-components';
-
-export type SliderData = {
-	value: number;
-	min: string;
-	max: string;
-	step: string;
-	unit: string;
-};
 
 interface IIcon {
 	styleoptions: IStyleOptions;
@@ -17,22 +8,13 @@ interface ISlider {
 	styleoptions: IStyleOptions;
 }
 
-interface IProps {
-	children?: JSX.Element | string;
-	data: SliderData;
-	onChange: ChangeEventHandler;
-	styleOptions: IStyleOptions;
-	icon?: JSX.Element;
-	[key: string]: any;
-}
-
 /* Styled Components */
 
-const SliderContainer = styled.div`
+export const SliderContainer = styled.div`
 	position: relative;
 	display: flex;
 	align-items: center;
-	width: 100%;
+	width: 70px;
 	& input {
 		width: 100%;
 	}
@@ -50,7 +32,7 @@ const SliderContainer = styled.div`
 	}
 `;
 
-const StyledSlider = styled.input<ISlider>`
+export const StyledSlider = styled.input<ISlider>`
 	width: 100%;
 	appearance: none;
 	height: 2px;
@@ -105,7 +87,7 @@ const StyledSlider = styled.input<ISlider>`
 	}
 `;
 
-const Icon = styled.div<IIcon>`
+export const Icon = styled.div<IIcon>`
 	font-size: 0.9rem;
 	margin-right: 5px;
 	& * {
@@ -113,28 +95,3 @@ const Icon = styled.div<IIcon>`
 		color: ${(props: any) => props.styleoptions.primaryColor};
 	}
 `;
-
-const Slider: FC<IProps> = ({
-	data,
-	onChange,
-	icon,
-	styleOptions,
-	...props
-}) => {
-	return (
-		<SliderContainer {...props}>
-			{icon && <Icon styleoptions={styleOptions}>{icon}</Icon>}
-			<StyledSlider
-				min={data.min}
-				max={data.max}
-				step={data.step}
-				type="range"
-				value={data.value}
-				onChange={onChange}
-				styleoptions={styleOptions}
-			/>
-		</SliderContainer>
-	);
-};
-
-export default Slider;

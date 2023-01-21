@@ -744,7 +744,6 @@ export class SpeechSynth extends EventEmitter {
 			)
 			.forEach((el) => {
 				if (!el) return;
-
 				(el as HTMLElement).style.transition = 'all 0.4s';
 			});
 	}
