@@ -1,27 +1,22 @@
 import React, { ChangeEventHandler, FC, useContext } from 'react';
-
-import { useTextReaderStore } from 'store';
 import { ISeekBarProps } from './types';
 import { Seekbar, SeekbarContainer, Time } from './styles';
 import format from 'format-duration';
 import debounce from 'lodash.debounce';
 import { GlobalStateContext } from 'components/TextReader/TextReader';
 
-const SeekBar: FC<ISeekBarProps> = ({ readerRef, styleOptions }) => {
-	const { state } = useContext(GlobalStateContext);
-	const { elapsedTime } = state;
+const SeekBar: FC<ISeekBarProps> = ({ styleOptions }) => {
+	const { state, reader } = useContext(GlobalStateContext);
 	const {
-		isMinimized,
-		// elapsedTime,
+		elapsedTime,
 		numberOfWords,
 		currentWordIndex,
+		isMinimized,
 		duration,
-	} = useTextReaderStore();
+	} = state;
 
 	const debouncedHandleManualSeek = debounce((value: number) => {
-		const reader = readerRef.current;
-		if (!reader) return;
-		reader.seekTo(value);
+		reader?.seekTo(value);
 	}, 5);
 
 	const handleManualSeek: ChangeEventHandler = (e) => {

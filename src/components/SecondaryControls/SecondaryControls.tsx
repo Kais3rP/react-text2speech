@@ -12,43 +12,32 @@ import CustomSelect from 'components/CustomSelect/CustomSelect';
 import { BiVolumeFull } from 'react-icons/bi';
 import VolumeSlider from 'components/VolumeSlider/VolumeSlider';
 import { GlobalStateContext } from 'components/TextReader/TextReader';
-import { setVoice } from 'store/actions';
+import { setDuration, setIsSettingsVisible, setVoice } from 'store/actions';
 
-const SecondaryControls: FC<ISecondaryControlsProps> = ({
-	readerRef,
-	styleOptions,
-}) => {
-	const { state, dispatch } = useContext(GlobalStateContext);
-	const { voice, voices } = state;
+const SecondaryControls: FC<ISecondaryControlsProps> = ({ styleOptions }) => {
+	const { state, dispatch, reader } = useContext(GlobalStateContext);
+	const { voice, voices, isSettingsVisible, isChunksModeOn } = state;
 	const {
 		setRate,
-		setDuration,
-		// setVoice,
+
 		setVolume,
-		isSettingsVisible,
-		hideSettings,
-		showSettings,
-		// voice,
+
 		rate,
-		// voices,
+
 		volume,
 		enablePreserveHighlighting,
 		disablePreserveHighlighting,
 		enableHighlightText,
 		disableHighlightText,
-		enableChunksMode,
-		disableChunksMode,
 		isPreserveHighlighting,
 		isHighlightTextOn,
-		isChunksModeOn,
 	} = useTextReaderStore();
 
-	const reader = readerRef.current;
 	const handleRateChange = (value: string) => {
 		if (!reader) return;
 		reader.editUtterance({ rate: +value });
 		setRate(value);
-		setDuration(reader.state.duration);
+		dispatch(setDuration(reader.state.duration));
 	};
 
 	const handleVoiceChange = (value: string) => {
@@ -64,8 +53,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = ({
 	};
 
 	const toggleSettings = () => {
-		if (isSettingsVisible) hideSettings();
-		else showSettings();
+		dispatch(setIsSettingsVisible(!isSettingsVisible));
 	};
 
 	/* Options Handlers */
@@ -96,15 +84,11 @@ const SecondaryControls: FC<ISecondaryControlsProps> = ({
 
 	const handleIsChunksModeOn: ChangeEventHandler = (e) => {
 		const target = e.target as HTMLInputElement;
-		if (!reader || reader.state.isMobile) return;
-
-		if (target.checked) enableChunksMode();
-		else disableChunksMode();
-
-		/* Use the editUtterance method to update the utterance text  */
+		if (!reader || reader.state.isMobile) return; // Disable this option for mobile devices
+		// dispatch(setIsChunksModeOn(true)) // Optimistic update the checkbox for an immediate feel, it's going to be corrected i
 		reader.changeChunkMode(target.checked);
 	};
-
+	console.log('IS chunks mode', isChunksModeOn);
 	return (
 		<>
 			<OptionsContainer>

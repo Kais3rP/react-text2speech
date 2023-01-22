@@ -1,4 +1,5 @@
 import React, { FC, Dispatch } from 'react';
+import { SpeechSynth } from '../../lib';
 import { ITextReaderProps } from './types';
 interface IGlobalState {
     isReading: boolean;
@@ -21,6 +22,7 @@ interface IGlobalState {
 interface IGlobalStateContext {
     state: IGlobalState;
     dispatch: Dispatch<ActionType>;
+    reader: SpeechSynth | null;
 }
 export declare const GlobalStateContext: React.Context<IGlobalStateContext>;
 declare const TextReader: FC<ITextReaderProps>;

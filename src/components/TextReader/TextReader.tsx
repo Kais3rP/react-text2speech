@@ -1,8 +1,5 @@
 import React, { FC, useRef, useEffect, useReducer, Dispatch } from 'react';
 import { SpeechSynth } from '../../lib';
-import { useTextReaderStore } from '../../store';
-
-import { useIsFirstRender } from '../../hooks';
 import { Container } from './styles';
 import { ITextReaderProps } from './types';
 import MainControls from 'components/MainControls/MainControls';
@@ -10,10 +7,14 @@ import WindowControls from 'components/WindowControls/WindowControls';
 import SeekBar from 'components/SeekBar/SeekBar';
 import SecondaryControls from 'components/SecondaryControls/SecondaryControls';
 import {
+	setCurrentWordIndex,
+	setDuration,
 	setElapsedTime,
+	setIsChunksModeOn,
+	setIsReading,
+	setNumberOfWords,
 	setVoice,
 	setVoices,
-	stopReading,
 } from 'store/actions';
 
 interface IGlobalState {
@@ -57,11 +58,20 @@ const globalState: IGlobalState = {
 const rootReducer = (state: IGlobalState, action: ActionType) => {
 	const { type, payload } = action;
 	switch (type) {
-		case 'START_READING': {
-			return { ...state, isReading: true };
+		case 'SET_IS_READING': {
+			return { ...state, isReading: payload };
 		}
-		case 'STOP_READING': {
-			return { ...state, isReading: false };
+		case 'SET_IS_LOADING': {
+			return { ...state, isLoading: payload };
+		}
+		case 'SET_IS_MINIMIZED': {
+			return { ...state, isMinimized: payload };
+		}
+		case 'SET_IS_VISIBLE': {
+			return { ...state, isVisible: payload };
+		}
+		case 'SET_IS_SETTINGS_VISIBLE': {
+			return { ...state, isSettingsVisible: payload };
 		}
 		case 'SET_VOICE': {
 			return { ...state, voice: payload };
@@ -72,6 +82,18 @@ const rootReducer = (state: IGlobalState, action: ActionType) => {
 		case 'SET_ELAPSED_TIME': {
 			return { ...state, elapsedTime: payload };
 		}
+		case 'SET_DURATION': {
+			return { ...state, duration: payload };
+		}
+		case 'SET_NUMBER_OF_WORDS': {
+			return { ...state, numberOfWords: payload };
+		}
+		case 'SET_CURRENT_WORD_INDEX': {
+			return { ...state, currentWordIndex: payload };
+		}
+		case 'SET_IS_CHUNKS_MODE_ON': {
+			return { ...state, isChunksModeOn: payload };
+		}
 		default:
 			return { ...state };
 	}
@@ -80,11 +102,13 @@ const rootReducer = (state: IGlobalState, action: ActionType) => {
 interface IGlobalStateContext {
 	state: IGlobalState;
 	dispatch: Dispatch<ActionType>;
+	reader: SpeechSynth | null;
 }
 
 export const GlobalStateContext = React.createContext<IGlobalStateContext>({
 	state: globalState,
 	dispatch: () => null,
+	reader: null,
 });
 
 const TextReader: FC<ITextReaderProps> = ({
@@ -94,62 +118,40 @@ const TextReader: FC<ITextReaderProps> = ({
 }) => {
 	/* Initialize store */
 	const [state, dispatch] = useReducer(rootReducer, globalState);
-	const { isReading } = state;
+	const { isMinimized, isVisible } = state;
 
-	const isFirstRender = useIsFirstRender();
-
-	const {
-		// isReading,
-		enableChunksMode,
-		// stopReading,
-		// setVoice,
-		// setVoices,
-		// setElapsedTime,
-		isMinimized,
-		isVisible,
-		setNumberOfWords,
-		setCurrentWordIndex,
-		setDuration,
-		setIsLoading,
-	} = useTextReaderStore();
-
-	const textReaderRef = useRef<SpeechSynth>();
-
-	useEffect(() => {
-		/* Reset browser active speech synth queue on refresh or new load */
-
-		window.speechSynthesis.cancel();
-
-		if (!textContainer) return;
-
-		textReaderRef.current = new SpeechSynth(textContainer, {
+	const readerRef = useRef<SpeechSynth>(
+		new SpeechSynth(textContainer, {
 			...options,
 			color1: styleOptions?.highlightColor1 || '#DEE',
 			color2: styleOptions.highlightColor2 || '#9DE',
 			onStart: (reader: SpeechSynth) => {
 				console.log('Start');
+				dispatch(setIsReading(reader.state.isReading));
 			},
 			onPause: (reader: SpeechSynth) => {
 				console.log('Pause');
+				dispatch(setIsReading(reader.state.isReading));
 			},
 			onResume: (reader: SpeechSynth) => {
 				console.log('Resume');
+				dispatch(setIsReading(reader.state.isReading));
 			},
 			onReset: (reader: SpeechSynth) => {
-				console.log('Reset Event called', reader?.state.elapsedTime);
-				dispatch(stopReading());
-				dispatch(setElapsedTime(reader?.state.elapsedTime as number));
-				setCurrentWordIndex(reader?.state.currentWordIndex as number);
+				console.log('Reset Event called', reader.state.elapsedTime);
+				dispatch(setIsReading(reader.state.isReading));
+				dispatch(setElapsedTime(reader.state.elapsedTime));
+				dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
 			},
 			onEnd: (reader: SpeechSynth) => {
 				console.log('End');
 				reader.reset();
 			},
 			onBoundary: (reader: SpeechSynth, e: Event) => {
-				setCurrentWordIndex(reader.state.currentWordIndex);
+				dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
 			},
 			onSeek: (reader: SpeechSynth, value: number) => {
-				setCurrentWordIndex(value);
+				dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
 			},
 			onTimeTick: (reader: SpeechSynth, value: number) => {
 				dispatch(setElapsedTime(reader.state.elapsedTime));
@@ -159,9 +161,20 @@ const TextReader: FC<ITextReaderProps> = ({
 				const idx: number = +(target.dataset.id as string);
 				reader?.seekTo(idx);
 			},
-		});
+			onChunksModeChange: (reader: SpeechSynth) => {
+				dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
+			},
+		})
+	);
 
-		textReaderRef.current
+	useEffect(() => {
+		/* Reset browser active speech synth queue on refresh or new load */
+
+		window.speechSynthesis.cancel();
+
+		const reader = readerRef.current;
+
+		reader
 			.init()
 			.then((reader) => {
 				const formattedVoices: IVoiceInfo[] = reader.state.voices?.map(
@@ -174,69 +187,32 @@ const TextReader: FC<ITextReaderProps> = ({
 					})
 				);
 
+				/* Synchronize UI state with reader initial state */
+
 				dispatch(setVoices(formattedVoices));
 				dispatch(setVoice(reader.state.voices[0].voiceURI));
-				setNumberOfWords(reader.state.numberOfWords);
-				setDuration(reader.state.duration);
-				/* Automatically set chunks mode ON on mobile devices since single word highlighting engine is not supported on mobile browsers */
-				if (reader.state.isMobile) {
-					reader.options.isChunksModeOn = true;
-					reader.editUtterance({});
-
-					enableChunksMode();
-				}
+				dispatch(setNumberOfWords(reader.state.numberOfWords));
+				dispatch(setDuration(reader.state.duration));
+				dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
 			})
 			.catch((e) => console.log(e));
-
-		return () => {
-			textReaderRef.current?.reset();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [textContainer]);
-
-	/* Declarative management of play/pause/resume logic */
-
-	useEffect(() => {
-		const reader = textReaderRef.current;
-
-		if (!reader || isFirstRender) return setIsLoading(false);
-		if (isReading) {
-			if (reader.isPaused()) {
-				/* Play button pressed and Reader in pause state case */
-				reader.resume();
-			} else {
-				/* Play button pressed and Reader not yet started case */
-				setIsLoading(true);
-				reader.play('start').then(() => {
-					setIsLoading(false);
-				});
-			}
-			/* Pause button pressed and Reader in play state case */
-		} else if (reader.isPlaying()) reader.pause();
-	}, [isReading, textContainer, isFirstRender, setIsLoading]);
+	}, []);
 
 	return (
-		<GlobalStateContext.Provider value={{ state, dispatch }}>
+		<GlobalStateContext.Provider
+			value={{ state, dispatch, reader: readerRef.current }}
+		>
 			<Container
 				isvisible={isVisible.toString()}
 				isminimized={isMinimized.toString()}
 				styleoptions={styleOptions}
 			>
 				<WindowControls styleOptions={styleOptions} />
-				<SeekBar
-					readerRef={textReaderRef}
-					styleOptions={styleOptions}
-				/>
-				<MainControls
-					readerRef={textReaderRef}
-					styleOptions={styleOptions}
-				/>
-				{/* Settings unit */}
+				<SeekBar styleOptions={styleOptions} />
+				<MainControls styleOptions={styleOptions} />
+				{/* Settings */}
 				{!isMinimized && (
-					<SecondaryControls
-						readerRef={textReaderRef}
-						styleOptions={styleOptions}
-					/>
+					<SecondaryControls styleOptions={styleOptions} />
 				)}
 			</Container>
 		</GlobalStateContext.Provider>

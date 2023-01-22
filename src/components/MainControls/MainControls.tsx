@@ -6,30 +6,24 @@ import {
 	AiFillPlayCircle,
 } from 'react-icons/ai';
 import { ControlButton, ControlsContainer, Reset } from './styles';
-import { useTextReaderStore } from 'store';
 import { IMainControlsProps } from './types';
 import { GlobalStateContext } from 'components/TextReader/TextReader';
-import { startReading, stopReading } from 'store/actions';
+import { setIsLoading } from 'store/actions';
 
-const MainControls: FC<IMainControlsProps> = ({ readerRef, styleOptions }) => {
-	const { state, dispatch } = useContext(GlobalStateContext);
-	const { isReading } = state;
-	const {
-		// isReading,
-		isLoading,
-		isMinimized,
-		// startReading,
-		// stopReading,
-	} = useTextReaderStore();
-
-	const reader = readerRef.current;
+const MainControls: FC<IMainControlsProps> = ({ styleOptions }) => {
+	const { state, dispatch, reader } = useContext(GlobalStateContext);
+	const { isReading, isLoading, isMinimized } = state;
 
 	const handleTextReadPlay = () => {
-		dispatch(startReading());
+		if (reader?.isPaused()) reader?.resume();
+		else
+			reader?.play('start').then(() => {
+				dispatch(setIsLoading(false));
+			});
 	};
 
 	const handleTextReadPause = () => {
-		dispatch(stopReading());
+		reader?.pause();
 	};
 
 	const handleReset = () => {
@@ -67,7 +61,7 @@ const MainControls: FC<IMainControlsProps> = ({ readerRef, styleOptions }) => {
 		)
 			reader.seekTo(reader.state.currentWordIndex + 1);
 	};
-
+	console.log('Is reading', isReading);
 	return (
 		<ControlsContainer isminimized={isMinimized.toString()}>
 			<div>

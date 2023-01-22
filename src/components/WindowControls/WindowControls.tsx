@@ -1,25 +1,26 @@
 import { WindowButton } from './styles';
-import React, { FC } from 'react';
-import { useTextReaderStore } from 'store';
+import React, { FC, useContext } from 'react';
 import { IWindowControlsProps } from './types';
 import { MdOutlineClose } from 'react-icons/md';
 import { FiMaximize, FiMinimize } from 'react-icons/fi';
+import { GlobalStateContext } from 'components/TextReader/TextReader';
+import { setIsMinimized, setIsVisible } from 'store/actions';
 
 const WindowControls: FC<IWindowControlsProps> = ({ styleOptions }) => {
-	const { isMinimized, stopReading, hideTextReader, minimize, maximize } =
-		useTextReaderStore();
+	const { state, dispatch, reader } = useContext(GlobalStateContext);
+	const { isMinimized } = state;
 
 	const handleHideReader = () => {
-		hideTextReader();
-		stopReading();
+		dispatch(setIsVisible(false));
+		reader?.reset();
 	};
 
 	const handleMinimizeReader = () => {
-		minimize();
+		dispatch(setIsMinimized(true));
 	};
 
 	const handleMaximizeReader = () => {
-		maximize();
+		dispatch(setIsMinimized(false));
 	};
 	return (
 		<>

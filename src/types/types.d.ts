@@ -20,6 +20,7 @@ declare global {
 		onTimeTick: (c: SpeechSynth, v?: any) => void;
 		onWordClick: (c: SpeechSynth, v?: any) => void;
 		onSeek: (c: SpeechSynth, v?: any) => void;
+		onChunksModeChange: (c: SpeechSynth, v?: any) => void;
 	}
 
 	interface IOptions {
@@ -77,7 +78,7 @@ declare global {
 		chunksArray: Chunk[];
 		/* Controls  */
 		isPaused: boolean;
-		isPlaying: boolean;
+		isReading: boolean;
 	}
 
 	interface IStyle {
