@@ -2,13 +2,11 @@ import React, { FC, Dispatch } from 'react';
 import { SpeechSynth } from '../../lib';
 import { ITextReaderProps } from './types';
 interface IGlobalState {
+    settings: ISettings;
+    options: IOptions;
     isReading: boolean;
-    rate: string;
-    voice: string;
     voices: IVoiceInfo[];
-    volume: string;
     elapsedTime: number;
-    isPreserveHighlighting: boolean;
     isMinimized: boolean;
     isVisible: boolean;
     isSettingsVisible: boolean;
@@ -16,8 +14,6 @@ interface IGlobalState {
     currentWordIndex: number;
     duration: number;
     isLoading: boolean;
-    isHighlightTextOn: boolean;
-    isChunksModeOn: boolean;
 }
 interface IGlobalStateContext {
     state: IGlobalState;

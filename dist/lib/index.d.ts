@@ -12,7 +12,7 @@ export declare class SpeechSynth extends EventEmitter {
     events: Events;
     options: IOptions;
     state: IState;
-    constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, onChunksModeChange, }?: Params);
+    constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, onChunksModeChange, onSettingsChange, onOptionsChange, }?: Params);
     addHTMLHighlightTags(node: Element): void;
     init(): Promise<SpeechSynth>;
     private initUtterance;
@@ -38,7 +38,9 @@ export declare class SpeechSynth extends EventEmitter {
     private getTextDuration;
     private getAverageTextElapsedTime;
     private delayRestart;
-    editUtterance(obj: Partial<ISettings>): void;
+    private restart;
+    changeSettings(obj: Partial<ISettings>): void;
+    changeOptions(obj: Partial<IOptions>): void;
     changeChunkMode(b: boolean): void;
     seekTo(idx: number): void;
     play(type?: string): Promise<null>;

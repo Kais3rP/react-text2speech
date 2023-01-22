@@ -7,24 +7,22 @@ import WindowControls from 'components/WindowControls/WindowControls';
 import SeekBar from 'components/SeekBar/SeekBar';
 import SecondaryControls from 'components/SecondaryControls/SecondaryControls';
 import {
+	changeOptions,
+	changeSettings,
 	setCurrentWordIndex,
 	setDuration,
 	setElapsedTime,
-	setIsChunksModeOn,
 	setIsReading,
 	setNumberOfWords,
-	setVoice,
 	setVoices,
 } from 'store/actions';
 
 interface IGlobalState {
+	settings: ISettings;
+	options: IOptions;
 	isReading: boolean;
-	rate: string;
-	voice: string;
 	voices: IVoiceInfo[];
-	volume: string;
 	elapsedTime: number;
-	isPreserveHighlighting: boolean;
 	isMinimized: boolean;
 	isVisible: boolean;
 	isSettingsVisible: boolean;
@@ -32,21 +30,25 @@ interface IGlobalState {
 	currentWordIndex: number;
 	duration: number;
 	isLoading: boolean;
-	isHighlightTextOn: boolean;
-	isChunksModeOn: boolean;
 }
 
 const globalState: IGlobalState = {
+	settings: {
+		rate: 1,
+		voiceURI: '',
+		volume: 0.5,
+		pitch: 0,
+		language: 'en',
+	},
+	options: {
+		isPreserveHighlighting: true,
+		isHighlightTextOn: true,
+		isChunksModeOn: false,
+	},
 	isReading: false,
 	isLoading: false,
-	rate: '1',
-	voice: '',
 	voices: [],
-	volume: '0.5',
 	elapsedTime: 0,
-	isPreserveHighlighting: true,
-	isHighlightTextOn: true,
-	isChunksModeOn: false,
 	isMinimized: true,
 	isVisible: true,
 	isSettingsVisible: false,
@@ -73,9 +75,9 @@ const rootReducer = (state: IGlobalState, action: ActionType) => {
 		case 'SET_IS_SETTINGS_VISIBLE': {
 			return { ...state, isSettingsVisible: payload };
 		}
-		case 'SET_VOICE': {
-			return { ...state, voice: payload };
-		}
+		/* case 'SET_VOICE': {
+			return { ...state, voiceURI: payload };
+		} */
 		case 'SET_VOICES': {
 			return { ...state, voices: payload };
 		}
@@ -91,8 +93,11 @@ const rootReducer = (state: IGlobalState, action: ActionType) => {
 		case 'SET_CURRENT_WORD_INDEX': {
 			return { ...state, currentWordIndex: payload };
 		}
-		case 'SET_IS_CHUNKS_MODE_ON': {
-			return { ...state, isChunksModeOn: payload };
+		case 'CHANGE_SETTINGS': {
+			return { ...state, settings: { ...state.settings, ...payload } };
+		}
+		case 'CHANGE_OPTIONS': {
+			return { ...state, options: { ...state.options, ...payload } };
 		}
 		default:
 			return { ...state };
@@ -162,7 +167,14 @@ const TextReader: FC<ITextReaderProps> = ({
 				reader?.seekTo(idx);
 			},
 			onChunksModeChange: (reader: SpeechSynth) => {
-				dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
+				// dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
+			},
+			onSettingsChange: (reader: SpeechSynth, obj) => {
+				dispatch(changeSettings(obj));
+			},
+			onOptionsChange: (reader: SpeechSynth, obj) => {
+				console.log('Options change', obj);
+				dispatch(changeOptions(obj));
 			},
 		})
 	);
@@ -190,10 +202,12 @@ const TextReader: FC<ITextReaderProps> = ({
 				/* Synchronize UI state with reader initial state */
 
 				dispatch(setVoices(formattedVoices));
-				dispatch(setVoice(reader.state.voices[0].voiceURI));
+				// dispatch(setVoice(reader.utterance.voice?.voiceURI || ''));
 				dispatch(setNumberOfWords(reader.state.numberOfWords));
 				dispatch(setDuration(reader.state.duration));
-				dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
+
+				dispatch(changeSettings(reader.settings));
+				dispatch(changeOptions(reader.options));
 			})
 			.catch((e) => console.log(e));
 	}, []);

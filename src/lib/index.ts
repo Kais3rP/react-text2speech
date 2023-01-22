@@ -40,6 +40,8 @@ export class SpeechSynth extends EventEmitter {
 			onWordClick = () => null,
 			onSeek = () => null,
 			onChunksModeChange = () => null,
+			onSettingsChange = () => null,
+			onOptionsChange = () => null,
 		}: Params = {
 			/* Generic Settings */
 			language: 'en',
@@ -57,6 +59,8 @@ export class SpeechSynth extends EventEmitter {
 			onWordClick: () => null,
 			onSeek: () => null,
 			onChunksModeChange: () => null,
+			onSettingsChange: () => null,
+			onOptionsChange: () => null,
 		}
 	) {
 		super();
@@ -82,7 +86,7 @@ export class SpeechSynth extends EventEmitter {
 			voiceURI: '',
 			language: language,
 			rate: 1,
-			volume: 1,
+			volume: 0.5,
 		};
 
 		/* Events */
@@ -98,6 +102,8 @@ export class SpeechSynth extends EventEmitter {
 			{ type: 'seek', handler: onSeek },
 			{ type: 'end', handler: onEnd },
 			{ type: 'chunks-mode-change', handler: onChunksModeChange },
+			{ type: 'settings-change', handler: onSettingsChange },
+			{ type: 'options-change', handler: onOptionsChange },
 		];
 
 		/* Options */
@@ -296,10 +302,10 @@ export class SpeechSynth extends EventEmitter {
 
 		try {
 			this.state.voices = await this.getVoices();
-			this.state.voices = this.state.voices.filter((voice) =>
-				voice.lang.startsWith(this.settings.language as string)
-			);
+
 			this.state.voice = this.state.voices[0];
+
+			this.settings.voiceURI = this.state.voice.voiceURI;
 
 			/* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags" 
     on stringified HTML */
@@ -620,7 +626,15 @@ export class SpeechSynth extends EventEmitter {
 			try {
 				id = setInterval(() => {
 					if (this.synth.getVoices().length !== 0) {
-						resolve(this.synth.getVoices());
+						resolve(
+							this.synth
+								.getVoices()
+								.filter((voice) =>
+									voice.lang.startsWith(
+										this.settings.language as string
+									)
+								)
+						);
 						clearInterval(id as Interval);
 					}
 				}, 10);
@@ -771,11 +785,20 @@ export class SpeechSynth extends EventEmitter {
 		}, 500);
 	}
 
+	private restart(type: string, delay: number) {
+		this.synth.cancel();
+		if (this.isReading()) this.play(type);
+		if (this.isPaused()) {
+			this.play(type).then(() => this.pause());
+			this.pause();
+		}
+	}
+
 	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PUBLIC METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
-	editUtterance(obj: Partial<ISettings>) {
+	changeSettings(obj: Partial<ISettings>) {
 		/* Reset timeouts  */
 
 		clearTimeout(this.timeoutRef);
@@ -825,9 +848,20 @@ export class SpeechSynth extends EventEmitter {
 
 		this.settings = { ...this.settings, ...obj };
 
+		this.emit('settings-change', this, obj);
+
 		/*  Debounce to handle volume change properly */
 
 		this.editTimeoutRef = this.delayRestart('edit-utterance', 500);
+	}
+
+	changeOptions(obj: Partial<IOptions>) {
+		/* Handle chunks mode option change */
+		if ('isChunksModeOn' in obj) {
+			this.changeChunkMode(obj.isChunksModeOn as boolean);
+		}
+		Object.assign(this.options, obj);
+		this.emit('options-change', this, obj);
 	}
 
 	changeChunkMode(b: boolean) {
@@ -856,7 +890,7 @@ export class SpeechSynth extends EventEmitter {
 
 		this.emit('chunks-mode-change', this);
 
-		this.delayRestart('chunks-mode-change', 500);
+		this.restart('chunks-mode-change', 500);
 	}
 
 	/* Control methods */

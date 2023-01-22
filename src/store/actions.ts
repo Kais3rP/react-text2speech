@@ -18,8 +18,6 @@ export const setIsVisible = (payload: boolean) =>
 export const setIsSettingsVisible = (payload: boolean) =>
 	createAction('SET_IS_SETTINGS_VISIBLE', payload);
 
-export const setVoice = (payload: string) => createAction('SET_VOICE', payload);
-
 export const setVoices = (payload: IVoiceInfo[]) =>
 	createAction('SET_VOICES', payload);
 
@@ -35,5 +33,8 @@ export const setCurrentWordIndex = (payload: number) =>
 export const setDuration = (payload: number) =>
 	createAction('SET_DURATION', payload);
 
-export const setIsChunksModeOn = (payload: boolean) =>
-	createAction('SET_IS_CHUNKS_MODE_ON', payload);
+export const changeSettings = (payload: Partial<ISettings>) =>
+	createAction('CHANGE_SETTINGS', payload);
+
+export const changeOptions = (payload: Partial<IOptions>) =>
+	createAction('CHANGE_OPTIONS', payload);

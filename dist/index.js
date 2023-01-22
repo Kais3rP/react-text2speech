@@ -222,7 +222,7 @@ class SpeechSynth extends EventEmitter {
     /* Style */
     color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
-    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onChunksModeChange = () => null, } = {
+    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onChunksModeChange = () => null, onSettingsChange = () => null, onOptionsChange = () => null, } = {
         /* Generic Settings */
         language: 'en',
         /* Style */
@@ -239,6 +239,8 @@ class SpeechSynth extends EventEmitter {
         onWordClick: () => null,
         onSeek: () => null,
         onChunksModeChange: () => null,
+        onSettingsChange: () => null,
+        onOptionsChange: () => null,
     }) {
         super();
         this.textContainer = textContainer;
@@ -256,7 +258,7 @@ class SpeechSynth extends EventEmitter {
             voiceURI: '',
             language: language,
             rate: 1,
-            volume: 1,
+            volume: 0.5,
         };
         /* Events */
         this.events = [
@@ -270,6 +272,8 @@ class SpeechSynth extends EventEmitter {
             { type: 'seek', handler: onSeek },
             { type: 'end', handler: onEnd },
             { type: 'chunks-mode-change', handler: onChunksModeChange },
+            { type: 'settings-change', handler: onSettingsChange },
+            { type: 'options-change', handler: onOptionsChange },
         ];
         /* Options */
         this.options = {
@@ -417,8 +421,8 @@ class SpeechSynth extends EventEmitter {
             /* Get voices */
             try {
                 this.state.voices = yield this.getVoices();
-                this.state.voices = this.state.voices.filter((voice) => voice.lang.startsWith(this.settings.language));
                 this.state.voice = this.state.voices[0];
+                this.settings.voiceURI = this.state.voice.voiceURI;
                 /* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags"
         on stringified HTML */
                 this.addHTMLHighlightTags(this.textContainer);
@@ -643,7 +647,9 @@ class SpeechSynth extends EventEmitter {
             try {
                 id = setInterval(() => {
                     if (this.synth.getVoices().length !== 0) {
-                        resolve(this.synth.getVoices());
+                        resolve(this.synth
+                            .getVoices()
+                            .filter((voice) => voice.lang.startsWith(this.settings.language)));
                         clearInterval(id);
                     }
                 }, 10);
@@ -763,10 +769,19 @@ class SpeechSynth extends EventEmitter {
             }
         }, 500);
     }
+    restart(type, delay) {
+        this.synth.cancel();
+        if (this.isReading())
+            this.play(type);
+        if (this.isPaused()) {
+            this.play(type).then(() => this.pause());
+            this.pause();
+        }
+    }
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PUBLIC METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-    editUtterance(obj) {
+    changeSettings(obj) {
         /* Reset timeouts  */
         clearTimeout(this.timeoutRef);
         clearTimeout(this.editTimeoutRef);
@@ -792,8 +807,17 @@ class SpeechSynth extends EventEmitter {
                 : this.getRemainingText(this.state.currentWordIndex) }));
         /* Update instance settings object to keep them in sync with utterance settings */
         this.settings = Object.assign(Object.assign({}, this.settings), obj);
+        this.emit('settings-change', this, obj);
         /*  Debounce to handle volume change properly */
         this.editTimeoutRef = this.delayRestart('edit-utterance', 500);
+    }
+    changeOptions(obj) {
+        /* Handle chunks mode option change */
+        if ('isChunksModeOn' in obj) {
+            this.changeChunkMode(obj.isChunksModeOn);
+        }
+        Object.assign(this.options, obj);
+        this.emit('options-change', this, obj);
     }
     changeChunkMode(b) {
         clearTimeout(this.timeoutRef);
@@ -815,7 +839,7 @@ class SpeechSynth extends EventEmitter {
             ? this.getCurrentChunkText(this.state.currentChunkIndex)
             : this.getRemainingText(this.state.currentWordIndex);
         this.emit('chunks-mode-change', this);
-        this.delayRestart('chunks-mode-change', 500);
+        this.restart('chunks-mode-change', 500);
     }
     /* Control methods */
     seekTo(idx) {
@@ -2224,13 +2248,13 @@ const setIsLoading = (payload) => createAction('SET_IS_LOADING', payload);
 const setIsMinimized = (payload) => createAction('SET_IS_MINIMIZED', payload);
 const setIsVisible = (payload) => createAction('SET_IS_VISIBLE', payload);
 const setIsSettingsVisible = (payload) => createAction('SET_IS_SETTINGS_VISIBLE', payload);
-const setVoice = (payload) => createAction('SET_VOICE', payload);
 const setVoices = (payload) => createAction('SET_VOICES', payload);
 const setElapsedTime = (payload) => createAction('SET_ELAPSED_TIME', payload);
 const setNumberOfWords = (payload) => createAction('SET_NUMBER_OF_WORDS', payload);
 const setCurrentWordIndex = (payload) => createAction('SET_CURRENT_WORD_INDEX', payload);
 const setDuration = (payload) => createAction('SET_DURATION', payload);
-const setIsChunksModeOn = (payload) => createAction('SET_IS_CHUNKS_MODE_ON', payload);
+const changeSettings = (payload) => createAction('CHANGE_SETTINGS', payload);
+const changeOptions = (payload) => createAction('CHANGE_OPTIONS', payload);
 
 const MainControls = ({ styleOptions }) => {
     const { state, dispatch, reader } = React.useContext(GlobalStateContext);
@@ -2944,6 +2968,429 @@ const CheckBox = styled.input `
 	margin: 0 !important;
 	padding: 0 !important;
 `;
+
+const useOnClickOutside = (ref, handler) => {
+    React.useEffect(() => {
+        const listener = (event) => {
+            // Do nothing if clicking ref's element or descendent elements
+            if (!ref.current || ref.current.contains(event === null || event === void 0 ? void 0 : event.target)) {
+                return;
+            }
+            handler(event);
+        };
+        document.addEventListener('mousedown', listener);
+        document.addEventListener('touchstart', listener);
+        return () => {
+            document.removeEventListener('mousedown', listener);
+            document.removeEventListener('touchstart', listener);
+        };
+    }, 
+    // Add ref and handler to effect dependencies
+    // It's worth noting that because passed in handler is a new ...
+    // ... function on every render that will cause this effect ...
+    // ... callback/cleanup to run every render. It's not a big deal ...
+    // ... but to optimize you can wrap handler in useCallback before ...
+    // ... passing it into this hook.
+    [ref, handler]);
+};
+
+const Container = styled.div `
+	margin-right: 10px;
+`;
+const StyledButton = styled.button `
+	position: relative;
+	font-size: 0.7em;
+	font-weight: bold;
+	color: ${(props) => props.styleoptions.primaryColor};
+	cursor: pointer;
+	transition: all 0.5s linear;
+	border: none;
+	background: none;
+	padding: 1px 6px !important;
+	&:hover {
+		color: ${(props) => props.styleoptions.secondaryColor};
+	}
+	&::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: -2px;
+		width: 0px;
+		height: 1.2px;
+		background-color: ${(props) => props.styleoptions.primaryColor};
+		transition: all 0.2s ease-in;
+	}
+	&:hover::after {
+		width: 100%;
+	}
+`;
+const OptionsContainer = styled.div `
+	opacity: ${(props) => (props.showOptions ? 1 : 0)};
+	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
+	position: absolute;
+	width: 100%;
+	height: 46px;
+	bottom: 0px;
+	right: 0;
+	background-color: ${(props) => props.styleoptions.bgColor};
+	color: ${(props) => props.styleoptions.primaryColor};
+	z-index: 100;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	overflow-x: hidden;
+`;
+
+/* React Components */
+const Button = (_a) => {
+    var { children, styleOptions } = _a, props = __rest$1(_a, ["children", "styleOptions"]);
+    return (React.createElement(StyledButton, Object.assign({ styleoptions: styleOptions }, props), children));
+};
+
+const CustomSelect = (_a) => {
+    var _b;
+    var { options, value, title, onChange, styleOptions, style } = _a, props = __rest$1(_a, ["options", "value", "title", "onChange", "styleOptions", "style"]);
+    const [showOptions, setShowOptions] = React.useState(false);
+    const ref = React.useRef(null);
+    const show = () => {
+        setShowOptions(true);
+    };
+    const hide = React.useCallback(() => {
+        setShowOptions(false);
+    }, []);
+    const onOptionClick = (val) => {
+        onChange(val);
+        hide();
+    };
+    useOnClickOutside(ref, hide);
+    return (React.createElement(Container, Object.assign({}, props),
+        React.createElement(StyledButton, { type: "button", onClick: show, styleoptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
+        React.createElement(OptionsContainer, { ref: ref, styleoptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React.createElement(Button, { key: opt.value, onClick: () => {
+                onOptionClick(opt.value);
+            }, styleOptions: styleOptions }, opt.name))))));
+};
+
+/* Styled Components */
+const SliderContainer = styled.div `
+	position: relative;
+	display: flex;
+	align-items: center;
+	width: 70px;
+	& input {
+		width: 100%;
+	}
+
+	& label {
+		position: absolute;
+		top: 0;
+		font-size: 0.7rem;
+		right: 0%;
+	}
+
+	& label.value {
+		top: -1rem;
+		color: var(--color-extra1);
+	}
+`;
+const StyledSlider = styled.input `
+	width: 100%;
+	appearance: none;
+	height: 2px;
+	background: ${(props) => props.styleoptions.primaryColor};
+	outline: none;
+	opacity: 0.7;
+	transition: opacity 0.2s;
+	&:hover {
+		opacity: 1;
+	}
+	::-webkit-slider-thumb {
+		appearance: none;
+		width: 10px; /* Set a specific slider handle width */
+		height: 10px; /* Slider handle height */
+		background: ${(props) => props.styleoptions.bgColor};
+		cursor: pointer; /* Cursor on hover */
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
+		border-radius: 50%;
+		z-index: 1;
+		box-shadow: 0 2px 5px
+			${(props) => props.styleoptions.secondaryColor};
+		transition: transform 0.1s ease-out;
+	}
+	::-moz-range-thumb {
+		appearance: none;
+		width: 10px; /* Set a specific slider handle width */
+		height: 10px; /* Slider handle height */
+		background: ${(props) => props.styleoptions.bgColor};
+		cursor: pointer; /* Cursor on hover */
+		border: 2px solid ${(props) => props.styleoptions.primaryColor};
+		border-radius: 50%;
+		z-index: 1;
+		box-shadow: 0 2px 5px
+			${(props) => props.styleoptions.secondaryColor};
+		transition: transform 0.4s ease-out;
+	}
+
+	&::-webkit-slider-thumb:hover {
+		transform: scale(1.1);
+		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
+	}
+
+	::-moz-range-thumb:hover {
+		transform: scale(1.1);
+		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
+	}
+
+	&::-webkit-slider-thumb:active {
+	}
+
+	::-moz-range-thumb:active {
+	}
+`;
+const Icon = styled.div `
+	font-size: 0.9rem;
+	margin-right: 5px;
+	& * {
+		stroke: ${(props) => props.styleoptions.primaryColor};
+		color: ${(props) => props.styleoptions.primaryColor};
+	}
+`;
+
+const VolumeSlider = (_a) => {
+    var { data, onChange, icon, styleOptions } = _a, props = __rest$1(_a, ["data", "onChange", "icon", "styleOptions"]);
+    return (React.createElement(SliderContainer, Object.assign({}, props),
+        icon && React.createElement(Icon, { styleoptions: styleOptions }, icon),
+        React.createElement(StyledSlider, { min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange, styleoptions: styleOptions })));
+};
+
+const SecondaryControls = ({ styleOptions }) => {
+    const { state, dispatch, reader } = React.useContext(GlobalStateContext);
+    const { voices, isSettingsVisible, settings: { voiceURI, volume, rate }, options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting }, } = state;
+    const toggleSettings = () => {
+        dispatch(setIsSettingsVisible(!isSettingsVisible));
+    };
+    /* Settings Handlers */
+    const handleRateChange = (value) => {
+        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ rate: +value });
+        dispatch(setDuration((reader === null || reader === void 0 ? void 0 : reader.state.duration) || 0));
+    };
+    const handleVoiceChange = (value) => {
+        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ voiceURI: value });
+    };
+    const handleVolumeChange = (e) => {
+        const target = e.target;
+        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ volume: +target.value });
+    };
+    /* Options Handlers */
+    const handlePreserveHighlighting = (e) => {
+        const target = e.target;
+        reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isPreserveHighlighting: target.checked });
+    };
+    const handleIsHighlightTextOn = (e) => {
+        const target = e.target;
+        reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isHighlightTextOn: target.checked });
+    };
+    const handleIsChunksModeOn = (e) => {
+        if (reader === null || reader === void 0 ? void 0 : reader.state.isMobile)
+            return; // Disable this option for mobile devices
+        const target = e.target;
+        reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isChunksModeOn: target.checked });
+    };
+    console.log(voices, voiceURI);
+    return (React.createElement(React.Fragment, null,
+        React.createElement(OptionsContainer$1, null,
+            React.createElement("div", { id: "options-wrapper-1" },
+                React.createElement(CustomSelect, { name: "rate", options: [
+                        { value: '0.5', name: '0.5x' },
+                        { value: '0.75', name: '0.75x' },
+                        { value: '1', name: '1x' },
+                        { value: '1.25', name: '1.25x' },
+                        { value: '1.5', name: '1.5x' },
+                        { value: '2', name: '2x' },
+                    ], onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
+                React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
+                React.createElement(SettingsIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings }),
+                React.createElement(InfoIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings })),
+            React.createElement("div", { id: "options-wrapper-2" },
+                React.createElement(VolumeSlider, { icon: React.createElement(BiVolumeFull, null), onChange: handleVolumeChange, data: {
+                        min: '0.1',
+                        max: '1',
+                        step: '0.1',
+                        value: volume,
+                        unit: '%',
+                    }, styleOptions: styleOptions })),
+            React.createElement(ExtraSettingsContainer, { styleoptions: styleOptions, issettingsvisible: isSettingsVisible.toString(), onPointerDown: toggleSettings },
+                React.createElement("label", { htmlFor: "preserve-option", onPointerDown: (e) => e.stopPropagation() },
+                    React.createElement(CheckBox, { id: "preserve-option", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
+                    React.createElement("h5", null, "Preserve Highlighting")),
+                React.createElement("label", { htmlFor: "highlight-option", onPointerDown: (e) => e.stopPropagation() },
+                    React.createElement(CheckBox, { id: "highlight-option", type: "checkbox", checked: isHighlightTextOn, onChange: handleIsHighlightTextOn }),
+                    React.createElement("h5", null, "Highlight Text")),
+                React.createElement("label", { htmlFor: "mode-option", onPointerDown: (e) => e.stopPropagation() },
+                    React.createElement(CheckBox, { id: "mode-option", type: "checkbox", checked: isChunksModeOn, onChange: handleIsChunksModeOn }),
+                    React.createElement("h5", null, "Chunks Mode"))))));
+};
+
+const globalState = {
+    settings: {
+        rate: 1,
+        voiceURI: '',
+        volume: 0.5,
+        pitch: 0,
+        language: 'en',
+    },
+    options: {
+        isPreserveHighlighting: true,
+        isHighlightTextOn: true,
+        isChunksModeOn: false,
+    },
+    isReading: false,
+    isLoading: false,
+    voices: [],
+    elapsedTime: 0,
+    isMinimized: true,
+    isVisible: true,
+    isSettingsVisible: false,
+    numberOfWords: 0,
+    currentWordIndex: 1,
+    duration: 0,
+};
+const rootReducer = (state, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case 'SET_IS_READING': {
+            return Object.assign(Object.assign({}, state), { isReading: payload });
+        }
+        case 'SET_IS_LOADING': {
+            return Object.assign(Object.assign({}, state), { isLoading: payload });
+        }
+        case 'SET_IS_MINIMIZED': {
+            return Object.assign(Object.assign({}, state), { isMinimized: payload });
+        }
+        case 'SET_IS_VISIBLE': {
+            return Object.assign(Object.assign({}, state), { isVisible: payload });
+        }
+        case 'SET_IS_SETTINGS_VISIBLE': {
+            return Object.assign(Object.assign({}, state), { isSettingsVisible: payload });
+        }
+        /* case 'SET_VOICE': {
+            return { ...state, voiceURI: payload };
+        } */
+        case 'SET_VOICES': {
+            return Object.assign(Object.assign({}, state), { voices: payload });
+        }
+        case 'SET_ELAPSED_TIME': {
+            return Object.assign(Object.assign({}, state), { elapsedTime: payload });
+        }
+        case 'SET_DURATION': {
+            return Object.assign(Object.assign({}, state), { duration: payload });
+        }
+        case 'SET_NUMBER_OF_WORDS': {
+            return Object.assign(Object.assign({}, state), { numberOfWords: payload });
+        }
+        case 'SET_CURRENT_WORD_INDEX': {
+            return Object.assign(Object.assign({}, state), { currentWordIndex: payload });
+        }
+        case 'CHANGE_SETTINGS': {
+            return Object.assign(Object.assign({}, state), { settings: Object.assign(Object.assign({}, state.settings), payload) });
+        }
+        case 'CHANGE_OPTIONS': {
+            return Object.assign(Object.assign({}, state), { options: Object.assign(Object.assign({}, state.options), payload) });
+        }
+        default:
+            return Object.assign({}, state);
+    }
+};
+const GlobalStateContext = React.createContext({
+    state: globalState,
+    dispatch: () => null,
+    reader: null,
+});
+const TextReader = ({ textContainer, options, styleOptions, }) => {
+    /* Initialize store */
+    const [state, dispatch] = React.useReducer(rootReducer, globalState);
+    const { isMinimized, isVisible } = state;
+    const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
+            console.log('Start');
+            dispatch(setIsReading(reader.state.isReading));
+        }, onPause: (reader) => {
+            console.log('Pause');
+            dispatch(setIsReading(reader.state.isReading));
+        }, onResume: (reader) => {
+            console.log('Resume');
+            dispatch(setIsReading(reader.state.isReading));
+        }, onReset: (reader) => {
+            console.log('Reset Event called', reader.state.elapsedTime);
+            dispatch(setIsReading(reader.state.isReading));
+            dispatch(setElapsedTime(reader.state.elapsedTime));
+            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
+        }, onEnd: (reader) => {
+            console.log('End');
+            reader.reset();
+        }, onBoundary: (reader, e) => {
+            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
+        }, onSeek: (reader, value) => {
+            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
+        }, onTimeTick: (reader, value) => {
+            dispatch(setElapsedTime(reader.state.elapsedTime));
+        }, onWordClick: (reader, e) => {
+            const target = e.target;
+            const idx = +target.dataset.id;
+            reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
+        }, onChunksModeChange: (reader) => {
+            // dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
+        }, onSettingsChange: (reader, obj) => {
+            dispatch(changeSettings(obj));
+        }, onOptionsChange: (reader, obj) => {
+            console.log('Options change', obj);
+            dispatch(changeOptions(obj));
+        } })));
+    React.useEffect(() => {
+        /* Reset browser active speech synth queue on refresh or new load */
+        window.speechSynthesis.cancel();
+        const reader = readerRef.current;
+        reader
+            .init()
+            .then((reader) => {
+            var _a;
+            const formattedVoices = (_a = reader.state.voices) === null || _a === void 0 ? void 0 : _a.map((voice) => {
+                var _a;
+                return ({
+                    name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
+                    ''),
+                    value: voice.voiceURI,
+                });
+            });
+            /* Synchronize UI state with reader initial state */
+            dispatch(setVoices(formattedVoices));
+            // dispatch(setVoice(reader.utterance.voice?.voiceURI || ''));
+            dispatch(setNumberOfWords(reader.state.numberOfWords));
+            dispatch(setDuration(reader.state.duration));
+            dispatch(changeSettings(reader.settings));
+            dispatch(changeOptions(reader.options));
+        })
+            .catch((e) => console.log(e));
+    }, []);
+    return (React.createElement(GlobalStateContext.Provider, { value: { state, dispatch, reader: readerRef.current } },
+        React.createElement(Container$1, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
+            React.createElement(WindowControls, { styleOptions: styleOptions }),
+            React.createElement(SeekBar, { styleOptions: styleOptions }),
+            React.createElement(MainControls, { styleOptions: styleOptions }),
+            !isMinimized && (React.createElement(SecondaryControls, { styleOptions: styleOptions })))));
+};
+TextReader.defaultProps = {
+    options: {
+        language: 'en',
+    },
+    styleOptions: {
+        primaryColor: '#00D',
+        secondaryColor: '#55F',
+        bgColor: '#FFF',
+        textColor: '#222',
+        highlightColor1: '#98AFC7',
+        highlightColor2: '#737CA1',
+    },
+};
 
 var vanilla = createCommonjsModule(function (module, exports) {
 
@@ -4013,440 +4460,6 @@ const useTextReaderStore = create()(middleware_2(middleware_3((set) => ({
         'isChunksModeOn',
     ].includes(key))),
 })));
-
-const useOnClickOutside = (ref, handler) => {
-    React.useEffect(() => {
-        const listener = (event) => {
-            // Do nothing if clicking ref's element or descendent elements
-            if (!ref.current || ref.current.contains(event === null || event === void 0 ? void 0 : event.target)) {
-                return;
-            }
-            handler(event);
-        };
-        document.addEventListener('mousedown', listener);
-        document.addEventListener('touchstart', listener);
-        return () => {
-            document.removeEventListener('mousedown', listener);
-            document.removeEventListener('touchstart', listener);
-        };
-    }, 
-    // Add ref and handler to effect dependencies
-    // It's worth noting that because passed in handler is a new ...
-    // ... function on every render that will cause this effect ...
-    // ... callback/cleanup to run every render. It's not a big deal ...
-    // ... but to optimize you can wrap handler in useCallback before ...
-    // ... passing it into this hook.
-    [ref, handler]);
-};
-
-const Container = styled.div `
-	margin-right: 10px;
-`;
-const StyledButton = styled.button `
-	position: relative;
-	font-size: 0.7em;
-	font-weight: bold;
-	color: ${(props) => props.styleoptions.primaryColor};
-	cursor: pointer;
-	transition: all 0.5s linear;
-	border: none;
-	background: none;
-	padding: 1px 6px !important;
-	&:hover {
-		color: ${(props) => props.styleoptions.secondaryColor};
-	}
-	&::after {
-		content: '';
-		position: absolute;
-		left: 0;
-		bottom: -2px;
-		width: 0px;
-		height: 1.2px;
-		background-color: ${(props) => props.styleoptions.primaryColor};
-		transition: all 0.2s ease-in;
-	}
-	&:hover::after {
-		width: 100%;
-	}
-`;
-const OptionsContainer = styled.div `
-	opacity: ${(props) => (props.showOptions ? 1 : 0)};
-	pointer-events: ${(props) => (props.showOptions ? 'all' : 'none')};
-	position: absolute;
-	width: 100%;
-	height: 46px;
-	bottom: 0px;
-	right: 0;
-	background-color: ${(props) => props.styleoptions.bgColor};
-	color: ${(props) => props.styleoptions.primaryColor};
-	z-index: 100;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-items: center;
-	overflow-x: hidden;
-`;
-
-/* React Components */
-const Button = (_a) => {
-    var { children, styleOptions } = _a, props = __rest$1(_a, ["children", "styleOptions"]);
-    return (React.createElement(StyledButton, Object.assign({ styleoptions: styleOptions }, props), children));
-};
-
-const CustomSelect = (_a) => {
-    var _b;
-    var { options, value, title, onChange, styleOptions, style } = _a, props = __rest$1(_a, ["options", "value", "title", "onChange", "styleOptions", "style"]);
-    const [showOptions, setShowOptions] = React.useState(false);
-    const ref = React.useRef(null);
-    const show = () => {
-        setShowOptions(true);
-    };
-    const hide = React.useCallback(() => {
-        setShowOptions(false);
-    }, []);
-    const onOptionClick = (val) => {
-        onChange(val);
-        hide();
-    };
-    useOnClickOutside(ref, hide);
-    return (React.createElement(Container, Object.assign({}, props),
-        React.createElement(StyledButton, { type: "button", onClick: show, styleoptions: styleOptions }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
-        React.createElement(OptionsContainer, { ref: ref, styleoptions: styleOptions, showOptions: showOptions }, options.map((opt) => (React.createElement(Button, { key: opt.value, onClick: () => {
-                onOptionClick(opt.value);
-            }, styleOptions: styleOptions }, opt.name))))));
-};
-
-/* Styled Components */
-const SliderContainer = styled.div `
-	position: relative;
-	display: flex;
-	align-items: center;
-	width: 70px;
-	& input {
-		width: 100%;
-	}
-
-	& label {
-		position: absolute;
-		top: 0;
-		font-size: 0.7rem;
-		right: 0%;
-	}
-
-	& label.value {
-		top: -1rem;
-		color: var(--color-extra1);
-	}
-`;
-const StyledSlider = styled.input `
-	width: 100%;
-	appearance: none;
-	height: 2px;
-	background: ${(props) => props.styleoptions.primaryColor};
-	outline: none;
-	opacity: 0.7;
-	transition: opacity 0.2s;
-	&:hover {
-		opacity: 1;
-	}
-	::-webkit-slider-thumb {
-		appearance: none;
-		width: 10px; /* Set a specific slider handle width */
-		height: 10px; /* Slider handle height */
-		background: ${(props) => props.styleoptions.bgColor};
-		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props) => props.styleoptions.primaryColor};
-		border-radius: 50%;
-		z-index: 1;
-		box-shadow: 0 2px 5px
-			${(props) => props.styleoptions.secondaryColor};
-		transition: transform 0.1s ease-out;
-	}
-	::-moz-range-thumb {
-		appearance: none;
-		width: 10px; /* Set a specific slider handle width */
-		height: 10px; /* Slider handle height */
-		background: ${(props) => props.styleoptions.bgColor};
-		cursor: pointer; /* Cursor on hover */
-		border: 2px solid ${(props) => props.styleoptions.primaryColor};
-		border-radius: 50%;
-		z-index: 1;
-		box-shadow: 0 2px 5px
-			${(props) => props.styleoptions.secondaryColor};
-		transition: transform 0.4s ease-out;
-	}
-
-	&::-webkit-slider-thumb:hover {
-		transform: scale(1.1);
-		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
-	}
-
-	::-moz-range-thumb:hover {
-		transform: scale(1.1);
-		box-shadow: 0 2px 10px ${(props) => props.styleoptions.bgColor};
-	}
-
-	&::-webkit-slider-thumb:active {
-	}
-
-	::-moz-range-thumb:active {
-	}
-`;
-const Icon = styled.div `
-	font-size: 0.9rem;
-	margin-right: 5px;
-	& * {
-		stroke: ${(props) => props.styleoptions.primaryColor};
-		color: ${(props) => props.styleoptions.primaryColor};
-	}
-`;
-
-const VolumeSlider = (_a) => {
-    var { data, onChange, icon, styleOptions } = _a, props = __rest$1(_a, ["data", "onChange", "icon", "styleOptions"]);
-    return (React.createElement(SliderContainer, Object.assign({}, props),
-        icon && React.createElement(Icon, { styleoptions: styleOptions }, icon),
-        React.createElement(StyledSlider, { min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange, styleoptions: styleOptions })));
-};
-
-const SecondaryControls = ({ styleOptions }) => {
-    const { state, dispatch, reader } = React.useContext(GlobalStateContext);
-    const { voice, voices, isSettingsVisible, isChunksModeOn } = state;
-    const { setRate, setVolume, rate, volume, enablePreserveHighlighting, disablePreserveHighlighting, enableHighlightText, disableHighlightText, isPreserveHighlighting, isHighlightTextOn, } = useTextReaderStore();
-    const handleRateChange = (value) => {
-        if (!reader)
-            return;
-        reader.editUtterance({ rate: +value });
-        setRate(value);
-        dispatch(setDuration(reader.state.duration));
-    };
-    const handleVoiceChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.editUtterance({ voiceURI: value });
-        dispatch(setVoice(value));
-    };
-    const handleVolumeChange = (e) => {
-        const target = e.target;
-        if (!reader)
-            return;
-        reader.editUtterance({ volume: +target.value });
-        setVolume(target.value);
-    };
-    const toggleSettings = () => {
-        dispatch(setIsSettingsVisible(!isSettingsVisible));
-    };
-    /* Options Handlers */
-    const handlePreserveHighlighting = (e) => {
-        const target = e.target;
-        if (!reader)
-            return;
-        if (target.checked) {
-            enablePreserveHighlighting();
-            reader.options.isPreserveHighlighting = true;
-        }
-        else {
-            disablePreserveHighlighting();
-            reader.options.isPreserveHighlighting = false;
-        }
-    };
-    const handleIsHighlightTextOn = (e) => {
-        const target = e.target;
-        if (!reader)
-            return;
-        if (target.checked) {
-            enableHighlightText();
-            reader.options.isHighlightTextOn = true;
-        }
-        else {
-            disableHighlightText();
-            reader.options.isHighlightTextOn = false;
-        }
-    };
-    const handleIsChunksModeOn = (e) => {
-        const target = e.target;
-        if (!reader || reader.state.isMobile)
-            return; // Disable this option for mobile devices
-        // dispatch(setIsChunksModeOn(true)) // Optimistic update the checkbox for an immediate feel, it's going to be corrected i
-        reader.changeChunkMode(target.checked);
-    };
-    console.log('IS chunks mode', isChunksModeOn);
-    return (React.createElement(React.Fragment, null,
-        React.createElement(OptionsContainer$1, null,
-            React.createElement("div", { id: "options-wrapper-1" },
-                React.createElement(CustomSelect, { name: "rate", options: [
-                        { value: '0.5', name: '0.5x' },
-                        { value: '0.75', name: '0.75x' },
-                        { value: '1', name: '1x' },
-                        { value: '1.25', name: '1.25x' },
-                        { value: '1.5', name: '1.5x' },
-                        { value: '2', name: '2x' },
-                    ], onChange: handleRateChange, value: rate, defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
-                React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voice, defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
-                React.createElement(SettingsIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings }),
-                React.createElement(InfoIcon, { styleoptions: styleOptions, onPointerDown: toggleSettings })),
-            React.createElement("div", { id: "options-wrapper-2" },
-                React.createElement(VolumeSlider, { icon: React.createElement(BiVolumeFull, null), onChange: handleVolumeChange, data: {
-                        min: '0.1',
-                        max: '1',
-                        step: '0.1',
-                        value: +volume,
-                        unit: '%',
-                    }, styleOptions: styleOptions })),
-            React.createElement(ExtraSettingsContainer, { styleoptions: styleOptions, issettingsvisible: isSettingsVisible.toString(), onPointerDown: toggleSettings },
-                React.createElement("label", { htmlFor: "preserve-option", onPointerDown: (e) => e.stopPropagation() },
-                    React.createElement(CheckBox, { id: "preserve-option", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
-                    React.createElement("h5", null, "Preserve Highlighting")),
-                React.createElement("label", { htmlFor: "highlight-option", onPointerDown: (e) => e.stopPropagation() },
-                    React.createElement(CheckBox, { id: "highlight-option", type: "checkbox", checked: isHighlightTextOn, onChange: handleIsHighlightTextOn }),
-                    React.createElement("h5", null, "Highlight Text")),
-                React.createElement("label", { htmlFor: "mode-option", onPointerDown: (e) => e.stopPropagation() },
-                    React.createElement(CheckBox, { id: "mode-option", type: "checkbox", checked: isChunksModeOn, onChange: handleIsChunksModeOn }),
-                    React.createElement("h5", null, "Chunks Mode"))))));
-};
-
-const globalState = {
-    isReading: false,
-    isLoading: false,
-    rate: '1',
-    voice: '',
-    voices: [],
-    volume: '0.5',
-    elapsedTime: 0,
-    isPreserveHighlighting: true,
-    isHighlightTextOn: true,
-    isChunksModeOn: false,
-    isMinimized: true,
-    isVisible: true,
-    isSettingsVisible: false,
-    numberOfWords: 0,
-    currentWordIndex: 1,
-    duration: 0,
-};
-const rootReducer = (state, action) => {
-    const { type, payload } = action;
-    switch (type) {
-        case 'SET_IS_READING': {
-            return Object.assign(Object.assign({}, state), { isReading: payload });
-        }
-        case 'SET_IS_LOADING': {
-            return Object.assign(Object.assign({}, state), { isLoading: payload });
-        }
-        case 'SET_IS_MINIMIZED': {
-            return Object.assign(Object.assign({}, state), { isMinimized: payload });
-        }
-        case 'SET_IS_VISIBLE': {
-            return Object.assign(Object.assign({}, state), { isVisible: payload });
-        }
-        case 'SET_IS_SETTINGS_VISIBLE': {
-            return Object.assign(Object.assign({}, state), { isSettingsVisible: payload });
-        }
-        case 'SET_VOICE': {
-            return Object.assign(Object.assign({}, state), { voice: payload });
-        }
-        case 'SET_VOICES': {
-            return Object.assign(Object.assign({}, state), { voices: payload });
-        }
-        case 'SET_ELAPSED_TIME': {
-            return Object.assign(Object.assign({}, state), { elapsedTime: payload });
-        }
-        case 'SET_DURATION': {
-            return Object.assign(Object.assign({}, state), { duration: payload });
-        }
-        case 'SET_NUMBER_OF_WORDS': {
-            return Object.assign(Object.assign({}, state), { numberOfWords: payload });
-        }
-        case 'SET_CURRENT_WORD_INDEX': {
-            return Object.assign(Object.assign({}, state), { currentWordIndex: payload });
-        }
-        case 'SET_IS_CHUNKS_MODE_ON': {
-            return Object.assign(Object.assign({}, state), { isChunksModeOn: payload });
-        }
-        default:
-            return Object.assign({}, state);
-    }
-};
-const GlobalStateContext = React.createContext({
-    state: globalState,
-    dispatch: () => null,
-    reader: null,
-});
-const TextReader = ({ textContainer, options, styleOptions, }) => {
-    /* Initialize store */
-    const [state, dispatch] = React.useReducer(rootReducer, globalState);
-    const { isMinimized, isVisible } = state;
-    const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
-            console.log('Start');
-            dispatch(setIsReading(reader.state.isReading));
-        }, onPause: (reader) => {
-            console.log('Pause');
-            dispatch(setIsReading(reader.state.isReading));
-        }, onResume: (reader) => {
-            console.log('Resume');
-            dispatch(setIsReading(reader.state.isReading));
-        }, onReset: (reader) => {
-            console.log('Reset Event called', reader.state.elapsedTime);
-            dispatch(setIsReading(reader.state.isReading));
-            dispatch(setElapsedTime(reader.state.elapsedTime));
-            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-        }, onEnd: (reader) => {
-            console.log('End');
-            reader.reset();
-        }, onBoundary: (reader, e) => {
-            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-        }, onSeek: (reader, value) => {
-            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-        }, onTimeTick: (reader, value) => {
-            dispatch(setElapsedTime(reader.state.elapsedTime));
-        }, onWordClick: (reader, e) => {
-            const target = e.target;
-            const idx = +target.dataset.id;
-            reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
-        }, onChunksModeChange: (reader) => {
-            dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
-        } })));
-    React.useEffect(() => {
-        /* Reset browser active speech synth queue on refresh or new load */
-        window.speechSynthesis.cancel();
-        const reader = readerRef.current;
-        reader
-            .init()
-            .then((reader) => {
-            var _a;
-            const formattedVoices = (_a = reader.state.voices) === null || _a === void 0 ? void 0 : _a.map((voice) => {
-                var _a;
-                return ({
-                    name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
-                    ''),
-                    value: voice.voiceURI,
-                });
-            });
-            /* Synchronize UI state with reader initial state */
-            dispatch(setVoices(formattedVoices));
-            dispatch(setVoice(reader.state.voices[0].voiceURI));
-            dispatch(setNumberOfWords(reader.state.numberOfWords));
-            dispatch(setDuration(reader.state.duration));
-            dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
-        })
-            .catch((e) => console.log(e));
-    }, []);
-    return (React.createElement(GlobalStateContext.Provider, { value: { state, dispatch, reader: readerRef.current } },
-        React.createElement(Container$1, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
-            React.createElement(WindowControls, { styleOptions: styleOptions }),
-            React.createElement(SeekBar, { styleOptions: styleOptions }),
-            React.createElement(MainControls, { styleOptions: styleOptions }),
-            !isMinimized && (React.createElement(SecondaryControls, { styleOptions: styleOptions })))));
-};
-TextReader.defaultProps = {
-    options: {
-        language: 'en',
-    },
-    styleOptions: {
-        primaryColor: '#00D',
-        secondaryColor: '#55F',
-        bgColor: '#FFF',
-        textColor: '#222',
-        highlightColor1: '#98AFC7',
-        highlightColor2: '#737CA1',
-    },
-};
 
 exports.default = TextReader;
 exports.useTextReaderStore = useTextReaderStore;
