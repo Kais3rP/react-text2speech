@@ -1,4 +1,13 @@
 import EventEmitter from 'events';
+import {
+	IStyle,
+	ISettings,
+	Events,
+	IOptions,
+	IState,
+	Params,
+	Chunk,
+} from './types';
 import { Utils } from './Utils';
 
 export class SpeechSynth extends EventEmitter {

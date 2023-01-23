@@ -1,19 +1,27 @@
+import { ISettings, IOptions } from 'lib/types';
+
 export const createAction = (type: string, payload?: any): ActionType => ({
 	type,
 	payload,
 });
 
+/* Actions */
+
+/* Actions that might be used to control the Reader externally */
+
 export const setIsReading = (payload: boolean) =>
 	createAction('SET_IS_READING', payload);
-
-export const setIsLoading = (payload: boolean) =>
-	createAction('SET_IS_LOADING', payload);
 
 export const setIsMinimized = (payload: boolean) =>
 	createAction('SET_IS_MINIMIZED', payload);
 
 export const setIsVisible = (payload: boolean) =>
 	createAction('SET_IS_VISIBLE', payload);
+
+/* Actions used internally by the Reader  */
+
+export const setIsLoading = (payload: boolean) =>
+	createAction('SET_IS_LOADING', payload);
 
 export const setIsSettingsVisible = (payload: boolean) =>
 	createAction('SET_IS_SETTINGS_VISIBLE', payload);

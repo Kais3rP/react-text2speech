@@ -2,5 +2,4 @@
 
 export interface ISeekBarProps {
 	children?: JSX.Element | string;
-	styleOptions: IStyleOptions;
 }

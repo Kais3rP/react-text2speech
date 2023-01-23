@@ -1,13 +1,15 @@
 import { WindowButton } from './styles';
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import { IWindowControlsProps } from './types';
 import { MdOutlineClose } from 'react-icons/md';
 import { FiMaximize, FiMinimize } from 'react-icons/fi';
-import { GlobalStateContext } from 'components/TextReader/TextReader';
 import { setIsMinimized, setIsVisible } from 'store/actions';
+import { useReader, useStore, useMainProps } from 'contexts';
 
-const WindowControls: FC<IWindowControlsProps> = ({ styleOptions }) => {
-	const { state, dispatch, reader } = useContext(GlobalStateContext);
+const WindowControls: FC<IWindowControlsProps> = () => {
+	const { reader } = useReader();
+	const { state, dispatch } = useStore();
+	const { styleOptions } = useMainProps();
 	const { isMinimized } = state;
 
 	const handleHideReader = () => {

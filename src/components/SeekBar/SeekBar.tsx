@@ -1,12 +1,14 @@
-import React, { ChangeEventHandler, FC, useContext } from 'react';
+import React, { ChangeEventHandler, FC } from 'react';
 import { ISeekBarProps } from './types';
 import { Seekbar, SeekbarContainer, Time } from './styles';
 import format from 'format-duration';
 import debounce from 'lodash.debounce';
-import { GlobalStateContext } from 'components/TextReader/TextReader';
+import { useReader, useStore, useMainProps } from 'contexts';
 
-const SeekBar: FC<ISeekBarProps> = ({ styleOptions }) => {
-	const { state, reader } = useContext(GlobalStateContext);
+const SeekBar: FC<ISeekBarProps> = () => {
+	const { reader } = useReader();
+	const { state } = useStore();
+	const { styleOptions } = useMainProps();
 	const {
 		elapsedTime,
 		numberOfWords,

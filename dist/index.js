@@ -5,977 +5,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var React = require('react');
 var EventEmitter = require('events');
 
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-function __rest$1(s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-}
-
-function __awaiter(thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-}
-
-class Utils {
-    constructor() {
-        this.HTMLTags = [
-            'div',
-            'span',
-            'a',
-            'i',
-            'img',
-            'html',
-            'body',
-            'section',
-            'article',
-            'main',
-            'head',
-            'header',
-            'aside',
-            'nav',
-        ];
-    }
-    static isMobile() {
-        /* Dev mode */
-        //	return true;
-        // check the user agent string
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-            return true;
-        // check the platform string
-        if (/iPad|iPhone|iPod/.test(navigator.platform))
-            return true;
-        // check the screen size and pixel density
-        if (window.innerWidth < 768 || window.devicePixelRatio > 1)
-            return true;
-        return false;
-    }
-    /* Regex Utils */
-    static isSlashTextContent(str) {
-        if (!str)
-            return false;
-        return /<.+>\/<\/.+>/.test(str);
-    }
-    static isDigitTextContent(str) {
-        if (!str)
-            return false;
-        return /<.+>\d+<\/.+>/.test(str);
-    }
-    static isWordTextContent(str) {
-        if (!str)
-            return false;
-        return /<.+>[a-zA-Z]+<\/.+>/.test(str);
-    }
-    static isWord(str) {
-        if (!str)
-            return false;
-        return /^[a-zA-Z]/.test(str);
-    }
-    static isWordWithNumbers(str) {
-        if (!str)
-            return false;
-        return /^[a-zA-Z0-9]+$/.test(str);
-    }
-    static isNumber(str) {
-        if (!str)
-            return false;
-        return (!isNaN(+str) && isFinite(+str)) || parseFloat(str);
-    }
-    static isURL(str) {
-        if (!str)
-            return false;
-        return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(str);
-    }
-    static isSpace(str) {
-        return str === ' ';
-    }
-    static isEmptyString(str) {
-        return str === '';
-    }
-    static isWhitespaceChar(str) {
-        return /^[\n\r\t]+$/.test(str);
-    }
-    static isAt(str) {
-        return str === '@';
-    }
-    static isDot(str) {
-        return str === '.';
-    }
-    static isZero(str) {
-        return str === '0';
-    }
-    static isPunctuation(str) {
-        if (!str)
-            return false;
-        return /^[.,;:!?]+$/.test(str);
-    }
-    static isPunctuationButDot(str) {
-        if (!str)
-            return false;
-        return /^[,;:!?]+$/.test(str);
-    }
-    static isHashtag(str) {
-        return str === '#';
-    }
-    static isSlash(str) {
-        return str === '/';
-    }
-    static isParens(str) {
-        if (!str)
-            return false;
-        return /^[()[\]{}]+$/.test(str);
-    }
-    static isTag(str) {
-        if (!str)
-            return false;
-        return /<.+?>/.test(str);
-    }
-    static isCodeOpenTag(str) {
-        if (!str)
-            return false;
-        return /<code(@@)?\s?([a-zA-Z-]+="[a-zA-Z-_@\s]+")?>/.test(str);
-    }
-    static isCodeCloseTag(str) {
-        if (!str)
-            return false;
-        return /<\/code>/.test(str);
-    }
-    static isWordInsideAngularBrackets(str) {
-        if (!str)
-            return false;
-        return /^<+.*>+\.?$/.test(str);
-    }
-    static isSpecialReadableCharacter(str) {
-        if (!str)
-            return false;
-        return /^[@#\\/_*^°£$%&=+]+$/.test(str);
-    }
-    static isSpecialUnreadableCharacter(str) {
-        if (!str)
-            return false;
-        return /^[()[\]{}'"<>`|-]+$/.test(str);
-    }
-    static isSpecialCharacter(str) {
-        if (!str)
-            return false;
-        return /^([.,;:\-_`'"*+()[\]{}<>\s\n])$/.test(str);
-    }
-    static isHTMLEntity(str) {
-        if (!str)
-            return false;
-        return /&[a-z]+?;+/.test(str);
-    }
-    static isValidDate(str) {
-        // @ts-expect-error
-        return new Date(str) > 0;
-    }
-    /* Type Checks */
-    static isFunction(fn) {
-        return fn && typeof fn === 'function';
-    }
-}
-/* Array utils */
-Utils.__join__ = function (fn) {
-    let str = ``;
-    let i = 0;
-    for (const el of this) {
-        const separator = fn(el, i, this);
-        str = str + el.toString() + separator;
-        i++;
-    }
-    return str;
-};
-
-class SpeechSynth extends EventEmitter {
-    /*
-    The constructor only required @Param is the TextContainer HTMLElement,
-    the second @Param is an optional object and all its properties are optional as well
-    */
-    constructor(textContainer, { 
-    /* Generic Settings */
-    language = 'en', 
-    /* Style */
-    color1 = '#DEE', color2 = '#9DE', 
-    /* Ev handlers */
-    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onChunksModeChange = () => null, onSettingsChange = () => null, onOptionsChange = () => null, } = {
-        /* Generic Settings */
-        language: 'en',
-        /* Style */
-        color1: '#DEE',
-        color2: '#9DE',
-        /* Ev handlers */
-        onEnd: () => null,
-        onStart: () => null,
-        onPause: () => null,
-        onResume: () => null,
-        onReset: () => null,
-        onBoundary: () => null,
-        onTimeTick: () => null,
-        onWordClick: () => null,
-        onSeek: () => null,
-        onChunksModeChange: () => null,
-        onSettingsChange: () => null,
-        onOptionsChange: () => null,
-    }) {
-        super();
-        this.textContainer = textContainer;
-        this.style = { color1, color2 };
-        /* Instances */
-        this.synth = window.speechSynthesis;
-        this.utterance = new window.SpeechSynthesisUtterance();
-        /* Timeouts */
-        this.timeoutRef = undefined;
-        this.seekTimeoutRef = undefined;
-        this.editTimeoutRef = undefined;
-        /* Utterance settings */
-        this.settings = {
-            pitch: 1,
-            voiceURI: '',
-            language: language,
-            rate: 1,
-            volume: 0.5,
-        };
-        /* Events */
-        this.events = [
-            { type: 'boundary', handler: onBoundary },
-            { type: 'time-tick', handler: onTimeTick },
-            { type: 'word-click', handler: onWordClick },
-            { type: 'start', handler: onStart },
-            { type: 'pause', handler: onPause },
-            { type: 'resume', handler: onResume },
-            { type: 'reset', handler: onReset },
-            { type: 'seek', handler: onSeek },
-            { type: 'end', handler: onEnd },
-            { type: 'chunks-mode-change', handler: onChunksModeChange },
-            { type: 'settings-change', handler: onSettingsChange },
-            { type: 'options-change', handler: onOptionsChange },
-        ];
-        /* Options */
-        this.options = {
-            isHighlightTextOn: true,
-            isChunksModeOn: Utils.isMobile(),
-            isPreserveHighlighting: true,
-        };
-        /* State */
-        this.state = {
-            isMobile: Utils.isMobile(),
-            /* Internal properties */
-            voice: {},
-            voices: [],
-            /* UI */
-            isLoading: true,
-            /* Highlight & Reading time */
-            tagIndex: 0,
-            currentWord: '',
-            currentWordIndex: 0,
-            currentWordProps: { charIndex: 0, charLength: 0 },
-            highlightedWords: [],
-            lastWordPosition: 0,
-            numberOfWords: 0,
-            wholeText: '',
-            wholeTextArray: [],
-            textRemaining: '',
-            duration: 0,
-            elapsedTime: 0,
-            currentChunkIndex: 0,
-            chunksArray: [],
-            /* Controls  */
-            isPaused: false,
-            isReading: false,
-        };
-    }
-    /*
-    Public Testable methods
-    */
-    /*
-    This method handles the DOM traversing to add the Highlightint tags to the readable elements and all the logic in it is responsible
-    for how the text content appears visually
-    e.g. alignment of punctuation, spaces, etc...
-    */
-    addHTMLHighlightTags(node) {
-        const tree = [...node.childNodes];
-        tree.forEach((el) => {
-            /* Exclude code tags and its content from parsing */
-            if (el.nodeType === 1 &&
-                (el.tagName === 'PRE' ||
-                    el.tagName === 'CODE'))
-                return;
-            /* Recurse if the element is an HTMLElement */
-            if (el.nodeType === 1)
-                this.addHTMLHighlightTags(el);
-            /* Begin text node parsing if node type is TextNode */
-            if (el.nodeType === 3) {
-                if (Utils.isEmptyString(el.textContent) ||
-                    Utils.isSpace(el.textContent) ||
-                    Utils.isWhitespaceChar(el.textContent))
-                    return;
-                const wrapper = document.createElement('span');
-                el.data
-                    .split('')
-                    .filter((char, i, arr) => {
-                    /* Dismiss empty strings or non valid values */
-                    if (!char)
-                        return false;
-                    /* Get rid of spaces between words and punctuation */
-                    if (Utils.isSpace(char) &&
-                        Utils.isPunctuation(arr[i + 1]))
-                        return false;
-                    /* Get rid of multiple spaces to avoid inconsistencies */
-                    if (Utils.isSpace(char) && Utils.isSpace(arr[i + 1]))
-                        return false;
-                    return true;
-                })
-                    /* Separate special characters that will be read as single characters */
-                    .map((c, i, arr) => {
-                    /* Replace whitespace characters with common spaces */
-                    if (Utils.isWhitespaceChar(c))
-                        return ' ';
-                    /* Separate the special readable characters like @#^*° so they can be read accordingly */
-                    if (Utils.isSpecialReadableCharacter(c))
-                        return ` ${c} `;
-                    /* Handle dots in the middle of numbers e.g. 1.000 1.23 */
-                    if (Utils.isDot(c) &&
-                        Utils.isNumber(arr[i - 1]) &&
-                        Utils.isNumber(arr[i + 1]))
-                        return `${c}`;
-                    /* Handle dots in the middle of words and numbers e.g. some.text e.g. abc33.bb32 ,
-                    since in this case they are read as a character : "some dot text" "one dot zero zero zero" */
-                    if (Utils.isDot(c) &&
-                        Utils.isWordWithNumbers(arr[i - 1]) &&
-                        Utils.isWordWithNumbers(arr[i + 1]))
-                        return ` ${c} `;
-                    /* Handle the punctation characters apart dots placed in the middle of a word e.g. test:test --> test: test */
-                    if (Utils.isPunctuationButDot(c) &&
-                        Utils.isWord(arr[i - 1]) &&
-                        Utils.isWord(arr[i + 1]))
-                        return `${c} `;
-                    /* Handle multiple zeroes in a row, since they are read a single separated words */
-                    return c;
-                })
-                    .join('')
-                    .split(' ')
-                    .forEach((word, i, arr) => {
-                    if (!word)
-                        return;
-                    /* If it's a special unreadable character or a dot it does not add an highlight data-id since those characters won't  be read */
-                    if (
-                    // Utils.isPunctuation(word) ||
-                    Utils.isSpecialUnreadableCharacter(word) ||
-                        Utils.isWordInsideAngularBrackets(word)) {
-                        const newEl = document.createTextNode(word + ' ');
-                        wrapper.appendChild(newEl);
-                    }
-                    else {
-                        /* In all other cases, which is, "plain words or slashes or any other readable character" we add the data-id attribute */
-                        const newEl = document.createElement('span');
-                        newEl.setAttribute('data-id', (this.state.tagIndex++).toString());
-                        newEl.setAttribute('data-type', 'WORD');
-                        /* Do not add a space after the word if it's a special readable character or if the next word is not a plain word */
-                        if (Utils.isSpecialReadableCharacter(word) ||
-                            Utils.isSpecialReadableCharacter(arr[i + 1]) ||
-                            Utils.isDot(word) ||
-                            Utils.isDot(arr[i + 1]) ||
-                            Utils.isZero(word)) {
-                            newEl.textContent = word;
-                        }
-                        else
-                            newEl.textContent = word + ' ';
-                        /* Add a space after the words that are Text words */
-                        wrapper.appendChild(newEl);
-                    }
-                });
-                node.replaceChild(wrapper, el);
-            }
-        });
-    }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            /* Add custom methods to primitives */
-            // eslint-disable-next-line no-extend-native
-            Array.prototype.__join__ = Utils.__join__;
-            /* Get voices */
-            try {
-                this.state.voices = yield this.getVoices();
-                this.state.voice = this.state.voices[0];
-                this.settings.voiceURI = this.state.voice.voiceURI;
-                /* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags"
-        on stringified HTML */
-                this.addHTMLHighlightTags(this.textContainer);
-                /* Add basic style to the words that have just been tagged wit HTML tags */
-                this.applyBasicStyleToWords(this.textContainer, '[data-id]');
-                /* Init state properties */
-                /* Get the total number of words to highlight */
-                this.state.numberOfWords = this.retrieveNumberOfWords(this.textContainer, '[data-id]');
-                /* Get the whole raw text */
-                this.state.wholeText = this.retrieveWholeText(this.textContainer, '[data-id]');
-                this.state.textRemaining = this.state.wholeText;
-                /* Get the total estimated duration of reading */
-                this.state.duration = this.getTextDuration(this.state.wholeText, this.settings.rate);
-                /* Get the array of words that will be read */
-                this.state.wholeTextArray = this.retrieveWholeTextArray(this.textContainer, '[data-id]');
-                this.state.chunksArray = this.retrieveChunks();
-                /* -------------------------------------------------------------------- */
-                /* Attach click event listener to words */
-                this.attachEventListenersToWords(this.textContainer, '[data-id]', {
-                    type: 'click',
-                    fn: (e) => {
-                        this.emit('word-click', this, e);
-                    },
-                });
-                /* Add class custom event listeners */
-                this.addCustomEventListeners();
-                /* -------------------------------------------------------------------- */
-                /* Init utterance settings */
-                this.initUtterance();
-                return this;
-            }
-            catch (e) {
-                console.log('Init error', e);
-                return this;
-            }
-        });
-    }
-    /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-    initUtterance() {
-        this.utterance.text = this.options.isChunksModeOn
-            ? this.state.chunksArray[this.state.currentChunkIndex].text
-            : this.state.wholeText;
-        this.utterance.lang = this.settings.language;
-        this.utterance.voice = this.state.voice;
-        this.utterance.pitch = this.settings.pitch;
-        this.utterance.rate = this.settings.rate;
-        this.utterance.volume = this.settings.volume;
-        /* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
-        this.utterance.onboundary = this.handleBoundary.bind(this);
-        /*
-        When chunks mode is enabled this event is fired multiple times at the end of each chunk.
-        Use this to manage chunk highlighting and extra logic that concerns chunks management
-        */
-        this.utterance.onend = (e) => {
-            /* This prevents the execution of code if the end event is called in response to the reset method being called */
-            if (this.state.isReading === false && this.state.isPaused === false)
-                return;
-            /* Emit the "end" event which signals the end of the WHOLE text, only when the whole text has finished to be read */
-            if ((!this.options.isChunksModeOn &&
-                this.state.currentWordIndex >=
-                    this.state.wholeTextArray.length - 1) ||
-                (this.options.isChunksModeOn &&
-                    this.state.currentChunkIndex >=
-                        this.state.chunksArray.length - 1))
-                return this.emit('end', this);
-            /* Handle the highlight options change dynamically */
-            /*
-            If the isPreserveHighlighting option is disabled,
-            it has to reset the highlighting of the whole previous chunk while skipping to the next one
-            */
-            if (!this.options.isPreserveHighlighting) {
-                this.resetHighlight();
-            }
-            /* Manage the highlighting of the next chunk just before it starts */
-            if (this.options.isChunksModeOn && this.state.isReading)
-                this.handleChunkHighlighting();
-            /* Finally play the next chunk */
-            this.play('next-chunk-start');
-        };
-    }
-    /*  Highlight  */
-    highlightChunk(idx) {
-        const length = this.state.currentWordIndex + this.state.chunksArray[idx].length;
-        for (let i = this.state.currentWordIndex; i < length; i++)
-            this.highlightText(i);
-    }
-    retrieveChunks() {
-        let currentPunctuationSymbol = '.';
-        const chunks = [];
-        let previousEnd = 0;
-        /*
-        Take into account that all the special readable characters will be counted as plain words hence we need to:
-        - use the "wholeTextArray" which holds all the text elements that were wrapped in a span tag with a data-id attribute,
-          this ensures that it will contain all readable content, since only readable words/characters are given such a wrap tag in
-          "addHTMLHighlightTags" method.
-          This further ensures to have a unique source of truth to keep in sync reading content and visual highlighting.
-        - join with spaces every single character wrapped with a data-id attribute tag to be able to further split on given breakpoints
-        - split in segments relative to periods that have words ending with a punctuation mark, to do so we use this regexp "/(?<=[a-zA-Z0-9])[.?!;]/"
-          to make sure to select any punctuation mark that is preceeded by a word
-          ( to avoid to consider punctuation in the middle of words as chunk edges, we use the wholeTextArray array
-            which already owns all characters that will be read, included dots in the middle of words e.g. text.text -> "text dot text" ).
-        - for each of the chunk extracted we build an object containg all the info on the chunk, start,end,length, index and text.
-          The text is the content that will be passed to the speech synth
-        - The chunk text has to be further manipulated since now as we manipulated the chunk the dots in the middle of the word won't be read as they are detached from the previous and next words.
-          The strategy here is the same used in the "retrieveWholeText" method, which is: using the custom __join__ method
-          tho use a space " " to join all the plain words and a no space "" to join the words that have a punctuation element next to them and dots element themselves */
-        this.state.wholeTextArray
-            .join(' ')
-            /* Alternative regexps:
-            1- /(?<![\s])[.?!;]+(?=[\s\n])/ This is safer since it just checks if there are spaces before and after the dot
-            2- /(?<=[a-zA-Z0-9])[.?!;]/  This does not take into account dots placed after a special character like a parens e.g. (word). <-- That dot won't be matched
-            */
-            .split(/(?<![\s])[.?!;]+(?=[\s\n])/)
-            .forEach((c, i) => {
-            if (Utils.isPunctuation(c))
-                currentPunctuationSymbol = c;
-            else {
-                const length = c
-                    .trim()
-                    .split(/[\s]/)
-                    .filter((el) => el).length;
-                /*  */
-                const text = c.split(/\s+/).__join__((el, i, arr) => {
-                    if (Utils.isPunctuation(arr[i + 1]) ||
-                        Utils.isDot(el)) {
-                        return '';
-                    }
-                    else
-                        return ' ';
-                });
-                const result = {
-                    text: text + currentPunctuationSymbol,
-                    length: length,
-                    start: previousEnd,
-                    end: previousEnd + length - 1,
-                    idx: i,
-                };
-                previousEnd = previousEnd + length;
-                chunks.push(result);
-            }
-        });
-        return chunks;
-    }
-    handleChunkHighlighting() {
-        // eslint-disable-next-line prettier/prettier
-        const currentChunk = this.state.chunksArray[this.state.currentChunkIndex];
-        // eslint-disable-next-line prettier/prettier
-        const nextChunk = this.state.chunksArray[++this.state.currentChunkIndex];
-        this.utterance.text = nextChunk.text;
-        /* Keep the currentWordIndex in sync */
-        this.state.currentWordIndex += currentChunk.length;
-        /* Highlight the next chunk */
-        this.highlightChunk(this.state.currentChunkIndex);
-    }
-    scrollTo(idx) {
-        const el = this.textContainer.querySelector(`[data-id="${idx}"]`);
-        if (el)
-            el.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-            });
-    }
-    /* Timer */
-    timeCount(e, frequency) {
-        if (frequency % 10 !== 0)
-            throw new Error('Frequency must be a multiple of 10');
-        this.state.elapsedTime += frequency;
-        if (this.state.elapsedTime % 1000 === 0) {
-            /* Instructions executed every 1000ms when the reader is active */
-            this.emit('time-tick', this, this.state.elapsedTime);
-        }
-        this.timeoutRef = setTimeout(this.timeCount.bind(this, e, frequency), frequency);
-    }
-    pauseTimeCount() {
-        clearTimeout(this.timeoutRef);
-    }
-    resetTimeCount() {
-        this.state.elapsedTime = 0;
-        clearTimeout(this.timeoutRef);
-    }
-    handleBoundary(e) {
-        /* Disable boundary if it's in chunk mode */
-        if (this.options.isChunksModeOn)
-            return;
-        this.state.currentWord =
-            this.state.wholeTextArray[this.state.currentWordIndex];
-        const previousWord = this.state.wholeTextArray[this.state.currentWordIndex - 1];
-        /* This is very important since it ensures the sync among words that are read
-        and those that are highlighted is not messed up  */
-        if (e.name !== 'word' || e.charLength === 0)
-            return;
-        /*
-        Disable boundary if the word is the repetition of the previous one, this happens in certain cases like numbers
-        e.g. 1000 is spelled "one thousand" even if it's just one word, hence the boundary is fired twice and dates.
-        This increase consistency in visual highlighting and audio sync.
-        */
-        if ((Utils.isNumber(previousWord) || Utils.isValidDate(previousWord)) &&
-            e.charIndex === this.state.currentWordProps.charIndex &&
-            e.charLength === this.state.currentWordProps.charLength)
-            return;
-        /* Sync current word props */
-        this.state.currentWordProps = {
-            charIndex: e.charIndex,
-            charLength: e.charLength,
-        };
-        /* Highlight the current word */
-        this.highlightText(this.state.currentWordIndex);
-        /* Increase the current index of word read */
-        this.state.currentWordIndex += 1;
-        /* Synchronize the chunk index */
-        if (/[.?!;]+/.test(this.state.wholeTextArray[this.state.currentWordIndex]))
-            this.state.currentChunkIndex++;
-        /* Emit boundary event */
-        this.emit('boundary', this, e);
-    }
-    /* VOICES ARE POPULATED ASYNCHRONOUSLY ON BROWSER LOAD */
-    getVoices() {
-        return new Promise((resolve, reject) => {
-            let id = null;
-            try {
-                id = setInterval(() => {
-                    if (this.synth.getVoices().length !== 0) {
-                        resolve(this.synth
-                            .getVoices()
-                            .filter((voice) => voice.lang.startsWith(this.settings.language)));
-                        clearInterval(id);
-                    }
-                }, 10);
-            }
-            catch (e) {
-                reject(e);
-                clearInterval(id);
-            }
-        });
-    }
-    highlightText(wordIndex) {
-        /* Do not highlight if the option is disabled */
-        if (!this.options.isHighlightTextOn)
-            return;
-        // eslint-disable-next-line prettier/prettier
-        const wordToHighlight = this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
-        if (!wordToHighlight)
-            return;
-        /* Update highlighted words array */
-        this.state.highlightedWords.push(wordToHighlight);
-        /* Calculate current word position */
-        const position = wordToHighlight.getBoundingClientRect().x;
-        /* Scroll to the right row position */
-        if (position <= this.state.lastWordPosition)
-            this.scrollTo(this.state.currentWordIndex);
-        /* Reset the row highlight only if it's not in chunks mode.
-           In chunks mode, it has to be managed during the chunks switch ( in the "onend" handler) */
-        if (!this.options.isPreserveHighlighting &&
-            !this.options.isChunksModeOn) {
-            this.resetHighlight();
-            this.state.highlightedWords = [wordToHighlight];
-        }
-        /* Update last word position */
-        this.state.lastWordPosition = position;
-        /* Apply highlight style */
-        wordToHighlight.style.backgroundColor = this.style.color1;
-        wordToHighlight.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
-        wordToHighlight.style.textDecoration = 'underline';
-    }
-    resetHighlight() {
-        this.state.highlightedWords.forEach((n) => {
-            n.style.backgroundColor = '';
-            n.style.boxShadow = '';
-            n.style.textDecoration = 'none';
-            this.state.highlightedWords = [];
-        });
-    }
-    addCustomEventListeners() {
-        this.events.forEach((e) => {
-            if (e.handler && Utils.isFunction(e.handler))
-                this.on(e.type, e.handler.bind(this));
-        });
-    }
-    attachEventListenersToWords(node, selector, { type, fn }) {
-        [...node.querySelectorAll(selector)].forEach((el) => {
-            el.addEventListener(type, fn);
-        });
-    }
-    getRemainingText(idx) {
-        const length = this.state.wholeTextArray.length;
-        /* Calculate and set the remaining text */
-        return this.state.wholeTextArray
-            .slice(idx, length + 1)
-            .__join__((el, i, arr) => {
-            if (Utils.isDot(arr[i + 1]) || Utils.isDot(el)) {
-                return '';
-            }
-            else
-                return ' ';
-        });
-    }
-    getCurrentChunkText(idx) {
-        return this.state.chunksArray[idx].text;
-    }
-    retrieveNumberOfWords(node, selector) {
-        return [...node.querySelectorAll(selector)].length;
-    }
-    retrieveWholeText(node, selector) {
-        return [...node.querySelectorAll(selector)]
-            .map((el) => el.textContent)
-            .__join__((el, i, arr) => {
-            if (Utils.isPunctuation(arr[i + 1]) ||
-                Utils.isDot(el)) {
-                return '';
-            }
-            else
-                return ' ';
-        });
-    }
-    retrieveWholeTextArray(node, selector) {
-        return [...node.querySelectorAll(selector)].map((el) => el.textContent);
-    }
-    applyBasicStyleToWords(node, selector) {
-        [...node.querySelectorAll(selector)]
-            .filter((el) => el && !Utils.isPunctuation(el.textContent))
-            .forEach((el) => {
-            if (!el)
-                return;
-            el.style.transition = 'all 0.4s';
-        });
-    }
-    getTextDuration(str, rate) {
-        return (str.length * 100 * 1) / rate;
-    }
-    getAverageTextElapsedTime(textArray, idx) {
-        const _text = textArray.slice(0, idx).join(' ');
-        return (rate) => this.getTextDuration(_text, rate);
-    }
-    delayRestart(type, delay) {
-        return setTimeout(() => {
-            this.synth.cancel();
-            if (this.isReading())
-                this.play(type);
-            if (this.isPaused()) {
-                this.play(type).then(() => this.pause());
-                this.pause();
-            }
-        }, 500);
-    }
-    restart(type, delay) {
-        this.synth.cancel();
-        if (this.isReading())
-            this.play(type);
-        if (this.isPaused()) {
-            this.play(type).then(() => this.pause());
-            this.pause();
-        }
-    }
-    /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PUBLIC METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-    changeSettings(obj) {
-        /* Reset timeouts  */
-        clearTimeout(this.timeoutRef);
-        clearTimeout(this.editTimeoutRef);
-        /* Update voice in the state if it changes */
-        if (obj.voiceURI) {
-            this.state.voice =
-                this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)
-                    .length > 0
-                    ? this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)[0]
-                    : this.state.voices[0];
-            this.utterance.voice = this.state.voice;
-        }
-        /* Recalculate total duration  and current elapsedTime when rate changes */
-        if (obj.rate) {
-            this.state.duration = this.getTextDuration(this.state.wholeText, obj.rate);
-            /* Recalculate time elapsed */
-            this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
-            this.emit('time-tick', this, this.state.elapsedTime);
-        }
-        /* Update utterance object, adding the remaining settings and remaining text left to be played */
-        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.options.isChunksModeOn
-                ? this.getCurrentChunkText(this.state.currentChunkIndex)
-                : this.getRemainingText(this.state.currentWordIndex) }));
-        /* Update instance settings object to keep them in sync with utterance settings */
-        this.settings = Object.assign(Object.assign({}, this.settings), obj);
-        this.emit('settings-change', this, obj);
-        /*  Debounce to handle volume change properly */
-        this.editTimeoutRef = this.delayRestart('edit-utterance', 500);
-    }
-    changeOptions(obj) {
-        /* Handle chunks mode option change */
-        if ('isChunksModeOn' in obj) {
-            this.changeChunkMode(obj.isChunksModeOn);
-        }
-        Object.assign(this.options, obj);
-        this.emit('options-change', this, obj);
-    }
-    changeChunkMode(b) {
-        clearTimeout(this.timeoutRef);
-        this.options.isChunksModeOn = b;
-        /* Since che chunk mode change triggers a restart of the utterance playing,
-        make sure the current word index gets synchronized with the current chunk index start word,
-        since the sentence is restarted from the first word of the sentence itself */
-        // eslint-disable-next-line prettier/prettier
-        this.state.currentWordIndex =
-            this.state.chunksArray[this.state.currentChunkIndex].start;
-        /* This manages the starting highlight if chunk mode is on or off:
-            1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
-            2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
-        if (this.options.isChunksModeOn)
-            this.highlightChunk(this.state.currentChunkIndex);
-        else
-            this.resetHighlight();
-        this.utterance.text = this.options.isChunksModeOn
-            ? this.getCurrentChunkText(this.state.currentChunkIndex)
-            : this.getRemainingText(this.state.currentWordIndex);
-        this.emit('chunks-mode-change', this);
-        this.restart('chunks-mode-change', 500);
-    }
-    /* Control methods */
-    seekTo(idx) {
-        this.emit('seek', this, idx);
-        /* Cancel synth instance */
-        // this.synth.cancel();
-        /* Reset timeouts  */
-        clearTimeout(this.timeoutRef);
-        clearTimeout(this.seekTimeoutRef);
-        /* Sync the current chunk in both cases that the seeking is performed in chunk or non chunk mode */
-        const chunk = this.state.chunksArray.find((c) => idx >= c.start && idx <= c.end);
-        this.state.currentChunkIndex = chunk.idx;
-        this.state.currentWordIndex = chunk.start;
-        if (!this.options.isChunksModeOn) {
-            /* Set the new text slice */
-            this.state.textRemaining = this.getRemainingText(idx);
-            /* Update current word index */
-            /* Need to increase the index by 1 */
-            this.state.currentWordIndex = idx;
-            /* Update utterance instance with  the new text slice */
-            this.utterance.text = this.state.textRemaining;
-            /* Highlight */
-            this.resetHighlight();
-            this.highlightText(this.state.currentWordIndex);
-        }
-        else {
-            this.utterance.text = chunk.text;
-            /* Highlight */
-            this.resetHighlight();
-            this.highlightChunk(this.state.currentChunkIndex);
-        }
-        /* Recalculate time elapsed */
-        this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
-        this.emit('time-tick', this, this.state.elapsedTime);
-        this.seekTimeoutRef = this.delayRestart('seek', 500);
-    }
-    /* ------------------------------------------------------------------------------------ */
-    /* Public Methods to control the player state */
-    /* ------------------------------------------------------------------------------------ */
-    play(type) {
-        this.synth.cancel(); // Makes sure the queue is empty when starting
-        clearTimeout(this.timeoutRef); // Makes sure to not trigger multiple timeouts
-        this.synth.speak(this.utterance);
-        this.state.isPaused = false;
-        this.state.isReading = true;
-        this.timeCount(null, 20);
-        switch (type) {
-            case 'start': {
-                this.emit('start', this);
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        /* Highlight the first chunk on the first start if it's chunks mode ON / mobile */
-                        if (this.options.isChunksModeOn)
-                            this.highlightChunk(0);
-                        resolve(null);
-                    };
-                });
-            }
-            case 'resume-chunk-mode': {
-                this.emit('resume-chunk-mode', this);
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-            }
-            case 'next-chunk-start': {
-                this.emit('next-chunk-start', this, this.state.chunksArray[this.state.currentChunkIndex]);
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-            }
-            case 'edit-utterance-settings': {
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-            }
-            case 'chunks-mode-change': {
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-            }
-            default:
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-        }
-    }
-    pause() {
-        this.synth.pause();
-        this.state.isPaused = true;
-        this.state.isReading = false;
-        this.emit('pause', this);
-        /* Pause timer */
-        this.pauseTimeCount();
-    }
-    resume() {
-        if (!this.options.isChunksModeOn)
-            this.synth.resume();
-        else
-            this.play('resume-chunk-mode');
-        this.state.isPaused = false;
-        this.state.isReading = true;
-        this.emit('resume', this);
-        /* Restart timer */
-        this.timeCount(null, 20);
-    }
-    reset() {
-        this.synth.cancel();
-        this.resetHighlight();
-        /* Reset timer */
-        this.resetTimeCount();
-        this.state = Object.assign(Object.assign({}, this.state), { textRemaining: this.state.wholeText, currentWordIndex: 0, currentChunkIndex: 0, highlightedWords: [], lastWordPosition: 0, isPaused: false, isReading: false });
-        /* Reset the utterance state ( needed to reset the text utterance ) */
-        this.initUtterance();
-        /* Scroll back to top word */
-        this.scrollTo(1);
-        this.emit('reset', this);
-    }
-    /* State check */
-    isReading() {
-        return this.state.isReading;
-    }
-    isPaused() {
-        return this.state.isPaused;
-    }
-}
-
 var DefaultContext = {
   color: undefined,
   size: undefined,
@@ -999,7 +28,7 @@ var __assign = undefined && undefined.__assign || function () {
   return __assign.apply(this, arguments);
 };
 
-var __rest = undefined && undefined.__rest || function (s, e) {
+var __rest$1 = undefined && undefined.__rest || function (s, e) {
   var t = {};
 
   for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -1030,7 +59,7 @@ function IconBase(props) {
     var attr = props.attr,
         size = props.size,
         title = props.title,
-        svgProps = __rest(props, ["attr", "size", "title"]);
+        svgProps = __rest$1(props, ["attr", "size", "title"]);
 
     var computedSize = size || conf.size || "1em";
     var className;
@@ -1061,10 +90,6 @@ function VscGithub (props) {
   return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"currentColor"},"child":[{"tag":"path","attr":{"d":"M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24zm3.163 21.783h-.093a.513.513 0 0 1-.382-.14.513.513 0 0 1-.14-.372v-1.406c.006-.467.01-.94.01-1.416a3.693 3.693 0 0 0-.151-1.028 1.832 1.832 0 0 0-.542-.875 8.014 8.014 0 0 0 2.038-.471 4.051 4.051 0 0 0 1.466-.964c.407-.427.71-.943.885-1.506a6.77 6.77 0 0 0 .3-2.13 4.138 4.138 0 0 0-.26-1.476 3.892 3.892 0 0 0-.795-1.284 2.81 2.81 0 0 0 .162-.582c.033-.2.05-.402.05-.604 0-.26-.03-.52-.09-.773a5.309 5.309 0 0 0-.221-.763.293.293 0 0 0-.111-.02h-.11c-.23.002-.456.04-.674.111a5.34 5.34 0 0 0-.703.26 6.503 6.503 0 0 0-.661.343c-.215.127-.405.249-.573.362a9.578 9.578 0 0 0-5.143 0 13.507 13.507 0 0 0-.572-.362 6.022 6.022 0 0 0-.672-.342 4.516 4.516 0 0 0-.705-.261 2.203 2.203 0 0 0-.662-.111h-.11a.29.29 0 0 0-.11.02 5.844 5.844 0 0 0-.23.763c-.054.254-.08.513-.081.773 0 .202.017.404.051.604.033.199.086.394.16.582A3.888 3.888 0 0 0 5.702 10a4.142 4.142 0 0 0-.263 1.476 6.871 6.871 0 0 0 .292 2.12c.181.563.483 1.08.884 1.516.415.422.915.75 1.466.964.653.25 1.337.41 2.033.476a1.828 1.828 0 0 0-.452.633 2.99 2.99 0 0 0-.2.744 2.754 2.754 0 0 1-1.175.27 1.788 1.788 0 0 1-1.065-.3 2.904 2.904 0 0 1-.752-.824 3.1 3.1 0 0 0-.292-.382 2.693 2.693 0 0 0-.372-.343 1.841 1.841 0 0 0-.432-.24 1.2 1.2 0 0 0-.481-.101c-.04.001-.08.005-.12.01a.649.649 0 0 0-.162.02.408.408 0 0 0-.13.06.116.116 0 0 0-.06.1.33.33 0 0 0 .14.242c.093.074.17.131.232.171l.03.021c.133.103.261.214.382.333.112.098.213.209.3.33.09.119.168.246.231.381.073.134.15.288.231.463.188.474.522.875.954 1.145.453.243.961.364 1.476.351.174 0 .349-.01.522-.03.172-.028.343-.057.515-.091v1.743a.5.5 0 0 1-.533.521h-.062a10.286 10.286 0 1 1 6.324 0v.005z"}}]})(props);
 }
 
-function unwrapExports (x) {
-	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
-}
-
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
@@ -1077,12 +102,12 @@ function createCommonjsModule(fn, module) {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var b$2="function"===typeof Symbol&&Symbol.for,c$1=b$2?Symbol.for("react.element"):60103,d$1=b$2?Symbol.for("react.portal"):60106,e=b$2?Symbol.for("react.fragment"):60107,f$1=b$2?Symbol.for("react.strict_mode"):60108,g$2=b$2?Symbol.for("react.profiler"):60114,h$2=b$2?Symbol.for("react.provider"):60109,k$3=b$2?Symbol.for("react.context"):60110,l$2=b$2?Symbol.for("react.async_mode"):60111,m$1=b$2?Symbol.for("react.concurrent_mode"):60111,n$2=b$2?Symbol.for("react.forward_ref"):60112,p$3=b$2?Symbol.for("react.suspense"):60113,q$4=b$2?
-Symbol.for("react.suspense_list"):60120,r$3=b$2?Symbol.for("react.memo"):60115,t$3=b$2?Symbol.for("react.lazy"):60116,v$3=b$2?Symbol.for("react.block"):60121,w$3=b$2?Symbol.for("react.fundamental"):60117,x$2=b$2?Symbol.for("react.responder"):60118,y$2=b$2?Symbol.for("react.scope"):60119;
-function z$2(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c$1:switch(a=a.type,a){case l$2:case m$1:case e:case g$2:case f$1:case p$3:return a;default:switch(a=a&&a.$$typeof,a){case k$3:case n$2:case t$3:case r$3:case h$2:return a;default:return u}}case d$1:return u}}}function A$1(a){return z$2(a)===m$1}var AsyncMode=l$2;var ConcurrentMode=m$1;var ContextConsumer=k$3;var ContextProvider=h$2;var Element=c$1;var ForwardRef=n$2;var Fragment=e;var Lazy=t$3;var Memo=r$3;var Portal=d$1;
-var Profiler=g$2;var StrictMode=f$1;var Suspense=p$3;var isAsyncMode=function(a){return A$1(a)||z$2(a)===l$2};var isConcurrentMode=A$1;var isContextConsumer=function(a){return z$2(a)===k$3};var isContextProvider=function(a){return z$2(a)===h$2};var isElement=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c$1};var isForwardRef=function(a){return z$2(a)===n$2};var isFragment=function(a){return z$2(a)===e};var isLazy=function(a){return z$2(a)===t$3};
-var isMemo=function(a){return z$2(a)===r$3};var isPortal=function(a){return z$2(a)===d$1};var isProfiler=function(a){return z$2(a)===g$2};var isStrictMode=function(a){return z$2(a)===f$1};var isSuspense=function(a){return z$2(a)===p$3};
-var isValidElementType=function(a){return "string"===typeof a||"function"===typeof a||a===e||a===m$1||a===g$2||a===f$1||a===p$3||a===q$4||"object"===typeof a&&null!==a&&(a.$$typeof===t$3||a.$$typeof===r$3||a.$$typeof===h$2||a.$$typeof===k$3||a.$$typeof===n$2||a.$$typeof===w$3||a.$$typeof===x$2||a.$$typeof===y$2||a.$$typeof===v$3)};var typeOf=z$2;
+var b$1="function"===typeof Symbol&&Symbol.for,c=b$1?Symbol.for("react.element"):60103,d=b$1?Symbol.for("react.portal"):60106,e=b$1?Symbol.for("react.fragment"):60107,f=b$1?Symbol.for("react.strict_mode"):60108,g$1=b$1?Symbol.for("react.profiler"):60114,h=b$1?Symbol.for("react.provider"):60109,k$1=b$1?Symbol.for("react.context"):60110,l=b$1?Symbol.for("react.async_mode"):60111,m=b$1?Symbol.for("react.concurrent_mode"):60111,n=b$1?Symbol.for("react.forward_ref"):60112,p=b$1?Symbol.for("react.suspense"):60113,q$1=b$1?
+Symbol.for("react.suspense_list"):60120,r=b$1?Symbol.for("react.memo"):60115,t=b$1?Symbol.for("react.lazy"):60116,v$1=b$1?Symbol.for("react.block"):60121,w$1=b$1?Symbol.for("react.fundamental"):60117,x$1=b$1?Symbol.for("react.responder"):60118,y$1=b$1?Symbol.for("react.scope"):60119;
+function z$1(a){if("object"===typeof a&&null!==a){var u=a.$$typeof;switch(u){case c:switch(a=a.type,a){case l:case m:case e:case g$1:case f:case p:return a;default:switch(a=a&&a.$$typeof,a){case k$1:case n:case t:case r:case h:return a;default:return u}}case d:return u}}}function A(a){return z$1(a)===m}var AsyncMode=l;var ConcurrentMode=m;var ContextConsumer=k$1;var ContextProvider=h;var Element=c;var ForwardRef=n;var Fragment=e;var Lazy=t;var Memo=r;var Portal=d;
+var Profiler=g$1;var StrictMode=f;var Suspense=p;var isAsyncMode=function(a){return A(a)||z$1(a)===l};var isConcurrentMode=A;var isContextConsumer=function(a){return z$1(a)===k$1};var isContextProvider=function(a){return z$1(a)===h};var isElement=function(a){return "object"===typeof a&&null!==a&&a.$$typeof===c};var isForwardRef=function(a){return z$1(a)===n};var isFragment=function(a){return z$1(a)===e};var isLazy=function(a){return z$1(a)===t};
+var isMemo=function(a){return z$1(a)===r};var isPortal=function(a){return z$1(a)===d};var isProfiler=function(a){return z$1(a)===g$1};var isStrictMode=function(a){return z$1(a)===f};var isSuspense=function(a){return z$1(a)===p};
+var isValidElementType=function(a){return "string"===typeof a||"function"===typeof a||a===e||a===m||a===g$1||a===f||a===p||a===q$1||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k$1||a.$$typeof===n||a.$$typeof===w$1||a.$$typeof===x$1||a.$$typeof===y$1||a.$$typeof===v$1)};var typeOf=z$1;
 
 var reactIs_production_min = {
 	AsyncMode: AsyncMode,
@@ -2136,7 +1161,7 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 
 var hoistNonReactStatics_cjs = hoistNonReactStatics;
 
-function y$1(){return (y$1=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r]);}return e}).apply(this,arguments)}var v$2=function(e,t){for(var n=[e[0]],r=0,o=t.length;r<o;r+=1)n.push(t[r],e[r+1]);return n},g$1=function(t){return null!==t&&"object"==typeof t&&"[object Object]"===(t.toString?t.toString():Object.prototype.toString.call(t))&&!reactIs_28(t)},S$1=Object.freeze([]),w$2=Object.freeze({});function E$1(e){return "function"==typeof e}function b$1(e){return "production"!==process.env.NODE_ENV&&"string"==typeof e&&e||e.displayName||e.name||"Component"}function _$1(e){return e&&"string"==typeof e.styledComponentId}var N="undefined"!=typeof process&&(process.env.REACT_APP_SC_ATTR||process.env.SC_ATTR)||"data-styled",C="undefined"!=typeof window&&"HTMLElement"in window,I$1=Boolean("boolean"==typeof SC_DISABLE_SPEEDY?SC_DISABLE_SPEEDY:"undefined"!=typeof process&&void 0!==process.env.REACT_APP_SC_DISABLE_SPEEDY&&""!==process.env.REACT_APP_SC_DISABLE_SPEEDY?"false"!==process.env.REACT_APP_SC_DISABLE_SPEEDY&&process.env.REACT_APP_SC_DISABLE_SPEEDY:"undefined"!=typeof process&&void 0!==process.env.SC_DISABLE_SPEEDY&&""!==process.env.SC_DISABLE_SPEEDY?"false"!==process.env.SC_DISABLE_SPEEDY&&process.env.SC_DISABLE_SPEEDY:"production"!==process.env.NODE_ENV),O$1="production"!==process.env.NODE_ENV?{1:"Cannot create styled-component for component: %s.\n\n",2:"Can't collect styles once you've consumed a `ServerStyleSheet`'s styles! `ServerStyleSheet` is a one off instance for each server-side render cycle.\n\n- Are you trying to reuse it across renders?\n- Are you accidentally calling collectStyles twice?\n\n",3:"Streaming SSR is only supported in a Node.js environment; Please do not try to call this method in the browser.\n\n",4:"The `StyleSheetManager` expects a valid target or sheet prop!\n\n- Does this error occur on the client and is your target falsy?\n- Does this error occur on the server and is the sheet falsy?\n\n",5:"The clone method cannot be used on the client!\n\n- Are you running in a client-like environment on the server?\n- Are you trying to run SSR on the client?\n\n",6:"Trying to insert a new style tag, but the given Node is unmounted!\n\n- Are you using a custom target that isn't mounted?\n- Does your document not have a valid head element?\n- Have you accidentally removed a style tag manually?\n\n",7:'ThemeProvider: Please return an object from your "theme" prop function, e.g.\n\n```js\ntheme={() => ({})}\n```\n\n',8:'ThemeProvider: Please make your "theme" prop an object.\n\n',9:"Missing document `<head>`\n\n",10:"Cannot find a StyleSheet instance. Usually this happens if there are multiple copies of styled-components loaded at once. Check out this issue for how to troubleshoot and fix the common cases where this situation can happen: https://github.com/styled-components/styled-components/issues/1941#issuecomment-417862021\n\n",11:"_This error was replaced with a dev-time warning, it will be deleted for v4 final._ [createGlobalStyle] received children which will not be rendered. Please use the component without passing children elements.\n\n",12:"It seems you are interpolating a keyframe declaration (%s) into an untagged string. This was supported in styled-components v3, but is not longer supported in v4 as keyframes are now injected on-demand. Please wrap your string in the css\\`\\` helper which ensures the styles are injected correctly. See https://www.styled-components.com/docs/api#css\n\n",13:"%s is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details.\n\n",14:'ThemeProvider: "theme" prop is required.\n\n',15:"A stylis plugin has been supplied that is not named. We need a name for each plugin to be able to prevent styling collisions between different stylis configurations within the same app. Before you pass your plugin to `<StyleSheetManager stylisPlugins={[]}>`, please make sure each plugin is uniquely-named, e.g.\n\n```js\nObject.defineProperty(importedPlugin, 'name', { value: 'some-unique-name' });\n```\n\n",16:"Reached the limit of how many styled components may be created at group %s.\nYou may only create up to 1,073,741,824 components. If you're creating components dynamically,\nas for instance in your render method then you may be running into this limitation.\n\n",17:"CSSStyleSheet could not be found on HTMLStyleElement.\nHas styled-components' style tag been unmounted or altered by another script?\n"}:{};function R$1(){for(var e=arguments.length<=0?void 0:arguments[0],t=[],n=1,r=arguments.length;n<r;n+=1)t.push(n<0||arguments.length<=n?void 0:arguments[n]);return t.forEach((function(t){e=e.replace(/%[a-z]/,t);})),e}function D$1(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];throw "production"===process.env.NODE_ENV?new Error("An error occurred. See https://git.io/JUIaE#"+e+" for more information."+(n.length>0?" Args: "+n.join(", "):"")):new Error(R$1.apply(void 0,[O$1[e]].concat(n)).trim())}var j$1=function(){function e(e){this.groupSizes=new Uint32Array(512),this.length=512,this.tag=e;}var t=e.prototype;return t.indexOfGroup=function(e){for(var t=0,n=0;n<e;n++)t+=this.groupSizes[n];return t},t.insertRules=function(e,t){if(e>=this.groupSizes.length){for(var n=this.groupSizes,r=n.length,o=r;e>=o;)(o<<=1)<0&&D$1(16,""+e);this.groupSizes=new Uint32Array(o),this.groupSizes.set(n),this.length=o;for(var s=r;s<o;s++)this.groupSizes[s]=0;}for(var i=this.indexOfGroup(e+1),a=0,c=t.length;a<c;a++)this.tag.insertRule(i,t[a])&&(this.groupSizes[e]++,i++);},t.clearGroup=function(e){if(e<this.length){var t=this.groupSizes[e],n=this.indexOfGroup(e),r=n+t;this.groupSizes[e]=0;for(var o=n;o<r;o++)this.tag.deleteRule(n);}},t.getGroup=function(e){var t="";if(e>=this.length||0===this.groupSizes[e])return t;for(var n=this.groupSizes[e],r=this.indexOfGroup(e),o=r+n,s=r;s<o;s++)t+=this.tag.getRule(s)+"/*!sc*/\n";return t},e}(),T=new Map,x$1=new Map,k$2=1,V=function(e){if(T.has(e))return T.get(e);for(;x$1.has(k$2);)k$2++;var t=k$2++;return "production"!==process.env.NODE_ENV&&((0|t)<0||t>1<<30)&&D$1(16,""+t),T.set(e,t),x$1.set(t,e),t},z$1=function(e){return x$1.get(e)},B$1=function(e,t){t>=k$2&&(k$2=t+1),T.set(e,t),x$1.set(t,e);},M$1="style["+N+'][data-styled-version="5.3.5"]',G$1=new RegExp("^"+N+'\\.g(\\d+)\\[id="([\\w\\d-]+)"\\].*?"([^"]*)'),L$1=function(e,t,n){for(var r,o=n.split(","),s=0,i=o.length;s<i;s++)(r=o[s])&&e.registerName(t,r);},F$1=function(e,t){for(var n=(t.textContent||"").split("/*!sc*/\n"),r=[],o=0,s=n.length;o<s;o++){var i=n[o].trim();if(i){var a=i.match(G$1);if(a){var c=0|parseInt(a[1],10),u=a[2];0!==c&&(B$1(u,c),L$1(e,u,a[3]),e.getTag().insertRules(c,r)),r.length=0;}else r.push(i);}}},Y$1=function(){return "undefined"!=typeof window&&void 0!==window.__webpack_nonce__?window.__webpack_nonce__:null},q$3=function(e){var t=document.head,n=e||t,r=document.createElement("style"),o=function(e){for(var t=e.childNodes,n=t.length;n>=0;n--){var r=t[n];if(r&&1===r.nodeType&&r.hasAttribute(N))return r}}(n),s=void 0!==o?o.nextSibling:null;r.setAttribute(N,"active"),r.setAttribute("data-styled-version","5.3.5");var i=Y$1();return i&&r.setAttribute("nonce",i),n.insertBefore(r,s),r},H$1=function(){function e(e){var t=this.element=q$3(e);t.appendChild(document.createTextNode("")),this.sheet=function(e){if(e.sheet)return e.sheet;for(var t=document.styleSheets,n=0,r=t.length;n<r;n++){var o=t[n];if(o.ownerNode===e)return o}D$1(17);}(t),this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){try{return this.sheet.insertRule(t,e),this.length++,!0}catch(e){return !1}},t.deleteRule=function(e){this.sheet.deleteRule(e),this.length--;},t.getRule=function(e){var t=this.sheet.cssRules[e];return void 0!==t&&"string"==typeof t.cssText?t.cssText:""},e}(),$=function(){function e(e){var t=this.element=q$3(e);this.nodes=t.childNodes,this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){if(e<=this.length&&e>=0){var n=document.createTextNode(t),r=this.nodes[e];return this.element.insertBefore(n,r||null),this.length++,!0}return !1},t.deleteRule=function(e){this.element.removeChild(this.nodes[e]),this.length--;},t.getRule=function(e){return e<this.length?this.nodes[e].textContent:""},e}(),W$1=function(){function e(e){this.rules=[],this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){return e<=this.length&&(this.rules.splice(e,0,t),this.length++,!0)},t.deleteRule=function(e){this.rules.splice(e,1),this.length--;},t.getRule=function(e){return e<this.length?this.rules[e]:""},e}(),U$1=C,J={isServer:!C,useCSSOMInjection:!I$1},X$1=function(){function e(e,t,n){void 0===e&&(e=w$2),void 0===t&&(t={}),this.options=y$1({},J,{},e),this.gs=t,this.names=new Map(n),this.server=!!e.isServer,!this.server&&C&&U$1&&(U$1=!1,function(e){for(var t=document.querySelectorAll(M$1),n=0,r=t.length;n<r;n++){var o=t[n];o&&"active"!==o.getAttribute(N)&&(F$1(e,o),o.parentNode&&o.parentNode.removeChild(o));}}(this));}e.registerId=function(e){return V(e)};var t=e.prototype;return t.reconstructWithOptions=function(t,n){return void 0===n&&(n=!0),new e(y$1({},this.options,{},t),this.gs,n&&this.names||void 0)},t.allocateGSInstance=function(e){return this.gs[e]=(this.gs[e]||0)+1},t.getTag=function(){return this.tag||(this.tag=(n=(t=this.options).isServer,r=t.useCSSOMInjection,o=t.target,e=n?new W$1(o):r?new H$1(o):new $(o),new j$1(e)));var e,t,n,r,o;},t.hasNameForId=function(e,t){return this.names.has(e)&&this.names.get(e).has(t)},t.registerName=function(e,t){if(V(e),this.names.has(e))this.names.get(e).add(t);else {var n=new Set;n.add(t),this.names.set(e,n);}},t.insertRules=function(e,t,n){this.registerName(e,t),this.getTag().insertRules(V(e),n);},t.clearNames=function(e){this.names.has(e)&&this.names.get(e).clear();},t.clearRules=function(e){this.getTag().clearGroup(V(e)),this.clearNames(e);},t.clearTag=function(){this.tag=void 0;},t.toString=function(){return function(e){for(var t=e.getTag(),n=t.length,r="",o=0;o<n;o++){var s=z$1(o);if(void 0!==s){var i=e.names.get(s),a=t.getGroup(o);if(i&&a&&i.size){var c=N+".g"+o+'[id="'+s+'"]',u="";void 0!==i&&i.forEach((function(e){e.length>0&&(u+=e+",");})),r+=""+a+c+'{content:"'+u+'"}/*!sc*/\n';}}}return r}(this)},e}(),Z$1=/(a)(d)/gi,K=function(e){return String.fromCharCode(e+(e>25?39:97))};function Q$1(e){var t,n="";for(t=Math.abs(e);t>52;t=t/52|0)n=K(t%52)+n;return (K(t%52)+n).replace(Z$1,"$1-$2")}var ee=function(e,t){for(var n=t.length;n;)e=33*e^t.charCodeAt(--n);return e},te=function(e){return ee(5381,e)};function ne(e){for(var t=0;t<e.length;t+=1){var n=e[t];if(E$1(n)&&!_$1(n))return !1}return !0}var re=te("5.3.5"),oe=function(){function e(e,t,n){this.rules=e,this.staticRulesId="",this.isStatic="production"===process.env.NODE_ENV&&(void 0===n||n.isStatic)&&ne(e),this.componentId=t,this.baseHash=ee(re,t),this.baseStyle=n,X$1.registerId(t);}return e.prototype.generateAndInjectStyles=function(e,t,n){var r=this.componentId,o=[];if(this.baseStyle&&o.push(this.baseStyle.generateAndInjectStyles(e,t,n)),this.isStatic&&!n.hash)if(this.staticRulesId&&t.hasNameForId(r,this.staticRulesId))o.push(this.staticRulesId);else {var s=_e(this.rules,e,t,n).join(""),i=Q$1(ee(this.baseHash,s)>>>0);if(!t.hasNameForId(r,i)){var a=n(s,"."+i,void 0,r);t.insertRules(r,i,a);}o.push(i),this.staticRulesId=i;}else {for(var c=this.rules.length,u=ee(this.baseHash,n.hash),l="",d=0;d<c;d++){var h=this.rules[d];if("string"==typeof h)l+=h,"production"!==process.env.NODE_ENV&&(u=ee(u,h+d));else if(h){var p=_e(h,e,t,n),f=Array.isArray(p)?p.join(""):p;u=ee(u,f+d),l+=f;}}if(l){var m=Q$1(u>>>0);if(!t.hasNameForId(r,m)){var y=n(l,"."+m,void 0,r);t.insertRules(r,m,y);}o.push(m);}}return o.join(" ")},e}(),se=/^\s*\/\/.*$/gm,ie=[":","[",".","#"];function ae(e){var t,n,r,o,s=void 0===e?w$2:e,i=s.options,a=void 0===i?w$2:i,c=s.plugins,u=void 0===c?S$1:c,l=new stylis_min(a),d=[],p=function(e){function t(t){if(t)try{e(t+"}");}catch(e){}}return function(n,r,o,s,i,a,c,u,l,d){switch(n){case 1:if(0===l&&64===r.charCodeAt(0))return e(r+";"),"";break;case 2:if(0===u)return r+"/*|*/";break;case 3:switch(u){case 102:case 112:return e(o[0]+r),"";default:return r+(0===d?"/*|*/":"")}case-2:r.split("/*|*/}").forEach(t);}}}((function(e){d.push(e);})),f=function(e,r,s){return 0===r&&-1!==ie.indexOf(s[n.length])||s.match(o)?e:"."+t};function m(e,s,i,a){void 0===a&&(a="&");var c=e.replace(se,""),u=s&&i?i+" "+s+" { "+c+" }":c;return t=a,n=s,r=new RegExp("\\"+n+"\\b","g"),o=new RegExp("(\\"+n+"\\b){2,}"),l(i||!s?"":s,u)}return l.use([].concat(u,[function(e,t,o){2===e&&o.length&&o[0].lastIndexOf(n)>0&&(o[0]=o[0].replace(r,f));},p,function(e){if(-2===e){var t=d;return d=[],t}}])),m.hash=u.length?u.reduce((function(e,t){return t.name||D$1(15),ee(e,t.name)}),5381).toString():"",m}var ce=React.createContext();ce.Consumer;var le=React.createContext(),de=(le.Consumer,new X$1),he=ae();function pe(){return React.useContext(ce)||de}function fe(){return React.useContext(le)||he}var ye=function(){function e(e,t){var n=this;this.inject=function(e,t){void 0===t&&(t=he);var r=n.name+t.hash;e.hasNameForId(n.id,r)||e.insertRules(n.id,r,t(n.rules,r,"@keyframes"));},this.toString=function(){return D$1(12,String(n.name))},this.name=e,this.id="sc-keyframes-"+e,this.rules=t;}return e.prototype.getName=function(e){return void 0===e&&(e=he),this.name+e.hash},e}(),ve=/([A-Z])/,ge=/([A-Z])/g,Se=/^ms-/,we=function(e){return "-"+e.toLowerCase()};function Ee(e){return ve.test(e)?e.replace(ge,we).replace(Se,"-ms-"):e}var be=function(e){return null==e||!1===e||""===e};function _e(e,n,r,o){if(Array.isArray(e)){for(var s,i=[],a=0,c=e.length;a<c;a+=1)""!==(s=_e(e[a],n,r,o))&&(Array.isArray(s)?i.push.apply(i,s):i.push(s));return i}if(be(e))return "";if(_$1(e))return "."+e.styledComponentId;if(E$1(e)){if("function"!=typeof(l=e)||l.prototype&&l.prototype.isReactComponent||!n)return e;var u=e(n);return "production"!==process.env.NODE_ENV&&reactIs_18(u)&&console.warn(b$1(e)+" is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details."),_e(u,n,r,o)}var l;return e instanceof ye?r?(e.inject(r,o),e.getName(o)):e:g$1(e)?function e(t,n){var r,o,s=[];for(var i in t)t.hasOwnProperty(i)&&!be(t[i])&&(Array.isArray(t[i])&&t[i].isCss||E$1(t[i])?s.push(Ee(i)+":",t[i],";"):g$1(t[i])?s.push.apply(s,e(t[i],i)):s.push(Ee(i)+": "+(r=i,null==(o=t[i])||"boolean"==typeof o||""===o?"":"number"!=typeof o||0===o||r in unitlessKeys?String(o).trim():o+"px")+";"));return n?[n+" {"].concat(s,["}"]):s}(e):e.toString()}var Ne=function(e){return Array.isArray(e)&&(e.isCss=!0),e};function Ae(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];return E$1(e)||g$1(e)?Ne(_e(v$2(S$1,[e].concat(n)))):0===n.length&&1===e.length&&"string"==typeof e[0]?e:Ne(_e(v$2(e,n)))}var Ce=/invalid hook call/i,Ie=new Set,Pe=function(e,t){if("production"!==process.env.NODE_ENV){var n="The component "+e+(t?' with the id of "'+t+'"':"")+" has been created dynamically.\nYou may see this warning because you've called styled inside another component.\nTo resolve this only create new StyledComponents outside of any render method and function component.",r=console.error;try{var o=!0;console.error=function(e){if(Ce.test(e))o=!1,Ie.delete(n);else {for(var t=arguments.length,s=new Array(t>1?t-1:0),i=1;i<t;i++)s[i-1]=arguments[i];r.apply(void 0,[e].concat(s));}},React.useRef(),o&&!Ie.has(n)&&(console.warn(n),Ie.add(n));}catch(e){Ce.test(e.message)&&Ie.delete(n);}finally{console.error=r;}}},Oe=function(e,t,n){return void 0===n&&(n=w$2),e.theme!==n.theme&&e.theme||t||n.theme},Re=/[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+/g,De=/(^-|-$)/g;function je(e){return e.replace(Re,"-").replace(De,"")}var Te=function(e){return Q$1(te(e)>>>0)};function xe(e){return "string"==typeof e&&("production"===process.env.NODE_ENV||e.charAt(0)===e.charAt(0).toLowerCase())}var ke=function(e){return "function"==typeof e||"object"==typeof e&&null!==e&&!Array.isArray(e)},Ve=function(e){return "__proto__"!==e&&"constructor"!==e&&"prototype"!==e};function ze(e,t,n){var r=e[n];ke(t)&&ke(r)?Be(r,t):e[n]=t;}function Be(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];for(var o=0,s=n;o<s.length;o++){var i=s[o];if(ke(i))for(var a in i)Ve(a)&&ze(e,i[a],a);}return e}var Me=React.createContext();Me.Consumer;var Fe={};function Ye(e,t,n){var o=_$1(e),i=!xe(e),a=t.attrs,c=void 0===a?S$1:a,d=t.componentId,h=void 0===d?function(e,t){var n="string"!=typeof e?"sc":je(e);Fe[n]=(Fe[n]||0)+1;var r=n+"-"+Te("5.3.5"+n+Fe[n]);return t?t+"-"+r:r}(t.displayName,t.parentComponentId):d,p=t.displayName,v=void 0===p?function(e){return xe(e)?"styled."+e:"Styled("+b$1(e)+")"}(e):p,g=t.displayName&&t.componentId?je(t.displayName)+"-"+t.componentId:t.componentId||h,N=o&&e.attrs?Array.prototype.concat(e.attrs,c).filter(Boolean):c,A=t.shouldForwardProp;o&&e.shouldForwardProp&&(A=t.shouldForwardProp?function(n,r,o){return e.shouldForwardProp(n,r,o)&&t.shouldForwardProp(n,r,o)}:e.shouldForwardProp);var C,I=new oe(n,g,o?e.componentStyle:void 0),P=I.isStatic&&0===c.length,O=function(e,t){return function(e,t,n,r){var o=e.attrs,i=e.componentStyle,a=e.defaultProps,c=e.foldedComponentIds,d=e.shouldForwardProp,h=e.styledComponentId,p=e.target;"production"!==process.env.NODE_ENV&&React.useDebugValue(h);var m=function(e,t,n){void 0===e&&(e=w$2);var r=y$1({},t,{theme:e}),o={};return n.forEach((function(e){var t,n,s,i=e;for(t in E$1(i)&&(i=i(r)),i)r[t]=o[t]="className"===t?(n=o[t],s=i[t],n&&s?n+" "+s:n||s):i[t];})),[r,o]}(Oe(t,React.useContext(Me),a)||w$2,t,o),v=m[0],g=m[1],S=function(e,t,n,r){var o=pe(),s=fe(),i=t?e.generateAndInjectStyles(w$2,o,s):e.generateAndInjectStyles(n,o,s);return "production"!==process.env.NODE_ENV&&React.useDebugValue(i),"production"!==process.env.NODE_ENV&&!t&&r&&r(i),i}(i,r,v,"production"!==process.env.NODE_ENV?e.warnTooManyClasses:void 0),b=n,_=g.$as||t.$as||g.as||t.as||p,N=xe(_),A=g!==t?y$1({},t,{},g):t,C={};for(var I in A)"$"!==I[0]&&"as"!==I&&("forwardedAs"===I?C.as=A[I]:(d?d(I,isPropValid,_):!N||isPropValid(I))&&(C[I]=A[I]));return t.style&&g.style!==t.style&&(C.style=y$1({},t.style,{},g.style)),C.className=Array.prototype.concat(c,h,S!==h?S:null,t.className,g.className).filter(Boolean).join(" "),C.ref=b,React.createElement(_,C)}(C,e,t,P)};return O.displayName=v,(C=React.forwardRef(O)).attrs=N,C.componentStyle=I,C.displayName=v,C.shouldForwardProp=A,C.foldedComponentIds=o?Array.prototype.concat(e.foldedComponentIds,e.styledComponentId):S$1,C.styledComponentId=g,C.target=o?e.target:e,C.withComponent=function(e){var r=t.componentId,o=function(e,t){if(null==e)return {};var n,r,o={},s=Object.keys(e);for(r=0;r<s.length;r++)n=s[r],t.indexOf(n)>=0||(o[n]=e[n]);return o}(t,["componentId"]),s=r&&r+"-"+(xe(e)?e:je(b$1(e)));return Ye(e,y$1({},o,{attrs:N,componentId:s}),n)},Object.defineProperty(C,"defaultProps",{get:function(){return this._foldedDefaultProps},set:function(t){this._foldedDefaultProps=o?Be({},e.defaultProps,t):t;}}),"production"!==process.env.NODE_ENV&&(Pe(v,g),C.warnTooManyClasses=function(e,t){var n={},r=!1;return function(o){if(!r&&(n[o]=!0,Object.keys(n).length>=200)){var s=t?' with the id of "'+t+'"':"";console.warn("Over 200 classes were generated for component "+e+s+".\nConsider using the attrs method, together with a style object for frequently changed styles.\nExample:\n  const Component = styled.div.attrs(props => ({\n    style: {\n      background: props.background,\n    },\n  }))`width: 100%;`\n\n  <Component />"),r=!0,n={};}}}(v,g)),C.toString=function(){return "."+C.styledComponentId},i&&hoistNonReactStatics_cjs(C,e,{attrs:!0,componentStyle:!0,displayName:!0,foldedComponentIds:!0,shouldForwardProp:!0,styledComponentId:!0,target:!0,withComponent:!0}),C}var qe=function(e){return function e(t,r,o){if(void 0===o&&(o=w$2),!reactIs_27(r))return D$1(1,String(r));var s=function(){return t(r,o,Ae.apply(void 0,arguments))};return s.withConfig=function(n){return e(t,r,y$1({},o,{},n))},s.attrs=function(n){return e(t,r,y$1({},o,{attrs:Array.prototype.concat(o.attrs,n).filter(Boolean)}))},s}(Ye,e)};["a","abbr","address","area","article","aside","audio","b","base","bdi","bdo","big","blockquote","body","br","button","canvas","caption","cite","code","col","colgroup","data","datalist","dd","del","details","dfn","dialog","div","dl","dt","em","embed","fieldset","figcaption","figure","footer","form","h1","h2","h3","h4","h5","h6","head","header","hgroup","hr","html","i","iframe","img","input","ins","kbd","keygen","label","legend","li","link","main","map","mark","marquee","menu","menuitem","meta","meter","nav","noscript","object","ol","optgroup","option","output","p","param","picture","pre","progress","q","rp","rt","ruby","s","samp","script","section","select","small","source","span","strong","style","sub","summary","sup","table","tbody","td","textarea","tfoot","th","thead","time","title","tr","track","u","ul","var","video","wbr","circle","clipPath","defs","ellipse","foreignObject","g","image","line","linearGradient","marker","mask","path","pattern","polygon","polyline","radialGradient","rect","stop","svg","text","textPath","tspan"].forEach((function(e){qe[e]=qe(e);}));"production"!==process.env.NODE_ENV&&"undefined"!=typeof navigator&&"ReactNative"===navigator.product&&console.warn("It looks like you've imported 'styled-components' on React Native.\nPerhaps you're looking to import 'styled-components/native'?\nRead more about this at https://www.styled-components.com/docs/basics#react-native"),"production"!==process.env.NODE_ENV&&"test"!==process.env.NODE_ENV&&"undefined"!=typeof window&&(window["__styled-components-init__"]=window["__styled-components-init__"]||0,1===window["__styled-components-init__"]&&console.warn("It looks like there are several instances of 'styled-components' initialized in this application. This may cause dynamic styles to not render properly, errors during the rehydration process, a missing theme prop, and makes your application bigger without good reason.\n\nSee https://s-c.sh/2BAXzed for more info."),window["__styled-components-init__"]+=1);var styled = qe;
+function y(){return (y=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r]);}return e}).apply(this,arguments)}var v=function(e,t){for(var n=[e[0]],r=0,o=t.length;r<o;r+=1)n.push(t[r],e[r+1]);return n},g=function(t){return null!==t&&"object"==typeof t&&"[object Object]"===(t.toString?t.toString():Object.prototype.toString.call(t))&&!reactIs_28(t)},S=Object.freeze([]),w=Object.freeze({});function E(e){return "function"==typeof e}function b(e){return "production"!==process.env.NODE_ENV&&"string"==typeof e&&e||e.displayName||e.name||"Component"}function _(e){return e&&"string"==typeof e.styledComponentId}var N="undefined"!=typeof process&&(process.env.REACT_APP_SC_ATTR||process.env.SC_ATTR)||"data-styled",C="undefined"!=typeof window&&"HTMLElement"in window,I=Boolean("boolean"==typeof SC_DISABLE_SPEEDY?SC_DISABLE_SPEEDY:"undefined"!=typeof process&&void 0!==process.env.REACT_APP_SC_DISABLE_SPEEDY&&""!==process.env.REACT_APP_SC_DISABLE_SPEEDY?"false"!==process.env.REACT_APP_SC_DISABLE_SPEEDY&&process.env.REACT_APP_SC_DISABLE_SPEEDY:"undefined"!=typeof process&&void 0!==process.env.SC_DISABLE_SPEEDY&&""!==process.env.SC_DISABLE_SPEEDY?"false"!==process.env.SC_DISABLE_SPEEDY&&process.env.SC_DISABLE_SPEEDY:"production"!==process.env.NODE_ENV),O="production"!==process.env.NODE_ENV?{1:"Cannot create styled-component for component: %s.\n\n",2:"Can't collect styles once you've consumed a `ServerStyleSheet`'s styles! `ServerStyleSheet` is a one off instance for each server-side render cycle.\n\n- Are you trying to reuse it across renders?\n- Are you accidentally calling collectStyles twice?\n\n",3:"Streaming SSR is only supported in a Node.js environment; Please do not try to call this method in the browser.\n\n",4:"The `StyleSheetManager` expects a valid target or sheet prop!\n\n- Does this error occur on the client and is your target falsy?\n- Does this error occur on the server and is the sheet falsy?\n\n",5:"The clone method cannot be used on the client!\n\n- Are you running in a client-like environment on the server?\n- Are you trying to run SSR on the client?\n\n",6:"Trying to insert a new style tag, but the given Node is unmounted!\n\n- Are you using a custom target that isn't mounted?\n- Does your document not have a valid head element?\n- Have you accidentally removed a style tag manually?\n\n",7:'ThemeProvider: Please return an object from your "theme" prop function, e.g.\n\n```js\ntheme={() => ({})}\n```\n\n',8:'ThemeProvider: Please make your "theme" prop an object.\n\n',9:"Missing document `<head>`\n\n",10:"Cannot find a StyleSheet instance. Usually this happens if there are multiple copies of styled-components loaded at once. Check out this issue for how to troubleshoot and fix the common cases where this situation can happen: https://github.com/styled-components/styled-components/issues/1941#issuecomment-417862021\n\n",11:"_This error was replaced with a dev-time warning, it will be deleted for v4 final._ [createGlobalStyle] received children which will not be rendered. Please use the component without passing children elements.\n\n",12:"It seems you are interpolating a keyframe declaration (%s) into an untagged string. This was supported in styled-components v3, but is not longer supported in v4 as keyframes are now injected on-demand. Please wrap your string in the css\\`\\` helper which ensures the styles are injected correctly. See https://www.styled-components.com/docs/api#css\n\n",13:"%s is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details.\n\n",14:'ThemeProvider: "theme" prop is required.\n\n',15:"A stylis plugin has been supplied that is not named. We need a name for each plugin to be able to prevent styling collisions between different stylis configurations within the same app. Before you pass your plugin to `<StyleSheetManager stylisPlugins={[]}>`, please make sure each plugin is uniquely-named, e.g.\n\n```js\nObject.defineProperty(importedPlugin, 'name', { value: 'some-unique-name' });\n```\n\n",16:"Reached the limit of how many styled components may be created at group %s.\nYou may only create up to 1,073,741,824 components. If you're creating components dynamically,\nas for instance in your render method then you may be running into this limitation.\n\n",17:"CSSStyleSheet could not be found on HTMLStyleElement.\nHas styled-components' style tag been unmounted or altered by another script?\n"}:{};function R(){for(var e=arguments.length<=0?void 0:arguments[0],t=[],n=1,r=arguments.length;n<r;n+=1)t.push(n<0||arguments.length<=n?void 0:arguments[n]);return t.forEach((function(t){e=e.replace(/%[a-z]/,t);})),e}function D(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];throw "production"===process.env.NODE_ENV?new Error("An error occurred. See https://git.io/JUIaE#"+e+" for more information."+(n.length>0?" Args: "+n.join(", "):"")):new Error(R.apply(void 0,[O[e]].concat(n)).trim())}var j=function(){function e(e){this.groupSizes=new Uint32Array(512),this.length=512,this.tag=e;}var t=e.prototype;return t.indexOfGroup=function(e){for(var t=0,n=0;n<e;n++)t+=this.groupSizes[n];return t},t.insertRules=function(e,t){if(e>=this.groupSizes.length){for(var n=this.groupSizes,r=n.length,o=r;e>=o;)(o<<=1)<0&&D(16,""+e);this.groupSizes=new Uint32Array(o),this.groupSizes.set(n),this.length=o;for(var s=r;s<o;s++)this.groupSizes[s]=0;}for(var i=this.indexOfGroup(e+1),a=0,c=t.length;a<c;a++)this.tag.insertRule(i,t[a])&&(this.groupSizes[e]++,i++);},t.clearGroup=function(e){if(e<this.length){var t=this.groupSizes[e],n=this.indexOfGroup(e),r=n+t;this.groupSizes[e]=0;for(var o=n;o<r;o++)this.tag.deleteRule(n);}},t.getGroup=function(e){var t="";if(e>=this.length||0===this.groupSizes[e])return t;for(var n=this.groupSizes[e],r=this.indexOfGroup(e),o=r+n,s=r;s<o;s++)t+=this.tag.getRule(s)+"/*!sc*/\n";return t},e}(),T=new Map,x=new Map,k=1,V=function(e){if(T.has(e))return T.get(e);for(;x.has(k);)k++;var t=k++;return "production"!==process.env.NODE_ENV&&((0|t)<0||t>1<<30)&&D(16,""+t),T.set(e,t),x.set(t,e),t},z=function(e){return x.get(e)},B=function(e,t){t>=k&&(k=t+1),T.set(e,t),x.set(t,e);},M="style["+N+'][data-styled-version="5.3.5"]',G=new RegExp("^"+N+'\\.g(\\d+)\\[id="([\\w\\d-]+)"\\].*?"([^"]*)'),L=function(e,t,n){for(var r,o=n.split(","),s=0,i=o.length;s<i;s++)(r=o[s])&&e.registerName(t,r);},F=function(e,t){for(var n=(t.textContent||"").split("/*!sc*/\n"),r=[],o=0,s=n.length;o<s;o++){var i=n[o].trim();if(i){var a=i.match(G);if(a){var c=0|parseInt(a[1],10),u=a[2];0!==c&&(B(u,c),L(e,u,a[3]),e.getTag().insertRules(c,r)),r.length=0;}else r.push(i);}}},Y=function(){return "undefined"!=typeof window&&void 0!==window.__webpack_nonce__?window.__webpack_nonce__:null},q=function(e){var t=document.head,n=e||t,r=document.createElement("style"),o=function(e){for(var t=e.childNodes,n=t.length;n>=0;n--){var r=t[n];if(r&&1===r.nodeType&&r.hasAttribute(N))return r}}(n),s=void 0!==o?o.nextSibling:null;r.setAttribute(N,"active"),r.setAttribute("data-styled-version","5.3.5");var i=Y();return i&&r.setAttribute("nonce",i),n.insertBefore(r,s),r},H=function(){function e(e){var t=this.element=q(e);t.appendChild(document.createTextNode("")),this.sheet=function(e){if(e.sheet)return e.sheet;for(var t=document.styleSheets,n=0,r=t.length;n<r;n++){var o=t[n];if(o.ownerNode===e)return o}D(17);}(t),this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){try{return this.sheet.insertRule(t,e),this.length++,!0}catch(e){return !1}},t.deleteRule=function(e){this.sheet.deleteRule(e),this.length--;},t.getRule=function(e){var t=this.sheet.cssRules[e];return void 0!==t&&"string"==typeof t.cssText?t.cssText:""},e}(),$=function(){function e(e){var t=this.element=q(e);this.nodes=t.childNodes,this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){if(e<=this.length&&e>=0){var n=document.createTextNode(t),r=this.nodes[e];return this.element.insertBefore(n,r||null),this.length++,!0}return !1},t.deleteRule=function(e){this.element.removeChild(this.nodes[e]),this.length--;},t.getRule=function(e){return e<this.length?this.nodes[e].textContent:""},e}(),W=function(){function e(e){this.rules=[],this.length=0;}var t=e.prototype;return t.insertRule=function(e,t){return e<=this.length&&(this.rules.splice(e,0,t),this.length++,!0)},t.deleteRule=function(e){this.rules.splice(e,1),this.length--;},t.getRule=function(e){return e<this.length?this.rules[e]:""},e}(),U=C,J={isServer:!C,useCSSOMInjection:!I},X=function(){function e(e,t,n){void 0===e&&(e=w),void 0===t&&(t={}),this.options=y({},J,{},e),this.gs=t,this.names=new Map(n),this.server=!!e.isServer,!this.server&&C&&U&&(U=!1,function(e){for(var t=document.querySelectorAll(M),n=0,r=t.length;n<r;n++){var o=t[n];o&&"active"!==o.getAttribute(N)&&(F(e,o),o.parentNode&&o.parentNode.removeChild(o));}}(this));}e.registerId=function(e){return V(e)};var t=e.prototype;return t.reconstructWithOptions=function(t,n){return void 0===n&&(n=!0),new e(y({},this.options,{},t),this.gs,n&&this.names||void 0)},t.allocateGSInstance=function(e){return this.gs[e]=(this.gs[e]||0)+1},t.getTag=function(){return this.tag||(this.tag=(n=(t=this.options).isServer,r=t.useCSSOMInjection,o=t.target,e=n?new W(o):r?new H(o):new $(o),new j(e)));var e,t,n,r,o;},t.hasNameForId=function(e,t){return this.names.has(e)&&this.names.get(e).has(t)},t.registerName=function(e,t){if(V(e),this.names.has(e))this.names.get(e).add(t);else {var n=new Set;n.add(t),this.names.set(e,n);}},t.insertRules=function(e,t,n){this.registerName(e,t),this.getTag().insertRules(V(e),n);},t.clearNames=function(e){this.names.has(e)&&this.names.get(e).clear();},t.clearRules=function(e){this.getTag().clearGroup(V(e)),this.clearNames(e);},t.clearTag=function(){this.tag=void 0;},t.toString=function(){return function(e){for(var t=e.getTag(),n=t.length,r="",o=0;o<n;o++){var s=z(o);if(void 0!==s){var i=e.names.get(s),a=t.getGroup(o);if(i&&a&&i.size){var c=N+".g"+o+'[id="'+s+'"]',u="";void 0!==i&&i.forEach((function(e){e.length>0&&(u+=e+",");})),r+=""+a+c+'{content:"'+u+'"}/*!sc*/\n';}}}return r}(this)},e}(),Z=/(a)(d)/gi,K=function(e){return String.fromCharCode(e+(e>25?39:97))};function Q(e){var t,n="";for(t=Math.abs(e);t>52;t=t/52|0)n=K(t%52)+n;return (K(t%52)+n).replace(Z,"$1-$2")}var ee=function(e,t){for(var n=t.length;n;)e=33*e^t.charCodeAt(--n);return e},te=function(e){return ee(5381,e)};function ne(e){for(var t=0;t<e.length;t+=1){var n=e[t];if(E(n)&&!_(n))return !1}return !0}var re=te("5.3.5"),oe=function(){function e(e,t,n){this.rules=e,this.staticRulesId="",this.isStatic="production"===process.env.NODE_ENV&&(void 0===n||n.isStatic)&&ne(e),this.componentId=t,this.baseHash=ee(re,t),this.baseStyle=n,X.registerId(t);}return e.prototype.generateAndInjectStyles=function(e,t,n){var r=this.componentId,o=[];if(this.baseStyle&&o.push(this.baseStyle.generateAndInjectStyles(e,t,n)),this.isStatic&&!n.hash)if(this.staticRulesId&&t.hasNameForId(r,this.staticRulesId))o.push(this.staticRulesId);else {var s=_e(this.rules,e,t,n).join(""),i=Q(ee(this.baseHash,s)>>>0);if(!t.hasNameForId(r,i)){var a=n(s,"."+i,void 0,r);t.insertRules(r,i,a);}o.push(i),this.staticRulesId=i;}else {for(var c=this.rules.length,u=ee(this.baseHash,n.hash),l="",d=0;d<c;d++){var h=this.rules[d];if("string"==typeof h)l+=h,"production"!==process.env.NODE_ENV&&(u=ee(u,h+d));else if(h){var p=_e(h,e,t,n),f=Array.isArray(p)?p.join(""):p;u=ee(u,f+d),l+=f;}}if(l){var m=Q(u>>>0);if(!t.hasNameForId(r,m)){var y=n(l,"."+m,void 0,r);t.insertRules(r,m,y);}o.push(m);}}return o.join(" ")},e}(),se=/^\s*\/\/.*$/gm,ie=[":","[",".","#"];function ae(e){var t,n,r,o,s=void 0===e?w:e,i=s.options,a=void 0===i?w:i,c=s.plugins,u=void 0===c?S:c,l=new stylis_min(a),d=[],p=function(e){function t(t){if(t)try{e(t+"}");}catch(e){}}return function(n,r,o,s,i,a,c,u,l,d){switch(n){case 1:if(0===l&&64===r.charCodeAt(0))return e(r+";"),"";break;case 2:if(0===u)return r+"/*|*/";break;case 3:switch(u){case 102:case 112:return e(o[0]+r),"";default:return r+(0===d?"/*|*/":"")}case-2:r.split("/*|*/}").forEach(t);}}}((function(e){d.push(e);})),f=function(e,r,s){return 0===r&&-1!==ie.indexOf(s[n.length])||s.match(o)?e:"."+t};function m(e,s,i,a){void 0===a&&(a="&");var c=e.replace(se,""),u=s&&i?i+" "+s+" { "+c+" }":c;return t=a,n=s,r=new RegExp("\\"+n+"\\b","g"),o=new RegExp("(\\"+n+"\\b){2,}"),l(i||!s?"":s,u)}return l.use([].concat(u,[function(e,t,o){2===e&&o.length&&o[0].lastIndexOf(n)>0&&(o[0]=o[0].replace(r,f));},p,function(e){if(-2===e){var t=d;return d=[],t}}])),m.hash=u.length?u.reduce((function(e,t){return t.name||D(15),ee(e,t.name)}),5381).toString():"",m}var ce=React.createContext();ce.Consumer;var le=React.createContext(),de=(le.Consumer,new X),he=ae();function pe(){return React.useContext(ce)||de}function fe(){return React.useContext(le)||he}var ye=function(){function e(e,t){var n=this;this.inject=function(e,t){void 0===t&&(t=he);var r=n.name+t.hash;e.hasNameForId(n.id,r)||e.insertRules(n.id,r,t(n.rules,r,"@keyframes"));},this.toString=function(){return D(12,String(n.name))},this.name=e,this.id="sc-keyframes-"+e,this.rules=t;}return e.prototype.getName=function(e){return void 0===e&&(e=he),this.name+e.hash},e}(),ve=/([A-Z])/,ge=/([A-Z])/g,Se=/^ms-/,we=function(e){return "-"+e.toLowerCase()};function Ee(e){return ve.test(e)?e.replace(ge,we).replace(Se,"-ms-"):e}var be=function(e){return null==e||!1===e||""===e};function _e(e,n,r,o){if(Array.isArray(e)){for(var s,i=[],a=0,c=e.length;a<c;a+=1)""!==(s=_e(e[a],n,r,o))&&(Array.isArray(s)?i.push.apply(i,s):i.push(s));return i}if(be(e))return "";if(_(e))return "."+e.styledComponentId;if(E(e)){if("function"!=typeof(l=e)||l.prototype&&l.prototype.isReactComponent||!n)return e;var u=e(n);return "production"!==process.env.NODE_ENV&&reactIs_18(u)&&console.warn(b(e)+" is not a styled component and cannot be referred to via component selector. See https://www.styled-components.com/docs/advanced#referring-to-other-components for more details."),_e(u,n,r,o)}var l;return e instanceof ye?r?(e.inject(r,o),e.getName(o)):e:g(e)?function e(t,n){var r,o,s=[];for(var i in t)t.hasOwnProperty(i)&&!be(t[i])&&(Array.isArray(t[i])&&t[i].isCss||E(t[i])?s.push(Ee(i)+":",t[i],";"):g(t[i])?s.push.apply(s,e(t[i],i)):s.push(Ee(i)+": "+(r=i,null==(o=t[i])||"boolean"==typeof o||""===o?"":"number"!=typeof o||0===o||r in unitlessKeys?String(o).trim():o+"px")+";"));return n?[n+" {"].concat(s,["}"]):s}(e):e.toString()}var Ne=function(e){return Array.isArray(e)&&(e.isCss=!0),e};function Ae(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];return E(e)||g(e)?Ne(_e(v(S,[e].concat(n)))):0===n.length&&1===e.length&&"string"==typeof e[0]?e:Ne(_e(v(e,n)))}var Ce=/invalid hook call/i,Ie=new Set,Pe=function(e,t){if("production"!==process.env.NODE_ENV){var n="The component "+e+(t?' with the id of "'+t+'"':"")+" has been created dynamically.\nYou may see this warning because you've called styled inside another component.\nTo resolve this only create new StyledComponents outside of any render method and function component.",r=console.error;try{var o=!0;console.error=function(e){if(Ce.test(e))o=!1,Ie.delete(n);else {for(var t=arguments.length,s=new Array(t>1?t-1:0),i=1;i<t;i++)s[i-1]=arguments[i];r.apply(void 0,[e].concat(s));}},React.useRef(),o&&!Ie.has(n)&&(console.warn(n),Ie.add(n));}catch(e){Ce.test(e.message)&&Ie.delete(n);}finally{console.error=r;}}},Oe=function(e,t,n){return void 0===n&&(n=w),e.theme!==n.theme&&e.theme||t||n.theme},Re=/[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~-]+/g,De=/(^-|-$)/g;function je(e){return e.replace(Re,"-").replace(De,"")}var Te=function(e){return Q(te(e)>>>0)};function xe(e){return "string"==typeof e&&("production"===process.env.NODE_ENV||e.charAt(0)===e.charAt(0).toLowerCase())}var ke=function(e){return "function"==typeof e||"object"==typeof e&&null!==e&&!Array.isArray(e)},Ve=function(e){return "__proto__"!==e&&"constructor"!==e&&"prototype"!==e};function ze(e,t,n){var r=e[n];ke(t)&&ke(r)?Be(r,t):e[n]=t;}function Be(e){for(var t=arguments.length,n=new Array(t>1?t-1:0),r=1;r<t;r++)n[r-1]=arguments[r];for(var o=0,s=n;o<s.length;o++){var i=s[o];if(ke(i))for(var a in i)Ve(a)&&ze(e,i[a],a);}return e}var Me=React.createContext();Me.Consumer;var Fe={};function Ye(e,t,n){var o=_(e),i=!xe(e),a=t.attrs,c=void 0===a?S:a,d=t.componentId,h=void 0===d?function(e,t){var n="string"!=typeof e?"sc":je(e);Fe[n]=(Fe[n]||0)+1;var r=n+"-"+Te("5.3.5"+n+Fe[n]);return t?t+"-"+r:r}(t.displayName,t.parentComponentId):d,p=t.displayName,v=void 0===p?function(e){return xe(e)?"styled."+e:"Styled("+b(e)+")"}(e):p,g=t.displayName&&t.componentId?je(t.displayName)+"-"+t.componentId:t.componentId||h,N=o&&e.attrs?Array.prototype.concat(e.attrs,c).filter(Boolean):c,A=t.shouldForwardProp;o&&e.shouldForwardProp&&(A=t.shouldForwardProp?function(n,r,o){return e.shouldForwardProp(n,r,o)&&t.shouldForwardProp(n,r,o)}:e.shouldForwardProp);var C,I=new oe(n,g,o?e.componentStyle:void 0),P=I.isStatic&&0===c.length,O=function(e,t){return function(e,t,n,r){var o=e.attrs,i=e.componentStyle,a=e.defaultProps,c=e.foldedComponentIds,d=e.shouldForwardProp,h=e.styledComponentId,p=e.target;"production"!==process.env.NODE_ENV&&React.useDebugValue(h);var m=function(e,t,n){void 0===e&&(e=w);var r=y({},t,{theme:e}),o={};return n.forEach((function(e){var t,n,s,i=e;for(t in E(i)&&(i=i(r)),i)r[t]=o[t]="className"===t?(n=o[t],s=i[t],n&&s?n+" "+s:n||s):i[t];})),[r,o]}(Oe(t,React.useContext(Me),a)||w,t,o),v=m[0],g=m[1],S=function(e,t,n,r){var o=pe(),s=fe(),i=t?e.generateAndInjectStyles(w,o,s):e.generateAndInjectStyles(n,o,s);return "production"!==process.env.NODE_ENV&&React.useDebugValue(i),"production"!==process.env.NODE_ENV&&!t&&r&&r(i),i}(i,r,v,"production"!==process.env.NODE_ENV?e.warnTooManyClasses:void 0),b=n,_=g.$as||t.$as||g.as||t.as||p,N=xe(_),A=g!==t?y({},t,{},g):t,C={};for(var I in A)"$"!==I[0]&&"as"!==I&&("forwardedAs"===I?C.as=A[I]:(d?d(I,isPropValid,_):!N||isPropValid(I))&&(C[I]=A[I]));return t.style&&g.style!==t.style&&(C.style=y({},t.style,{},g.style)),C.className=Array.prototype.concat(c,h,S!==h?S:null,t.className,g.className).filter(Boolean).join(" "),C.ref=b,React.createElement(_,C)}(C,e,t,P)};return O.displayName=v,(C=React.forwardRef(O)).attrs=N,C.componentStyle=I,C.displayName=v,C.shouldForwardProp=A,C.foldedComponentIds=o?Array.prototype.concat(e.foldedComponentIds,e.styledComponentId):S,C.styledComponentId=g,C.target=o?e.target:e,C.withComponent=function(e){var r=t.componentId,o=function(e,t){if(null==e)return {};var n,r,o={},s=Object.keys(e);for(r=0;r<s.length;r++)n=s[r],t.indexOf(n)>=0||(o[n]=e[n]);return o}(t,["componentId"]),s=r&&r+"-"+(xe(e)?e:je(b(e)));return Ye(e,y({},o,{attrs:N,componentId:s}),n)},Object.defineProperty(C,"defaultProps",{get:function(){return this._foldedDefaultProps},set:function(t){this._foldedDefaultProps=o?Be({},e.defaultProps,t):t;}}),"production"!==process.env.NODE_ENV&&(Pe(v,g),C.warnTooManyClasses=function(e,t){var n={},r=!1;return function(o){if(!r&&(n[o]=!0,Object.keys(n).length>=200)){var s=t?' with the id of "'+t+'"':"";console.warn("Over 200 classes were generated for component "+e+s+".\nConsider using the attrs method, together with a style object for frequently changed styles.\nExample:\n  const Component = styled.div.attrs(props => ({\n    style: {\n      background: props.background,\n    },\n  }))`width: 100%;`\n\n  <Component />"),r=!0,n={};}}}(v,g)),C.toString=function(){return "."+C.styledComponentId},i&&hoistNonReactStatics_cjs(C,e,{attrs:!0,componentStyle:!0,displayName:!0,foldedComponentIds:!0,shouldForwardProp:!0,styledComponentId:!0,target:!0,withComponent:!0}),C}var qe=function(e){return function e(t,r,o){if(void 0===o&&(o=w),!reactIs_27(r))return D(1,String(r));var s=function(){return t(r,o,Ae.apply(void 0,arguments))};return s.withConfig=function(n){return e(t,r,y({},o,{},n))},s.attrs=function(n){return e(t,r,y({},o,{attrs:Array.prototype.concat(o.attrs,n).filter(Boolean)}))},s}(Ye,e)};["a","abbr","address","area","article","aside","audio","b","base","bdi","bdo","big","blockquote","body","br","button","canvas","caption","cite","code","col","colgroup","data","datalist","dd","del","details","dfn","dialog","div","dl","dt","em","embed","fieldset","figcaption","figure","footer","form","h1","h2","h3","h4","h5","h6","head","header","hgroup","hr","html","i","iframe","img","input","ins","kbd","keygen","label","legend","li","link","main","map","mark","marquee","menu","menuitem","meta","meter","nav","noscript","object","ol","optgroup","option","output","p","param","picture","pre","progress","q","rp","rt","ruby","s","samp","script","section","select","small","source","span","strong","style","sub","summary","sup","table","tbody","td","textarea","tfoot","th","thead","time","title","tr","track","u","ul","var","video","wbr","circle","clipPath","defs","ellipse","foreignObject","g","image","line","linearGradient","marker","mask","path","pattern","polygon","polyline","radialGradient","rect","stop","svg","text","textPath","tspan"].forEach((function(e){qe[e]=qe(e);}));"production"!==process.env.NODE_ENV&&"undefined"!=typeof navigator&&"ReactNative"===navigator.product&&console.warn("It looks like you've imported 'styled-components' on React Native.\nPerhaps you're looking to import 'styled-components/native'?\nRead more about this at https://www.styled-components.com/docs/basics#react-native"),"production"!==process.env.NODE_ENV&&"test"!==process.env.NODE_ENV&&"undefined"!=typeof window&&(window["__styled-components-init__"]=window["__styled-components-init__"]||0,1===window["__styled-components-init__"]&&console.warn("It looks like there are several instances of 'styled-components' initialized in this application. This may cause dynamic styles to not render properly, errors during the rehydration process, a missing theme prop, and makes your application bigger without good reason.\n\nSee https://s-c.sh/2BAXzed for more info."),window["__styled-components-init__"]+=1);var styled = qe;
 
 /* Styled Components */
 const Container$1 = styled.div `
@@ -2243,10 +1268,13 @@ const createAction = (type, payload) => ({
     type,
     payload,
 });
+/* Actions */
+/* Actions that might be used to control the Reader externally */
 const setIsReading = (payload) => createAction('SET_IS_READING', payload);
-const setIsLoading = (payload) => createAction('SET_IS_LOADING', payload);
 const setIsMinimized = (payload) => createAction('SET_IS_MINIMIZED', payload);
 const setIsVisible = (payload) => createAction('SET_IS_VISIBLE', payload);
+/* Actions used internally by the Reader  */
+const setIsLoading = (payload) => createAction('SET_IS_LOADING', payload);
 const setIsSettingsVisible = (payload) => createAction('SET_IS_SETTINGS_VISIBLE', payload);
 const setVoices = (payload) => createAction('SET_VOICES', payload);
 const setElapsedTime = (payload) => createAction('SET_ELAPSED_TIME', payload);
@@ -2256,8 +1284,1117 @@ const setDuration = (payload) => createAction('SET_DURATION', payload);
 const changeSettings = (payload) => createAction('CHANGE_SETTINGS', payload);
 const changeOptions = (payload) => createAction('CHANGE_OPTIONS', payload);
 
-const MainControls = ({ styleOptions }) => {
-    const { state, dispatch, reader } = React.useContext(GlobalStateContext);
+const StoreContext = React.createContext(null);
+const MainPropsContext = React.createContext(null);
+const ReaderContext = React.createContext(null);
+
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+class Utils {
+    constructor() {
+        this.HTMLTags = [
+            'div',
+            'span',
+            'a',
+            'i',
+            'img',
+            'html',
+            'body',
+            'section',
+            'article',
+            'main',
+            'head',
+            'header',
+            'aside',
+            'nav',
+        ];
+    }
+    static isMobile() {
+        /* Dev mode */
+        //	return true;
+        // check the user agent string
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+            return true;
+        // check the platform string
+        if (/iPad|iPhone|iPod/.test(navigator.platform))
+            return true;
+        // check the screen size and pixel density
+        if (window.innerWidth < 768 || window.devicePixelRatio > 1)
+            return true;
+        return false;
+    }
+    /* Regex Utils */
+    static isSlashTextContent(str) {
+        if (!str)
+            return false;
+        return /<.+>\/<\/.+>/.test(str);
+    }
+    static isDigitTextContent(str) {
+        if (!str)
+            return false;
+        return /<.+>\d+<\/.+>/.test(str);
+    }
+    static isWordTextContent(str) {
+        if (!str)
+            return false;
+        return /<.+>[a-zA-Z]+<\/.+>/.test(str);
+    }
+    static isWord(str) {
+        if (!str)
+            return false;
+        return /^[a-zA-Z]/.test(str);
+    }
+    static isWordWithNumbers(str) {
+        if (!str)
+            return false;
+        return /^[a-zA-Z0-9]+$/.test(str);
+    }
+    static isNumber(str) {
+        if (!str)
+            return false;
+        return (!isNaN(+str) && isFinite(+str)) || parseFloat(str);
+    }
+    static isURL(str) {
+        if (!str)
+            return false;
+        return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/.test(str);
+    }
+    static isSpace(str) {
+        return str === ' ';
+    }
+    static isEmptyString(str) {
+        return str === '';
+    }
+    static isWhitespaceChar(str) {
+        return /^[\n\r\t]+$/.test(str);
+    }
+    static isAt(str) {
+        return str === '@';
+    }
+    static isDot(str) {
+        return str === '.';
+    }
+    static isZero(str) {
+        return str === '0';
+    }
+    static isPunctuation(str) {
+        if (!str)
+            return false;
+        return /^[.,;:!?]+$/.test(str);
+    }
+    static isPunctuationButDot(str) {
+        if (!str)
+            return false;
+        return /^[,;:!?]+$/.test(str);
+    }
+    static isHashtag(str) {
+        return str === '#';
+    }
+    static isSlash(str) {
+        return str === '/';
+    }
+    static isParens(str) {
+        if (!str)
+            return false;
+        return /^[()[\]{}]+$/.test(str);
+    }
+    static isTag(str) {
+        if (!str)
+            return false;
+        return /<.+?>/.test(str);
+    }
+    static isCodeOpenTag(str) {
+        if (!str)
+            return false;
+        return /<code(@@)?\s?([a-zA-Z-]+="[a-zA-Z-_@\s]+")?>/.test(str);
+    }
+    static isCodeCloseTag(str) {
+        if (!str)
+            return false;
+        return /<\/code>/.test(str);
+    }
+    static isWordInsideAngularBrackets(str) {
+        if (!str)
+            return false;
+        return /^<+.*>+\.?$/.test(str);
+    }
+    static isSpecialReadableCharacter(str) {
+        if (!str)
+            return false;
+        return /^[@#\\/_*^°£$%&=+]+$/.test(str);
+    }
+    static isSpecialUnreadableCharacter(str) {
+        if (!str)
+            return false;
+        return /^[()[\]{}'"<>`|-]+$/.test(str);
+    }
+    static isSpecialCharacter(str) {
+        if (!str)
+            return false;
+        return /^([.,;:\-_`'"*+()[\]{}<>\s\n])$/.test(str);
+    }
+    static isHTMLEntity(str) {
+        if (!str)
+            return false;
+        return /&[a-z]+?;+/.test(str);
+    }
+    static isValidDate(str) {
+        // @ts-expect-error
+        return new Date(str) > 0;
+    }
+    /* Type Checks */
+    static isFunction(fn) {
+        return fn && typeof fn === 'function';
+    }
+}
+/* Array utils */
+Utils.__join__ = function (fn) {
+    let str = ``;
+    let i = 0;
+    for (const el of this) {
+        const separator = fn(el, i, this);
+        str = str + el.toString() + separator;
+        i++;
+    }
+    return str;
+};
+
+class SpeechSynth extends EventEmitter {
+    /*
+    The constructor only required @Param is the TextContainer HTMLElement,
+    the second @Param is an optional object and all its properties are optional as well
+    */
+    constructor(textContainer, { 
+    /* Generic Settings */
+    language = 'en', 
+    /* Style */
+    color1 = '#DEE', color2 = '#9DE', 
+    /* Ev handlers */
+    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onChunksModeChange = () => null, onSettingsChange = () => null, onOptionsChange = () => null, } = {
+        /* Generic Settings */
+        language: 'en',
+        /* Style */
+        color1: '#DEE',
+        color2: '#9DE',
+        /* Ev handlers */
+        onEnd: () => null,
+        onStart: () => null,
+        onPause: () => null,
+        onResume: () => null,
+        onReset: () => null,
+        onBoundary: () => null,
+        onTimeTick: () => null,
+        onWordClick: () => null,
+        onSeek: () => null,
+        onChunksModeChange: () => null,
+        onSettingsChange: () => null,
+        onOptionsChange: () => null,
+    }) {
+        super();
+        this.textContainer = textContainer;
+        this.style = { color1, color2 };
+        /* Instances */
+        this.synth = window.speechSynthesis;
+        this.utterance = new window.SpeechSynthesisUtterance();
+        /* Timeouts */
+        this.timeoutRef = undefined;
+        this.seekTimeoutRef = undefined;
+        this.editTimeoutRef = undefined;
+        /* Utterance settings */
+        this.settings = {
+            pitch: 1,
+            voiceURI: '',
+            language: language,
+            rate: 1,
+            volume: 0.5,
+        };
+        /* Events */
+        this.events = [
+            { type: 'boundary', handler: onBoundary },
+            { type: 'time-tick', handler: onTimeTick },
+            { type: 'word-click', handler: onWordClick },
+            { type: 'start', handler: onStart },
+            { type: 'pause', handler: onPause },
+            { type: 'resume', handler: onResume },
+            { type: 'reset', handler: onReset },
+            { type: 'seek', handler: onSeek },
+            { type: 'end', handler: onEnd },
+            { type: 'chunks-mode-change', handler: onChunksModeChange },
+            { type: 'settings-change', handler: onSettingsChange },
+            { type: 'options-change', handler: onOptionsChange },
+        ];
+        /* Options */
+        this.options = {
+            isHighlightTextOn: true,
+            isChunksModeOn: Utils.isMobile(),
+            isPreserveHighlighting: true,
+        };
+        /* State */
+        this.state = {
+            isMobile: Utils.isMobile(),
+            /* Internal properties */
+            voice: {},
+            voices: [],
+            /* UI */
+            isLoading: true,
+            /* Highlight & Reading time */
+            tagIndex: 0,
+            currentWord: '',
+            currentWordIndex: 0,
+            currentWordProps: { charIndex: 0, charLength: 0 },
+            highlightedWords: [],
+            lastWordPosition: 0,
+            numberOfWords: 0,
+            wholeText: '',
+            wholeTextArray: [],
+            textRemaining: '',
+            duration: 0,
+            elapsedTime: 0,
+            currentChunkIndex: 0,
+            chunksArray: [],
+            /* Controls  */
+            isPaused: false,
+            isReading: false,
+        };
+    }
+    /*
+    Public Testable methods
+    */
+    /*
+    This method handles the DOM traversing to add the Highlightint tags to the readable elements and all the logic in it is responsible
+    for how the text content appears visually
+    e.g. alignment of punctuation, spaces, etc...
+    */
+    addHTMLHighlightTags(node) {
+        const tree = [...node.childNodes];
+        tree.forEach((el) => {
+            /* Exclude code tags and its content from parsing */
+            if (el.nodeType === 1 &&
+                (el.tagName === 'PRE' ||
+                    el.tagName === 'CODE'))
+                return;
+            /* Recurse if the element is an HTMLElement */
+            if (el.nodeType === 1)
+                this.addHTMLHighlightTags(el);
+            /* Begin text node parsing if node type is TextNode */
+            if (el.nodeType === 3) {
+                if (Utils.isEmptyString(el.textContent) ||
+                    Utils.isSpace(el.textContent) ||
+                    Utils.isWhitespaceChar(el.textContent))
+                    return;
+                const wrapper = document.createElement('span');
+                el.data
+                    .split('')
+                    .filter((char, i, arr) => {
+                    /* Dismiss empty strings or non valid values */
+                    if (!char)
+                        return false;
+                    /* Get rid of spaces between words and punctuation */
+                    if (Utils.isSpace(char) &&
+                        Utils.isPunctuation(arr[i + 1]))
+                        return false;
+                    /* Get rid of multiple spaces to avoid inconsistencies */
+                    if (Utils.isSpace(char) && Utils.isSpace(arr[i + 1]))
+                        return false;
+                    return true;
+                })
+                    /* Separate special characters that will be read as single characters */
+                    .map((c, i, arr) => {
+                    /* Replace whitespace characters with common spaces */
+                    if (Utils.isWhitespaceChar(c))
+                        return ' ';
+                    /* Separate the special readable characters like @#^*° so they can be read accordingly */
+                    if (Utils.isSpecialReadableCharacter(c))
+                        return ` ${c} `;
+                    /* Handle dots in the middle of numbers e.g. 1.000 1.23 */
+                    if (Utils.isDot(c) &&
+                        Utils.isNumber(arr[i - 1]) &&
+                        Utils.isNumber(arr[i + 1]))
+                        return `${c}`;
+                    /* Handle dots in the middle of words and numbers e.g. some.text e.g. abc33.bb32 ,
+                    since in this case they are read as a character : "some dot text" "one dot zero zero zero" */
+                    if (Utils.isDot(c) &&
+                        Utils.isWordWithNumbers(arr[i - 1]) &&
+                        Utils.isWordWithNumbers(arr[i + 1]))
+                        return ` ${c} `;
+                    /* Handle the punctation characters apart dots placed in the middle of a word e.g. test:test --> test: test */
+                    if (Utils.isPunctuationButDot(c) &&
+                        Utils.isWord(arr[i - 1]) &&
+                        Utils.isWord(arr[i + 1]))
+                        return `${c} `;
+                    /* Handle multiple zeroes in a row, since they are read a single separated words */
+                    return c;
+                })
+                    .join('')
+                    .split(' ')
+                    .forEach((word, i, arr) => {
+                    if (!word)
+                        return;
+                    /* If it's a special unreadable character or a dot it does not add an highlight data-id since those characters won't  be read */
+                    if (
+                    // Utils.isPunctuation(word) ||
+                    Utils.isSpecialUnreadableCharacter(word) ||
+                        Utils.isWordInsideAngularBrackets(word)) {
+                        const newEl = document.createTextNode(word + ' ');
+                        wrapper.appendChild(newEl);
+                    }
+                    else {
+                        /* In all other cases, which is, "plain words or slashes or any other readable character" we add the data-id attribute */
+                        const newEl = document.createElement('span');
+                        newEl.setAttribute('data-id', (this.state.tagIndex++).toString());
+                        newEl.setAttribute('data-type', 'WORD');
+                        /* Do not add a space after the word if it's a special readable character or if the next word is not a plain word */
+                        if (Utils.isSpecialReadableCharacter(word) ||
+                            Utils.isSpecialReadableCharacter(arr[i + 1]) ||
+                            Utils.isDot(word) ||
+                            Utils.isDot(arr[i + 1]) ||
+                            Utils.isZero(word)) {
+                            newEl.textContent = word;
+                        }
+                        else
+                            newEl.textContent = word + ' ';
+                        /* Add a space after the words that are Text words */
+                        wrapper.appendChild(newEl);
+                    }
+                });
+                node.replaceChild(wrapper, el);
+            }
+        });
+    }
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            /* Add custom methods to primitives */
+            // eslint-disable-next-line no-extend-native
+            Array.prototype.__join__ = Utils.__join__;
+            /* Get voices */
+            try {
+                this.state.voices = yield this.getVoices();
+                this.state.voice = this.state.voices[0];
+                this.settings.voiceURI = this.state.voice.voiceURI;
+                /* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags"
+        on stringified HTML */
+                this.addHTMLHighlightTags(this.textContainer);
+                /* Add basic style to the words that have just been tagged wit HTML tags */
+                this.applyBasicStyleToWords(this.textContainer, '[data-id]');
+                /* Init state properties */
+                /* Get the total number of words to highlight */
+                this.state.numberOfWords = this.retrieveNumberOfWords(this.textContainer, '[data-id]');
+                /* Get the whole raw text */
+                this.state.wholeText = this.retrieveWholeText(this.textContainer, '[data-id]');
+                this.state.textRemaining = this.state.wholeText;
+                /* Get the total estimated duration of reading */
+                this.state.duration = this.getTextDuration(this.state.wholeText, this.settings.rate);
+                /* Get the array of words that will be read */
+                this.state.wholeTextArray = this.retrieveWholeTextArray(this.textContainer, '[data-id]');
+                this.state.chunksArray = this.retrieveChunks();
+                /* -------------------------------------------------------------------- */
+                /* Attach click event listener to words */
+                this.attachEventListenersToWords(this.textContainer, '[data-id]', {
+                    type: 'click',
+                    fn: (e) => {
+                        this.emit('word-click', this, e);
+                    },
+                });
+                /* Add class custom event listeners */
+                this.addCustomEventListeners();
+                /* -------------------------------------------------------------------- */
+                /* Init utterance settings */
+                this.initUtterance();
+                return this;
+            }
+            catch (e) {
+                console.log('Init error', e);
+                return this;
+            }
+        });
+    }
+    /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+    initUtterance() {
+        this.utterance.text = this.options.isChunksModeOn
+            ? this.state.chunksArray[this.state.currentChunkIndex].text
+            : this.state.wholeText;
+        this.utterance.lang = this.settings.language;
+        this.utterance.voice = this.state.voice;
+        this.utterance.pitch = this.settings.pitch;
+        this.utterance.rate = this.settings.rate;
+        this.utterance.volume = this.settings.volume;
+        /* Add the boundary handler to the utterance to manage the highlight ( no mobile supported ) */
+        this.utterance.onboundary = this.handleBoundary.bind(this);
+        /*
+        When chunks mode is enabled this event is fired multiple times at the end of each chunk.
+        Use this to manage chunk highlighting and extra logic that concerns chunks management
+        */
+        this.utterance.onend = (e) => {
+            /* This prevents the execution of code if the end event is called in response to the reset method being called */
+            if (this.state.isReading === false && this.state.isPaused === false)
+                return;
+            /* Emit the "end" event which signals the end of the WHOLE text, only when the whole text has finished to be read */
+            if ((!this.options.isChunksModeOn &&
+                this.state.currentWordIndex >=
+                    this.state.wholeTextArray.length - 1) ||
+                (this.options.isChunksModeOn &&
+                    this.state.currentChunkIndex >=
+                        this.state.chunksArray.length - 1))
+                return this.emit('end', this);
+            /* Handle the highlight options change dynamically */
+            /*
+            If the isPreserveHighlighting option is disabled,
+            it has to reset the highlighting of the whole previous chunk while skipping to the next one
+            */
+            if (!this.options.isPreserveHighlighting) {
+                this.resetHighlight();
+            }
+            /* Manage the highlighting of the next chunk just before it starts */
+            if (this.options.isChunksModeOn && this.state.isReading)
+                this.handleChunkHighlighting();
+            /* Finally play the next chunk */
+            this.play('next-chunk-start');
+        };
+    }
+    /*  Highlight  */
+    highlightChunk(idx) {
+        const length = this.state.currentWordIndex + this.state.chunksArray[idx].length;
+        for (let i = this.state.currentWordIndex; i < length; i++)
+            this.highlightText(i);
+    }
+    retrieveChunks() {
+        let currentPunctuationSymbol = '.';
+        const chunks = [];
+        let previousEnd = 0;
+        /*
+        Take into account that all the special readable characters will be counted as plain words hence we need to:
+        - use the "wholeTextArray" which holds all the text elements that were wrapped in a span tag with a data-id attribute,
+          this ensures that it will contain all readable content, since only readable words/characters are given such a wrap tag in
+          "addHTMLHighlightTags" method.
+          This further ensures to have a unique source of truth to keep in sync reading content and visual highlighting.
+        - join with spaces every single character wrapped with a data-id attribute tag to be able to further split on given breakpoints
+        - split in segments relative to periods that have words ending with a punctuation mark, to do so we use this regexp "/(?<=[a-zA-Z0-9])[.?!;]/"
+          to make sure to select any punctuation mark that is preceeded by a word
+          ( to avoid to consider punctuation in the middle of words as chunk edges, we use the wholeTextArray array
+            which already owns all characters that will be read, included dots in the middle of words e.g. text.text -> "text dot text" ).
+        - for each of the chunk extracted we build an object containg all the info on the chunk, start,end,length, index and text.
+          The text is the content that will be passed to the speech synth
+        - The chunk text has to be further manipulated since now as we manipulated the chunk the dots in the middle of the word won't be read as they are detached from the previous and next words.
+          The strategy here is the same used in the "retrieveWholeText" method, which is: using the custom __join__ method
+          tho use a space " " to join all the plain words and a no space "" to join the words that have a punctuation element next to them and dots element themselves */
+        this.state.wholeTextArray
+            .join(' ')
+            /* Alternative regexps:
+            1- /(?<![\s])[.?!;]+(?=[\s\n])/ This is safer since it just checks if there are spaces before and after the dot
+            2- /(?<=[a-zA-Z0-9])[.?!;]/  This does not take into account dots placed after a special character like a parens e.g. (word). <-- That dot won't be matched
+            */
+            .split(/(?<![\s])[.?!;]+(?=[\s\n])/)
+            .forEach((c, i) => {
+            if (Utils.isPunctuation(c))
+                currentPunctuationSymbol = c;
+            else {
+                const length = c
+                    .trim()
+                    .split(/[\s]/)
+                    .filter((el) => el).length;
+                /*  */
+                const text = c.split(/\s+/).__join__((el, i, arr) => {
+                    if (Utils.isPunctuation(arr[i + 1]) ||
+                        Utils.isDot(el)) {
+                        return '';
+                    }
+                    else
+                        return ' ';
+                });
+                const result = {
+                    text: text + currentPunctuationSymbol,
+                    length: length,
+                    start: previousEnd,
+                    end: previousEnd + length - 1,
+                    idx: i,
+                };
+                previousEnd = previousEnd + length;
+                chunks.push(result);
+            }
+        });
+        return chunks;
+    }
+    handleChunkHighlighting() {
+        // eslint-disable-next-line prettier/prettier
+        const currentChunk = this.state.chunksArray[this.state.currentChunkIndex];
+        // eslint-disable-next-line prettier/prettier
+        const nextChunk = this.state.chunksArray[++this.state.currentChunkIndex];
+        this.utterance.text = nextChunk.text;
+        /* Keep the currentWordIndex in sync */
+        this.state.currentWordIndex += currentChunk.length;
+        /* Highlight the next chunk */
+        this.highlightChunk(this.state.currentChunkIndex);
+    }
+    scrollTo(idx) {
+        const el = this.textContainer.querySelector(`[data-id="${idx}"]`);
+        if (el)
+            el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
+    }
+    /* Timer */
+    timeCount(e, frequency) {
+        if (frequency % 10 !== 0)
+            throw new Error('Frequency must be a multiple of 10');
+        this.state.elapsedTime += frequency;
+        if (this.state.elapsedTime % 1000 === 0) {
+            /* Instructions executed every 1000ms when the reader is active */
+            this.emit('time-tick', this, this.state.elapsedTime);
+        }
+        this.timeoutRef = setTimeout(this.timeCount.bind(this, e, frequency), frequency);
+    }
+    pauseTimeCount() {
+        clearTimeout(this.timeoutRef);
+    }
+    resetTimeCount() {
+        this.state.elapsedTime = 0;
+        clearTimeout(this.timeoutRef);
+    }
+    handleBoundary(e) {
+        /* Disable boundary if it's in chunk mode */
+        if (this.options.isChunksModeOn)
+            return;
+        this.state.currentWord =
+            this.state.wholeTextArray[this.state.currentWordIndex];
+        const previousWord = this.state.wholeTextArray[this.state.currentWordIndex - 1];
+        /* This is very important since it ensures the sync among words that are read
+        and those that are highlighted is not messed up  */
+        if (e.name !== 'word' || e.charLength === 0)
+            return;
+        /*
+        Disable boundary if the word is the repetition of the previous one, this happens in certain cases like numbers
+        e.g. 1000 is spelled "one thousand" even if it's just one word, hence the boundary is fired twice and dates.
+        This increase consistency in visual highlighting and audio sync.
+        */
+        if ((Utils.isNumber(previousWord) || Utils.isValidDate(previousWord)) &&
+            e.charIndex === this.state.currentWordProps.charIndex &&
+            e.charLength === this.state.currentWordProps.charLength)
+            return;
+        /* Sync current word props */
+        this.state.currentWordProps = {
+            charIndex: e.charIndex,
+            charLength: e.charLength,
+        };
+        /* Highlight the current word */
+        this.highlightText(this.state.currentWordIndex);
+        /* Increase the current index of word read */
+        this.state.currentWordIndex += 1;
+        /* Synchronize the chunk index */
+        if (/[.?!;]+/.test(this.state.wholeTextArray[this.state.currentWordIndex]))
+            this.state.currentChunkIndex++;
+        /* Emit boundary event */
+        this.emit('boundary', this, e);
+    }
+    /* VOICES ARE POPULATED ASYNCHRONOUSLY ON BROWSER LOAD */
+    getVoices() {
+        return new Promise((resolve, reject) => {
+            let id = null;
+            try {
+                id = setInterval(() => {
+                    if (this.synth.getVoices().length !== 0) {
+                        resolve(this.synth
+                            .getVoices()
+                            .filter((voice) => voice.lang.startsWith(this.settings.language)));
+                        clearInterval(id);
+                    }
+                }, 10);
+            }
+            catch (e) {
+                reject(e);
+                clearInterval(id);
+            }
+        });
+    }
+    highlightText(wordIndex) {
+        /* Do not highlight if the option is disabled */
+        if (!this.options.isHighlightTextOn)
+            return;
+        // eslint-disable-next-line prettier/prettier
+        const wordToHighlight = this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
+        if (!wordToHighlight)
+            return;
+        /* Update highlighted words array */
+        this.state.highlightedWords.push(wordToHighlight);
+        /* Calculate current word position */
+        const position = wordToHighlight.getBoundingClientRect().x;
+        /* Scroll to the right row position */
+        if (position <= this.state.lastWordPosition)
+            this.scrollTo(this.state.currentWordIndex);
+        /* Reset the row highlight only if it's not in chunks mode.
+           In chunks mode, it has to be managed during the chunks switch ( in the "onend" handler) */
+        if (!this.options.isPreserveHighlighting &&
+            !this.options.isChunksModeOn) {
+            this.resetHighlight();
+            this.state.highlightedWords = [wordToHighlight];
+        }
+        /* Update last word position */
+        this.state.lastWordPosition = position;
+        /* Apply highlight style */
+        wordToHighlight.style.backgroundColor = this.style.color1;
+        wordToHighlight.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
+        wordToHighlight.style.textDecoration = 'underline';
+    }
+    resetHighlight() {
+        this.state.highlightedWords.forEach((n) => {
+            n.style.backgroundColor = '';
+            n.style.boxShadow = '';
+            n.style.textDecoration = 'none';
+            this.state.highlightedWords = [];
+        });
+    }
+    addCustomEventListeners() {
+        this.events.forEach((e) => {
+            if (e.handler && Utils.isFunction(e.handler))
+                this.on(e.type, e.handler.bind(this));
+        });
+    }
+    attachEventListenersToWords(node, selector, { type, fn }) {
+        [...node.querySelectorAll(selector)].forEach((el) => {
+            el.addEventListener(type, fn);
+        });
+    }
+    getRemainingText(idx) {
+        const length = this.state.wholeTextArray.length;
+        /* Calculate and set the remaining text */
+        return this.state.wholeTextArray
+            .slice(idx, length + 1)
+            .__join__((el, i, arr) => {
+            if (Utils.isDot(arr[i + 1]) || Utils.isDot(el)) {
+                return '';
+            }
+            else
+                return ' ';
+        });
+    }
+    getCurrentChunkText(idx) {
+        return this.state.chunksArray[idx].text;
+    }
+    retrieveNumberOfWords(node, selector) {
+        return [...node.querySelectorAll(selector)].length;
+    }
+    retrieveWholeText(node, selector) {
+        return [...node.querySelectorAll(selector)]
+            .map((el) => el.textContent)
+            .__join__((el, i, arr) => {
+            if (Utils.isPunctuation(arr[i + 1]) ||
+                Utils.isDot(el)) {
+                return '';
+            }
+            else
+                return ' ';
+        });
+    }
+    retrieveWholeTextArray(node, selector) {
+        return [...node.querySelectorAll(selector)].map((el) => el.textContent);
+    }
+    applyBasicStyleToWords(node, selector) {
+        [...node.querySelectorAll(selector)]
+            .filter((el) => el && !Utils.isPunctuation(el.textContent))
+            .forEach((el) => {
+            if (!el)
+                return;
+            el.style.transition = 'all 0.4s';
+        });
+    }
+    getTextDuration(str, rate) {
+        return (str.length * 100 * 1) / rate;
+    }
+    getAverageTextElapsedTime(textArray, idx) {
+        const _text = textArray.slice(0, idx).join(' ');
+        return (rate) => this.getTextDuration(_text, rate);
+    }
+    delayRestart(type, delay) {
+        return setTimeout(() => {
+            this.synth.cancel();
+            if (this.isReading())
+                this.play(type);
+            if (this.isPaused()) {
+                this.play(type).then(() => this.pause());
+                this.pause();
+            }
+        }, 500);
+    }
+    restart(type, delay) {
+        this.synth.cancel();
+        if (this.isReading())
+            this.play(type);
+        if (this.isPaused()) {
+            this.play(type).then(() => this.pause());
+            this.pause();
+        }
+    }
+    /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PUBLIC METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+    changeSettings(obj) {
+        /* Reset timeouts  */
+        clearTimeout(this.timeoutRef);
+        clearTimeout(this.editTimeoutRef);
+        /* Update voice in the state if it changes */
+        if (obj.voiceURI) {
+            this.state.voice =
+                this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)
+                    .length > 0
+                    ? this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)[0]
+                    : this.state.voices[0];
+            this.utterance.voice = this.state.voice;
+        }
+        /* Recalculate total duration  and current elapsedTime when rate changes */
+        if (obj.rate) {
+            this.state.duration = this.getTextDuration(this.state.wholeText, obj.rate);
+            /* Recalculate time elapsed */
+            this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
+            this.emit('time-tick', this, this.state.elapsedTime);
+        }
+        /* Update utterance object, adding the remaining settings and remaining text left to be played */
+        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.options.isChunksModeOn
+                ? this.getCurrentChunkText(this.state.currentChunkIndex)
+                : this.getRemainingText(this.state.currentWordIndex) }));
+        /* Update instance settings object to keep them in sync with utterance settings */
+        this.settings = Object.assign(Object.assign({}, this.settings), obj);
+        this.emit('settings-change', this, obj);
+        /*  Debounce to handle volume change properly */
+        this.editTimeoutRef = this.delayRestart('edit-utterance', 500);
+    }
+    changeOptions(obj) {
+        /* Handle chunks mode option change */
+        if ('isChunksModeOn' in obj) {
+            this.changeChunkMode(obj.isChunksModeOn);
+        }
+        Object.assign(this.options, obj);
+        this.emit('options-change', this, obj);
+    }
+    changeChunkMode(b) {
+        clearTimeout(this.timeoutRef);
+        this.options.isChunksModeOn = b;
+        /* Since che chunk mode change triggers a restart of the utterance playing,
+        make sure the current word index gets synchronized with the current chunk index start word,
+        since the sentence is restarted from the first word of the sentence itself */
+        // eslint-disable-next-line prettier/prettier
+        this.state.currentWordIndex =
+            this.state.chunksArray[this.state.currentChunkIndex].start;
+        /* This manages the starting highlight if chunk mode is on or off:
+            1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
+            2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
+        if (this.options.isChunksModeOn)
+            this.highlightChunk(this.state.currentChunkIndex);
+        else
+            this.resetHighlight();
+        this.utterance.text = this.options.isChunksModeOn
+            ? this.getCurrentChunkText(this.state.currentChunkIndex)
+            : this.getRemainingText(this.state.currentWordIndex);
+        this.emit('chunks-mode-change', this);
+        this.restart('chunks-mode-change', 500);
+    }
+    /* Control methods */
+    seekTo(idx) {
+        this.emit('seek', this, idx);
+        /* Cancel synth instance */
+        // this.synth.cancel();
+        /* Reset timeouts  */
+        clearTimeout(this.timeoutRef);
+        clearTimeout(this.seekTimeoutRef);
+        /* Sync the current chunk in both cases that the seeking is performed in chunk or non chunk mode */
+        const chunk = this.state.chunksArray.find((c) => idx >= c.start && idx <= c.end);
+        this.state.currentChunkIndex = chunk.idx;
+        this.state.currentWordIndex = chunk.start;
+        if (!this.options.isChunksModeOn) {
+            /* Set the new text slice */
+            this.state.textRemaining = this.getRemainingText(idx);
+            /* Update current word index */
+            /* Need to increase the index by 1 */
+            this.state.currentWordIndex = idx;
+            /* Update utterance instance with  the new text slice */
+            this.utterance.text = this.state.textRemaining;
+            /* Highlight */
+            this.resetHighlight();
+            this.highlightText(this.state.currentWordIndex);
+        }
+        else {
+            this.utterance.text = chunk.text;
+            /* Highlight */
+            this.resetHighlight();
+            this.highlightChunk(this.state.currentChunkIndex);
+        }
+        /* Recalculate time elapsed */
+        this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
+        this.emit('time-tick', this, this.state.elapsedTime);
+        this.seekTimeoutRef = this.delayRestart('seek', 500);
+    }
+    /* ------------------------------------------------------------------------------------ */
+    /* Public Methods to control the player state */
+    /* ------------------------------------------------------------------------------------ */
+    play(type) {
+        this.synth.cancel(); // Makes sure the queue is empty when starting
+        clearTimeout(this.timeoutRef); // Makes sure to not trigger multiple timeouts
+        this.synth.speak(this.utterance);
+        this.state.isPaused = false;
+        this.state.isReading = true;
+        this.timeCount(null, 20);
+        switch (type) {
+            case 'start': {
+                this.emit('start', this);
+                return new Promise((resolve) => {
+                    this.utterance.onstart = (e) => {
+                        /* Highlight the first chunk on the first start if it's chunks mode ON / mobile */
+                        if (this.options.isChunksModeOn)
+                            this.highlightChunk(0);
+                        resolve(null);
+                    };
+                });
+            }
+            case 'resume-chunk-mode': {
+                this.emit('resume-chunk-mode', this);
+                return new Promise((resolve) => {
+                    this.utterance.onstart = (e) => {
+                        resolve(null);
+                    };
+                });
+            }
+            case 'next-chunk-start': {
+                this.emit('next-chunk-start', this, this.state.chunksArray[this.state.currentChunkIndex]);
+                return new Promise((resolve) => {
+                    this.utterance.onstart = (e) => {
+                        resolve(null);
+                    };
+                });
+            }
+            case 'edit-utterance-settings': {
+                return new Promise((resolve) => {
+                    this.utterance.onstart = (e) => {
+                        resolve(null);
+                    };
+                });
+            }
+            case 'chunks-mode-change': {
+                return new Promise((resolve) => {
+                    this.utterance.onstart = (e) => {
+                        resolve(null);
+                    };
+                });
+            }
+            default:
+                return new Promise((resolve) => {
+                    this.utterance.onstart = (e) => {
+                        resolve(null);
+                    };
+                });
+        }
+    }
+    pause() {
+        this.synth.pause();
+        this.state.isPaused = true;
+        this.state.isReading = false;
+        this.emit('pause', this);
+        /* Pause timer */
+        this.pauseTimeCount();
+    }
+    resume() {
+        if (!this.options.isChunksModeOn)
+            this.synth.resume();
+        else
+            this.play('resume-chunk-mode');
+        this.state.isPaused = false;
+        this.state.isReading = true;
+        this.emit('resume', this);
+        /* Restart timer */
+        this.timeCount(null, 20);
+    }
+    reset() {
+        this.synth.cancel();
+        this.resetHighlight();
+        /* Reset timer */
+        this.resetTimeCount();
+        this.state = Object.assign(Object.assign({}, this.state), { textRemaining: this.state.wholeText, currentWordIndex: 0, currentChunkIndex: 0, highlightedWords: [], lastWordPosition: 0, isPaused: false, isReading: false });
+        /* Reset the utterance state ( needed to reset the text utterance ) */
+        this.initUtterance();
+        /* Scroll back to top word */
+        this.scrollTo(1);
+        this.emit('reset', this);
+    }
+    /* State check */
+    isReading() {
+        return this.state.isReading;
+    }
+    isPaused() {
+        return this.state.isPaused;
+    }
+}
+
+const globalState = {
+    settings: {
+        rate: 1,
+        voiceURI: '',
+        volume: 0.5,
+        pitch: 0,
+        language: 'en',
+    },
+    options: {
+        isPreserveHighlighting: true,
+        isHighlightTextOn: true,
+        isChunksModeOn: false,
+    },
+    isReading: false,
+    isLoading: false,
+    voices: [],
+    elapsedTime: 0,
+    isMinimized: true,
+    isVisible: true,
+    isSettingsVisible: false,
+    numberOfWords: 0,
+    currentWordIndex: 1,
+    duration: 0,
+};
+const rootReducer = (state, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case 'SET_IS_READING': {
+            return Object.assign(Object.assign({}, state), { isReading: payload });
+        }
+        case 'SET_IS_LOADING': {
+            return Object.assign(Object.assign({}, state), { isLoading: payload });
+        }
+        case 'SET_IS_MINIMIZED': {
+            return Object.assign(Object.assign({}, state), { isMinimized: payload });
+        }
+        case 'SET_IS_VISIBLE': {
+            return Object.assign(Object.assign({}, state), { isVisible: payload });
+        }
+        case 'SET_IS_SETTINGS_VISIBLE': {
+            return Object.assign(Object.assign({}, state), { isSettingsVisible: payload });
+        }
+        case 'SET_VOICES': {
+            return Object.assign(Object.assign({}, state), { voices: payload });
+        }
+        case 'SET_ELAPSED_TIME': {
+            return Object.assign(Object.assign({}, state), { elapsedTime: payload });
+        }
+        case 'SET_DURATION': {
+            return Object.assign(Object.assign({}, state), { duration: payload });
+        }
+        case 'SET_NUMBER_OF_WORDS': {
+            return Object.assign(Object.assign({}, state), { numberOfWords: payload });
+        }
+        case 'SET_CURRENT_WORD_INDEX': {
+            return Object.assign(Object.assign({}, state), { currentWordIndex: payload });
+        }
+        case 'CHANGE_SETTINGS': {
+            return Object.assign(Object.assign({}, state), { settings: Object.assign(Object.assign({}, state.settings), payload) });
+        }
+        case 'CHANGE_OPTIONS': {
+            return Object.assign(Object.assign({}, state), { options: Object.assign(Object.assign({}, state.options), payload) });
+        }
+        default:
+            return Object.assign({}, state);
+    }
+};
+
+const useStore = () => {
+    const store = React.useContext(StoreContext);
+    return store;
+};
+const useReader = () => {
+    const reader = React.useContext(ReaderContext);
+    return reader;
+};
+const useMainProps = () => {
+    const mainProps = React.useContext(MainPropsContext);
+    return mainProps;
+};
+
+/* Provides the main props */
+const MainPropsProvider = ({ value, children, }) => {
+    return (React.createElement(MainPropsContext.Provider, { value: value }, children));
+};
+/* Provides the reader instance */
+const ReaderProvider = ({ children }) => {
+    const { dispatch } = useStore();
+    const { textContainer, options, styleOptions } = useMainProps();
+    const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
+            console.log('Start');
+            dispatch(setIsReading(reader.state.isReading));
+        }, onPause: (reader) => {
+            console.log('Pause');
+            dispatch(setIsReading(reader.state.isReading));
+        }, onResume: (reader) => {
+            console.log('Resume');
+            dispatch(setIsReading(reader.state.isReading));
+        }, onReset: (reader) => {
+            console.log('Reset Event called', reader.state.elapsedTime);
+            dispatch(setIsReading(reader.state.isReading));
+            dispatch(setElapsedTime(reader.state.elapsedTime));
+            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
+        }, onEnd: (reader) => {
+            console.log('End');
+            reader.reset();
+        }, onBoundary: (reader, e) => {
+            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
+        }, onSeek: (reader, value) => {
+            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
+        }, onTimeTick: (reader, value) => {
+            dispatch(setElapsedTime(reader.state.elapsedTime));
+        }, onWordClick: (reader, e) => {
+            const target = e.target;
+            const idx = +target.dataset.id;
+            reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
+        }, onChunksModeChange: (reader) => {
+            // dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
+        }, onSettingsChange: (reader, obj) => {
+            dispatch(changeSettings(obj));
+        }, onOptionsChange: (reader, obj) => {
+            console.log('Options change', obj);
+            dispatch(changeOptions(obj));
+        } })));
+    return (React.createElement(ReaderContext.Provider, { value: { reader: readerRef.current } }, children));
+};
+/* Provides the store */
+const StoreProvider = ({ children }) => {
+    const [state, dispatch] = React.useReducer(rootReducer, globalState);
+    return (React.createElement(StoreContext.Provider, { value: { state, dispatch } }, children));
+};
+
+const MainControls = () => {
+    const { reader } = useReader();
+    const { state, dispatch } = useStore();
+    const { styleOptions } = useMainProps();
     const { isReading, isLoading, isMinimized } = state;
     const handleTextReadPlay = () => {
         if (reader === null || reader === void 0 ? void 0 : reader.isPaused())
@@ -2298,7 +2435,6 @@ const MainControls = ({ styleOptions }) => {
             reader.state.wholeTextArray.length)
             reader.seekTo(reader.state.currentWordIndex + 1);
     };
-    console.log('Is reading', isReading);
     return (React.createElement(ControlsContainer, { isminimized: isMinimized.toString() },
         React.createElement("div", null,
             React.createElement(ControlButton, { as: AiFillFastBackward, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward, styleoptions: styleOptions, isloading: isLoading.toString() }),
@@ -2344,8 +2480,10 @@ function FiMaximize (props) {
   return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"}}]})(props);
 }
 
-const WindowControls = ({ styleOptions }) => {
-    const { state, dispatch, reader } = React.useContext(GlobalStateContext);
+const WindowControls = () => {
+    const { reader } = useReader();
+    const { state, dispatch } = useStore();
+    const { styleOptions } = useMainProps();
     const { isMinimized } = state;
     const handleHideReader = () => {
         dispatch(setIsVisible(false));
@@ -2857,8 +2995,10 @@ function toNumber(value) {
 
 var lodash_debounce = debounce;
 
-const SeekBar = ({ styleOptions }) => {
-    const { state, reader } = React.useContext(GlobalStateContext);
+const SeekBar = () => {
+    const { reader } = useReader();
+    const { state } = useStore();
+    const { styleOptions } = useMainProps();
     const { elapsedTime, numberOfWords, currentWordIndex, isMinimized, duration, } = state;
     const debouncedHandleManualSeek = lodash_debounce((value) => {
         reader === null || reader === void 0 ? void 0 : reader.seekTo(value);
@@ -3044,13 +3184,13 @@ const OptionsContainer = styled.div `
 
 /* React Components */
 const Button = (_a) => {
-    var { children, styleOptions } = _a, props = __rest$1(_a, ["children", "styleOptions"]);
+    var { children, styleOptions } = _a, props = __rest(_a, ["children", "styleOptions"]);
     return (React.createElement(StyledButton, Object.assign({ styleoptions: styleOptions }, props), children));
 };
 
 const CustomSelect = (_a) => {
     var _b;
-    var { options, value, title, onChange, styleOptions, style } = _a, props = __rest$1(_a, ["options", "value", "title", "onChange", "styleOptions", "style"]);
+    var { options, value, title, onChange, styleOptions, style } = _a, props = __rest(_a, ["options", "value", "title", "onChange", "styleOptions", "style"]);
     const [showOptions, setShowOptions] = React.useState(false);
     const ref = React.useRef(null);
     const show = () => {
@@ -3157,14 +3297,16 @@ const Icon = styled.div `
 `;
 
 const VolumeSlider = (_a) => {
-    var { data, onChange, icon, styleOptions } = _a, props = __rest$1(_a, ["data", "onChange", "icon", "styleOptions"]);
+    var { data, onChange, icon, styleOptions } = _a, props = __rest(_a, ["data", "onChange", "icon", "styleOptions"]);
     return (React.createElement(SliderContainer, Object.assign({}, props),
         icon && React.createElement(Icon, { styleoptions: styleOptions }, icon),
         React.createElement(StyledSlider, { min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange, styleoptions: styleOptions })));
 };
 
-const SecondaryControls = ({ styleOptions }) => {
-    const { state, dispatch, reader } = React.useContext(GlobalStateContext);
+const SecondaryControls = () => {
+    const { reader } = useReader();
+    const { state, dispatch } = useStore();
+    const { styleOptions } = useMainProps();
     const { voices, isSettingsVisible, settings: { voiceURI, volume, rate }, options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting }, } = state;
     const toggleSettings = () => {
         dispatch(setIsSettingsVisible(!isSettingsVisible));
@@ -3231,127 +3373,54 @@ const SecondaryControls = ({ styleOptions }) => {
                     React.createElement("h5", null, "Chunks Mode"))))));
 };
 
-const globalState = {
-    settings: {
-        rate: 1,
-        voiceURI: '',
-        volume: 0.5,
-        pitch: 0,
-        language: 'en',
-    },
-    options: {
-        isPreserveHighlighting: true,
-        isHighlightTextOn: true,
-        isChunksModeOn: false,
-    },
-    isReading: false,
-    isLoading: false,
-    voices: [],
-    elapsedTime: 0,
-    isMinimized: true,
-    isVisible: true,
-    isSettingsVisible: false,
-    numberOfWords: 0,
-    currentWordIndex: 1,
-    duration: 0,
+const useBindTextReader = () => {
+    const { reader } = useReader();
+    const { state, dispatch } = useStore();
+    const { isMinimized, isVisible, isReading, isLoading } = state;
+    const { bindReader } = useMainProps();
+    const handlers = React.useMemo(() => ({
+        showReader: () => {
+            dispatch(setIsVisible(true));
+        },
+        hideReader: () => {
+            dispatch(setIsVisible(false));
+        },
+        minimizeReader: () => {
+            dispatch(setIsMinimized(true));
+        },
+        maximizeReader: () => {
+            dispatch(setIsMinimized(false));
+        },
+        play: () => {
+            if (reader === null || reader === void 0 ? void 0 : reader.isPaused())
+                reader === null || reader === void 0 ? void 0 : reader.resume();
+            else
+                reader === null || reader === void 0 ? void 0 : reader.play('start').then(() => {
+                    dispatch(setIsLoading(false));
+                });
+        },
+        pause: () => reader === null || reader === void 0 ? void 0 : reader.pause(),
+    }), [dispatch, reader]);
+    React.useEffect(() => {
+        const exposedState = { isMinimized, isVisible, isReading, isLoading };
+        bindReader(exposedState, handlers);
+    }, [
+        bindReader,
+        dispatch,
+        handlers,
+        isLoading,
+        isMinimized,
+        isReading,
+        isVisible,
+    ]);
 };
-const rootReducer = (state, action) => {
-    const { type, payload } = action;
-    switch (type) {
-        case 'SET_IS_READING': {
-            return Object.assign(Object.assign({}, state), { isReading: payload });
-        }
-        case 'SET_IS_LOADING': {
-            return Object.assign(Object.assign({}, state), { isLoading: payload });
-        }
-        case 'SET_IS_MINIMIZED': {
-            return Object.assign(Object.assign({}, state), { isMinimized: payload });
-        }
-        case 'SET_IS_VISIBLE': {
-            return Object.assign(Object.assign({}, state), { isVisible: payload });
-        }
-        case 'SET_IS_SETTINGS_VISIBLE': {
-            return Object.assign(Object.assign({}, state), { isSettingsVisible: payload });
-        }
-        /* case 'SET_VOICE': {
-            return { ...state, voiceURI: payload };
-        } */
-        case 'SET_VOICES': {
-            return Object.assign(Object.assign({}, state), { voices: payload });
-        }
-        case 'SET_ELAPSED_TIME': {
-            return Object.assign(Object.assign({}, state), { elapsedTime: payload });
-        }
-        case 'SET_DURATION': {
-            return Object.assign(Object.assign({}, state), { duration: payload });
-        }
-        case 'SET_NUMBER_OF_WORDS': {
-            return Object.assign(Object.assign({}, state), { numberOfWords: payload });
-        }
-        case 'SET_CURRENT_WORD_INDEX': {
-            return Object.assign(Object.assign({}, state), { currentWordIndex: payload });
-        }
-        case 'CHANGE_SETTINGS': {
-            return Object.assign(Object.assign({}, state), { settings: Object.assign(Object.assign({}, state.settings), payload) });
-        }
-        case 'CHANGE_OPTIONS': {
-            return Object.assign(Object.assign({}, state), { options: Object.assign(Object.assign({}, state.options), payload) });
-        }
-        default:
-            return Object.assign({}, state);
-    }
-};
-const GlobalStateContext = React.createContext({
-    state: globalState,
-    dispatch: () => null,
-    reader: null,
-});
-const TextReader = ({ textContainer, options, styleOptions, }) => {
-    /* Initialize store */
-    const [state, dispatch] = React.useReducer(rootReducer, globalState);
-    const { isMinimized, isVisible } = state;
-    const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
-            console.log('Start');
-            dispatch(setIsReading(reader.state.isReading));
-        }, onPause: (reader) => {
-            console.log('Pause');
-            dispatch(setIsReading(reader.state.isReading));
-        }, onResume: (reader) => {
-            console.log('Resume');
-            dispatch(setIsReading(reader.state.isReading));
-        }, onReset: (reader) => {
-            console.log('Reset Event called', reader.state.elapsedTime);
-            dispatch(setIsReading(reader.state.isReading));
-            dispatch(setElapsedTime(reader.state.elapsedTime));
-            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-        }, onEnd: (reader) => {
-            console.log('End');
-            reader.reset();
-        }, onBoundary: (reader, e) => {
-            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-        }, onSeek: (reader, value) => {
-            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-        }, onTimeTick: (reader, value) => {
-            dispatch(setElapsedTime(reader.state.elapsedTime));
-        }, onWordClick: (reader, e) => {
-            const target = e.target;
-            const idx = +target.dataset.id;
-            reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
-        }, onChunksModeChange: (reader) => {
-            // dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
-        }, onSettingsChange: (reader, obj) => {
-            dispatch(changeSettings(obj));
-        }, onOptionsChange: (reader, obj) => {
-            console.log('Options change', obj);
-            dispatch(changeOptions(obj));
-        } })));
+const useInitializeReader = () => {
+    const { reader } = useReader();
+    const { dispatch } = useStore();
     React.useEffect(() => {
         /* Reset browser active speech synth queue on refresh or new load */
         window.speechSynthesis.cancel();
-        const reader = readerRef.current;
-        reader
-            .init()
-            .then((reader) => {
+        reader === null || reader === void 0 ? void 0 : reader.init().then((reader) => {
             var _a;
             const formattedVoices = (_a = reader.state.voices) === null || _a === void 0 ? void 0 : _a.map((voice) => {
                 var _a;
@@ -3363,22 +3432,41 @@ const TextReader = ({ textContainer, options, styleOptions, }) => {
             });
             /* Synchronize UI state with reader initial state */
             dispatch(setVoices(formattedVoices));
-            // dispatch(setVoice(reader.utterance.voice?.voiceURI || ''));
             dispatch(setNumberOfWords(reader.state.numberOfWords));
             dispatch(setDuration(reader.state.duration));
             dispatch(changeSettings(reader.settings));
             dispatch(changeOptions(reader.options));
-        })
-            .catch((e) => console.log(e));
+        }).catch((e) => console.log(e));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    return (React.createElement(GlobalStateContext.Provider, { value: { state, dispatch, reader: readerRef.current } },
-        React.createElement(Container$1, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
-            React.createElement(WindowControls, { styleOptions: styleOptions }),
-            React.createElement(SeekBar, { styleOptions: styleOptions }),
-            React.createElement(MainControls, { styleOptions: styleOptions }),
-            !isMinimized && (React.createElement(SecondaryControls, { styleOptions: styleOptions })))));
 };
-TextReader.defaultProps = {
+
+const TextReader = () => {
+    const { state } = useStore();
+    const { isMinimized, isVisible } = state;
+    const { styleOptions } = useMainProps();
+    useBindTextReader();
+    useInitializeReader();
+    return (React.createElement(Container$1, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
+        React.createElement(WindowControls, null),
+        React.createElement(SeekBar, null),
+        React.createElement(MainControls, null),
+        !isMinimized && React.createElement(SecondaryControls, null)));
+};
+
+/* Providers */
+const App = ({ options, styleOptions, textContainer, bindReader, }) => {
+    return (React.createElement(MainPropsProvider, { value: {
+            options,
+            styleOptions,
+            textContainer,
+            bindReader,
+        } },
+        React.createElement(StoreProvider, null,
+            React.createElement(ReaderProvider, null,
+                React.createElement(TextReader, null)))));
+};
+App.defaultProps = {
     options: {
         language: 'en',
     },
@@ -3391,1076 +3479,16 @@ TextReader.defaultProps = {
         highlightColor2: '#737CA1',
     },
 };
-
-var vanilla = createCommonjsModule(function (module, exports) {
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-var createStoreImpl = function createStoreImpl(createState) {
-  var state;
-  var listeners = new Set();
-
-  var setState = function setState(partial, replace) {
-    var nextState = typeof partial === 'function' ? partial(state) : partial;
-
-    if (nextState !== state) {
-      var _previousState = state;
-      state = replace ? nextState : Object.assign({}, state, nextState);
-      listeners.forEach(function (listener) {
-        return listener(state, _previousState);
-      });
-    }
-  };
-
-  var getState = function getState() {
-    return state;
-  };
-
-  var subscribe = function subscribe(listener) {
-    listeners.add(listener);
-    return function () {
-      return listeners.delete(listener);
-    };
-  };
-
-  var destroy = function destroy() {
-    return listeners.clear();
-  };
-
-  var api = {
-    setState: setState,
-    getState: getState,
-    subscribe: subscribe,
-    destroy: destroy
-  };
-  state = createState(setState, getState, api);
-  return api;
+const useTextReader = () => {
+    const [handlers, setHandlers] = React.useState({});
+    const [state, setState] = React.useState({});
+    const bindReader = React.useCallback((state, handlers) => {
+        setState(state);
+        setHandlers(handlers);
+    }, [setState, setHandlers]);
+    return { handlers, state, bindReader };
 };
 
-var createStore = function createStore(createState) {
-  return createState ? createStoreImpl(createState) : createStoreImpl;
-};
-
-exports["default"] = createStore;
-});
-
-unwrapExports(vanilla);
-
-function h$1(a,b){return a===b&&(0!==a||1/a===1/b)||a!==a&&b!==b}var k$1="function"===typeof Object.is?Object.is:h$1,l$1=React.useState,m=React.useEffect,n$1=React.useLayoutEffect,p$2=React.useDebugValue;function q$2(a,b){var d=b(),f=l$1({inst:{value:d,getSnapshot:b}}),c=f[0].inst,g=f[1];n$1(function(){c.value=d;c.getSnapshot=b;r$2(c)&&g({inst:c});},[a,d,b]);m(function(){r$2(c)&&g({inst:c});return a(function(){r$2(c)&&g({inst:c});})},[a]);p$2(d);return d}
-function r$2(a){var b=a.getSnapshot;a=a.value;try{var d=b();return !k$1(a,d)}catch(f){return !0}}function t$2(a,b){return b()}var u$2="undefined"===typeof window||"undefined"===typeof window.document||"undefined"===typeof window.document.createElement?t$2:q$2;var useSyncExternalStore=void 0!==React.useSyncExternalStore?React.useSyncExternalStore:u$2;
-
-var useSyncExternalStoreShim_production_min = {
-	useSyncExternalStore: useSyncExternalStore
-};
-
-var useSyncExternalStoreShim_development = createCommonjsModule(function (module, exports) {
-
-if (process.env.NODE_ENV !== "production") {
-  (function() {
-
-/* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
-if (
-  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
-  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart ===
-    'function'
-) {
-  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
-}
-          var React$1 = React;
-
-var ReactSharedInternals = React$1.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-
-function error(format) {
-  {
-    {
-      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        args[_key2 - 1] = arguments[_key2];
-      }
-
-      printWarning('error', format, args);
-    }
-  }
-}
-
-function printWarning(level, format, args) {
-  // When changing this logic, you might want to also
-  // update consoleWithStackDev.www.js as well.
-  {
-    var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
-    var stack = ReactDebugCurrentFrame.getStackAddendum();
-
-    if (stack !== '') {
-      format += '%s';
-      args = args.concat([stack]);
-    } // eslint-disable-next-line react-internal/safe-string-coercion
-
-
-    var argsWithFormat = args.map(function (item) {
-      return String(item);
-    }); // Careful: RN currently depends on this prefix
-
-    argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
-    // breaks IE9: https://github.com/facebook/react/issues/13610
-    // eslint-disable-next-line react-internal/no-production-logging
-
-    Function.prototype.apply.call(console[level], console, argsWithFormat);
-  }
-}
-
-/**
- * inlined Object.is polyfill to avoid requiring consumers ship their own
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
- */
-function is(x, y) {
-  return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y // eslint-disable-line no-self-compare
-  ;
-}
-
-var objectIs = typeof Object.is === 'function' ? Object.is : is;
-
-// dispatch for CommonJS interop named imports.
-
-var useState = React$1.useState,
-    useEffect = React$1.useEffect,
-    useLayoutEffect = React$1.useLayoutEffect,
-    useDebugValue = React$1.useDebugValue;
-var didWarnOld18Alpha = false;
-var didWarnUncachedGetSnapshot = false; // Disclaimer: This shim breaks many of the rules of React, and only works
-// because of a very particular set of implementation details and assumptions
-// -- change any one of them and it will break. The most important assumption
-// is that updates are always synchronous, because concurrent rendering is
-// only available in versions of React that also have a built-in
-// useSyncExternalStore API. And we only use this shim when the built-in API
-// does not exist.
-//
-// Do not assume that the clever hacks used by this hook also work in general.
-// The point of this shim is to replace the need for hacks by other libraries.
-
-function useSyncExternalStore(subscribe, getSnapshot, // Note: The shim does not use getServerSnapshot, because pre-18 versions of
-// React do not expose a way to check if we're hydrating. So users of the shim
-// will need to track that themselves and return the correct value
-// from `getSnapshot`.
-getServerSnapshot) {
-  {
-    if (!didWarnOld18Alpha) {
-      if (React$1.startTransition !== undefined) {
-        didWarnOld18Alpha = true;
-
-        error('You are using an outdated, pre-release alpha of React 18 that ' + 'does not support useSyncExternalStore. The ' + 'use-sync-external-store shim will not work correctly. Upgrade ' + 'to a newer pre-release.');
-      }
-    }
-  } // Read the current snapshot from the store on every render. Again, this
-  // breaks the rules of React, and only works here because of specific
-  // implementation details, most importantly that updates are
-  // always synchronous.
-
-
-  var value = getSnapshot();
-
-  {
-    if (!didWarnUncachedGetSnapshot) {
-      var cachedValue = getSnapshot();
-
-      if (!objectIs(value, cachedValue)) {
-        error('The result of getSnapshot should be cached to avoid an infinite loop');
-
-        didWarnUncachedGetSnapshot = true;
-      }
-    }
-  } // Because updates are synchronous, we don't queue them. Instead we force a
-  // re-render whenever the subscribed state changes by updating an some
-  // arbitrary useState hook. Then, during render, we call getSnapshot to read
-  // the current value.
-  //
-  // Because we don't actually use the state returned by the useState hook, we
-  // can save a bit of memory by storing other stuff in that slot.
-  //
-  // To implement the early bailout, we need to track some things on a mutable
-  // object. Usually, we would put that in a useRef hook, but we can stash it in
-  // our useState hook instead.
-  //
-  // To force a re-render, we call forceUpdate({inst}). That works because the
-  // new object always fails an equality check.
-
-
-  var _useState = useState({
-    inst: {
-      value: value,
-      getSnapshot: getSnapshot
-    }
-  }),
-      inst = _useState[0].inst,
-      forceUpdate = _useState[1]; // Track the latest getSnapshot function with a ref. This needs to be updated
-  // in the layout phase so we can access it during the tearing check that
-  // happens on subscribe.
-
-
-  useLayoutEffect(function () {
-    inst.value = value;
-    inst.getSnapshot = getSnapshot; // Whenever getSnapshot or subscribe changes, we need to check in the
-    // commit phase if there was an interleaved mutation. In concurrent mode
-    // this can happen all the time, but even in synchronous mode, an earlier
-    // effect may have mutated the store.
-
-    if (checkIfSnapshotChanged(inst)) {
-      // Force a re-render.
-      forceUpdate({
-        inst: inst
-      });
-    }
-  }, [subscribe, value, getSnapshot]);
-  useEffect(function () {
-    // Check for changes right before subscribing. Subsequent changes will be
-    // detected in the subscription handler.
-    if (checkIfSnapshotChanged(inst)) {
-      // Force a re-render.
-      forceUpdate({
-        inst: inst
-      });
-    }
-
-    var handleStoreChange = function () {
-      // TODO: Because there is no cross-renderer API for batching updates, it's
-      // up to the consumer of this library to wrap their subscription event
-      // with unstable_batchedUpdates. Should we try to detect when this isn't
-      // the case and print a warning in development?
-      // The store changed. Check if the snapshot changed since the last time we
-      // read from the store.
-      if (checkIfSnapshotChanged(inst)) {
-        // Force a re-render.
-        forceUpdate({
-          inst: inst
-        });
-      }
-    }; // Subscribe to the store and return a clean-up function.
-
-
-    return subscribe(handleStoreChange);
-  }, [subscribe]);
-  useDebugValue(value);
-  return value;
-}
-
-function checkIfSnapshotChanged(inst) {
-  var latestGetSnapshot = inst.getSnapshot;
-  var prevValue = inst.value;
-
-  try {
-    var nextValue = latestGetSnapshot();
-    return !objectIs(prevValue, nextValue);
-  } catch (error) {
-    return true;
-  }
-}
-
-function useSyncExternalStore$1(subscribe, getSnapshot, getServerSnapshot) {
-  // Note: The shim does not use getServerSnapshot, because pre-18 versions of
-  // React do not expose a way to check if we're hydrating. So users of the shim
-  // will need to track that themselves and return the correct value
-  // from `getSnapshot`.
-  return getSnapshot();
-}
-
-var canUseDOM = !!(typeof window !== 'undefined' && typeof window.document !== 'undefined' && typeof window.document.createElement !== 'undefined');
-
-var isServerEnvironment = !canUseDOM;
-
-var shim = isServerEnvironment ? useSyncExternalStore$1 : useSyncExternalStore;
-var useSyncExternalStore$2 = React$1.useSyncExternalStore !== undefined ? React$1.useSyncExternalStore : shim;
-
-exports.useSyncExternalStore = useSyncExternalStore$2;
-          /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
-if (
-  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
-  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop ===
-    'function'
-) {
-  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
-}
-        
-  })();
-}
-});
-useSyncExternalStoreShim_development.useSyncExternalStore;
-
-var shim = createCommonjsModule(function (module) {
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports = useSyncExternalStoreShim_production_min;
-} else {
-  module.exports = useSyncExternalStoreShim_development;
-}
-});
-
-function p$1(a,b){return a===b&&(0!==a||1/a===1/b)||a!==a&&b!==b}var q$1="function"===typeof Object.is?Object.is:p$1,r$1=shim.useSyncExternalStore,t$1=React.useRef,u$1=React.useEffect,v$1=React.useMemo,w$1=React.useDebugValue;
-var useSyncExternalStoreWithSelector=function(a,b,e,l,g){var c=t$1(null);if(null===c.current){var f={hasValue:!1,value:null};c.current=f;}else f=c.current;c=v$1(function(){function a(a){if(!c){c=!0;d=a;a=l(a);if(void 0!==g&&f.hasValue){var b=f.value;if(g(b,a))return k=b}return k=a}b=k;if(q$1(d,a))return b;var e=l(a);if(void 0!==g&&g(b,e))return b;d=a;return k=e}var c=!1,d,k,m=void 0===e?null:e;return [function(){return a(b())},null===m?void 0:function(){return a(m())}]},[b,e,l,g]);var d=r$1(a,c[0],c[1]);
-u$1(function(){f.hasValue=!0;f.value=d;},[d]);w$1(d);return d};
-
-var withSelector_production_min = {
-	useSyncExternalStoreWithSelector: useSyncExternalStoreWithSelector
-};
-
-var withSelector_development = createCommonjsModule(function (module, exports) {
-
-if (process.env.NODE_ENV !== "production") {
-  (function() {
-
-/* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
-if (
-  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
-  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart ===
-    'function'
-) {
-  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
-}
-          var React$1 = React;
-var shim$1 = shim;
-
-/**
- * inlined Object.is polyfill to avoid requiring consumers ship their own
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
- */
-function is(x, y) {
-  return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y // eslint-disable-line no-self-compare
-  ;
-}
-
-var objectIs = typeof Object.is === 'function' ? Object.is : is;
-
-var useSyncExternalStore = shim$1.useSyncExternalStore;
-
-// for CommonJS interop.
-
-var useRef = React$1.useRef,
-    useEffect = React$1.useEffect,
-    useMemo = React$1.useMemo,
-    useDebugValue = React$1.useDebugValue; // Same as useSyncExternalStore, but supports selector and isEqual arguments.
-
-function useSyncExternalStoreWithSelector(subscribe, getSnapshot, getServerSnapshot, selector, isEqual) {
-  // Use this to track the rendered snapshot.
-  var instRef = useRef(null);
-  var inst;
-
-  if (instRef.current === null) {
-    inst = {
-      hasValue: false,
-      value: null
-    };
-    instRef.current = inst;
-  } else {
-    inst = instRef.current;
-  }
-
-  var _useMemo = useMemo(function () {
-    // Track the memoized state using closure variables that are local to this
-    // memoized instance of a getSnapshot function. Intentionally not using a
-    // useRef hook, because that state would be shared across all concurrent
-    // copies of the hook/component.
-    var hasMemo = false;
-    var memoizedSnapshot;
-    var memoizedSelection;
-
-    var memoizedSelector = function (nextSnapshot) {
-      if (!hasMemo) {
-        // The first time the hook is called, there is no memoized result.
-        hasMemo = true;
-        memoizedSnapshot = nextSnapshot;
-
-        var _nextSelection = selector(nextSnapshot);
-
-        if (isEqual !== undefined) {
-          // Even if the selector has changed, the currently rendered selection
-          // may be equal to the new selection. We should attempt to reuse the
-          // current value if possible, to preserve downstream memoizations.
-          if (inst.hasValue) {
-            var currentSelection = inst.value;
-
-            if (isEqual(currentSelection, _nextSelection)) {
-              memoizedSelection = currentSelection;
-              return currentSelection;
-            }
-          }
-        }
-
-        memoizedSelection = _nextSelection;
-        return _nextSelection;
-      } // We may be able to reuse the previous invocation's result.
-
-
-      // We may be able to reuse the previous invocation's result.
-      var prevSnapshot = memoizedSnapshot;
-      var prevSelection = memoizedSelection;
-
-      if (objectIs(prevSnapshot, nextSnapshot)) {
-        // The snapshot is the same as last time. Reuse the previous selection.
-        return prevSelection;
-      } // The snapshot has changed, so we need to compute a new selection.
-
-
-      // The snapshot has changed, so we need to compute a new selection.
-      var nextSelection = selector(nextSnapshot); // If a custom isEqual function is provided, use that to check if the data
-      // has changed. If it hasn't, return the previous selection. That signals
-      // to React that the selections are conceptually equal, and we can bail
-      // out of rendering.
-
-      // If a custom isEqual function is provided, use that to check if the data
-      // has changed. If it hasn't, return the previous selection. That signals
-      // to React that the selections are conceptually equal, and we can bail
-      // out of rendering.
-      if (isEqual !== undefined && isEqual(prevSelection, nextSelection)) {
-        return prevSelection;
-      }
-
-      memoizedSnapshot = nextSnapshot;
-      memoizedSelection = nextSelection;
-      return nextSelection;
-    }; // Assigning this to a constant so that Flow knows it can't change.
-
-
-    // Assigning this to a constant so that Flow knows it can't change.
-    var maybeGetServerSnapshot = getServerSnapshot === undefined ? null : getServerSnapshot;
-
-    var getSnapshotWithSelector = function () {
-      return memoizedSelector(getSnapshot());
-    };
-
-    var getServerSnapshotWithSelector = maybeGetServerSnapshot === null ? undefined : function () {
-      return memoizedSelector(maybeGetServerSnapshot());
-    };
-    return [getSnapshotWithSelector, getServerSnapshotWithSelector];
-  }, [getSnapshot, getServerSnapshot, selector, isEqual]),
-      getSelection = _useMemo[0],
-      getServerSelection = _useMemo[1];
-
-  var value = useSyncExternalStore(subscribe, getSelection, getServerSelection);
-  useEffect(function () {
-    inst.hasValue = true;
-    inst.value = value;
-  }, [value]);
-  useDebugValue(value);
-  return value;
-}
-
-exports.useSyncExternalStoreWithSelector = useSyncExternalStoreWithSelector;
-          /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
-if (
-  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' &&
-  typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop ===
-    'function'
-) {
-  __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
-}
-        
-  })();
-}
-});
-withSelector_development.useSyncExternalStoreWithSelector;
-
-var withSelector = createCommonjsModule(function (module) {
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports = withSelector_production_min;
-} else {
-  module.exports = withSelector_development;
-}
-});
-
-var createStore = vanilla;
-
-var zustand = createCommonjsModule(function (module, exports) {
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-
-
-
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-var createStore__default = /*#__PURE__*/_interopDefaultLegacy(createStore);
-var useSyncExternalStoreExports__default = /*#__PURE__*/_interopDefaultLegacy(withSelector);
-
-var useSyncExternalStoreWithSelector = useSyncExternalStoreExports__default["default"].useSyncExternalStoreWithSelector;
-function useStore(api, selector, equalityFn) {
-  if (selector === void 0) {
-    selector = api.getState;
-  }
-
-  var slice = useSyncExternalStoreWithSelector(api.subscribe, api.getState, api.getServerState || api.getState, selector, equalityFn);
-  React.useDebugValue(slice);
-  return slice;
-}
-
-var createImpl = function createImpl(createState) {
-  var api = typeof createState === 'function' ? createStore__default["default"](createState) : createState;
-
-  var useBoundStore = function useBoundStore(selector, equalityFn) {
-    return useStore(api, selector, equalityFn);
-  };
-
-  Object.assign(useBoundStore, api);
-  return useBoundStore;
-};
-
-var create = function create(createState) {
-  return createState ? createImpl(createState) : createImpl;
-};
-
-var create$1 = create;
-
-Object.defineProperty(exports, 'createStore', {
-  enumerable: true,
-  get: function () { return createStore__default["default"]; }
-});
-exports["default"] = create$1;
-exports.useStore = useStore;
-Object.keys(createStore).forEach(function (k) {
-  if (k !== 'default' && !exports.hasOwnProperty(k)) Object.defineProperty(exports, k, {
-    enumerable: true,
-    get: function () { return createStore[k]; }
-  });
-});
-});
-
-var create = unwrapExports(zustand);
-zustand.useStore;
-
-var middleware = createCommonjsModule(function (module, exports) {
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function _extends() {
-  _extends = Object.assign ? Object.assign.bind() : function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-  return _extends.apply(this, arguments);
-}
-
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-
-  return target;
-}
-
-var reduxImpl = function reduxImpl(reducer, initial) {
-  return function (set, _get, api) {
-    api.dispatch = function (action) {
-      set(function (state) {
-        return reducer(state, action);
-      }, false, action);
-      return action;
-    };
-
-    api.dispatchFromDevtools = true;
-    return _extends({
-      dispatch: function dispatch() {
-        var _ref;
-
-        return (_ref = api).dispatch.apply(_ref, arguments);
-      }
-    }, initial);
-  };
-};
-
-var redux = reduxImpl;
-
-var _excluded = ["enabled", "anonymousActionType"];
-
-var devtoolsImpl = function devtoolsImpl(fn, devtoolsOptions) {
-  if (devtoolsOptions === void 0) {
-    devtoolsOptions = {};
-  }
-
-  return function (set, get, api) {
-    var _devtoolsOptions = devtoolsOptions,
-        enabled = _devtoolsOptions.enabled,
-        anonymousActionType = _devtoolsOptions.anonymousActionType,
-        options = _objectWithoutPropertiesLoose(_devtoolsOptions, _excluded);
-
-    var extensionConnector;
-
-    try {
-      extensionConnector = (enabled != null ? enabled : process.env.NODE_ENV !== "production") && window.__REDUX_DEVTOOLS_EXTENSION__;
-    } catch (_unused) {}
-
-    if (!extensionConnector) {
-      if (process.env.NODE_ENV !== "production" && enabled) {
-        console.warn('[zustand devtools middleware] Please install/enable Redux devtools extension');
-      }
-
-      return fn(set, get, api);
-    }
-
-    var extension = extensionConnector.connect(options);
-    var isRecording = true;
-
-    api.setState = function (state, replace, nameOrAction) {
-      var r = set(state, replace);
-      if (!isRecording) return r;
-      extension.send(nameOrAction === undefined ? {
-        type: anonymousActionType || 'anonymous'
-      } : typeof nameOrAction === 'string' ? {
-        type: nameOrAction
-      } : nameOrAction, get());
-      return r;
-    };
-
-    var setStateFromDevtools = function setStateFromDevtools() {
-      var originalIsRecording = isRecording;
-      isRecording = false;
-      set.apply(void 0, arguments);
-      isRecording = originalIsRecording;
-    };
-
-    var initialState = fn(api.setState, get, api);
-    extension.init(initialState);
-
-    if (api.dispatchFromDevtools && typeof api.dispatch === 'function') {
-      var didWarnAboutReservedActionType = false;
-      var originalDispatch = api.dispatch;
-
-      api.dispatch = function () {
-        for (var _len = arguments.length, a = new Array(_len), _key = 0; _key < _len; _key++) {
-          a[_key] = arguments[_key];
-        }
-
-        if (process.env.NODE_ENV !== "production" && a[0].type === '__setState' && !didWarnAboutReservedActionType) {
-          console.warn('[zustand devtools middleware] "__setState" action type is reserved ' + 'to set state from the devtools. Avoid using it.');
-          didWarnAboutReservedActionType = true;
-        }
-        originalDispatch.apply(void 0, a);
-      };
-    }
-    extension.subscribe(function (message) {
-      switch (message.type) {
-        case 'ACTION':
-          if (typeof message.payload !== 'string') {
-            console.error('[zustand devtools middleware] Unsupported action format');
-            return;
-          }
-
-          return parseJsonThen(message.payload, function (action) {
-            if (action.type === '__setState') {
-              setStateFromDevtools(action.state);
-              return;
-            }
-
-            if (!api.dispatchFromDevtools) return;
-            if (typeof api.dispatch !== 'function') return;
-            api.dispatch(action);
-          });
-
-        case 'DISPATCH':
-          switch (message.payload.type) {
-            case 'RESET':
-              setStateFromDevtools(initialState);
-              return extension.init(api.getState());
-
-            case 'COMMIT':
-              return extension.init(api.getState());
-
-            case 'ROLLBACK':
-              return parseJsonThen(message.state, function (state) {
-                setStateFromDevtools(state);
-                extension.init(api.getState());
-              });
-
-            case 'JUMP_TO_STATE':
-            case 'JUMP_TO_ACTION':
-              return parseJsonThen(message.state, function (state) {
-                setStateFromDevtools(state);
-              });
-
-            case 'IMPORT_STATE':
-              {
-                var _nextLiftedState$comp;
-
-                var nextLiftedState = message.payload.nextLiftedState;
-                var lastComputedState = (_nextLiftedState$comp = nextLiftedState.computedStates.slice(-1)[0]) == null ? void 0 : _nextLiftedState$comp.state;
-                if (!lastComputedState) return;
-                setStateFromDevtools(lastComputedState);
-                extension.send(null, nextLiftedState);
-                return;
-              }
-
-            case 'PAUSE_RECORDING':
-              return isRecording = !isRecording;
-          }
-
-          return;
-      }
-    });
-    return initialState;
-  };
-};
-
-var devtools = devtoolsImpl;
-
-var parseJsonThen = function parseJsonThen(stringified, f) {
-  var parsed;
-
-  try {
-    parsed = JSON.parse(stringified);
-  } catch (e) {
-    console.error('[zustand devtools middleware] Could not parse the received json', e);
-  }
-
-  if (parsed !== undefined) f(parsed);
-};
-
-var subscribeWithSelectorImpl = function subscribeWithSelectorImpl(fn) {
-  return function (set, get, api) {
-    var origSubscribe = api.subscribe;
-
-    api.subscribe = function (selector, optListener, options) {
-      var listener = selector;
-
-      if (optListener) {
-        var equalityFn = (options == null ? void 0 : options.equalityFn) || Object.is;
-        var currentSlice = selector(api.getState());
-
-        listener = function listener(state) {
-          var nextSlice = selector(state);
-
-          if (!equalityFn(currentSlice, nextSlice)) {
-            var previousSlice = currentSlice;
-            optListener(currentSlice = nextSlice, previousSlice);
-          }
-        };
-
-        if (options != null && options.fireImmediately) {
-          optListener(currentSlice, currentSlice);
-        }
-      }
-
-      return origSubscribe(listener);
-    };
-
-    var initialState = fn(set, get, api);
-    return initialState;
-  };
-};
-
-var subscribeWithSelector = subscribeWithSelectorImpl;
-
-var combine = function combine(initialState, create) {
-  return function () {
-    return Object.assign({}, initialState, create.apply(void 0, arguments));
-  };
-};
-
-var toThenable = function toThenable(fn) {
-  return function (input) {
-    try {
-      var result = fn(input);
-
-      if (result instanceof Promise) {
-        return result;
-      }
-
-      return {
-        then: function then(onFulfilled) {
-          return toThenable(onFulfilled)(result);
-        },
-        catch: function _catch(_onRejected) {
-          return this;
-        }
-      };
-    } catch (e) {
-      return {
-        then: function then(_onFulfilled) {
-          return this;
-        },
-        catch: function _catch(onRejected) {
-          return toThenable(onRejected)(e);
-        }
-      };
-    }
-  };
-};
-
-var persistImpl = function persistImpl(config, baseOptions) {
-  return function (set, get, api) {
-    var options = _extends({
-      getStorage: function getStorage() {
-        return localStorage;
-      },
-      serialize: JSON.stringify,
-      deserialize: JSON.parse,
-      partialize: function partialize(state) {
-        return state;
-      },
-      version: 0,
-      merge: function merge(persistedState, currentState) {
-        return _extends({}, currentState, persistedState);
-      }
-    }, baseOptions);
-
-    var _hasHydrated = false;
-    var hydrationListeners = new Set();
-    var finishHydrationListeners = new Set();
-    var storage;
-
-    try {
-      storage = options.getStorage();
-    } catch (e) {}
-
-    if (!storage) {
-      return config(function () {
-        console.warn("[zustand persist middleware] Unable to update item '" + options.name + "', the given storage is currently unavailable.");
-        set.apply(void 0, arguments);
-      }, get, api);
-    }
-
-    var thenableSerialize = toThenable(options.serialize);
-
-    var setItem = function setItem() {
-      var state = options.partialize(_extends({}, get()));
-      var errorInSync;
-      var thenable = thenableSerialize({
-        state: state,
-        version: options.version
-      }).then(function (serializedValue) {
-        return storage.setItem(options.name, serializedValue);
-      }).catch(function (e) {
-        errorInSync = e;
-      });
-
-      if (errorInSync) {
-        throw errorInSync;
-      }
-
-      return thenable;
-    };
-
-    var savedSetState = api.setState;
-
-    api.setState = function (state, replace) {
-      savedSetState(state, replace);
-      void setItem();
-    };
-
-    var configResult = config(function () {
-      set.apply(void 0, arguments);
-      void setItem();
-    }, get, api);
-    var stateFromStorage;
-
-    var hydrate = function hydrate() {
-      if (!storage) return;
-      _hasHydrated = false;
-      hydrationListeners.forEach(function (cb) {
-        return cb(get());
-      });
-      var postRehydrationCallback = (options.onRehydrateStorage == null ? void 0 : options.onRehydrateStorage(get())) || undefined;
-      return toThenable(storage.getItem.bind(storage))(options.name).then(function (storageValue) {
-        if (storageValue) {
-          return options.deserialize(storageValue);
-        }
-      }).then(function (deserializedStorageValue) {
-        if (deserializedStorageValue) {
-          if (typeof deserializedStorageValue.version === 'number' && deserializedStorageValue.version !== options.version) {
-            if (options.migrate) {
-              return options.migrate(deserializedStorageValue.state, deserializedStorageValue.version);
-            }
-
-            console.error("State loaded from storage couldn't be migrated since no migrate function was provided");
-          } else {
-            return deserializedStorageValue.state;
-          }
-        }
-      }).then(function (migratedState) {
-        var _get;
-
-        stateFromStorage = options.merge(migratedState, (_get = get()) != null ? _get : configResult);
-        set(stateFromStorage, true);
-        return setItem();
-      }).then(function () {
-        postRehydrationCallback == null ? void 0 : postRehydrationCallback(stateFromStorage, undefined);
-        _hasHydrated = true;
-        finishHydrationListeners.forEach(function (cb) {
-          return cb(stateFromStorage);
-        });
-      }).catch(function (e) {
-        postRehydrationCallback == null ? void 0 : postRehydrationCallback(undefined, e);
-      });
-    };
-
-    api.persist = {
-      setOptions: function setOptions(newOptions) {
-        options = _extends({}, options, newOptions);
-
-        if (newOptions.getStorage) {
-          storage = newOptions.getStorage();
-        }
-      },
-      clearStorage: function clearStorage() {
-        var _storage;
-
-        (_storage = storage) == null ? void 0 : _storage.removeItem(options.name);
-      },
-      getOptions: function getOptions() {
-        return options;
-      },
-      rehydrate: function rehydrate() {
-        return hydrate();
-      },
-      hasHydrated: function hasHydrated() {
-        return _hasHydrated;
-      },
-      onHydrate: function onHydrate(cb) {
-        hydrationListeners.add(cb);
-        return function () {
-          hydrationListeners.delete(cb);
-        };
-      },
-      onFinishHydration: function onFinishHydration(cb) {
-        finishHydrationListeners.add(cb);
-        return function () {
-          finishHydrationListeners.delete(cb);
-        };
-      }
-    };
-    hydrate();
-    return stateFromStorage || configResult;
-  };
-};
-
-var persist = persistImpl;
-
-exports.combine = combine;
-exports.devtools = devtools;
-exports.persist = persist;
-exports.redux = redux;
-exports.subscribeWithSelector = subscribeWithSelector;
-});
-
-unwrapExports(middleware);
-middleware.combine;
-var middleware_2 = middleware.devtools;
-var middleware_3 = middleware.persist;
-middleware.redux;
-middleware.subscribeWithSelector;
-
-function n(n){for(var r=arguments.length,t=Array(r>1?r-1:0),e=1;e<r;e++)t[e-1]=arguments[e];if("production"!==process.env.NODE_ENV){var i=Y[n],o=i?"function"==typeof i?i.apply(null,t):i:"unknown error nr: "+n;throw Error("[Immer] "+o)}throw Error("[Immer] minified error nr: "+n+(t.length?" "+t.map((function(n){return "'"+n+"'"})).join(","):"")+". Find the full error at: https://bit.ly/3cXEKWf")}function r(n){return !!n&&!!n[Q]}function t(n){return !!n&&(function(n){if(!n||"object"!=typeof n)return !1;var r=Object.getPrototypeOf(n);if(null===r)return !0;var t=Object.hasOwnProperty.call(r,"constructor")&&r.constructor;return t===Object||"function"==typeof t&&Function.toString.call(t)===Z}(n)||Array.isArray(n)||!!n[L]||!!n.constructor[L]||s(n)||v(n))}function i(n,r,t){void 0===t&&(t=!1),0===o(n)?(t?Object.keys:nn)(n).forEach((function(e){t&&"symbol"==typeof e||r(e,n[e],n);})):n.forEach((function(t,e){return r(e,t,n)}));}function o(n){var r=n[Q];return r?r.i>3?r.i-4:r.i:Array.isArray(n)?1:s(n)?2:v(n)?3:0}function u(n,r){return 2===o(n)?n.has(r):Object.prototype.hasOwnProperty.call(n,r)}function a(n,r){return 2===o(n)?n.get(r):n[r]}function f(n,r,t){var e=o(n);2===e?n.set(r,t):3===e?(n.delete(r),n.add(t)):n[r]=t;}function c(n,r){return n===r?0!==n||1/n==1/r:n!=n&&r!=r}function s(n){return X&&n instanceof Map}function v(n){return q&&n instanceof Set}function p(n){return n.o||n.t}function l(n){if(Array.isArray(n))return Array.prototype.slice.call(n);var r=rn(n);delete r[Q];for(var t=nn(r),e=0;e<t.length;e++){var i=t[e],o=r[i];!1===o.writable&&(o.writable=!0,o.configurable=!0),(o.get||o.set)&&(r[i]={configurable:!0,writable:!0,enumerable:o.enumerable,value:n[i]});}return Object.create(Object.getPrototypeOf(n),r)}function d(n,e){return void 0===e&&(e=!1),y(n)||r(n)||!t(n)?n:(o(n)>1&&(n.set=n.add=n.clear=n.delete=h),Object.freeze(n),e&&i(n,(function(n,r){return d(r,!0)}),!0),n)}function h(){n(2);}function y(n){return null==n||"object"!=typeof n||Object.isFrozen(n)}function b(r){var t=tn[r];return t||n(18,r),t}function _(){return "production"===process.env.NODE_ENV||U||n(0),U}function j(n,r){r&&(b("Patches"),n.u=[],n.s=[],n.v=r);}function O(n){g(n),n.p.forEach(S),n.p=null;}function g(n){n===U&&(U=n.l);}function w(n){return U={p:[],l:U,h:n,m:!0,_:0}}function S(n){var r=n[Q];0===r.i||1===r.i?r.j():r.O=!0;}function P(r,e){e._=e.p.length;var i=e.p[0],o=void 0!==r&&r!==i;return e.h.g||b("ES5").S(e,r,o),o?(i[Q].P&&(O(e),n(4)),t(r)&&(r=M(e,r),e.l||x(e,r)),e.u&&b("Patches").M(i[Q].t,r,e.u,e.s)):r=M(e,i,[]),O(e),e.u&&e.v(e.u,e.s),r!==H?r:void 0}function M(n,r,t){if(y(r))return r;var e=r[Q];if(!e)return i(r,(function(i,o){return A(n,e,r,i,o,t)}),!0),r;if(e.A!==n)return r;if(!e.P)return x(n,e.t,!0),e.t;if(!e.I){e.I=!0,e.A._--;var o=4===e.i||5===e.i?e.o=l(e.k):e.o;i(3===e.i?new Set(o):o,(function(r,i){return A(n,e,o,r,i,t)})),x(n,o,!1),t&&n.u&&b("Patches").R(e,t,n.u,n.s);}return e.o}function A(e,i,o,a,c,s){if("production"!==process.env.NODE_ENV&&c===o&&n(5),r(c)){var v=M(e,c,s&&i&&3!==i.i&&!u(i.D,a)?s.concat(a):void 0);if(f(o,a,v),!r(v))return;e.m=!1;}if(t(c)&&!y(c)){if(!e.h.F&&e._<1)return;M(e,c),i&&i.A.l||x(e,c);}}function x(n,r,t){void 0===t&&(t=!1),n.h.F&&n.m&&d(r,t);}function z(n,r){var t=n[Q];return (t?p(t):n)[r]}function I(n,r){if(r in n)for(var t=Object.getPrototypeOf(n);t;){var e=Object.getOwnPropertyDescriptor(t,r);if(e)return e;t=Object.getPrototypeOf(t);}}function k(n){n.P||(n.P=!0,n.l&&k(n.l));}function E(n){n.o||(n.o=l(n.t));}function R(n,r,t){var e=s(r)?b("MapSet").N(r,t):v(r)?b("MapSet").T(r,t):n.g?function(n,r){var t=Array.isArray(n),e={i:t?1:0,A:r?r.A:_(),P:!1,I:!1,D:{},l:r,t:n,k:null,o:null,j:null,C:!1},i=e,o=en;t&&(i=[e],o=on);var u=Proxy.revocable(i,o),a=u.revoke,f=u.proxy;return e.k=f,e.j=a,f}(r,t):b("ES5").J(r,t);return (t?t.A:_()).p.push(e),e}function D(e){return r(e)||n(22,e),function n(r){if(!t(r))return r;var e,u=r[Q],c=o(r);if(u){if(!u.P&&(u.i<4||!b("ES5").K(u)))return u.t;u.I=!0,e=F(r,c),u.I=!1;}else e=F(r,c);return i(e,(function(r,t){u&&a(u.t,r)===t||f(e,r,n(t));})),3===c?new Set(e):e}(e)}function F(n,r){switch(r){case 2:return new Map(n);case 3:return Array.from(n)}return l(n)}var G,U,W="undefined"!=typeof Symbol&&"symbol"==typeof Symbol("x"),X="undefined"!=typeof Map,q="undefined"!=typeof Set,B="undefined"!=typeof Proxy&&void 0!==Proxy.revocable&&"undefined"!=typeof Reflect,H=W?Symbol.for("immer-nothing"):((G={})["immer-nothing"]=!0,G),L=W?Symbol.for("immer-draftable"):"__$immer_draftable",Q=W?Symbol.for("immer-state"):"__$immer_state",Y={0:"Illegal state",1:"Immer drafts cannot have computed properties",2:"This object has been frozen and should not be mutated",3:function(n){return "Cannot use a proxy that has been revoked. Did you pass an object from inside an immer function to an async process? "+n},4:"An immer producer returned a new value *and* modified its draft. Either return a new value *or* modify the draft.",5:"Immer forbids circular references",6:"The first or second argument to `produce` must be a function",7:"The third argument to `produce` must be a function or undefined",8:"First argument to `createDraft` must be a plain object, an array, or an immerable object",9:"First argument to `finishDraft` must be a draft returned by `createDraft`",10:"The given draft is already finalized",11:"Object.defineProperty() cannot be used on an Immer draft",12:"Object.setPrototypeOf() cannot be used on an Immer draft",13:"Immer only supports deleting array indices",14:"Immer only supports setting array indices and the 'length' property",15:function(n){return "Cannot apply patch, path doesn't resolve: "+n},16:'Sets cannot have "replace" patches.',17:function(n){return "Unsupported patch operation: "+n},18:function(n){return "The plugin for '"+n+"' has not been loaded into Immer. To enable the plugin, import and call `enable"+n+"()` when initializing your application."},20:"Cannot use proxies if Proxy, Proxy.revocable or Reflect are not available",21:function(n){return "produce can only be called on things that are draftable: plain objects, arrays, Map, Set or classes that are marked with '[immerable]: true'. Got '"+n+"'"},22:function(n){return "'current' expects a draft, got: "+n},23:function(n){return "'original' expects a draft, got: "+n},24:"Patching reserved attributes like __proto__, prototype and constructor is not allowed"},Z=""+Object.prototype.constructor,nn="undefined"!=typeof Reflect&&Reflect.ownKeys?Reflect.ownKeys:void 0!==Object.getOwnPropertySymbols?function(n){return Object.getOwnPropertyNames(n).concat(Object.getOwnPropertySymbols(n))}:Object.getOwnPropertyNames,rn=Object.getOwnPropertyDescriptors||function(n){var r={};return nn(n).forEach((function(t){r[t]=Object.getOwnPropertyDescriptor(n,t);})),r},tn={},en={get:function(n,r){if(r===Q)return n;var e=p(n);if(!u(e,r))return function(n,r,t){var e,i=I(r,t);return i?"value"in i?i.value:null===(e=i.get)||void 0===e?void 0:e.call(n.k):void 0}(n,e,r);var i=e[r];return n.I||!t(i)?i:i===z(n.t,r)?(E(n),n.o[r]=R(n.A.h,i,n)):i},has:function(n,r){return r in p(n)},ownKeys:function(n){return Reflect.ownKeys(p(n))},set:function(n,r,t){var e=I(p(n),r);if(null==e?void 0:e.set)return e.set.call(n.k,t),!0;if(!n.P){var i=z(p(n),r),o=null==i?void 0:i[Q];if(o&&o.t===t)return n.o[r]=t,n.D[r]=!1,!0;if(c(t,i)&&(void 0!==t||u(n.t,r)))return !0;E(n),k(n);}return n.o[r]===t&&"number"!=typeof t&&(void 0!==t||r in n.o)||(n.o[r]=t,n.D[r]=!0,!0)},deleteProperty:function(n,r){return void 0!==z(n.t,r)||r in n.t?(n.D[r]=!1,E(n),k(n)):delete n.D[r],n.o&&delete n.o[r],!0},getOwnPropertyDescriptor:function(n,r){var t=p(n),e=Reflect.getOwnPropertyDescriptor(t,r);return e?{writable:!0,configurable:1!==n.i||"length"!==r,enumerable:e.enumerable,value:t[r]}:e},defineProperty:function(){n(11);},getPrototypeOf:function(n){return Object.getPrototypeOf(n.t)},setPrototypeOf:function(){n(12);}},on={};i(en,(function(n,r){on[n]=function(){return arguments[0]=arguments[0][0],r.apply(this,arguments)};})),on.deleteProperty=function(r,t){return "production"!==process.env.NODE_ENV&&isNaN(parseInt(t))&&n(13),on.set.call(this,r,t,void 0)},on.set=function(r,t,e){return "production"!==process.env.NODE_ENV&&"length"!==t&&isNaN(parseInt(t))&&n(14),en.set.call(this,r[0],t,e,r[0])};var un=function(){function e(r){var e=this;this.g=B,this.F=!0,this.produce=function(r,i,o){if("function"==typeof r&&"function"!=typeof i){var u=i;i=r;var a=e;return function(n){var r=this;void 0===n&&(n=u);for(var t=arguments.length,e=Array(t>1?t-1:0),o=1;o<t;o++)e[o-1]=arguments[o];return a.produce(n,(function(n){var t;return (t=i).call.apply(t,[r,n].concat(e))}))}}var f;if("function"!=typeof i&&n(6),void 0!==o&&"function"!=typeof o&&n(7),t(r)){var c=w(e),s=R(e,r,void 0),v=!0;try{f=i(s),v=!1;}finally{v?O(c):g(c);}return "undefined"!=typeof Promise&&f instanceof Promise?f.then((function(n){return j(c,o),P(n,c)}),(function(n){throw O(c),n})):(j(c,o),P(f,c))}if(!r||"object"!=typeof r){if(void 0===(f=i(r))&&(f=r),f===H&&(f=void 0),e.F&&d(f,!0),o){var p=[],l=[];b("Patches").M(r,f,p,l),o(p,l);}return f}n(21,r);},this.produceWithPatches=function(n,r){if("function"==typeof n)return function(r){for(var t=arguments.length,i=Array(t>1?t-1:0),o=1;o<t;o++)i[o-1]=arguments[o];return e.produceWithPatches(r,(function(r){return n.apply(void 0,[r].concat(i))}))};var t,i,o=e.produce(n,r,(function(n,r){t=n,i=r;}));return "undefined"!=typeof Promise&&o instanceof Promise?o.then((function(n){return [n,t,i]})):[o,t,i]},"boolean"==typeof(null==r?void 0:r.useProxies)&&this.setUseProxies(r.useProxies),"boolean"==typeof(null==r?void 0:r.autoFreeze)&&this.setAutoFreeze(r.autoFreeze);}var i=e.prototype;return i.createDraft=function(e){t(e)||n(8),r(e)&&(e=D(e));var i=w(this),o=R(this,e,void 0);return o[Q].C=!0,g(i),o},i.finishDraft=function(r,t){var e=r&&r[Q];"production"!==process.env.NODE_ENV&&(e&&e.C||n(9),e.I&&n(10));var i=e.A;return j(i,t),P(void 0,i)},i.setAutoFreeze=function(n){this.F=n;},i.setUseProxies=function(r){r&&!B&&n(20),this.g=r;},i.applyPatches=function(n,t){var e;for(e=t.length-1;e>=0;e--){var i=t[e];if(0===i.path.length&&"replace"===i.op){n=i.value;break}}e>-1&&(t=t.slice(e+1));var o=b("Patches").$;return r(n)?o(n,t):this.produce(n,(function(n){return o(n,t)}))},e}(),an=new un,fn=an.produce;an.produceWithPatches.bind(an);an.setAutoFreeze.bind(an);an.setUseProxies.bind(an);an.applyPatches.bind(an);an.createDraft.bind(an);an.finishDraft.bind(an);
-
-const useTextReaderStore = create()(middleware_2(middleware_3((set) => ({
-    isReading: false,
-    isLoading: false,
-    rate: '1',
-    voice: '',
-    voices: [],
-    volume: '0.5',
-    elapsedTime: 0,
-    isPreserveHighlighting: true,
-    isHighlightTextOn: true,
-    isChunksModeOn: false,
-    isMinimized: true,
-    isVisible: true,
-    isSettingsVisible: false,
-    numberOfWords: 0,
-    currentWordIndex: 1,
-    duration: 0,
-    enablePreserveHighlighting: () => set(fn((state) => {
-        state.isPreserveHighlighting = true;
-    })),
-    disablePreserveHighlighting: () => set(fn((state) => {
-        state.isPreserveHighlighting = false;
-    })),
-    enableHighlightText: () => set(fn((state) => {
-        state.isHighlightTextOn = true;
-    })),
-    disableHighlightText: () => set(fn((state) => {
-        state.isHighlightTextOn = false;
-    })),
-    enableChunksMode: () => set(fn((state) => {
-        state.isChunksModeOn = true;
-    })),
-    disableChunksMode: () => set(fn((state) => {
-        state.isChunksModeOn = false;
-    })),
-    setIsLoading: (b) => set(fn((state) => {
-        state.isLoading = b;
-    })),
-    setDuration: (n) => set(fn((state) => {
-        state.duration = n;
-    })),
-    setCurrentWordIndex: (n) => set(fn((state) => {
-        state.currentWordIndex = n;
-    })),
-    setNumberOfWords: (n) => set(fn((state) => {
-        state.numberOfWords = n;
-    })),
-    showSettings: () => set(fn((state) => {
-        state.isSettingsVisible = true;
-    })),
-    hideSettings: () => set(fn((state) => {
-        state.isSettingsVisible = false;
-    })),
-    showTextReader: () => set(fn((state) => {
-        state.isVisible = true;
-    })),
-    hideTextReader: () => set(fn((state) => {
-        state.isVisible = false;
-    })),
-    minimize: () => set(fn((state) => {
-        state.isMinimized = true;
-    })),
-    maximize: () => set(fn((state) => {
-        state.isMinimized = false;
-    })),
-    stopReading: () => set(fn((state) => {
-        state.isReading = false;
-    })),
-    startReading: () => set(fn((state) => {
-        state.isReading = true;
-    })),
-    setRate: (rate) => set(fn((state) => {
-        state.rate = rate;
-    })),
-    setVoice: (voice) => set(fn((state) => {
-        state.voice = voice;
-    })),
-    setVoices: (voices) => set(fn((state) => {
-        state.voices = voices;
-    })),
-    setVolume: (volume) => set(fn((state) => {
-        state.volume = volume;
-    })),
-    setElapsedTime: (time) => set(fn((state) => {
-        state.elapsedTime = time;
-    })),
-}), {
-    name: 'ITextReaderState',
-    partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => ![
-        'elapsedTime',
-        'isReading',
-        'currentWordIndex',
-        'isPreserveHighlighting',
-        'isHighlightTextOn',
-        'isChunksModeOn',
-    ].includes(key))),
-})));
-
-exports.default = TextReader;
-exports.useTextReaderStore = useTextReaderStore;
+exports.default = App;
+exports.useTextReader = useTextReader;
 //# sourceMappingURL=index.js.map

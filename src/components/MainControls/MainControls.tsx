@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import {
 	AiFillFastBackward,
 	AiFillFastForward,
@@ -7,11 +7,13 @@ import {
 } from 'react-icons/ai';
 import { ControlButton, ControlsContainer, Reset } from './styles';
 import { IMainControlsProps } from './types';
-import { GlobalStateContext } from 'components/TextReader/TextReader';
 import { setIsLoading } from 'store/actions';
+import { useReader, useStore, useMainProps } from 'contexts';
 
-const MainControls: FC<IMainControlsProps> = ({ styleOptions }) => {
-	const { state, dispatch, reader } = useContext(GlobalStateContext);
+const MainControls: FC<IMainControlsProps> = () => {
+	const { reader } = useReader();
+	const { state, dispatch } = useStore();
+	const { styleOptions } = useMainProps();
 	const { isReading, isLoading, isMinimized } = state;
 
 	const handleTextReadPlay = () => {
@@ -61,7 +63,7 @@ const MainControls: FC<IMainControlsProps> = ({ styleOptions }) => {
 		)
 			reader.seekTo(reader.state.currentWordIndex + 1);
 	};
-	console.log('Is reading', isReading);
+
 	return (
 		<ControlsContainer isminimized={isMinimized.toString()}>
 			<div>

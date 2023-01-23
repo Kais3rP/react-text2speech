@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import EventEmitter from 'events';
+import { IStyle, ISettings, Events, IOptions, IState, Params } from './types';
 export declare class SpeechSynth extends EventEmitter {
     textContainer: HTMLElement;
     synth: SpeechSynthesis;

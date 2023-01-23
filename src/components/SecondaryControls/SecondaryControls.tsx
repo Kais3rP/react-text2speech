@@ -5,16 +5,18 @@ import {
 	OptionsContainer,
 	SettingsIcon,
 } from './styles';
-import React, { ChangeEventHandler, FC, useContext } from 'react';
+import React, { ChangeEventHandler, FC } from 'react';
 import { ISecondaryControlsProps } from './types';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
 import { BiVolumeFull } from 'react-icons/bi';
 import VolumeSlider from 'components/VolumeSlider/VolumeSlider';
-import { GlobalStateContext } from 'components/TextReader/TextReader';
 import { setDuration, setIsSettingsVisible } from 'store/actions';
+import { useReader, useStore, useMainProps } from 'contexts';
 
-const SecondaryControls: FC<ISecondaryControlsProps> = ({ styleOptions }) => {
-	const { state, dispatch, reader } = useContext(GlobalStateContext);
+const SecondaryControls: FC<ISecondaryControlsProps> = () => {
+	const { reader } = useReader();
+	const { state, dispatch } = useStore();
+	const { styleOptions } = useMainProps();
 	const {
 		voices,
 		isSettingsVisible,
