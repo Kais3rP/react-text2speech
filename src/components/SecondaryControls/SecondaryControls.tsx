@@ -6,99 +6,60 @@ import {
 	SettingsIcon,
 } from './styles';
 import React, { ChangeEventHandler, FC } from 'react';
-import { useTextReaderStore } from 'store';
 import { ISecondaryControlsProps } from './types';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
 import { BiVolumeFull } from 'react-icons/bi';
 import VolumeSlider from 'components/VolumeSlider/VolumeSlider';
+import { setDuration, setIsSettingsVisible } from 'store/actions';
+import { useReader, useStore, useMainProps } from 'contexts';
 
-const SecondaryControls: FC<ISecondaryControlsProps> = ({
-	readerRef,
-	styleOptions,
-}) => {
+const SecondaryControls: FC<ISecondaryControlsProps> = () => {
+	const { reader } = useReader();
+	const { state, dispatch } = useStore();
+	const { styleOptions } = useMainProps();
 	const {
-		setRate,
-		setDuration,
-		setVoice,
-		setVolume,
-		isSettingsVisible,
-		hideSettings,
-		showSettings,
-		voice,
-		rate,
 		voices,
-		volume,
-		enablePreserveHighlighting,
-		disablePreserveHighlighting,
-		enableHighlightText,
-		disableHighlightText,
-		enableChunksMode,
-		disableChunksMode,
-		isPreserveHighlighting,
-		isHighlightTextOn,
-		isChunksModeOn,
-	} = useTextReaderStore();
+		isSettingsVisible,
+		settings: { voiceURI, volume, rate },
+		options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting },
+	} = state;
 
-	const reader = readerRef.current;
+	const toggleSettings = () => {
+		dispatch(setIsSettingsVisible(!isSettingsVisible));
+	};
+
+	/* Settings Handlers */
+
 	const handleRateChange = (value: string) => {
-		if (!reader) return;
-		reader.editUtterance({ rate: +value });
-		setRate(value);
-		setDuration(reader.state.duration);
+		reader?.changeSettings({ rate: +value });
+		dispatch(setDuration(reader?.state.duration || 0));
 	};
 
 	const handleVoiceChange = (value: string) => {
-		reader?.editUtterance({ voiceURI: value });
-		setVoice(value);
+		reader?.changeSettings({ voiceURI: value });
 	};
 
 	const handleVolumeChange: ChangeEventHandler = (e) => {
 		const target = e.target as HTMLInputElement;
-		if (!reader) return;
-		reader.editUtterance({ volume: +target.value });
-		setVolume(target.value);
-	};
-
-	const toggleSettings = () => {
-		if (isSettingsVisible) hideSettings();
-		else showSettings();
+		reader?.changeSettings({ volume: +target.value });
 	};
 
 	/* Options Handlers */
 
 	const handlePreserveHighlighting: ChangeEventHandler = (e) => {
 		const target = e.target as HTMLInputElement;
-		if (!reader) return;
-		if (target.checked) {
-			enablePreserveHighlighting();
-			reader.options.isPreserveHighlighting = true;
-		} else {
-			disablePreserveHighlighting();
-			reader.options.isPreserveHighlighting = false;
-		}
+		reader?.changeOptions({ isPreserveHighlighting: target.checked });
 	};
 
 	const handleIsHighlightTextOn: ChangeEventHandler = (e) => {
 		const target = e.target as HTMLInputElement;
-		if (!reader) return;
-		if (target.checked) {
-			enableHighlightText();
-			reader.options.isHighlightTextOn = true;
-		} else {
-			disableHighlightText();
-			reader.options.isHighlightTextOn = false;
-		}
+		reader?.changeOptions({ isHighlightTextOn: target.checked });
 	};
 
 	const handleIsChunksModeOn: ChangeEventHandler = (e) => {
+		if (reader?.state.isMobile) return; // Disable this option for mobile devices
 		const target = e.target as HTMLInputElement;
-		if (!reader || reader.state.isMobile) return;
-
-		if (target.checked) enableChunksMode();
-		else disableChunksMode();
-
-		/* Use the editUtterance method to update the utterance text  */
-		reader.changeChunkMode(target.checked);
+		reader?.changeOptions({ isChunksModeOn: target.checked });
 	};
 
 	return (
@@ -116,22 +77,16 @@ const SecondaryControls: FC<ISecondaryControlsProps> = ({
 							{ value: '2', name: '2x' },
 						]}
 						onChange={handleRateChange}
-						value={rate}
+						value={rate.toString()}
 						defaultValue="1"
 						title="Rate"
 						styleOptions={styleOptions}
 					/>
 					<CustomSelect
 						name="voice"
-						options={voices?.map((voice) => ({
-							name: voice.name?.replace(
-								/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
-								''
-							),
-							value: voice.voiceURI,
-						}))}
+						options={voices}
 						onChange={handleVoiceChange}
-						value={voice}
+						value={voiceURI || ''}
 						defaultValue="1"
 						title="Voices"
 						styleOptions={styleOptions}
@@ -154,7 +109,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = ({
 							min: '0.1',
 							max: '1',
 							step: '0.1',
-							value: +volume,
+							value: volume,
 							unit: '%',
 						}}
 						styleOptions={styleOptions}

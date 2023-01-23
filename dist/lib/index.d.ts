@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import EventEmitter from 'events';
+import { IStyle, ISettings, Events, IOptions, IState, Params } from './types';
 export declare class SpeechSynth extends EventEmitter {
     textContainer: HTMLElement;
     synth: SpeechSynthesis;
@@ -8,14 +9,14 @@ export declare class SpeechSynth extends EventEmitter {
     seekTimeoutRef: string | number | Timeout | undefined;
     editTimeoutRef: string | number | Timeout | undefined;
     style: IStyle;
-    settings: ISettings;
     events: Events;
+    settings: ISettings;
     options: IOptions;
     state: IState;
-    constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, }?: Params);
-    addHTMLHighlightTags(node: Element): void;
+    constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, onSettingsChange, onOptionsChange, }?: Params);
     init(): Promise<SpeechSynth>;
     private initUtterance;
+    private addHTMLHighlightTags;
     private highlightChunk;
     private retrieveChunks;
     private handleChunkHighlighting;
@@ -26,6 +27,7 @@ export declare class SpeechSynth extends EventEmitter {
     private handleBoundary;
     private getVoices;
     private highlightText;
+    private changeChunkMode;
     private resetHighlight;
     private addCustomEventListeners;
     private attachEventListenersToWords;
@@ -38,14 +40,15 @@ export declare class SpeechSynth extends EventEmitter {
     private getTextDuration;
     private getAverageTextElapsedTime;
     private delayRestart;
-    editUtterance(obj: Partial<ISettings>): void;
-    changeChunkMode(b: boolean): void;
+    private restart;
+    changeSettings(obj: Partial<ISettings>): void;
+    changeOptions(obj: Partial<IOptions>): void;
     seekTo(idx: number): void;
     play(type?: string): Promise<null>;
     pause(): void;
     resume(): void;
     reset(): void;
-    isPlaying(): boolean;
+    isReading(): boolean;
     isPaused(): boolean;
 }
 //# sourceMappingURL=index.d.ts.map

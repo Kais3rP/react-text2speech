@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 import { useState, useEffect } from 'react';
-import TextReader, { useTextReaderStore } from 'react-text2speech';
+import TextReader, { useTextReader } from 'react-text2speech';
 import { highlightAll, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -10,20 +10,20 @@ import 'prismjs/themes/prism-tomorrow.css';
 function App() {
 	const [node, setNode] = useState(null);
 
+	/* Use the useTextReader hook to retrieve the state and the handlers to control the reader from your application, ù
+	remember to set the bindReader prop on TextReader component to bind your Components higher in the tree hierarchy
+	with its own state */
+
+	const { bindReader, handlers, state } = useTextReader();
+
+	const { play, pause, showReader } = handlers;
+	const { isReading, isLoading, isVisible } = state;
+
 	useEffect(() => {
 		if (node) {
 			highlightAll(languages.js);
 		}
 	}, [node]);
-
-	const {
-		isLoading,
-		isReading,
-		isVisible,
-		showTextReader,
-		startReading,
-		stopReading,
-	} = useTextReaderStore();
 
 	return (
 		<div className={styles.container}>
@@ -35,16 +35,20 @@ function App() {
 				react-text2speech
 			</a>
 			{node && (
-				<TextReader textContainer={node} options={{ language: 'en' }} />
+				<TextReader
+					textContainer={node}
+					options={{ language: 'en' }}
+					bindReader={bindReader}
+				/>
 			)}
 			<button
 				className={styles.play}
 				onClick={
 					isReading
-						? stopReading
+						? pause
 						: () => {
-								if (!isVisible) showTextReader();
-								startReading();
+								if (!isVisible) showReader();
+								play();
 						  }
 				}
 			>
@@ -193,7 +197,7 @@ function App() {
 				<h2>Edge Cases:</h2>
 				<h4>Test code:</h4>
 				<pre>
-					<code class="language-javascript">{`
+					<code className="language-javascript">{`
 function App() {
 	const [node, setNode] = useState(null);
 
@@ -208,8 +212,8 @@ function App() {
 		isReading,
 		isVisible,
 		showTextReader,
-		startReading,
-		stopReading,
+		play,
+		pause(),
 	} = useTextReaderStore();
 
 	return (
@@ -228,10 +232,10 @@ function App() {
 				className={styles.play}
 				onClick={
 					isReading
-						? stopReading
+						? pause()
 						: () => {
 								if (!isVisible) showTextReader();
-								startReading();
+								play();
 						  }
 				}
 			>
@@ -246,15 +250,16 @@ function App() {
 				</pre>
 				<h4>Special readable characters:</h4>
 				<span>
-					# @ / \ _ = + $ £ % &    #@/\_    test@test test/test test\test
+					# @ / \ _ = + $ £ % & #@/\_ test@test test/test test\test
 					test#test test_test °Test ^Test test°test test^test.
 				</span>
 				<h4>Special unreadable characters:</h4>
 				<span>{` - () [] {} " ' < > \` | "quotation" 'quotation' \`quotation\` <unreadablequotation> <<unreadablequotation>>.`}</span>
 				<h4>Test punctuation in the middle of text:</h4>
 				<span>
-					so.me.text.text so.it so.org so.vercel.app so.com so.me.text www.com abc33.bc32 test.com http://test.com www.test.com so:me:text:text so;me;text;text
-					so,me,text,text.
+					so.me.text.text so.it so.org so.vercel.app so.com so.me.text
+					www.com abc33.bc32 test.com http://test.com www.test.com
+					so:me:text:text so;me;text;text so,me,text,text.
 				</span>
 				<h4>Test pound:</h4>
 				<span> # #hashtag # hash-tag.</span>

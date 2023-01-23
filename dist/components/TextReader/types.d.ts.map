@@ -1,1 +1,1 @@
-{"version":3,"file":"types.d.ts","sourceRoot":"","sources":["../../../src/components/TextReader/types.ts"],"names":[],"mappings":";AAAA,MAAM,WAAW,gBAAgB;IAChC,QAAQ,CAAC,EAAE,GAAG,CAAC,OAAO,GAAG,MAAM,CAAC;IAChC,OAAO,EAAE;QAAE,QAAQ,EAAE,MAAM,CAAA;KAAE,CAAC;IAC9B,YAAY,EAAE,aAAa,CAAC;IAC5B,aAAa,EAAE,WAAW,CAAC;CAC3B"}
+{"version":3,"file":"types.d.ts","sourceRoot":"","sources":["../../../src/components/TextReader/types.ts"],"names":[],"mappings":";AAAA,MAAM,WAAW,gBAAgB;IAChC,QAAQ,CAAC,EAAE,GAAG,CAAC,OAAO,GAAG,MAAM,CAAC;CAChC"}

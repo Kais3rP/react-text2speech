@@ -1,225 +1,70 @@
-import create from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
-import { produce } from 'immer';
+import { IGlobalState } from './types';
 
-interface ITextReaderState {
-	isReading: boolean;
-	rate: string;
-	voice: string;
-	voices: SpeechSynthesisVoice[];
-	volume: string;
-	elapsedTime: number;
-	isPreserveHighlighting: boolean;
-	isMinimized: boolean;
-	isVisible: boolean;
-	isSettingsVisible: boolean;
-	numberOfWords: number;
-	currentWordIndex: number;
-	duration: number;
-	isLoading: boolean;
-	isHighlightTextOn: boolean;
-	isChunksModeOn: boolean;
-	enableHighlightText: () => void;
-	disableHighlightText: () => void;
-	enableChunksMode: () => void;
-	disableChunksMode: () => void;
-	setDuration: (n: number) => void;
-	setCurrentWordIndex: (n: number) => void;
-	setNumberOfWords: (n: number) => void;
-	enablePreserveHighlighting: () => void;
-	disablePreserveHighlighting: () => void;
-	showSettings: () => void;
-	hideSettings: () => void;
-	showTextReader: () => void;
-	hideTextReader: () => void;
-	minimize: () => void;
-	maximize: () => void;
-	stopReading: () => void;
-	startReading: () => void;
-	setRate: (rate: string) => void;
-	setVoice: (voice: string) => void;
-	setVoices: (voices: SpeechSynthesisVoice[]) => void;
-	setVolume: (volume: string) => void;
-	setElapsedTime: (time: number) => void;
-	setIsLoading: (b: boolean) => void;
-}
+export const globalState: IGlobalState = {
+	settings: {
+		rate: 1,
+		voiceURI: '',
+		volume: 0.5,
+		pitch: 0,
+		language: 'en',
+	},
+	options: {
+		isPreserveHighlighting: true,
+		isHighlightTextOn: true,
+		isChunksModeOn: false,
+	},
+	isReading: false,
+	isLoading: false,
+	voices: [],
+	elapsedTime: 0,
+	isMinimized: true,
+	isVisible: true,
+	isSettingsVisible: false,
+	numberOfWords: 0,
+	currentWordIndex: 1,
+	duration: 0,
+};
 
-export const useTextReaderStore = create<ITextReaderState>()(
-	devtools(
-		persist(
-			(set) => ({
-				isReading: false,
-				isLoading: false,
-				rate: '1',
-				voice: '',
-				voices: [],
-				volume: '0.5',
-				elapsedTime: 0,
-				isPreserveHighlighting: true,
-				isHighlightTextOn: true,
-				isChunksModeOn: false,
-				isMinimized: true,
-				isVisible: true,
-				isSettingsVisible: false,
-				numberOfWords: 0,
-				currentWordIndex: 1,
-				duration: 0,
-				enablePreserveHighlighting: () =>
-					set(
-						produce((state) => {
-							state.isPreserveHighlighting = true;
-						})
-					),
-				disablePreserveHighlighting: () =>
-					set(
-						produce((state) => {
-							state.isPreserveHighlighting = false;
-						})
-					),
-				enableHighlightText: () =>
-					set(
-						produce((state) => {
-							state.isHighlightTextOn = true;
-						})
-					),
-				disableHighlightText: () =>
-					set(
-						produce((state) => {
-							state.isHighlightTextOn = false;
-						})
-					),
-				enableChunksMode: () =>
-					set(
-						produce((state) => {
-							state.isChunksModeOn = true;
-						})
-					),
-				disableChunksMode: () =>
-					set(
-						produce((state) => {
-							state.isChunksModeOn = false;
-						})
-					),
-				setIsLoading: (b: boolean) =>
-					set(
-						produce((state) => {
-							state.isLoading = b;
-						})
-					),
-				setDuration: (n: number) =>
-					set(
-						produce((state) => {
-							state.duration = n;
-						})
-					),
-				setCurrentWordIndex: (n) =>
-					set(
-						produce((state) => {
-							state.currentWordIndex = n;
-						})
-					),
-				setNumberOfWords: (n) =>
-					set(
-						produce((state) => {
-							state.numberOfWords = n;
-						})
-					),
-				showSettings: () =>
-					set(
-						produce((state) => {
-							state.isSettingsVisible = true;
-						})
-					),
-				hideSettings: () =>
-					set(
-						produce((state) => {
-							state.isSettingsVisible = false;
-						})
-					),
-				showTextReader: () =>
-					set(
-						produce((state) => {
-							state.isVisible = true;
-						})
-					),
-				hideTextReader: () =>
-					set(
-						produce((state) => {
-							state.isVisible = false;
-						})
-					),
-				minimize: () =>
-					set(
-						produce((state) => {
-							state.isMinimized = true;
-						})
-					),
-				maximize: () =>
-					set(
-						produce((state) => {
-							state.isMinimized = false;
-						})
-					),
-				stopReading: () =>
-					set(
-						produce((state) => {
-							state.isReading = false;
-						})
-					),
-				startReading: () =>
-					set(
-						produce((state) => {
-							state.isReading = true;
-						})
-					),
-				setRate: (rate) =>
-					set(
-						produce((state) => {
-							state.rate = rate;
-						})
-					),
-				setVoice: (voice) =>
-					set(
-						produce((state) => {
-							state.voice = voice;
-						})
-					),
-				setVoices: (voices) =>
-					set(
-						produce((state) => {
-							state.voices = voices;
-						})
-					),
-				setVolume: (volume) =>
-					set(
-						produce((state) => {
-							state.volume = volume;
-						})
-					),
-				setElapsedTime: (time) =>
-					set(
-						produce((state) => {
-							state.elapsedTime = time;
-						})
-					),
-			}),
-			{
-				name: 'ITextReaderState',
-				partialize: (state: ITextReaderState) =>
-					Object.fromEntries(
-						Object.entries(state).filter(
-							([key]) =>
-								![
-									'elapsedTime',
-									'isReading',
-									'currentWordIndex',
-									'isPreserveHighlighting',
-									'isHighlightTextOn',
-									'isChunksModeOn',
-								].includes(key)
-						)
-					),
-			}
-		)
-	)
-);
+export const rootReducer = (state: IGlobalState, action: ActionType) => {
+	const { type, payload } = action;
+	switch (type) {
+		case 'SET_IS_READING': {
+			return { ...state, isReading: payload };
+		}
+		case 'SET_IS_LOADING': {
+			return { ...state, isLoading: payload };
+		}
+		case 'SET_IS_MINIMIZED': {
+			return { ...state, isMinimized: payload };
+		}
+		case 'SET_IS_VISIBLE': {
+			return { ...state, isVisible: payload };
+		}
+		case 'SET_IS_SETTINGS_VISIBLE': {
+			return { ...state, isSettingsVisible: payload };
+		}
+		case 'SET_VOICES': {
+			return { ...state, voices: payload };
+		}
+		case 'SET_ELAPSED_TIME': {
+			return { ...state, elapsedTime: payload };
+		}
+		case 'SET_DURATION': {
+			return { ...state, duration: payload };
+		}
+		case 'SET_NUMBER_OF_WORDS': {
+			return { ...state, numberOfWords: payload };
+		}
+		case 'SET_CURRENT_WORD_INDEX': {
+			return { ...state, currentWordIndex: payload };
+		}
+		case 'CHANGE_SETTINGS': {
+			return { ...state, settings: { ...state.settings, ...payload } };
+		}
+		case 'CHANGE_OPTIONS': {
+			return { ...state, options: { ...state.options, ...payload } };
+		}
+		default:
+			return { ...state };
+	}
+};

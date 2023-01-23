@@ -1,11 +1,11 @@
-interface ITextReaderState {
-    isReading: boolean;
-    rate: string;
-    voice: string;
-    voices: SpeechSynthesisVoice[];
-    volume: string;
+import { IGlobalState } from './types';
+export declare const globalState: IGlobalState;
+export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
+    isReading: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    voices: IVoiceInfo[];
     elapsedTime: number;
-    isPreserveHighlighting: boolean;
     isMinimized: boolean;
     isVisible: boolean;
     isSettingsVisible: boolean;
@@ -13,50 +13,148 @@ interface ITextReaderState {
     currentWordIndex: number;
     duration: number;
     isLoading: boolean;
-    isHighlightTextOn: boolean;
-    isChunksModeOn: boolean;
-    enableHighlightText: () => void;
-    disableHighlightText: () => void;
-    enableChunksMode: () => void;
-    disableChunksMode: () => void;
-    setDuration: (n: number) => void;
-    setCurrentWordIndex: (n: number) => void;
-    setNumberOfWords: (n: number) => void;
-    enablePreserveHighlighting: () => void;
-    disablePreserveHighlighting: () => void;
-    showSettings: () => void;
-    hideSettings: () => void;
-    showTextReader: () => void;
-    hideTextReader: () => void;
-    minimize: () => void;
-    maximize: () => void;
-    stopReading: () => void;
-    startReading: () => void;
-    setRate: (rate: string) => void;
-    setVoice: (voice: string) => void;
-    setVoices: (voices: SpeechSynthesisVoice[]) => void;
-    setVolume: (volume: string) => void;
-    setElapsedTime: (time: number) => void;
-    setIsLoading: (b: boolean) => void;
-}
-export declare const useTextReaderStore: import("zustand").UseBoundStore<Omit<Omit<import("zustand").StoreApi<ITextReaderState>, "setState"> & {
-    setState(partial: ITextReaderState | Partial<ITextReaderState> | ((state: ITextReaderState) => ITextReaderState | Partial<ITextReaderState>), replace?: boolean | undefined, actionType?: string | {
-        type: unknown;
-    } | undefined): void;
-}, "persist"> & {
-    persist: {
-        setOptions: (options: Partial<import("zustand/middleware").PersistOptions<ITextReaderState, {
-            [k: string]: any;
-        }>>) => void;
-        clearStorage: () => void;
-        rehydrate: () => Promise<void>;
-        hasHydrated: () => boolean;
-        onHydrate: (fn: (state: ITextReaderState) => void) => () => void;
-        onFinishHydration: (fn: (state: ITextReaderState) => void) => () => void;
-        getOptions: () => Partial<import("zustand/middleware").PersistOptions<ITextReaderState, {
-            [k: string]: any;
-        }>>;
-    };
-}>;
-export {};
+} | {
+    isLoading: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isMinimized: boolean;
+    isVisible: boolean;
+    isSettingsVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    duration: number;
+} | {
+    isMinimized: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isVisible: boolean;
+    isSettingsVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    duration: number;
+    isLoading: boolean;
+} | {
+    isVisible: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isMinimized: boolean;
+    isSettingsVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    duration: number;
+    isLoading: boolean;
+} | {
+    isSettingsVisible: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isMinimized: boolean;
+    isVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    duration: number;
+    isLoading: boolean;
+} | {
+    voices: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    elapsedTime: number;
+    isMinimized: boolean;
+    isVisible: boolean;
+    isSettingsVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    duration: number;
+    isLoading: boolean;
+} | {
+    elapsedTime: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    isMinimized: boolean;
+    isVisible: boolean;
+    isSettingsVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    duration: number;
+    isLoading: boolean;
+} | {
+    duration: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isMinimized: boolean;
+    isVisible: boolean;
+    isSettingsVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    isLoading: boolean;
+} | {
+    numberOfWords: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isMinimized: boolean;
+    isVisible: boolean;
+    isSettingsVisible: boolean;
+    currentWordIndex: number;
+    duration: number;
+    isLoading: boolean;
+} | {
+    currentWordIndex: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isMinimized: boolean;
+    isVisible: boolean;
+    isSettingsVisible: boolean;
+    numberOfWords: number;
+    duration: number;
+    isLoading: boolean;
+} | {
+    settings: any;
+    options: import("../lib/types").IOptions;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isMinimized: boolean;
+    isVisible: boolean;
+    isSettingsVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    duration: number;
+    isLoading: boolean;
+} | {
+    options: any;
+    settings: import("../lib/types").ISettings;
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isMinimized: boolean;
+    isVisible: boolean;
+    isSettingsVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    duration: number;
+    isLoading: boolean;
+};
 //# sourceMappingURL=index.d.ts.map
