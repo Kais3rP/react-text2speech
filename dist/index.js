@@ -3459,6 +3459,7 @@ const useInitializeReader = () => {
     }, []);
 };
 
+// import styles from './styles.module.css';
 const TextReader = () => {
     const { state } = useStore();
     const { isMinimized, isVisible } = state;

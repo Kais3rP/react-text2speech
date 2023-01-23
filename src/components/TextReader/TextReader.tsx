@@ -7,6 +7,7 @@ import SeekBar from 'components/SeekBar/SeekBar';
 import SecondaryControls from 'components/SecondaryControls/SecondaryControls';
 import { useBindTextReader, useInitializeReader } from './hooks';
 import { useStore, useMainProps } from 'contexts';
+// import styles from './styles.module.css';
 
 const TextReader: FC<ITextReaderProps> = () => {
 	const { state } = useStore();
