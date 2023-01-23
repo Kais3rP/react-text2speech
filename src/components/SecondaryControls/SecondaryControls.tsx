@@ -61,7 +61,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 		const target = e.target as HTMLInputElement;
 		reader?.changeOptions({ isChunksModeOn: target.checked });
 	};
-	console.log(voices, voiceURI);
+
 	return (
 		<>
 			<OptionsContainer>

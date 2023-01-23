@@ -63,12 +63,12 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 				reader.reset();
 			},
 			onBoundary: (reader: SpeechSynth, e: Event) => {
+				console.log('Boundary event');
+			},
+			onSeek: (reader: SpeechSynth) => {
 				dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
 			},
-			onSeek: (reader: SpeechSynth, value: number) => {
-				dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-			},
-			onTimeTick: (reader: SpeechSynth, value: number) => {
+			onTimeTick: (reader: SpeechSynth) => {
 				dispatch(setElapsedTime(reader.state.elapsedTime));
 			},
 			onWordClick: (reader: SpeechSynth, e: MouseEvent) => {
@@ -76,15 +76,13 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 				const idx: number = +(target.dataset.id as string);
 				reader?.seekTo(idx);
 			},
-			onChunksModeChange: (reader: SpeechSynth) => {
-				// dispatch(setIsChunksModeOn(reader.options.isChunksModeOn));
-			},
-			onSettingsChange: (reader: SpeechSynth, obj) => {
-				dispatch(changeSettings(obj));
+			onSettingsChange: (reader: SpeechSynth) => {
+				console.log('Settings change');
+				dispatch(changeSettings(reader.settings));
 			},
 			onOptionsChange: (reader: SpeechSynth, obj) => {
 				console.log('Options change', obj);
-				dispatch(changeOptions(obj));
+				dispatch(changeOptions(reader.options));
 			},
 		})
 	);

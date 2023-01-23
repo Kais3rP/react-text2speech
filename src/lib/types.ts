@@ -9,6 +9,7 @@ export interface IGenericSettings {
 }
 
 export interface IEvents {
+	onPlay: (c: SpeechSynth, v?: any) => void;
 	onEnd: (c: SpeechSynth, v?: any) => void;
 	onStart: (c: SpeechSynth, v?: any) => void;
 	onPause: (c: SpeechSynth, v?: any) => void;
@@ -39,7 +40,7 @@ export interface ISettings {
 
 export interface IEvent {
 	type: string;
-	handler: EventHandler;
+	handlers: EventHandler[];
 }
 
 export type EventHandler = (c: SpeechSynth, v?: any) => void;
