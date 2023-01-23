@@ -13,8 +13,6 @@ const TextReader: FC<ITextReaderProps> = () => {
 	const { isMinimized, isVisible } = state;
 	const { styleOptions } = useMainProps();
 
-	console.log('test merge');
-
 	useBindTextReader();
 
 	useInitializeReader();
