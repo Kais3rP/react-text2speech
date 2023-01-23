@@ -3463,6 +3463,7 @@ const TextReader = () => {
     const { state } = useStore();
     const { isMinimized, isVisible } = state;
     const { styleOptions } = useMainProps();
+    console.log();
     useBindTextReader();
     useInitializeReader();
     return (React.createElement(Container$1, { isvisible: isVisible.toString(), isminimized: isMinimized.toString(), styleoptions: styleOptions },
