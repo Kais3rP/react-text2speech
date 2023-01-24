@@ -1,14 +1,14 @@
 import React, { ChangeEventHandler, FC } from 'react';
 import { ISeekBarProps } from './types';
-import { Seekbar, SeekbarContainer, Time } from './styles';
 import format from 'format-duration';
 import debounce from 'lodash.debounce';
-import { useReader, useStore, useMainProps } from 'contexts';
+import { useReader, useStore } from 'contexts';
+import styles from './styles.module.css';
 
 const SeekBar: FC<ISeekBarProps> = () => {
 	const { reader } = useReader();
 	const { state } = useStore();
-	const { styleOptions } = useMainProps();
+
 	const {
 		elapsedTime,
 		numberOfWords,
@@ -26,10 +26,12 @@ const SeekBar: FC<ISeekBarProps> = () => {
 	};
 
 	return (
-		<SeekbarContainer isminimized={isMinimized.toString()}>
-			<Time>{format(elapsedTime)}</Time>
-			<Seekbar
-				styleoptions={styleOptions}
+		<div
+			className={`${styles.container} ${isMinimized && styles.minimized}`}
+		>
+			<h5 className={styles.time}>{format(elapsedTime)}</h5>
+			<input
+				className={styles.seekbar}
 				type="range"
 				min="0"
 				max={numberOfWords}
@@ -37,10 +39,13 @@ const SeekBar: FC<ISeekBarProps> = () => {
 				value={currentWordIndex}
 				onChange={handleManualSeek}
 			/>
-			<Time style={{ left: 'auto', right: '-15px' }}>
+			<h5
+				style={{ left: 'auto', right: '-15px' }}
+				className={styles.time}
+			>
 				{format(duration)}*
-			</Time>
-		</SeekbarContainer>
+			</h5>
+		</div>
 	);
 };
 

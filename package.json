@@ -93,7 +93,6 @@
 		"format-duration": "^2.0.0",
 		"immer": "^9.0.15",
 		"lodash.debounce": "^4.0.8",
-		"react-icons": "^4.4.0",
-		"styled-components": "^5.3.5"
+		"react-icons": "^4.4.0"
 	}
 }

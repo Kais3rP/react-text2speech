@@ -1,0 +1,55 @@
+.container {
+	margin-right: 10px;
+}
+
+.button {
+	position: relative;
+	font-size: 0.7em;
+	font-weight: bold;
+	color: var(--primaryColor);
+	cursor: pointer;
+	transition: all 0.5s linear;
+	border: none;
+	background: none;
+	padding: 1px 6px !important;
+}
+
+.button:hover {
+	color: var(--secondaryColor);
+}
+.button::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: -2px;
+	width: 0px;
+	height: 1.2px;
+	background-color: var(--primaryColor);
+	transition: all 0.2s ease-in;
+}
+.button:hover::after {
+	width: 100%;
+}
+
+.optionsContainer {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+	width: 100%;
+	height: 46px;
+	bottom: 0px;
+	right: 0;
+	background-color: var(--bgColor);
+	color: var(--primaryColor);
+	z-index: 100;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	overflow-x: hidden;
+}
+
+.visible {
+	opacity: 1;
+	pointer-events: all;
+}
