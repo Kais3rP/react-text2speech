@@ -1,15 +1,14 @@
-import { WindowButton } from './styles';
 import React, { FC } from 'react';
 import { IWindowControlsProps } from './types';
 import { MdOutlineClose } from 'react-icons/md';
 import { FiMaximize, FiMinimize } from 'react-icons/fi';
 import { setIsMinimized, setIsVisible } from 'store/actions';
-import { useReader, useStore, useMainProps } from 'contexts';
+import { useReader, useStore } from 'contexts';
+import styles from './styles.module.css';
 
 const WindowControls: FC<IWindowControlsProps> = () => {
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();
-	const { styleOptions } = useMainProps();
 	const { isMinimized } = state;
 
 	const handleHideReader = () => {
@@ -26,24 +25,25 @@ const WindowControls: FC<IWindowControlsProps> = () => {
 	};
 	return (
 		<>
-			<WindowButton
+			<div
 				style={{ position: 'absolute', top: '2px', right: '3px' }}
-				styleoptions={styleOptions}
+				title={'Close'}
+				className={styles.button}
 				onPointerDown={handleHideReader}
 			>
 				<MdOutlineClose title="Close" />
-			</WindowButton>
+			</div>
 			{/* Minimize button */}
-			<WindowButton
+			<div
 				style={{ position: 'absolute', top: '2px', right: '24px' }}
 				title={isMinimized ? 'Maximize' : 'Minimize'}
-				styleoptions={styleOptions}
+				className={styles.button}
 				onPointerDown={
 					isMinimized ? handleMaximizeReader : handleMinimizeReader
 				}
 			>
 				{isMinimized ? <FiMaximize /> : <FiMinimize />}
-			</WindowButton>
+			</div>
 		</>
 	);
 };

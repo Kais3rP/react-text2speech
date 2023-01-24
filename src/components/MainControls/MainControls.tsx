@@ -5,15 +5,15 @@ import {
 	AiFillPauseCircle,
 	AiFillPlayCircle,
 } from 'react-icons/ai';
-import { ControlButton, ControlsContainer, Reset } from './styles';
+import { BiReset } from 'react-icons/bi';
 import { IMainControlsProps } from './types';
 import { setIsLoading } from 'store/actions';
-import { useReader, useStore, useMainProps } from 'contexts';
+import { useReader, useStore } from 'contexts';
+import styles from './styles.module.css';
 
 const MainControls: FC<IMainControlsProps> = () => {
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();
-	const { styleOptions } = useMainProps();
 	const { isReading, isLoading, isMinimized } = state;
 
 	const handleTextReadPlay = () => {
@@ -65,53 +65,57 @@ const MainControls: FC<IMainControlsProps> = () => {
 	};
 
 	return (
-		<ControlsContainer isminimized={isMinimized.toString()}>
-			<div>
-				<ControlButton
-					as={AiFillFastBackward}
-					title="Fast backward"
-					onDoubleClick={(e) => e.preventDefault()}
-					onPointerDown={handleFastBackward}
-					styleoptions={styleOptions}
-					isloading={isLoading.toString()}
+		<div
+			className={`${styles.container} ${
+				isMinimized ? styles.minimized : styles.notMinimized
+			}`}
+		>
+			<AiFillFastBackward
+				className={`${styles.button} ${
+					isLoading ? styles.loading : styles.notLoading
+				}`}
+				title="Fast backward"
+				onDoubleClick={(e) => e.preventDefault()}
+				onPointerDown={handleFastBackward}
+			/>
+
+			{isReading ? (
+				<AiFillPauseCircle
+					style={{
+						fontSize: '2em',
+					}}
+					className={`${styles.button} ${
+						isLoading ? styles.loading : styles.notLoading
+					}`}
+					title={'Pause'}
+					onPointerDown={handleTextReadPause}
 				/>
-				{!isReading ? (
-					<ControlButton
-						style={{
-							fontSize: '1.5em',
-						}}
-						as={AiFillPlayCircle}
-						title="Play"
-						onPointerDown={handleTextReadPlay}
-						styleoptions={styleOptions}
-						isloading={isLoading.toString()}
-					/>
-				) : (
-					<ControlButton
-						style={{
-							fontSize: '1.5em',
-						}}
-						as={AiFillPauseCircle}
-						title="Pause"
-						styleoptions={styleOptions}
-						onPointerDown={handleTextReadPause}
-						isloading={isLoading.toString()}
-					/>
-				)}
-				<ControlButton
-					as={AiFillFastForward}
-					title="Fast forsward"
-					onPointerDown={handleFastForward}
-					styleoptions={styleOptions}
-					isloading={isLoading.toString()}
+			) : (
+				<AiFillPlayCircle
+					style={{
+						fontSize: '2em',
+					}}
+					className={`${styles.button} ${
+						isLoading ? styles.loading : styles.notLoading
+					}`}
+					title={'Play'}
+					onPointerDown={handleTextReadPlay}
 				/>
-				<Reset
-					title="reset"
-					styleoptions={styleOptions}
-					onClick={handleReset}
-				/>
-			</div>
-		</ControlsContainer>
+			)}
+
+			<AiFillFastForward
+				title="Fast forward"
+				className={`${styles.button} ${
+					isLoading ? styles.loading : styles.notLoading
+				}`}
+				onPointerDown={handleFastForward}
+			/>
+			<BiReset
+				className={styles.reset}
+				title="reset"
+				onClick={handleReset}
+			/>
+		</div>
 	);
 };
 

@@ -92,3 +92,15 @@ export const useInitializeReader = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 };
+
+export const useSetCSSVAriables = () => {
+	const { styleOptions } = useMainProps();
+
+	useEffect(() => {
+		for (const entry of Object.entries(styleOptions))
+			document.documentElement.style.setProperty(
+				`--${entry[0]}`,
+				entry[1]
+			);
+	}, [styleOptions]);
+};

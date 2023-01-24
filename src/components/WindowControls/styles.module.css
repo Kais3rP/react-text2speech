@@ -1,0 +1,21 @@
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 100;
+	font-size: 1em !important;
+	width: 20px;
+	height: 20px;
+	border-radius: 3px;
+	border: 2px solid var(--primaryColor);
+	background-color: var(--bgColor);
+	color: var(--textColor);
+	font-weight: bold !important;
+	cursor: pointer;
+	transition: all 0.2s linear;
+}
+
+.button:hover {
+	background-color: var(--bgColor);
+	color: var(--secondaryColor);
+}
