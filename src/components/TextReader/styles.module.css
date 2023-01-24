@@ -17,6 +17,7 @@
 	background-color: var(--bgColor);
 	font-family: Arial, sans-serif !important;
 	box-sizing: border-box;
+	overflow: hidden;
 }
 
 .container * {

@@ -63,9 +63,14 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 				reader.reset();
 			},
 			onBoundary: (reader: SpeechSynth, e: Event) => {
-				console.log('Boundary event');
+				// console.log('Boundary event');
 			},
 			onSeek: (reader: SpeechSynth) => {
+				console.log(
+					'Index inside the seek event listener',
+					reader.state,
+					reader.state.currentWordIndex
+				);
 				dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
 			},
 			onTimeTick: (reader: SpeechSynth) => {
@@ -81,7 +86,7 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 				dispatch(changeSettings(reader.settings));
 			},
 			onOptionsChange: (reader: SpeechSynth, obj) => {
-				console.log('Options change', obj);
+				console.log('Options change', obj, reader.options);
 				dispatch(changeOptions(reader.options));
 			},
 		})

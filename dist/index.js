@@ -283,7 +283,7 @@ const setIsMinimized = (payload) => createAction('SET_IS_MINIMIZED', payload);
 const setIsVisible = (payload) => createAction('SET_IS_VISIBLE', payload);
 /* Actions used internally by the Reader  */
 const setIsLoading = (payload) => createAction('SET_IS_LOADING', payload);
-const setIsSettingsVisible = (payload) => createAction('SET_IS_SETTINGS_VISIBLE', payload);
+const setIsOptionsVisible = (payload) => createAction('SET_IS_OPTIONS_VISIBLE', payload);
 const setVoices = (payload) => createAction('SET_VOICES', payload);
 const setElapsedTime = (payload) => createAction('SET_ELAPSED_TIME', payload);
 const setNumberOfWords = (payload) => createAction('SET_NUMBER_OF_WORDS', payload);
@@ -489,6 +489,32 @@ class Utils {
     static isFunction(fn) {
         return fn && typeof fn === 'function';
     }
+    /* Utilities */
+    static formatMsToTime(n) {
+        let seconds, minutes, hours;
+        let secondsLeft = 0;
+        let minutesLeft = 0;
+        seconds = Math.floor(n / 1000);
+        minutes = Math.floor(seconds / 60);
+        secondsLeft = seconds % 60;
+        hours = Math.floor(minutes / 60);
+        minutesLeft = Math.floor(hours % 60);
+        /* console.log(
+            'Seconds',
+            seconds,
+            'Minutes',
+            seconds / 60,
+            'Minutes Left',
+            minutes % 60
+        ); */
+        /* format */
+        seconds = secondsLeft.toString().padStart(2, '0');
+        minutes = minutesLeft.toString().padStart(2, '0');
+        hours = hours.toString().padStart(2, 0);
+        return hours > 0
+            ? `${hours}:${minutes}:${seconds}`
+            : `${minutes}:${seconds}`;
+    }
     static debounce(fn, delay) {
         let timeout;
         return function (...args) {
@@ -498,7 +524,6 @@ class Utils {
         };
     }
 }
-/* Array utils */
 Utils.__join__ = function (fn) {
     let str = ``;
     let i = 0;
@@ -581,6 +606,7 @@ class SpeechSynth extends EventEmitter {
         });
         /* Reader Options */
         const optionsSetter = (obj, key, value) => {
+            console.log('Options in the trap', this.options);
             this.emit('options-change', this);
             return Reflect.set(obj, key, value);
         };
@@ -593,8 +619,12 @@ class SpeechSynth extends EventEmitter {
         });
         /* State */
         const stateSetter = (obj, key, value) => {
-            if (key === 'currentWordIndex')
-                this.emit('seek', this);
+            switch (key) {
+                case 'currentWordIndex':
+                    this.emit('seek', this);
+                    break;
+                //	console.log(key);
+            }
             this.emit('state-change');
             return Reflect.set(obj, key, value);
         };
@@ -1168,12 +1198,10 @@ class SpeechSynth extends EventEmitter {
         /* Sync the current chunk in both cases that the seeking is performed in chunk or non chunk mode */
         const chunk = this.state.chunksArray.find((c) => idx >= c.start && idx <= c.end);
         this.state.currentChunkIndex = chunk.idx;
-        this.state.currentWordIndex = chunk.start;
         if (!this.options.isChunksModeOn) {
             /* Set the new text slice */
             this.state.textRemaining = this.getRemainingText(idx);
             /* Update current word index */
-            /* Need to increase the index by 1 */
             this.state.currentWordIndex = idx;
             /* Update utterance instance with  the new text slice */
             this.utterance.text = this.state.textRemaining;
@@ -1182,6 +1210,8 @@ class SpeechSynth extends EventEmitter {
             this.highlightText(this.state.currentWordIndex);
         }
         else {
+            /* In Chunks mode sync the current word index with the start of the chunk */
+            this.state.currentWordIndex = chunk.start;
             this.utterance.text = chunk.text;
             /* Highlight */
             this.resetHighlight();
@@ -1311,7 +1341,7 @@ const globalState = {
     elapsedTime: 0,
     isMinimized: true,
     isVisible: true,
-    isSettingsVisible: false,
+    isOptionsVisible: false,
     numberOfWords: 0,
     currentWordIndex: 1,
     duration: 0,
@@ -1331,8 +1361,8 @@ const rootReducer = (state, action) => {
         case 'SET_IS_VISIBLE': {
             return Object.assign(Object.assign({}, state), { isVisible: payload });
         }
-        case 'SET_IS_SETTINGS_VISIBLE': {
-            return Object.assign(Object.assign({}, state), { isSettingsVisible: payload });
+        case 'SET_IS_OPTIONS_VISIBLE': {
+            return Object.assign(Object.assign({}, state), { isOptionsVisible: payload });
         }
         case 'SET_VOICES': {
             return Object.assign(Object.assign({}, state), { voices: payload });
@@ -1399,8 +1429,9 @@ const ReaderProvider = ({ children }) => {
             console.log('End');
             reader.reset();
         }, onBoundary: (reader, e) => {
-            console.log('Boundary event');
+            // console.log('Boundary event');
         }, onSeek: (reader) => {
+            console.log('Index inside the seek event listener', reader.state, reader.state.currentWordIndex);
             dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
         }, onTimeTick: (reader) => {
             dispatch(setElapsedTime(reader.state.elapsedTime));
@@ -1412,7 +1443,7 @@ const ReaderProvider = ({ children }) => {
             console.log('Settings change');
             dispatch(changeSettings(reader.settings));
         }, onOptionsChange: (reader, obj) => {
-            console.log('Options change', obj);
+            console.log('Options change', obj, reader.options);
             dispatch(changeOptions(reader.options));
         } })));
     return (React.createElement(ReaderContext.Provider, { value: { reader: readerRef.current } }, children));
@@ -1450,9 +1481,9 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z$6 = ".styles-module_container__2RHmB {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tmargin: 5px 0px 5px 0px;\r\n}\r\n\r\n.styles-module_minimized__qd4bl {\r\n\tborder-bottom: 1px;\r\n\tpadding: 2px 0px 2px 0px;\r\n}\r\n\r\n.styles-module_notMinimized__vhRsj {\r\n\tpadding-top: 2px;\r\n}\r\n\r\n.styles-module_button__l6T6c {\r\n\tborder-radius: 50%;\r\n\tmargin: 2px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tfont-weight: normal !important;\r\n\tcursor: pointer;\r\n\tborder: 4px solid var(--secondaryColor);\r\n\ttransition: all 0.2s;\r\n\tfont-size: 1.5em;\r\n}\r\n\r\n.styles-module_button__l6T6c:hover {\r\n\tborder: 3px solid var(--primaryColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_loading__-h2hU {\r\n\tpointer-events: none;\r\n}\r\n\r\n.styles-module_notLoading__GJ8Ir {\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_reset__hvUvm {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\tright: 0px;\r\n\tfont-weight: bold;\r\n\tcursor: pointer;\r\n\ttransition: 0.2s ease-in;\r\n\tfont-size: 0.9em;\r\n\tcolor: var(--primaryColor);\r\n}\r\n\r\n.styles-module_reset__hvUvm:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n";
-var styles$6 = {"container":"styles-module_container__2RHmB","minimized":"styles-module_minimized__qd4bl","notMinimized":"styles-module_notMinimized__vhRsj","button":"styles-module_button__l6T6c","loading":"styles-module_loading__-h2hU","notLoading":"styles-module_notLoading__GJ8Ir","reset":"styles-module_reset__hvUvm"};
-styleInject(css_248z$6);
+var css_248z$7 = ".styles-module_container__2RHmB {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tmargin: 5px 0px 5px 0px;\r\n}\r\n\r\n.styles-module_minimized__qd4bl {\r\n\tborder-bottom: 1px;\r\n\tpadding: 2px 0px 2px 0px;\r\n}\r\n\r\n.styles-module_notMinimized__vhRsj {\r\n\tpadding-top: 2px;\r\n}\r\n\r\n.styles-module_button__l6T6c {\r\n\tborder-radius: 50%;\r\n\tmargin: 2px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tfont-weight: normal !important;\r\n\tcursor: pointer;\r\n\tborder: 4px solid var(--secondaryColor);\r\n\ttransition: all 0.2s;\r\n\tfont-size: 1.5em;\r\n}\r\n\r\n.styles-module_button__l6T6c:hover {\r\n\tborder: 3px solid var(--primaryColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_loading__-h2hU {\r\n\tpointer-events: none;\r\n}\r\n\r\n.styles-module_notLoading__GJ8Ir {\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_reset__hvUvm {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\tright: 0px;\r\n\tfont-weight: bold;\r\n\tcursor: pointer;\r\n\ttransition: 0.2s ease-in;\r\n\tfont-size: 0.9em;\r\n\tcolor: var(--primaryColor);\r\n}\r\n\r\n.styles-module_reset__hvUvm:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n";
+var styles$7 = {"container":"styles-module_container__2RHmB","minimized":"styles-module_minimized__qd4bl","notMinimized":"styles-module_notMinimized__vhRsj","button":"styles-module_button__l6T6c","loading":"styles-module_loading__-h2hU","notLoading":"styles-module_notLoading__GJ8Ir","reset":"styles-module_reset__hvUvm"};
+styleInject(css_248z$7);
 
 const MainControls = () => {
     const { reader } = useReader();
@@ -1497,15 +1528,15 @@ const MainControls = () => {
             reader.state.wholeTextArray.length)
             reader.seekTo(reader.state.currentWordIndex + 1);
     };
-    return (React.createElement("div", { className: `${styles$6.container} ${isMinimized ? styles$6.minimized : styles$6.notMinimized}` },
-        React.createElement(AiFillFastBackward_1, { className: `${styles$6.button} ${isLoading ? styles$6.loading : styles$6.notLoading}`, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward }),
+    return (React.createElement("div", { className: `${styles$7.container} ${isMinimized ? styles$7.minimized : styles$7.notMinimized}` },
+        React.createElement(AiFillFastBackward_1, { className: `${styles$7.button} ${isLoading ? styles$7.loading : styles$7.notLoading}`, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward }),
         isReading ? (React.createElement(AiFillPauseCircle_1, { style: {
                 fontSize: '2em',
-            }, className: `${styles$6.button} ${isLoading ? styles$6.loading : styles$6.notLoading}`, title: 'Pause', onPointerDown: handleTextReadPause })) : (React.createElement(AiFillPlayCircle_1, { style: {
+            }, className: `${styles$7.button} ${isLoading ? styles$7.loading : styles$7.notLoading}`, title: 'Pause', onPointerDown: handleTextReadPause })) : (React.createElement(AiFillPlayCircle_1, { style: {
                 fontSize: '2em',
-            }, className: `${styles$6.button} ${isLoading ? styles$6.loading : styles$6.notLoading}`, title: 'Play', onPointerDown: handleTextReadPlay })),
-        React.createElement(AiFillFastForward_1, { title: "Fast forward", className: `${styles$6.button} ${isLoading ? styles$6.loading : styles$6.notLoading}`, onPointerDown: handleFastForward }),
-        React.createElement(BiReset_1, { className: styles$6.reset, title: "reset", onClick: handleReset })));
+            }, className: `${styles$7.button} ${isLoading ? styles$7.loading : styles$7.notLoading}`, title: 'Play', onPointerDown: handleTextReadPlay })),
+        React.createElement(AiFillFastForward_1, { title: "Fast forward", className: `${styles$7.button} ${isLoading ? styles$7.loading : styles$7.notLoading}`, onPointerDown: handleFastForward }),
+        React.createElement(BiReset_1, { className: styles$7.reset, title: "reset", onClick: handleReset })));
 };
 
 // THIS FILE IS AUTO GENERATED
@@ -1526,9 +1557,9 @@ var MdClose_1 = function MdClose (props) {
   return GenIcon$2({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"}}]})(props);
 };
 
-var css_248z$5 = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.2s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n";
-var styles$5 = {"button":"styles-module_button__9sOag"};
-styleInject(css_248z$5);
+var css_248z$6 = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.2s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n";
+var styles$6 = {"button":"styles-module_button__9sOag"};
+styleInject(css_248z$6);
 
 const WindowControls = () => {
     const { reader } = useReader();
@@ -1545,80 +1576,30 @@ const WindowControls = () => {
         dispatch(setIsMinimized(false));
     };
     return (React.createElement(React.Fragment, null,
-        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '3px' }, title: 'Close', className: styles$5.button, onPointerDown: handleHideReader },
+        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '3px' }, title: 'Close', className: styles$6.button, onPointerDown: handleHideReader },
             React.createElement(MdClose_1, { title: "Close" })),
-        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', className: styles$5.button, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
+        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', className: styles$6.button, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
 };
 
-// adapted from https://github.com/sindresorhus/parse-ms.
-// moved to internal function because parse-ms is now pure ESM.
-function parseMs (milliseconds) {
-  if (typeof milliseconds !== 'number') {
-    throw new TypeError('Expected a number')
-  }
-
-  return {
-    days: Math.trunc(milliseconds / 86400000),
-    hours: Math.trunc(milliseconds / 3600000) % 24,
-    minutes: Math.trunc(milliseconds / 60000) % 60,
-    seconds: Math.trunc(milliseconds / 1000) % 60,
-    milliseconds: Math.trunc(milliseconds) % 1000
-  }
-}
-
-// adapted from https://github.com/rafaelrinaldi/add-zero.
-// moved to internal function b/c addZero is unmaintained (7+ years).
-// stripped out negative sign logic since we're already doing it elsewhere.
-function addZero (value, digits) {
-  digits = digits || 2;
-
-  let str = value.toString();
-  let size = 0;
-
-  size = digits - str.length + 1;
-  str = new Array(size).join('0').concat(str);
-
-  return str
-}
-
-/**
- * Convert a number in milliseconds to a standard duration string.
- * @param {number} ms - duration in milliseconds
- * @param {object} options - formatDuration options object
- * @param {boolean} [options.leading=false] - add leading zero
- * @returns string - formatted duration string
- */
-function formatDuration (ms, options) {
-  const leading = options && options.leading;
-  const unsignedMs = ms < 0 ? -ms : ms;
-  const sign = ms <= -1000 ? '-' : '';
-  const t = parseMs(unsignedMs);
-  const seconds = addZero(t.seconds);
-  if (t.days) return sign + t.days + ':' + addZero(t.hours) + ':' + addZero(t.minutes) + ':' + seconds
-  if (t.hours) return sign + (leading ? addZero(t.hours) : t.hours) + ':' + addZero(t.minutes) + ':' + seconds
-  return sign + (leading ? addZero(t.minutes) : t.minutes) + ':' + seconds
-}
-
-var formatDuration_1 = formatDuration;
-
-var css_248z$4 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 10px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 12px; /* Set a specific slider handle width */\r\n\theight: 12px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: #111;\r\n\tmargin: 0 !important;\r\n}\r\n";
-var styles$4 = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
-styleInject(css_248z$4);
+var css_248z$5 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 10px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 12px; /* Set a specific slider handle width */\r\n\theight: 12px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: #111;\r\n\tmargin: 0 !important;\r\n}\r\n";
+var styles$5 = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
+styleInject(css_248z$5);
 
 const SeekBar = () => {
     const { reader } = useReader();
     const { state } = useStore();
     const { elapsedTime, numberOfWords, currentWordIndex, isMinimized, duration, } = state;
-    const debouncedHandleManualSeek = Utils.debounce((reader === null || reader === void 0 ? void 0 : reader.seekTo.bind(reader)) || Function, 5);
+    const debouncedHandleManualSeek = Utils.debounce((reader === null || reader === void 0 ? void 0 : reader.seekTo.bind(reader)) || Function, 3);
     const handleManualSeek = (e) => {
         const value = +e.target.value;
+        console.log('Value received from the input range', value);
         debouncedHandleManualSeek(value);
     };
-    return (React.createElement("div", { className: `${styles$4.container} ${isMinimized && styles$4.minimized}` },
-        React.createElement("h5", { className: styles$4.time }, formatDuration_1(elapsedTime)),
-        React.createElement("input", { className: styles$4.seekbar, type: "range", min: "0", max: numberOfWords, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
-        React.createElement("h5", { style: { left: 'auto', right: '-15px' }, className: styles$4.time },
-            formatDuration_1(duration),
+    return (React.createElement("div", { className: `${styles$5.container} ${isMinimized && styles$5.minimized}` },
+        React.createElement("h5", { className: styles$5.time }, Utils.formatMsToTime(elapsedTime)),
+        React.createElement("input", { className: styles$5.seekbar, type: "range", min: "0", max: numberOfWords - 1, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
+        React.createElement("h5", { style: { left: 'auto', right: '-15px' }, className: styles$5.time },
+            Utils.formatMsToTime(duration),
             "*")));
 };
 
@@ -1647,14 +1628,14 @@ const useOnClickOutside = (ref, handler) => {
     [ref, handler]);
 };
 
-var css_248z$3 = ".styles-module_container__dB4nt {\r\n\tmargin-right: 10px;\r\n}\r\n\r\n.styles-module_button__oFwwA {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n}\r\n\r\n.styles-module_button__oFwwA:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_button__oFwwA::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_button__oFwwA:hover::after {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-x: hidden;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
-var styles$3 = {"container":"styles-module_container__dB4nt","button":"styles-module_button__oFwwA","optionsContainer":"styles-module_optionsContainer__miH3Q","visible":"styles-module_visible__eJpaP"};
-styleInject(css_248z$3);
+var css_248z$4 = ".styles-module_container__dB4nt {\r\n\tmargin-right: 10px;\r\n}\r\n\r\n.styles-module_button__oFwwA {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n}\r\n\r\n.styles-module_button__oFwwA:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_button__oFwwA::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_button__oFwwA:hover::after {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-x: hidden;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
+var styles$4 = {"container":"styles-module_container__dB4nt","button":"styles-module_button__oFwwA","optionsContainer":"styles-module_optionsContainer__miH3Q","visible":"styles-module_visible__eJpaP"};
+styleInject(css_248z$4);
 
 /* React Components */
 const Button = (_a) => {
     var { children } = _a, props = __rest(_a, ["children"]);
-    return (React.createElement("div", Object.assign({ className: styles$3.button }, props), children));
+    return (React.createElement("div", Object.assign({ className: styles$4.button }, props), children));
 };
 
 const CustomSelect = (_a) => {
@@ -1673,9 +1654,9 @@ const CustomSelect = (_a) => {
         hide();
     };
     useOnClickOutside(ref, hide);
-    return (React.createElement("div", Object.assign({ className: styles$3.container }, props),
+    return (React.createElement("div", Object.assign({ className: styles$4.container }, props),
         React.createElement(Button, { type: "button", onClick: show }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
-        React.createElement("div", { ref: ref, className: `${styles$3.optionsContainer} ${showOptions && styles$3.visible}` }, options.map((opt) => (React.createElement(Button, { key: opt.value, onClick: () => {
+        React.createElement("div", { ref: ref, className: `${styles$4.optionsContainer} ${showOptions && styles$4.visible}`, onPointerDown: hide }, options.map((opt) => (React.createElement(Button, { key: opt.value, onClick: () => {
                 onOptionClick(opt.value);
             } }, opt.name))))));
 };
@@ -1686,9 +1667,29 @@ var BiVolumeFull_1 = function BiVolumeFull (props) {
   return GenIcon$1({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M16,21c3.527-1.547,5.999-4.909,5.999-9S19.527,4.547,16,3v2c2.387,1.386,3.999,4.047,3.999,7S18.387,17.614,16,19V21z"}},{"tag":"path","attr":{"d":"M16 7v10c1.225-1.1 2-3.229 2-5S17.225 8.1 16 7zM4 17h2.697l5.748 3.832C12.612 20.943 12.806 21 13 21c.162 0 .324-.039.472-.118C13.797 20.708 14 20.369 14 20V4c0-.369-.203-.708-.528-.882-.324-.175-.72-.154-1.026.05L6.697 7H4C2.897 7 2 7.897 2 9v6C2 16.103 2.897 17 4 17zM4 9h3c.033 0 .061-.016.093-.019.064-.006.125-.02.188-.038.068-.021.131-.045.192-.078.026-.015.057-.017.082-.033L12 5.868v12.264l-4.445-2.964c-.025-.017-.056-.02-.082-.033-.061-.033-.123-.058-.19-.078-.064-.019-.126-.032-.192-.038C7.059 15.016 7.032 15 7 15H4V9z"}}]})(props);
 };
 
-var css_248z$2 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\tpadding-bottom: 13px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_icon__7uc9b {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__7uc9b path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__7uc9b:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h label {\r\n\tdisplay: flex;\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__KInGF {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
-var styles$2 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-","icon":"styles-module_icon__7uc9b","overlayContainer":"styles-module_overlayContainer__kuM3h","visible":"styles-module_visible__KInGF"};
+var css_248z$3 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\tpadding-bottom: 13px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
+var styles$3 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-"};
+styleInject(css_248z$3);
+
+var css_248z$2 = ".styles-module_container__rkaUB {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_container__rkaUB input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Lf7kP {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Lf7kP:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Lf7kP::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__b92n5 {\r\n\tfont-size: 0.9rem;\r\n\tmargin-right: 5px;\r\n}\r\n\r\n.styles-module_icon__b92n5 * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
+var styles$2 = {"container":"styles-module_container__rkaUB","value":"styles-module_value__eh3ZO","slider":"styles-module_slider__Lf7kP","icon":"styles-module_icon__b92n5"};
 styleInject(css_248z$2);
+
+const GenericSlider = (_a) => {
+    var { data, onChange, icon } = _a, props = __rest(_a, ["data", "onChange", "icon"]);
+    const debouncedOnChange = Utils.debounce(onChange, 20);
+    const handleChange = (e) => {
+        const value = +e.target.value;
+        debouncedOnChange(value);
+    };
+    return (React.createElement("div", Object.assign({ className: styles$2.container }, props),
+        icon && React.createElement("div", { className: styles$2.icon }, icon),
+        React.createElement("input", { className: styles$2.slider, min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: handleChange })));
+};
+
+var css_248z$1 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tdisplay: flex;\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
+var styles$1 = {"container":"styles-module_container__bAbpe","icon":"styles-module_icon__J4xQk","overlayContainer":"styles-module_overlayContainer__iWVEa","visible":"styles-module_visible__Ci-XW"};
+styleInject(css_248z$1);
 
 // THIS FILE IS AUTO GENERATED
 var GenIcon = esm.GenIcon;
@@ -1696,43 +1697,16 @@ var FcSettings_1 = function FcSettings (props) {
   return GenIcon({"tag":"svg","attr":{"version":"1","viewBox":"0 0 48 48","enableBackground":"new 0 0 48 48"},"child":[{"tag":"path","attr":{"fill":"#607D8B","d":"M39.6,27.2c0.1-0.7,0.2-1.4,0.2-2.2s-0.1-1.5-0.2-2.2l4.5-3.2c0.4-0.3,0.6-0.9,0.3-1.4L40,10.8 c-0.3-0.5-0.8-0.7-1.3-0.4l-5,2.3c-1.2-0.9-2.4-1.6-3.8-2.2l-0.5-5.5c-0.1-0.5-0.5-0.9-1-0.9h-8.6c-0.5,0-1,0.4-1,0.9l-0.5,5.5 c-1.4,0.6-2.7,1.3-3.8,2.2l-5-2.3c-0.5-0.2-1.1,0-1.3,0.4l-4.3,7.4c-0.3,0.5-0.1,1.1,0.3,1.4l4.5,3.2c-0.1,0.7-0.2,1.4-0.2,2.2 s0.1,1.5,0.2,2.2L4,30.4c-0.4,0.3-0.6,0.9-0.3,1.4L8,39.2c0.3,0.5,0.8,0.7,1.3,0.4l5-2.3c1.2,0.9,2.4,1.6,3.8,2.2l0.5,5.5 c0.1,0.5,0.5,0.9,1,0.9h8.6c0.5,0,1-0.4,1-0.9l0.5-5.5c1.4-0.6,2.7-1.3,3.8-2.2l5,2.3c0.5,0.2,1.1,0,1.3-0.4l4.3-7.4 c0.3-0.5,0.1-1.1-0.3-1.4L39.6,27.2z M24,35c-5.5,0-10-4.5-10-10c0-5.5,4.5-10,10-10c5.5,0,10,4.5,10,10C34,30.5,29.5,35,24,35z"}},{"tag":"path","attr":{"fill":"#455A64","d":"M24,13c-6.6,0-12,5.4-12,12c0,6.6,5.4,12,12,12s12-5.4,12-12C36,18.4,30.6,13,24,13z M24,30 c-2.8,0-5-2.2-5-5c0-2.8,2.2-5,5-5s5,2.2,5,5C29,27.8,26.8,30,24,30z"}}]})(props);
 };
 
-var css_248z$1 = ".styles-module_container__rkaUB {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_container__rkaUB input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Lf7kP {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Lf7kP:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Lf7kP::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__b92n5 {\r\n\tfont-size: 0.9rem;\r\n\tmargin-right: 5px;\r\n}\r\n\r\n.styles-module_icon__b92n5 * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
-var styles$1 = {"container":"styles-module_container__rkaUB","value":"styles-module_value__eh3ZO","slider":"styles-module_slider__Lf7kP","icon":"styles-module_icon__b92n5"};
-styleInject(css_248z$1);
-
-const GenericSlider = (_a) => {
-    var { data, onChange, icon } = _a, props = __rest(_a, ["data", "onChange", "icon"]);
-    const debouncedOnChange = Utils.debounce(onChange, 20);
-    const handleChange = (e) => {
-        const value = +e.target.value;
-        console.log('Volume change', value);
-        debouncedOnChange(value);
-    };
-    return (React.createElement("div", Object.assign({ className: styles$1.container }, props),
-        icon && React.createElement("div", { className: styles$1.icon }, icon),
-        React.createElement("input", { className: styles$1.slider, min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: handleChange })));
-};
-
-/* import { ImInfo } from 'react-icons/im';
- */
-const SecondaryControls = () => {
+const Options = () => {
+    const ref = React.useRef(null);
     const { reader } = useReader();
     const { state, dispatch } = useStore();
-    const { styleOptions } = useMainProps();
-    const { voices, isSettingsVisible, settings: { voiceURI, volume, rate }, options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting }, } = state;
-    const toggleSettings = () => {
-        dispatch(setIsSettingsVisible(!isSettingsVisible));
+    const { isOptionsVisible, options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting }, } = state;
+    const showOptions = () => {
+        dispatch(setIsOptionsVisible(true));
     };
-    /* Settings Handlers */
-    const handleRateChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ rate: +value });
-        dispatch(setDuration((reader === null || reader === void 0 ? void 0 : reader.state.duration) || 0));
-    };
-    const handleVoiceChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ voiceURI: value });
-    };
-    const handleVolumeChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ volume: value });
+    const hideOptions = () => {
+        dispatch(setIsOptionsVisible(false));
     };
     /* Options Handlers */
     const handlePreserveHighlighting = (e) => {
@@ -1749,27 +1723,10 @@ const SecondaryControls = () => {
         const target = e.target;
         reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isChunksModeOn: target.checked });
     };
-    return (React.createElement("div", { className: styles$2.container },
-        React.createElement("div", { className: styles$2.optionsWrapper1 },
-            React.createElement(CustomSelect, { name: "rate", options: [
-                    { value: '0.5', name: '0.5x' },
-                    { value: '0.75', name: '0.75x' },
-                    { value: '1', name: '1x' },
-                    { value: '1.25', name: '1.25x' },
-                    { value: '1.5', name: '1.5x' },
-                    { value: '2', name: '2x' },
-                ], onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
-            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
-            React.createElement(FcSettings_1, { className: styles$2.icon, onPointerDown: toggleSettings })),
-        React.createElement("div", { className: styles$2.optionsWrapper2 },
-            React.createElement(GenericSlider, { icon: React.createElement(BiVolumeFull_1, null), onChange: handleVolumeChange, data: {
-                    min: '0.1',
-                    max: '1',
-                    step: '0.1',
-                    value: volume,
-                    unit: '%',
-                } })),
-        React.createElement("div", { className: `${styles$2.overlayContainer} ${isSettingsVisible && styles$2.visible}`, onPointerDown: toggleSettings },
+    useOnClickOutside(ref, hideOptions);
+    return (React.createElement("div", { className: styles$1.container, ref: ref },
+        React.createElement(FcSettings_1, { className: styles$1.icon, onPointerDown: showOptions }),
+        React.createElement("div", { className: `${styles$1.overlayContainer} ${isOptionsVisible && styles$1.visible}`, onPointerDown: hideOptions },
             React.createElement("label", { htmlFor: "preserve-option", onPointerDown: (e) => e.stopPropagation() },
                 React.createElement("input", { id: "preserve-option", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
                 React.createElement("h5", null, "Preserve Highlighting")),
@@ -1780,6 +1737,66 @@ const SecondaryControls = () => {
                 React.createElement("input", { id: "mode-option", type: "checkbox", checked: isChunksModeOn, onChange: handleIsChunksModeOn }),
                 React.createElement("h5", null, "Chunks Mode")))));
 };
+
+const SecondaryControls = () => {
+    const { reader } = useReader();
+    const { state, dispatch } = useStore();
+    const { styleOptions } = useMainProps();
+    const { voices, settings: { voiceURI, volume, rate }, } = state;
+    /* Settings Handlers */
+    const handleRateChange = (value) => {
+        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ rate: +value });
+        dispatch(setDuration((reader === null || reader === void 0 ? void 0 : reader.state.duration) || 0));
+    };
+    const handleVoiceChange = (value) => {
+        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ voiceURI: value });
+    };
+    const handleVolumeChange = (value) => {
+        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ volume: value });
+    };
+    return (React.createElement("div", { className: styles$3.container },
+        React.createElement("div", { className: styles$3.optionsWrapper1 },
+            React.createElement(CustomSelect, { name: "rate", options: [
+                    { value: '0.5', name: '0.5x' },
+                    { value: '0.75', name: '0.75x' },
+                    { value: '1', name: '1x' },
+                    { value: '1.25', name: '1.25x' },
+                    { value: '1.5', name: '1.5x' },
+                    { value: '2', name: '2x' },
+                ], onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
+            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
+            React.createElement(Options, null)),
+        React.createElement("div", { className: styles$3.optionsWrapper2 },
+            React.createElement(GenericSlider, { icon: React.createElement(BiVolumeFull_1, null), onChange: handleVolumeChange, data: {
+                    min: '0.1',
+                    max: '1',
+                    step: '0.1',
+                    value: volume,
+                    unit: '%',
+                } }))));
+};
+// "The Sea's Symphony"
+/*
+Deep in the ocean blue,
+Where colorful fishes swim,
+They sing a melody,
+A symphony within.
+
+The whales and dolphins join in,
+Their songs so grand and true,
+The sea is alive, gives chillings,
+A symphony for me and you.
+
+The coral reefs, the seaweed beds,
+All play their part,
+That's a real work of art.
+
+The ocean is a treasure,
+We must protect it still,
+For the sea's symphony,
+Is a melody worth the thrill.
+
+*/
 
 const useBindTextReader = () => {
     const { reader } = useReader();
@@ -1858,7 +1875,7 @@ const useSetCSSVAriables = () => {
     }, [styleOptions]);
 };
 
-var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: 300px;\r\n\theight: 125px;\r\n\tright: -2000px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 5px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\ttransition: all 200ms linear;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tpadding: 15px;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 10px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
+var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: 300px;\r\n\theight: 125px;\r\n\tright: -2000px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 5px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\ttransition: all 200ms linear;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tpadding: 15px;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\toverflow: hidden;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 10px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
 var styles = {"container":"styles-module_container__xkMLR","visible":"styles-module_visible__ZUiLT","minimized":"styles-module_minimized__W5TJy"};
 styleInject(css_248z);
 

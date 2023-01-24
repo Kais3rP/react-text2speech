@@ -29,8 +29,9 @@ export declare class Utils {
     static isSpecialCharacter(str: string): boolean;
     static isHTMLEntity(str: string): boolean;
     static isValidDate(str: string): boolean;
-    static __join__: (fn: (el: any, i: number, arr: any[]) => string) => string;
     static isFunction(fn: any): any;
+    static formatMsToTime(n: number): string;
     static debounce(fn: (...arg: any[]) => any, delay: number): (...args: any[]) => void;
+    static __join__: (fn: (el: any, i: number, arr: any[]) => string) => string;
 }
 //# sourceMappingURL=Utils.d.ts.map

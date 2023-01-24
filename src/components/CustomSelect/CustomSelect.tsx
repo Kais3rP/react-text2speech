@@ -40,6 +40,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 				className={`${styles.optionsContainer} ${
 					showOptions && styles.visible
 				}`}
+				onPointerDown={hide}
 			>
 				{options.map((opt) => (
 					<Button

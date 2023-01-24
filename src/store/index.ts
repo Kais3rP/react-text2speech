@@ -19,7 +19,7 @@ export const globalState: IGlobalState = {
 	elapsedTime: 0,
 	isMinimized: true,
 	isVisible: true,
-	isSettingsVisible: false,
+	isOptionsVisible: false,
 	numberOfWords: 0,
 	currentWordIndex: 1,
 	duration: 0,
@@ -40,8 +40,8 @@ export const rootReducer = (state: IGlobalState, action: ActionType) => {
 		case 'SET_IS_VISIBLE': {
 			return { ...state, isVisible: payload };
 		}
-		case 'SET_IS_SETTINGS_VISIBLE': {
-			return { ...state, isSettingsVisible: payload };
+		case 'SET_IS_OPTIONS_VISIBLE': {
+			return { ...state, isOptionsVisible: payload };
 		}
 		case 'SET_VOICES': {
 			return { ...state, voices: payload };

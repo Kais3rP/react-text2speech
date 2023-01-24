@@ -11,7 +11,7 @@ export interface IGlobalState {
     elapsedTime: number;
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;

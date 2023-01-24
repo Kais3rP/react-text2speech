@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler, FC } from 'react';
 import { IGenericSliderProps } from './types';
 import styles from './styles.module.css';
-import { Utils } from 'lib/Utils';
+import { Utils } from 'lib';
 
 const GenericSlider: FC<IGenericSliderProps> = ({
 	data,
@@ -13,7 +13,6 @@ const GenericSlider: FC<IGenericSliderProps> = ({
 
 	const handleChange: ChangeEventHandler = (e) => {
 		const value = +(e.target as HTMLInputElement).value;
-		console.log('Volume change', value);
 		debouncedOnChange(value);
 	};
 

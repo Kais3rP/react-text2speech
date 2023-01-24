@@ -171,7 +171,49 @@ export class Utils {
 		return new Date(str) > 0;
 	}
 
-	/* Array utils */
+	/* Type Checks */
+
+	static isFunction(fn: any) {
+		return fn && typeof fn === 'function';
+	}
+
+	/* Utilities */
+
+	static formatMsToTime(n: number) {
+		let seconds, minutes, hours;
+		let secondsLeft = 0;
+		let minutesLeft = 0;
+		seconds = Math.floor(n / 1000);
+		minutes = Math.floor(seconds / 60);
+		secondsLeft = seconds % 60;
+		hours = Math.floor(minutes / 60);
+		minutesLeft = Math.floor(hours % 60);
+		/* console.log(
+			'Seconds',
+			seconds,
+			'Minutes',
+			seconds / 60,
+			'Minutes Left',
+			minutes % 60
+		); */
+
+		/* format */
+		seconds = secondsLeft.toString().padStart(2, '0');
+		minutes = minutesLeft.toString().padStart(2, '0');
+		hours = hours.toString().padStart(2, 0);
+
+		return hours > 0
+			? `${hours}:${minutes}:${seconds}`
+			: `${minutes}:${seconds}`;
+	}
+
+	static debounce(fn: (...arg: any[]) => any, delay: number) {
+		let timeout: Timeout | undefined;
+		return function (...args) {
+			if (timeout) clearTimeout(timeout);
+			timeout = setTimeout(() => fn(...args), delay);
+		};
+	}
 
 	static __join__ = function (
 		fn: (el: any, i: number, arr: any[]) => string
@@ -186,18 +228,4 @@ export class Utils {
 		}
 		return str;
 	};
-
-	/* Type Checks */
-
-	static isFunction(fn: any) {
-		return fn && typeof fn === 'function';
-	}
-
-	static debounce(fn: (...arg: any[]) => any, delay: number) {
-		let timeout: Timeout | undefined;
-		return function (...args) {
-			if (timeout) clearTimeout(timeout);
-			timeout = setTimeout(() => fn(...args), delay);
-		};
-	}
 }

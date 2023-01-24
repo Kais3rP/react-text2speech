@@ -27,7 +27,7 @@ interface IReset {
 }
 interface IExtraSettings {
     styleoptions: IStyleOptions;
-    issettingsvisible: string;
+    isOptionsVisible: string;
 }
 interface ICheckBox {
 }

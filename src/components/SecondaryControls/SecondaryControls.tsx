@@ -1,28 +1,21 @@
-import React, { ChangeEventHandler, FC } from 'react';
+import React, { FC } from 'react';
 import { ISecondaryControlsProps } from './types';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
 import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
-import { setDuration, setIsSettingsVisible } from 'store/actions';
+import { setDuration } from 'store/actions';
 import { useReader, useStore, useMainProps } from 'contexts';
 import styles from './styles.module.css';
-import { FcSettings } from '@react-icons/all-files/fc/FcSettings';
 import GenericSlider from 'components/GenericSlider/GenericSlider';
-/* import { ImInfo } from 'react-icons/im';
- */
+import Options from 'components/Options/Options';
+
 const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();
 	const { styleOptions } = useMainProps();
 	const {
 		voices,
-		isSettingsVisible,
 		settings: { voiceURI, volume, rate },
-		options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting },
 	} = state;
-
-	const toggleSettings = () => {
-		dispatch(setIsSettingsVisible(!isSettingsVisible));
-	};
 
 	/* Settings Handlers */
 
@@ -37,24 +30,6 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 
 	const handleVolumeChange = (value: number) => {
 		reader?.changeSettings({ volume: value });
-	};
-
-	/* Options Handlers */
-
-	const handlePreserveHighlighting: ChangeEventHandler = (e) => {
-		const target = e.target as HTMLInputElement;
-		reader?.changeOptions({ isPreserveHighlighting: target.checked });
-	};
-
-	const handleIsHighlightTextOn: ChangeEventHandler = (e) => {
-		const target = e.target as HTMLInputElement;
-		reader?.changeOptions({ isHighlightTextOn: target.checked });
-	};
-
-	const handleIsChunksModeOn: ChangeEventHandler = (e) => {
-		if (reader?.state.isMobile) return; // Disable this option for mobile devices
-		const target = e.target as HTMLInputElement;
-		reader?.changeOptions({ isChunksModeOn: target.checked });
 	};
 
 	return (
@@ -88,10 +63,8 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					styleOptions={styleOptions}
 				/>
 				{/* Reader Options Button */}
-				<FcSettings
-					className={styles.icon}
-					onPointerDown={toggleSettings}
-				/>
+				<Options />
+
 				{/* <ImInfo
 					style={{ marginLeft: '10px' }}
 					className={styles.icon}
@@ -112,51 +85,32 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					}}
 				/>
 			</div>
-			<div
-				className={`${styles.overlayContainer} ${
-					isSettingsVisible && styles.visible
-				}`}
-				onPointerDown={toggleSettings}
-			>
-				<label
-					htmlFor="preserve-option"
-					onPointerDown={(e) => e.stopPropagation()}
-				>
-					<input
-						id="preserve-option"
-						type="checkbox"
-						checked={isPreserveHighlighting}
-						onChange={handlePreserveHighlighting}
-					/>
-					<h5>Preserve Highlighting</h5>
-				</label>
-				<label
-					htmlFor="highlight-option"
-					onPointerDown={(e) => e.stopPropagation()}
-				>
-					<input
-						id="highlight-option"
-						type="checkbox"
-						checked={isHighlightTextOn}
-						onChange={handleIsHighlightTextOn}
-					/>
-					<h5>Highlight Text</h5>
-				</label>
-				<label
-					htmlFor="mode-option"
-					onPointerDown={(e) => e.stopPropagation()}
-				>
-					<input
-						id="mode-option"
-						type="checkbox"
-						checked={isChunksModeOn}
-						onChange={handleIsChunksModeOn}
-					/>
-					<h5>Chunks Mode</h5>
-				</label>
-			</div>
 		</div>
 	);
 };
 
 export default SecondaryControls;
+
+// "The Sea's Symphony"
+
+/* 
+Deep in the ocean blue,
+Where colorful fishes swim,
+They sing a melody,
+A symphony within.
+
+The whales and dolphins join in,
+Their songs so grand and true,
+The sea is alive, gives chillings,
+A symphony for me and you.
+
+The coral reefs, the seaweed beds,
+All play their part,
+That's a real work of art.
+
+The ocean is a treasure,
+We must protect it still,
+For the sea's symphony,
+Is a melody worth the thrill. 
+
+*/

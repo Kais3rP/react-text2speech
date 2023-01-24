@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import { ISeekBarProps } from './types';
-import format from 'format-duration';
 import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
-import { Utils } from 'lib/Utils';
+import { Utils } from 'lib';
 
 const SeekBar: FC<ISeekBarProps> = () => {
 	const { reader } = useReader();
@@ -19,11 +18,12 @@ const SeekBar: FC<ISeekBarProps> = () => {
 
 	const debouncedHandleManualSeek = Utils.debounce(
 		reader?.seekTo.bind(reader) || Function,
-		5
+		3
 	);
 
 	const handleManualSeek = (e) => {
 		const value = +(e.target as HTMLInputElement).value;
+		console.log('Value received from the input range', value);
 		debouncedHandleManualSeek(value);
 	};
 
@@ -31,12 +31,13 @@ const SeekBar: FC<ISeekBarProps> = () => {
 		<div
 			className={`${styles.container} ${isMinimized && styles.minimized}`}
 		>
-			<h5 className={styles.time}>{format(elapsedTime)}</h5>
+			<h5 className={styles.time}>{Utils.formatMsToTime(elapsedTime)}</h5>
+
 			<input
 				className={styles.seekbar}
 				type="range"
 				min="0"
-				max={numberOfWords}
+				max={numberOfWords - 1}
 				step="1"
 				value={currentWordIndex}
 				onChange={handleManualSeek}
@@ -45,7 +46,7 @@ const SeekBar: FC<ISeekBarProps> = () => {
 				style={{ left: 'auto', right: '-15px' }}
 				className={styles.time}
 			>
-				{format(duration)}*
+				{Utils.formatMsToTime(duration)}*
 			</h5>
 		</div>
 	);

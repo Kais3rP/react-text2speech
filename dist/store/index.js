@@ -1,84 +1,68 @@
-import create from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
-import { produce } from 'immer';
-export const useTextReaderStore = create()(devtools(persist((set) => ({
+export const globalState = {
+    settings: {
+        rate: 1,
+        voiceURI: '',
+        volume: 0.5,
+        pitch: 0,
+        language: 'en',
+    },
+    options: {
+        isPreserveHighlighting: true,
+        isHighlightTextOn: true,
+        isChunksModeOn: false,
+    },
     isReading: false,
     isLoading: false,
-    rate: '1',
-    voice: 'Microsoft Aria Online (Natural) - English (United States)',
     voices: [],
-    volume: '0.5',
     elapsedTime: 0,
-    isPreserveHighlighting: true,
     isMinimized: true,
     isVisible: true,
-    isSettingsVisible: false,
+    isOptionsVisible: false,
     numberOfWords: 0,
     currentWordIndex: 1,
     duration: 0,
-    setIsLoading: (b) => set(produce((state) => {
-        state.isLoading = b;
-    })),
-    setDuration: (n) => set(produce((state) => {
-        state.duration = n;
-    })),
-    setCurrentWordIndex: (n) => set(produce((state) => {
-        state.currentWordIndex = n;
-    })),
-    setNumberOfWords: (n) => set(produce((state) => {
-        state.numberOfWords = n;
-    })),
-    enablePreserveHighlighting: () => set(produce((state) => {
-        state.isPreserveHighlighting = true;
-    })),
-    disablePreserveHighlighting: () => set(produce((state) => {
-        state.isPreserveHighlighting = false;
-    })),
-    showSettings: () => set(produce((state) => {
-        state.isSettingsVisible = true;
-    })),
-    hideSettings: () => set(produce((state) => {
-        state.isSettingsVisible = false;
-    })),
-    showTextReader: () => set(produce((state) => {
-        state.isVisible = true;
-    })),
-    hideTextReader: () => set(produce((state) => {
-        state.isVisible = false;
-    })),
-    minimize: () => set(produce((state) => {
-        state.isMinimized = true;
-    })),
-    maximize: () => set(produce((state) => {
-        state.isMinimized = false;
-    })),
-    stopReading: () => set(produce((state) => {
-        state.isReading = false;
-    })),
-    startReading: () => set(produce((state) => {
-        state.isReading = true;
-    })),
-    setRate: (rate) => set(produce((state) => {
-        state.rate = rate;
-    })),
-    setVoice: (voice) => set(produce((state) => {
-        state.voice = voice;
-    })),
-    setVoices: (voices) => set(produce((state) => {
-        state.voices = voices;
-    })),
-    setVolume: (volume) => set(produce((state) => {
-        state.volume = volume;
-    })),
-    setElapsedTime: (time) => set(produce((state) => {
-        state.elapsedTime = time;
-    })),
-}), {
-    name: 'ITextReaderState',
-    partialize: (state) => Object.fromEntries(Object.entries(state).filter(([key]) => ![
-        'elapsedTime',
-        'isReading',
-        'currentWordIndex',
-    ].includes(key))),
-})));
+};
+export const rootReducer = (state, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case 'SET_IS_READING': {
+            return Object.assign(Object.assign({}, state), { isReading: payload });
+        }
+        case 'SET_IS_LOADING': {
+            return Object.assign(Object.assign({}, state), { isLoading: payload });
+        }
+        case 'SET_IS_MINIMIZED': {
+            return Object.assign(Object.assign({}, state), { isMinimized: payload });
+        }
+        case 'SET_IS_VISIBLE': {
+            return Object.assign(Object.assign({}, state), { isVisible: payload });
+        }
+        case 'SET_IS_SETTINGS_VISIBLE': {
+            return Object.assign(Object.assign({}, state), { isOptionsVisible: payload });
+        }
+        case 'SET_VOICES': {
+            return Object.assign(Object.assign({}, state), { voices: payload });
+        }
+        case 'SET_ELAPSED_TIME': {
+            return Object.assign(Object.assign({}, state), { elapsedTime: payload });
+        }
+        case 'SET_DURATION': {
+            return Object.assign(Object.assign({}, state), { duration: payload });
+        }
+        case 'SET_NUMBER_OF_WORDS': {
+            return Object.assign(Object.assign({}, state), { numberOfWords: payload });
+        }
+        case 'SET_CURRENT_WORD_INDEX': {
+            return Object.assign(Object.assign({}, state), { currentWordIndex: payload });
+        }
+        case 'CHANGE_SETTINGS': {
+            return Object.assign(Object.assign({}, state), { settings: Object.assign(Object.assign({}, state.settings), payload) });
+        }
+        case 'CHANGE_OPTIONS': {
+            return Object.assign(Object.assign({}, state), { options: Object.assign(Object.assign({}, state.options), payload) });
+        }
+        default:
+            return Object.assign({}, state);
+    }
+};
 //# sourceMappingURL=index.js.map

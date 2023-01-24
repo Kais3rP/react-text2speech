@@ -23,8 +23,8 @@ export const setIsVisible = (payload: boolean) =>
 export const setIsLoading = (payload: boolean) =>
 	createAction('SET_IS_LOADING', payload);
 
-export const setIsSettingsVisible = (payload: boolean) =>
-	createAction('SET_IS_SETTINGS_VISIBLE', payload);
+export const setIsOptionsVisible = (payload: boolean) =>
+	createAction('SET_IS_OPTIONS_VISIBLE', payload);
 
 export const setVoices = (payload: IVoiceInfo[]) =>
 	createAction('SET_VOICES', payload);

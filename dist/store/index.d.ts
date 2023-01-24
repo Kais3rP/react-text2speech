@@ -8,7 +8,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     elapsedTime: number;
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;
@@ -22,7 +22,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     elapsedTime: number;
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;
@@ -34,7 +34,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     voices: IVoiceInfo[];
     elapsedTime: number;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;
@@ -47,13 +47,13 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     voices: IVoiceInfo[];
     elapsedTime: number;
     isMinimized: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;
     isLoading: boolean;
 } | {
-    isSettingsVisible: any;
+    isOptionsVisible: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
     isReading: boolean;
@@ -73,7 +73,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     elapsedTime: number;
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;
@@ -86,7 +86,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     voices: IVoiceInfo[];
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;
@@ -100,7 +100,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     elapsedTime: number;
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     isLoading: boolean;
@@ -113,7 +113,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     elapsedTime: number;
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     currentWordIndex: number;
     duration: number;
     isLoading: boolean;
@@ -126,7 +126,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     elapsedTime: number;
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     duration: number;
     isLoading: boolean;
@@ -138,7 +138,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     elapsedTime: number;
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;
@@ -151,7 +151,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     elapsedTime: number;
     isMinimized: boolean;
     isVisible: boolean;
-    isSettingsVisible: boolean;
+    isOptionsVisible: boolean;
     numberOfWords: number;
     currentWordIndex: number;
     duration: number;

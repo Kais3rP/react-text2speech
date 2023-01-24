@@ -180,8 +180,8 @@ export const SliderContainer = styled.div `
 	width: 70px;
 `;
 export const ExtraSettings = styled.div `
-	opacity: ${(props) => (props.issettingsvisible === 'true' ? 1 : 0)};
-	pointer-events: ${(props) => props.issettingsvisible === 'true' ? 'all' : 'none'};
+	opacity: ${(props) => (props.isOptionsVisible === 'true' ? 1 : 0)};
+	pointer-events: ${(props) => props.isOptionsVisible === 'true' ? 'all' : 'none'};
 	position: absolute;
 	width: 100%;
 	height: 46px;
