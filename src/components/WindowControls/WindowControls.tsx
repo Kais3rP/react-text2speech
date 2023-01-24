@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { IWindowControlsProps } from './types';
-import { MdOutlineClose } from 'react-icons/md';
-import { FiMaximize, FiMinimize } from 'react-icons/fi';
+import { FiMaximize } from '@react-icons/all-files/fi/FiMaximize';
+import { FiMinimize } from '@react-icons/all-files/fi/FiMinimize';
+import { MdClose } from '@react-icons/all-files/md/MdClose';
 import { setIsMinimized, setIsVisible } from 'store/actions';
 import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
@@ -31,7 +32,7 @@ const WindowControls: FC<IWindowControlsProps> = () => {
 				className={styles.button}
 				onPointerDown={handleHideReader}
 			>
-				<MdOutlineClose title="Close" />
+				<MdClose title="Close" />
 			</div>
 			{/* Minimize button */}
 			<div

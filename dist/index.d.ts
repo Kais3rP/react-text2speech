@@ -7,7 +7,7 @@ export interface IProps {
     };
     styleOptions: IStyleOptions;
     textContainer: HTMLElement;
-    bindReader: BindReader;
+    bindReader?: BindReader;
 }
 declare const App: FC<IProps>;
 export declare const useTextReader: () => {

@@ -10,7 +10,7 @@ export interface IProps {
 	options: { language: string };
 	styleOptions: IStyleOptions;
 	textContainer: HTMLElement;
-	bindReader: BindReader;
+	bindReader?: BindReader;
 }
 
 const App: FC<IProps> = ({

@@ -1,12 +1,12 @@
 import React, { ChangeEventHandler, FC } from 'react';
 import { ISecondaryControlsProps } from './types';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
-import { BiVolumeFull } from 'react-icons/bi';
+import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
 import VolumeSlider from 'components/VolumeSlider/VolumeSlider';
 import { setDuration, setIsSettingsVisible } from 'store/actions';
 import { useReader, useStore, useMainProps } from 'contexts';
 import styles from './styles.module.css';
-import { FcSettings } from 'react-icons/fc';
+import { FcSettings } from '@react-icons/all-files/fc/FcSettings';
 /* import { ImInfo } from 'react-icons/im';
  */
 const SecondaryControls: FC<ISecondaryControlsProps> = () => {

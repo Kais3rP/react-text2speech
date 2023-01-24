@@ -8,7 +8,7 @@ import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
 import { visualizer } from 'rollup-plugin-visualizer';
-
+import sizes from 'rollup-plugin-sizes';
 export default {
 	input: `src/index.tsx`,
 	output: [
@@ -58,13 +58,13 @@ export default {
 		}),
 		// Resolve source maps to the original source
 		sourceMaps(),
-		// analyze(),
-		visualizer(),
 		// Compile TypeScript files
 		typescript({
 			useTsconfigDeclarationDir: true,
 			exclude: ['**/__tests__/**', '*.spec.*', '*.test.*'],
 			clean: true,
 		}),
+		visualizer(), // Generates a visual report in stats.html
+		sizes(), // Highlights size of deps
 	],
 };

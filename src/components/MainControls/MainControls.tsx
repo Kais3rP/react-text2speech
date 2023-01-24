@@ -1,11 +1,9 @@
 import React, { FC } from 'react';
-import {
-	AiFillFastBackward,
-	AiFillFastForward,
-	AiFillPauseCircle,
-	AiFillPlayCircle,
-} from 'react-icons/ai';
-import { BiReset } from 'react-icons/bi';
+import { AiFillFastBackward } from '@react-icons/all-files/ai/AiFillFastBackward';
+import { AiFillFastForward } from '@react-icons/all-files/ai/AiFillFastForward';
+import { AiFillPlayCircle } from '@react-icons/all-files/ai/AiFillPlayCircle';
+import { AiFillPauseCircle } from '@react-icons/all-files/ai/AiFillPauseCircle';
+import { BiReset } from '@react-icons/all-files/bi/BiReset';
 import { IMainControlsProps } from './types';
 import { setIsLoading } from 'store/actions';
 import { useReader, useStore } from 'contexts';
