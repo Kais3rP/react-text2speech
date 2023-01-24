@@ -1,0 +1,87 @@
+.container {
+	position: relative;
+	display: flex;
+	align-items: center;
+	width: 70px;
+}
+
+.container input {
+	width: 100%;
+}
+
+.container label {
+	position: absolute;
+	top: 0;
+	font-size: 0.7rem;
+	right: 0%;
+}
+
+.container label.value {
+	top: -1rem;
+	color: var(--color-extra1);
+}
+
+.slider {
+	width: 100%;
+	appearance: none;
+	height: 2px;
+	background: var(--primaryColor);
+	outline: none;
+	opacity: 0.7;
+	transition: opacity 0.2s;
+}
+
+.slider:hover {
+	opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+	appearance: none;
+	width: 10px; /* Set a specific slider handle width */
+	height: 10px; /* Slider handle height */
+	background: var(--bgColor);
+	cursor: pointer; /* Cursor on hover */
+	border: 2px solid var(--primaryColor);
+	border-radius: 50%;
+	z-index: 1;
+	box-shadow: 0 2px 5px var(--secondaryColor);
+	transition: transform 0.1s ease-out;
+}
+.slider::-moz-range-thumb {
+	appearance: none;
+	width: 10px; /* Set a specific slider handle width */
+	height: 10px; /* Slider handle height */
+	background: var(--bgColor);
+	cursor: pointer; /* Cursor on hover */
+	border: 2px solid var(--primaryColor);
+	border-radius: 50%;
+	z-index: 1;
+	box-shadow: 0 2px 5px var(--secondaryColor);
+	transition: transform 0.4s ease-out;
+}
+
+.slider::-webkit-slider-thumb:hover {
+	transform: scale(1.1);
+	box-shadow: 0 2px 10px var(--bgColor);
+}
+
+::-moz-range-thumb:hover {
+	transform: scale(1.1);
+	box-shadow: 0 2px 10px var(--bgColor);
+}
+
+.slider::-webkit-slider-thumb:active {
+}
+
+::-moz-range-thumb:active {
+}
+
+.icon {
+	font-size: 0.9rem;
+	margin-right: 5px;
+}
+
+.icon * {
+	stroke: var(--primaryColor);
+	color: var(--primaryColor);
+}

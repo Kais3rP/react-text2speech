@@ -9,10 +9,6 @@ export interface ICustomSelectProps {
     value: string;
     title: string;
     onChange: (v: string) => void;
-    styleOptions: IStyleOptions;
-    style?: {
-        [key: string]: string;
-    };
     [key: string]: any;
 }
 //# sourceMappingURL=types.d.ts.map
