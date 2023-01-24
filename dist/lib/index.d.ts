@@ -6,7 +6,6 @@ export declare class SpeechSynth extends EventEmitter {
     synth: SpeechSynthesis;
     utterance: SpeechSynthesisUtterance;
     timeoutRef: string | number | Timeout | undefined;
-    seekTimeoutRef: string | number | Timeout | undefined;
     editTimeoutRef: string | number | Timeout | undefined;
     style: IStyle;
     events: Events;
@@ -22,7 +21,7 @@ export declare class SpeechSynth extends EventEmitter {
     private handleChunkHighlighting;
     private scrollTo;
     private timeCount;
-    private pauseTimeCount;
+    private clearTimeCount;
     private resetTimeCount;
     private handleBoundary;
     private getVoices;

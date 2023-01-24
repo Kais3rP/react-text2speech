@@ -489,6 +489,14 @@ class Utils {
     static isFunction(fn) {
         return fn && typeof fn === 'function';
     }
+    static debounce(fn, delay) {
+        let timeout;
+        return function (...args) {
+            if (timeout)
+                clearTimeout(timeout);
+            timeout = setTimeout(() => fn(...args), delay);
+        };
+    }
 }
 /* Array utils */
 Utils.__join__ = function (fn) {
@@ -541,7 +549,6 @@ class SpeechSynth extends EventEmitter {
         this.utterance = new window.SpeechSynthesisUtterance();
         /* Timeouts */
         this.timeoutRef = undefined;
-        this.seekTimeoutRef = undefined;
         this.editTimeoutRef = undefined;
         /* Events */
         this.events = [
@@ -586,7 +593,6 @@ class SpeechSynth extends EventEmitter {
         });
         /* State */
         const stateSetter = (obj, key, value) => {
-            console.log('State trap', key, value);
             if (key === 'currentWordIndex')
                 this.emit('seek', this);
             this.emit('state-change');
@@ -909,13 +915,14 @@ class SpeechSynth extends EventEmitter {
         }
         this.timeoutRef = setTimeout(this.timeCount.bind(this, e, frequency), frequency);
     }
-    pauseTimeCount() {
+    clearTimeCount() {
         clearTimeout(this.timeoutRef);
     }
     resetTimeCount() {
         this.state.elapsedTime = 0;
-        clearTimeout(this.timeoutRef);
+        this.clearTimeCount();
     }
+    /* Handle the boundary event */
     handleBoundary(e) {
         /* Disable boundary if it's in chunk mode */
         if (this.options.isChunksModeOn)
@@ -1001,7 +1008,7 @@ class SpeechSynth extends EventEmitter {
         wordToHighlight.style.textDecoration = 'underline';
     }
     changeChunkMode(b) {
-        clearTimeout(this.timeoutRef);
+        this.clearTimeCount();
         this.options.isChunksModeOn = b;
         /* Since che chunk mode change triggers a restart of the utterance playing,
         make sure the current word index gets synchronized with the current chunk index start word,
@@ -1019,7 +1026,7 @@ class SpeechSynth extends EventEmitter {
         this.utterance.text = this.options.isChunksModeOn
             ? this.getCurrentChunkText(this.state.currentChunkIndex)
             : this.getRemainingText(this.state.currentWordIndex);
-        this.restart('chunks-mode-change', 500);
+        this.restart('chunks-mode-change');
     }
     resetHighlight() {
         this.state.highlightedWords.forEach((n) => {
@@ -1105,7 +1112,7 @@ class SpeechSynth extends EventEmitter {
             }
         }, 500);
     }
-    restart(type, delay) {
+    restart(type) {
         this.synth.cancel();
         if (this.isReading())
             this.play(type);
@@ -1119,8 +1126,7 @@ class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     changeSettings(obj) {
         /* Reset timeouts  */
-        clearTimeout(this.timeoutRef);
-        clearTimeout(this.editTimeoutRef);
+        this.clearTimeCount();
         /* Update voice in the state if it changes */
         if (obj.voiceURI) {
             const voice = this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)
@@ -1145,7 +1151,7 @@ class SpeechSynth extends EventEmitter {
         for (const entry of Object.entries(obj))
             this.settings[entry[0]] = entry[1];
         /*  Debounce to handle volume change properly */
-        this.editTimeoutRef = this.delayRestart('edit-utterance', 500);
+        this.restart('edit-utterance');
     }
     changeOptions(obj) {
         /* Handle chunks mode option change */
@@ -1158,8 +1164,7 @@ class SpeechSynth extends EventEmitter {
     /* Control methods */
     seekTo(idx) {
         /* Reset timeouts  */
-        clearTimeout(this.timeoutRef);
-        clearTimeout(this.seekTimeoutRef);
+        this.clearTimeCount();
         /* Sync the current chunk in both cases that the seeking is performed in chunk or non chunk mode */
         const chunk = this.state.chunksArray.find((c) => idx >= c.start && idx <= c.end);
         this.state.currentChunkIndex = chunk.idx;
@@ -1185,14 +1190,14 @@ class SpeechSynth extends EventEmitter {
         /* Recalculate time elapsed */
         this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
         this.emit('time-tick', this, this.state.elapsedTime);
-        this.seekTimeoutRef = this.delayRestart('seek', 500);
+        this.restart('seek');
     }
     /* ------------------------------------------------------------------------------------ */
     /* Public Methods to control the player state */
     /* ------------------------------------------------------------------------------------ */
     play(type) {
         this.synth.cancel(); // Makes sure the queue is empty when starting
-        clearTimeout(this.timeoutRef); // Makes sure to not trigger multiple timeouts
+        this.clearTimeCount(); // Makes sure to not trigger multiple timeouts
         this.synth.speak(this.utterance);
         this.state.isPaused = false;
         this.state.isReading = true;
@@ -1253,7 +1258,7 @@ class SpeechSynth extends EventEmitter {
         this.state.isReading = false;
         this.emit('pause', this);
         /* Pause timer */
-        this.pauseTimeCount();
+        this.clearTimeCount();
     }
     resume() {
         if (!this.options.isChunksModeOn)
@@ -1596,384 +1601,6 @@ function formatDuration (ms, options) {
 
 var formatDuration_1 = formatDuration;
 
-/**
- * lodash (Custom Build) <https://lodash.com/>
- * Build: `lodash modularize exports="npm" -o ./`
- * Copyright jQuery Foundation and other contributors <https://jquery.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-/** Used as the `TypeError` message for "Functions" methods. */
-var FUNC_ERROR_TEXT = 'Expected a function';
-
-/** Used as references for various `Number` constants. */
-var NAN = 0 / 0;
-
-/** `Object#toString` result references. */
-var symbolTag = '[object Symbol]';
-
-/** Used to match leading and trailing whitespace. */
-var reTrim = /^\s+|\s+$/g;
-
-/** Used to detect bad signed hexadecimal string values. */
-var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-/** Used to detect binary string values. */
-var reIsBinary = /^0b[01]+$/i;
-
-/** Used to detect octal string values. */
-var reIsOctal = /^0o[0-7]+$/i;
-
-/** Built-in method references without a dependency on `root`. */
-var freeParseInt = parseInt;
-
-/** Detect free variable `global` from Node.js. */
-var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
-
-/** Detect free variable `self`. */
-var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
-
-/** Used as a reference to the global object. */
-var root = freeGlobal || freeSelf || Function('return this')();
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var objectToString = objectProto.toString;
-
-/* Built-in method references for those with the same name as other `lodash` methods. */
-var nativeMax = Math.max,
-    nativeMin = Math.min;
-
-/**
- * Gets the timestamp of the number of milliseconds that have elapsed since
- * the Unix epoch (1 January 1970 00:00:00 UTC).
- *
- * @static
- * @memberOf _
- * @since 2.4.0
- * @category Date
- * @returns {number} Returns the timestamp.
- * @example
- *
- * _.defer(function(stamp) {
- *   console.log(_.now() - stamp);
- * }, _.now());
- * // => Logs the number of milliseconds it took for the deferred invocation.
- */
-var now = function() {
-  return root.Date.now();
-};
-
-/**
- * Creates a debounced function that delays invoking `func` until after `wait`
- * milliseconds have elapsed since the last time the debounced function was
- * invoked. The debounced function comes with a `cancel` method to cancel
- * delayed `func` invocations and a `flush` method to immediately invoke them.
- * Provide `options` to indicate whether `func` should be invoked on the
- * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
- * with the last arguments provided to the debounced function. Subsequent
- * calls to the debounced function return the result of the last `func`
- * invocation.
- *
- * **Note:** If `leading` and `trailing` options are `true`, `func` is
- * invoked on the trailing edge of the timeout only if the debounced function
- * is invoked more than once during the `wait` timeout.
- *
- * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
- * until to the next tick, similar to `setTimeout` with a timeout of `0`.
- *
- * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
- * for details over the differences between `_.debounce` and `_.throttle`.
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Function
- * @param {Function} func The function to debounce.
- * @param {number} [wait=0] The number of milliseconds to delay.
- * @param {Object} [options={}] The options object.
- * @param {boolean} [options.leading=false]
- *  Specify invoking on the leading edge of the timeout.
- * @param {number} [options.maxWait]
- *  The maximum time `func` is allowed to be delayed before it's invoked.
- * @param {boolean} [options.trailing=true]
- *  Specify invoking on the trailing edge of the timeout.
- * @returns {Function} Returns the new debounced function.
- * @example
- *
- * // Avoid costly calculations while the window size is in flux.
- * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
- *
- * // Invoke `sendMail` when clicked, debouncing subsequent calls.
- * jQuery(element).on('click', _.debounce(sendMail, 300, {
- *   'leading': true,
- *   'trailing': false
- * }));
- *
- * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
- * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
- * var source = new EventSource('/stream');
- * jQuery(source).on('message', debounced);
- *
- * // Cancel the trailing debounced invocation.
- * jQuery(window).on('popstate', debounced.cancel);
- */
-function debounce(func, wait, options) {
-  var lastArgs,
-      lastThis,
-      maxWait,
-      result,
-      timerId,
-      lastCallTime,
-      lastInvokeTime = 0,
-      leading = false,
-      maxing = false,
-      trailing = true;
-
-  if (typeof func != 'function') {
-    throw new TypeError(FUNC_ERROR_TEXT);
-  }
-  wait = toNumber(wait) || 0;
-  if (isObject(options)) {
-    leading = !!options.leading;
-    maxing = 'maxWait' in options;
-    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
-    trailing = 'trailing' in options ? !!options.trailing : trailing;
-  }
-
-  function invokeFunc(time) {
-    var args = lastArgs,
-        thisArg = lastThis;
-
-    lastArgs = lastThis = undefined;
-    lastInvokeTime = time;
-    result = func.apply(thisArg, args);
-    return result;
-  }
-
-  function leadingEdge(time) {
-    // Reset any `maxWait` timer.
-    lastInvokeTime = time;
-    // Start the timer for the trailing edge.
-    timerId = setTimeout(timerExpired, wait);
-    // Invoke the leading edge.
-    return leading ? invokeFunc(time) : result;
-  }
-
-  function remainingWait(time) {
-    var timeSinceLastCall = time - lastCallTime,
-        timeSinceLastInvoke = time - lastInvokeTime,
-        result = wait - timeSinceLastCall;
-
-    return maxing ? nativeMin(result, maxWait - timeSinceLastInvoke) : result;
-  }
-
-  function shouldInvoke(time) {
-    var timeSinceLastCall = time - lastCallTime,
-        timeSinceLastInvoke = time - lastInvokeTime;
-
-    // Either this is the first call, activity has stopped and we're at the
-    // trailing edge, the system time has gone backwards and we're treating
-    // it as the trailing edge, or we've hit the `maxWait` limit.
-    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
-      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
-  }
-
-  function timerExpired() {
-    var time = now();
-    if (shouldInvoke(time)) {
-      return trailingEdge(time);
-    }
-    // Restart the timer.
-    timerId = setTimeout(timerExpired, remainingWait(time));
-  }
-
-  function trailingEdge(time) {
-    timerId = undefined;
-
-    // Only invoke if we have `lastArgs` which means `func` has been
-    // debounced at least once.
-    if (trailing && lastArgs) {
-      return invokeFunc(time);
-    }
-    lastArgs = lastThis = undefined;
-    return result;
-  }
-
-  function cancel() {
-    if (timerId !== undefined) {
-      clearTimeout(timerId);
-    }
-    lastInvokeTime = 0;
-    lastArgs = lastCallTime = lastThis = timerId = undefined;
-  }
-
-  function flush() {
-    return timerId === undefined ? result : trailingEdge(now());
-  }
-
-  function debounced() {
-    var time = now(),
-        isInvoking = shouldInvoke(time);
-
-    lastArgs = arguments;
-    lastThis = this;
-    lastCallTime = time;
-
-    if (isInvoking) {
-      if (timerId === undefined) {
-        return leadingEdge(lastCallTime);
-      }
-      if (maxing) {
-        // Handle invocations in a tight loop.
-        timerId = setTimeout(timerExpired, wait);
-        return invokeFunc(lastCallTime);
-      }
-    }
-    if (timerId === undefined) {
-      timerId = setTimeout(timerExpired, wait);
-    }
-    return result;
-  }
-  debounced.cancel = cancel;
-  debounced.flush = flush;
-  return debounced;
-}
-
-/**
- * Checks if `value` is the
- * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
- * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(_.noop);
- * // => true
- *
- * _.isObject(null);
- * // => false
- */
-function isObject(value) {
-  var type = typeof value;
-  return !!value && (type == 'object' || type == 'function');
-}
-
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-function isObjectLike(value) {
-  return !!value && typeof value == 'object';
-}
-
-/**
- * Checks if `value` is classified as a `Symbol` primitive or object.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
- * @example
- *
- * _.isSymbol(Symbol.iterator);
- * // => true
- *
- * _.isSymbol('abc');
- * // => false
- */
-function isSymbol(value) {
-  return typeof value == 'symbol' ||
-    (isObjectLike(value) && objectToString.call(value) == symbolTag);
-}
-
-/**
- * Converts `value` to a number.
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to process.
- * @returns {number} Returns the number.
- * @example
- *
- * _.toNumber(3.2);
- * // => 3.2
- *
- * _.toNumber(Number.MIN_VALUE);
- * // => 5e-324
- *
- * _.toNumber(Infinity);
- * // => Infinity
- *
- * _.toNumber('3.2');
- * // => 3.2
- */
-function toNumber(value) {
-  if (typeof value == 'number') {
-    return value;
-  }
-  if (isSymbol(value)) {
-    return NAN;
-  }
-  if (isObject(value)) {
-    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-    value = isObject(other) ? (other + '') : other;
-  }
-  if (typeof value != 'string') {
-    return value === 0 ? value : +value;
-  }
-  value = value.replace(reTrim, '');
-  var isBinary = reIsBinary.test(value);
-  return (isBinary || reIsOctal.test(value))
-    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-    : (reIsBadHex.test(value) ? NAN : +value);
-}
-
-var lodash_debounce = debounce;
-
 var css_248z$4 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 10px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 12px; /* Set a specific slider handle width */\r\n\theight: 12px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: #111;\r\n\tmargin: 0 !important;\r\n}\r\n";
 var styles$4 = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
 styleInject(css_248z$4);
@@ -1982,11 +1609,10 @@ const SeekBar = () => {
     const { reader } = useReader();
     const { state } = useStore();
     const { elapsedTime, numberOfWords, currentWordIndex, isMinimized, duration, } = state;
-    const debouncedHandleManualSeek = lodash_debounce((value) => {
-        reader === null || reader === void 0 ? void 0 : reader.seekTo(value);
-    }, 5);
+    const debouncedHandleManualSeek = Utils.debounce((reader === null || reader === void 0 ? void 0 : reader.seekTo.bind(reader)) || Function, 5);
     const handleManualSeek = (e) => {
-        debouncedHandleManualSeek(+e.target.value);
+        const value = +e.target.value;
+        debouncedHandleManualSeek(value);
     };
     return (React.createElement("div", { className: `${styles$4.container} ${isMinimized && styles$4.minimized}` },
         React.createElement("h5", { className: styles$4.time }, formatDuration_1(elapsedTime)),
@@ -2060,25 +1686,31 @@ var BiVolumeFull_1 = function BiVolumeFull (props) {
   return GenIcon$1({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M16,21c3.527-1.547,5.999-4.909,5.999-9S19.527,4.547,16,3v2c2.387,1.386,3.999,4.047,3.999,7S18.387,17.614,16,19V21z"}},{"tag":"path","attr":{"d":"M16 7v10c1.225-1.1 2-3.229 2-5S17.225 8.1 16 7zM4 17h2.697l5.748 3.832C12.612 20.943 12.806 21 13 21c.162 0 .324-.039.472-.118C13.797 20.708 14 20.369 14 20V4c0-.369-.203-.708-.528-.882-.324-.175-.72-.154-1.026.05L6.697 7H4C2.897 7 2 7.897 2 9v6C2 16.103 2.897 17 4 17zM4 9h3c.033 0 .061-.016.093-.019.064-.006.125-.02.188-.038.068-.021.131-.045.192-.078.026-.015.057-.017.082-.033L12 5.868v12.264l-4.445-2.964c-.025-.017-.056-.02-.082-.033-.061-.033-.123-.058-.19-.078-.064-.019-.126-.032-.192-.038C7.059 15.016 7.032 15 7 15H4V9z"}}]})(props);
 };
 
-var css_248z$2 = ".styles-module_container__b86L6 {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_container__b86L6 input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__b86L6 label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__b86L6 label.styles-module_value__ildtp {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Y4O-v {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Y4O-v:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Y4O-v::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Y4O-v::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Y4O-v::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Y4O-v::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__1apXm {\r\n\tfont-size: 0.9rem;\r\n\tmargin-right: 5px;\r\n}\r\n\r\n.styles-module_icon__1apXm * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
-var styles$2 = {"container":"styles-module_container__b86L6","value":"styles-module_value__ildtp","slider":"styles-module_slider__Y4O-v","icon":"styles-module_icon__1apXm"};
+var css_248z$2 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\tpadding-bottom: 13px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_icon__7uc9b {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__7uc9b path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__7uc9b:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h label {\r\n\tdisplay: flex;\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__KInGF {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
+var styles$2 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-","icon":"styles-module_icon__7uc9b","overlayContainer":"styles-module_overlayContainer__kuM3h","visible":"styles-module_visible__KInGF"};
 styleInject(css_248z$2);
-
-const VolumeSlider = (_a) => {
-    var { data, onChange, icon, styleOptions } = _a, props = __rest(_a, ["data", "onChange", "icon", "styleOptions"]);
-    return (React.createElement("div", Object.assign({ className: styles$2.container }, props),
-        icon && React.createElement("div", { className: styles$2.icon }, icon),
-        React.createElement("input", { className: styles$2.slider, min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: onChange })));
-};
-
-var css_248z$1 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\tpadding-bottom: 13px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_icon__7uc9b {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__7uc9b path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__7uc9b:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h label {\r\n\tdisplay: flex;\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__kuM3h h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__KInGF {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
-var styles$1 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-","icon":"styles-module_icon__7uc9b","overlayContainer":"styles-module_overlayContainer__kuM3h","visible":"styles-module_visible__KInGF"};
-styleInject(css_248z$1);
 
 // THIS FILE IS AUTO GENERATED
 var GenIcon = esm.GenIcon;
 var FcSettings_1 = function FcSettings (props) {
   return GenIcon({"tag":"svg","attr":{"version":"1","viewBox":"0 0 48 48","enableBackground":"new 0 0 48 48"},"child":[{"tag":"path","attr":{"fill":"#607D8B","d":"M39.6,27.2c0.1-0.7,0.2-1.4,0.2-2.2s-0.1-1.5-0.2-2.2l4.5-3.2c0.4-0.3,0.6-0.9,0.3-1.4L40,10.8 c-0.3-0.5-0.8-0.7-1.3-0.4l-5,2.3c-1.2-0.9-2.4-1.6-3.8-2.2l-0.5-5.5c-0.1-0.5-0.5-0.9-1-0.9h-8.6c-0.5,0-1,0.4-1,0.9l-0.5,5.5 c-1.4,0.6-2.7,1.3-3.8,2.2l-5-2.3c-0.5-0.2-1.1,0-1.3,0.4l-4.3,7.4c-0.3,0.5-0.1,1.1,0.3,1.4l4.5,3.2c-0.1,0.7-0.2,1.4-0.2,2.2 s0.1,1.5,0.2,2.2L4,30.4c-0.4,0.3-0.6,0.9-0.3,1.4L8,39.2c0.3,0.5,0.8,0.7,1.3,0.4l5-2.3c1.2,0.9,2.4,1.6,3.8,2.2l0.5,5.5 c0.1,0.5,0.5,0.9,1,0.9h8.6c0.5,0,1-0.4,1-0.9l0.5-5.5c1.4-0.6,2.7-1.3,3.8-2.2l5,2.3c0.5,0.2,1.1,0,1.3-0.4l4.3-7.4 c0.3-0.5,0.1-1.1-0.3-1.4L39.6,27.2z M24,35c-5.5,0-10-4.5-10-10c0-5.5,4.5-10,10-10c5.5,0,10,4.5,10,10C34,30.5,29.5,35,24,35z"}},{"tag":"path","attr":{"fill":"#455A64","d":"M24,13c-6.6,0-12,5.4-12,12c0,6.6,5.4,12,12,12s12-5.4,12-12C36,18.4,30.6,13,24,13z M24,30 c-2.8,0-5-2.2-5-5c0-2.8,2.2-5,5-5s5,2.2,5,5C29,27.8,26.8,30,24,30z"}}]})(props);
+};
+
+var css_248z$1 = ".styles-module_container__rkaUB {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_container__rkaUB input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Lf7kP {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Lf7kP:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Lf7kP::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__b92n5 {\r\n\tfont-size: 0.9rem;\r\n\tmargin-right: 5px;\r\n}\r\n\r\n.styles-module_icon__b92n5 * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
+var styles$1 = {"container":"styles-module_container__rkaUB","value":"styles-module_value__eh3ZO","slider":"styles-module_slider__Lf7kP","icon":"styles-module_icon__b92n5"};
+styleInject(css_248z$1);
+
+const GenericSlider = (_a) => {
+    var { data, onChange, icon } = _a, props = __rest(_a, ["data", "onChange", "icon"]);
+    const debouncedOnChange = Utils.debounce(onChange, 20);
+    const handleChange = (e) => {
+        const value = +e.target.value;
+        console.log('Volume change', value);
+        debouncedOnChange(value);
+    };
+    return (React.createElement("div", Object.assign({ className: styles$1.container }, props),
+        icon && React.createElement("div", { className: styles$1.icon }, icon),
+        React.createElement("input", { className: styles$1.slider, min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: handleChange })));
 };
 
 /* import { ImInfo } from 'react-icons/im';
@@ -2099,9 +1731,8 @@ const SecondaryControls = () => {
     const handleVoiceChange = (value) => {
         reader === null || reader === void 0 ? void 0 : reader.changeSettings({ voiceURI: value });
     };
-    const handleVolumeChange = (e) => {
-        const target = e.target;
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ volume: +target.value });
+    const handleVolumeChange = (value) => {
+        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ volume: value });
     };
     /* Options Handlers */
     const handlePreserveHighlighting = (e) => {
@@ -2118,8 +1749,8 @@ const SecondaryControls = () => {
         const target = e.target;
         reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isChunksModeOn: target.checked });
     };
-    return (React.createElement("div", { className: styles$1.container },
-        React.createElement("div", { className: styles$1.optionsWrapper1 },
+    return (React.createElement("div", { className: styles$2.container },
+        React.createElement("div", { className: styles$2.optionsWrapper1 },
             React.createElement(CustomSelect, { name: "rate", options: [
                     { value: '0.5', name: '0.5x' },
                     { value: '0.75', name: '0.75x' },
@@ -2129,16 +1760,16 @@ const SecondaryControls = () => {
                     { value: '2', name: '2x' },
                 ], onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
             React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
-            React.createElement(FcSettings_1, { className: styles$1.icon, onPointerDown: toggleSettings })),
-        React.createElement("div", { className: styles$1.optionsWrapper2 },
-            React.createElement(VolumeSlider, { icon: React.createElement(BiVolumeFull_1, null), onChange: handleVolumeChange, data: {
+            React.createElement(FcSettings_1, { className: styles$2.icon, onPointerDown: toggleSettings })),
+        React.createElement("div", { className: styles$2.optionsWrapper2 },
+            React.createElement(GenericSlider, { icon: React.createElement(BiVolumeFull_1, null), onChange: handleVolumeChange, data: {
                     min: '0.1',
                     max: '1',
                     step: '0.1',
                     value: volume,
                     unit: '%',
-                }, styleOptions: styleOptions })),
-        React.createElement("div", { className: `${styles$1.overlayContainer} ${isSettingsVisible && styles$1.visible}`, onPointerDown: toggleSettings },
+                } })),
+        React.createElement("div", { className: `${styles$2.overlayContainer} ${isSettingsVisible && styles$2.visible}`, onPointerDown: toggleSettings },
             React.createElement("label", { htmlFor: "preserve-option", onPointerDown: (e) => e.stopPropagation() },
                 React.createElement("input", { id: "preserve-option", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
                 React.createElement("h5", null, "Preserve Highlighting")),

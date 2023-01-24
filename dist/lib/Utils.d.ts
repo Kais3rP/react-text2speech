@@ -31,5 +31,6 @@ export declare class Utils {
     static isValidDate(str: string): boolean;
     static __join__: (fn: (el: any, i: number, arr: any[]) => string) => string;
     static isFunction(fn: any): any;
+    static debounce(fn: (...arg: any[]) => any, delay: number): (...args: any[]) => void;
 }
 //# sourceMappingURL=Utils.d.ts.map

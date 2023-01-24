@@ -1,15 +1,15 @@
-import { ChangeEventHandler } from 'react';
-export interface SliderData {
+/// <reference types="react" />
+export interface ISliderData {
     value: number;
     min: string;
     max: string;
     step: string;
     unit: string;
 }
-export interface IVolumeSliderProps {
+export interface IGenericSliderProps {
     children?: JSX.Element | string;
-    data: SliderData;
-    onChange: ChangeEventHandler;
+    data: ISliderData;
+    onChange: (value: number) => void;
     icon?: JSX.Element;
     [key: string]: any;
 }

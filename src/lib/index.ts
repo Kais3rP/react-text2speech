@@ -15,7 +15,7 @@ export class SpeechSynth extends EventEmitter {
 	synth: SpeechSynthesis;
 	utterance: SpeechSynthesisUtterance;
 	timeoutRef: string | number | Timeout | undefined;
-	seekTimeoutRef: string | number | Timeout | undefined;
+
 	editTimeoutRef: string | number | Timeout | undefined;
 
 	style: IStyle;
@@ -85,7 +85,7 @@ export class SpeechSynth extends EventEmitter {
 		/* Timeouts */
 
 		this.timeoutRef = undefined;
-		this.seekTimeoutRef = undefined;
+
 		this.editTimeoutRef = undefined;
 
 		/* Events */
@@ -147,7 +147,6 @@ export class SpeechSynth extends EventEmitter {
 		/* State */
 
 		const stateSetter = (obj: any, key: string | symbol, value: any) => {
-			console.log('State trap', key, value);
 			if (key === 'currentWordIndex') this.emit('seek', this);
 			this.emit('state-change');
 			return Reflect.set(obj, key, value);
@@ -596,14 +595,16 @@ export class SpeechSynth extends EventEmitter {
 		);
 	}
 
-	private pauseTimeCount() {
+	private clearTimeCount() {
 		clearTimeout(this.timeoutRef);
 	}
 
 	private resetTimeCount() {
 		this.state.elapsedTime = 0;
-		clearTimeout(this.timeoutRef);
+		this.clearTimeCount();
 	}
+
+	/* Handle the boundary event */
 
 	private handleBoundary(e: SpeechSynthesisEvent) {
 		/* Disable boundary if it's in chunk mode */
@@ -733,7 +734,7 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private changeChunkMode(b: boolean) {
-		clearTimeout(this.timeoutRef);
+		this.clearTimeCount();
 		this.options.isChunksModeOn = b;
 
 		/* Since che chunk mode change triggers a restart of the utterance playing,
@@ -756,7 +757,7 @@ export class SpeechSynth extends EventEmitter {
 			? this.getCurrentChunkText(this.state.currentChunkIndex)
 			: this.getRemainingText(this.state.currentWordIndex);
 
-		this.restart('chunks-mode-change', 500);
+		this.restart('chunks-mode-change');
 	}
 
 	private resetHighlight() {
@@ -858,7 +859,7 @@ export class SpeechSynth extends EventEmitter {
 		}, 500);
 	}
 
-	private restart(type: string, delay: number) {
+	private restart(type: string) {
 		this.synth.cancel();
 		if (this.isReading()) this.play(type);
 		if (this.isPaused()) {
@@ -874,8 +875,7 @@ export class SpeechSynth extends EventEmitter {
 	changeSettings(obj: Partial<ISettings>) {
 		/* Reset timeouts  */
 
-		clearTimeout(this.timeoutRef);
-		clearTimeout(this.editTimeoutRef);
+		this.clearTimeCount();
 
 		/* Update voice in the state if it changes */
 
@@ -924,7 +924,7 @@ export class SpeechSynth extends EventEmitter {
 
 		/*  Debounce to handle volume change properly */
 
-		this.editTimeoutRef = this.delayRestart('edit-utterance', 500);
+		this.restart('edit-utterance');
 	}
 
 	changeOptions(obj: Partial<IOptions>) {
@@ -941,8 +941,7 @@ export class SpeechSynth extends EventEmitter {
 	seekTo(idx: number) {
 		/* Reset timeouts  */
 
-		clearTimeout(this.timeoutRef);
-		clearTimeout(this.seekTimeoutRef);
+		this.clearTimeCount();
 
 		/* Sync the current chunk in both cases that the seeking is performed in chunk or non chunk mode */
 
@@ -987,8 +986,7 @@ export class SpeechSynth extends EventEmitter {
 		)(this.settings.rate as number);
 
 		this.emit('time-tick', this, this.state.elapsedTime);
-
-		this.seekTimeoutRef = this.delayRestart('seek', 500);
+		this.restart('seek');
 	}
 
 	/* ------------------------------------------------------------------------------------ */
@@ -997,7 +995,7 @@ export class SpeechSynth extends EventEmitter {
 
 	play(type?: string): Promise<null> {
 		this.synth.cancel(); // Makes sure the queue is empty when starting
-		clearTimeout(this.timeoutRef); // Makes sure to not trigger multiple timeouts
+		this.clearTimeCount(); // Makes sure to not trigger multiple timeouts
 
 		this.synth.speak(this.utterance);
 
@@ -1067,7 +1065,7 @@ export class SpeechSynth extends EventEmitter {
 		this.emit('pause', this);
 
 		/* Pause timer */
-		this.pauseTimeCount();
+		this.clearTimeCount();
 	}
 
 	resume() {

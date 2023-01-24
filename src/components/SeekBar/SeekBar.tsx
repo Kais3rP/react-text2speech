@@ -1,9 +1,9 @@
-import React, { ChangeEventHandler, FC } from 'react';
+import React, { FC } from 'react';
 import { ISeekBarProps } from './types';
 import format from 'format-duration';
-import debounce from 'lodash.debounce';
 import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
+import { Utils } from 'lib/Utils';
 
 const SeekBar: FC<ISeekBarProps> = () => {
 	const { reader } = useReader();
@@ -17,12 +17,14 @@ const SeekBar: FC<ISeekBarProps> = () => {
 		duration,
 	} = state;
 
-	const debouncedHandleManualSeek = debounce((value: number) => {
-		reader?.seekTo(value);
-	}, 5);
+	const debouncedHandleManualSeek = Utils.debounce(
+		reader?.seekTo.bind(reader) || Function,
+		5
+	);
 
-	const handleManualSeek: ChangeEventHandler = (e) => {
-		debouncedHandleManualSeek(+(e.target as HTMLInputElement).value);
+	const handleManualSeek = (e) => {
+		const value = +(e.target as HTMLInputElement).value;
+		debouncedHandleManualSeek(value);
 	};
 
 	return (

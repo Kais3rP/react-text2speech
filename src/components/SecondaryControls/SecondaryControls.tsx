@@ -2,11 +2,11 @@ import React, { ChangeEventHandler, FC } from 'react';
 import { ISecondaryControlsProps } from './types';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
 import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
-import VolumeSlider from 'components/VolumeSlider/VolumeSlider';
 import { setDuration, setIsSettingsVisible } from 'store/actions';
 import { useReader, useStore, useMainProps } from 'contexts';
 import styles from './styles.module.css';
 import { FcSettings } from '@react-icons/all-files/fc/FcSettings';
+import GenericSlider from 'components/GenericSlider/GenericSlider';
 /* import { ImInfo } from 'react-icons/im';
  */
 const SecondaryControls: FC<ISecondaryControlsProps> = () => {
@@ -35,9 +35,8 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 		reader?.changeSettings({ voiceURI: value });
 	};
 
-	const handleVolumeChange: ChangeEventHandler = (e) => {
-		const target = e.target as HTMLInputElement;
-		reader?.changeSettings({ volume: +target.value });
+	const handleVolumeChange = (value: number) => {
+		reader?.changeSettings({ volume: value });
 	};
 
 	/* Options Handlers */
@@ -101,7 +100,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 			</div>
 
 			<div className={styles.optionsWrapper2}>
-				<VolumeSlider
+				<GenericSlider
 					icon={<BiVolumeFull />}
 					onChange={handleVolumeChange}
 					data={{
@@ -111,7 +110,6 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 						value: volume,
 						unit: '%',
 					}}
-					styleOptions={styleOptions}
 				/>
 			</div>
 			<div

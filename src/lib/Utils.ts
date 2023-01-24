@@ -192,4 +192,12 @@ export class Utils {
 	static isFunction(fn: any) {
 		return fn && typeof fn === 'function';
 	}
+
+	static debounce(fn: (...arg: any[]) => any, delay: number) {
+		let timeout: Timeout | undefined;
+		return function (...args) {
+			if (timeout) clearTimeout(timeout);
+			timeout = setTimeout(() => fn(...args), delay);
+		};
+	}
 }
