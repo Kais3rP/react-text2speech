@@ -9,7 +9,7 @@ const GenericSlider: FC<IGenericSliderProps> = ({
 	icon,
 	...props
 }) => {
-	const debouncedOnChange = Utils.debounce(onChange, 20);
+	const debouncedOnChange = Utils.debounce(onChange, 5);
 
 	const handleChange: ChangeEventHandler = (e) => {
 		const value = +(e.target as HTMLInputElement).value;

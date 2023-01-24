@@ -1,4 +1,5 @@
 import { FC } from 'react';
-declare const Options: FC;
+import { IOptionsProps } from './types';
+declare const Options: FC<IOptionsProps>;
 export default Options;
 //# sourceMappingURL=Options.d.ts.map

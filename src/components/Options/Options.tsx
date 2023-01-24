@@ -4,8 +4,9 @@ import { FcSettings } from '@react-icons/all-files/fc/FcSettings';
 import { useReader, useStore } from 'contexts';
 import { useOnClickOutside } from 'hooks';
 import { setIsOptionsVisible } from 'store/actions';
+import { IOptionsProps } from './types';
 
-const Options: FC = () => {
+const Options: FC<IOptionsProps> = () => {
 	const ref = useRef(null);
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();

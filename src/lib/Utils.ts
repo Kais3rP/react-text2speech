@@ -184,22 +184,30 @@ export class Utils {
 		let secondsLeft = 0;
 		let minutesLeft = 0;
 		seconds = Math.floor(n / 1000);
+		secondsLeft = Math.floor(seconds % 60);
 		minutes = Math.floor(seconds / 60);
-		secondsLeft = seconds % 60;
+		minutesLeft = Math.floor(minutes % 60);
+
 		hours = Math.floor(minutes / 60);
-		minutesLeft = Math.floor(hours % 60);
-		/* console.log(
+
+		console.log(
 			'Seconds',
 			seconds,
+			'Seconds Left',
+			secondsLeft,
 			'Minutes',
-			seconds / 60,
+			minutes,
 			'Minutes Left',
-			minutes % 60
-		); */
+			minutesLeft,
+			'Hours',
+			hours
+		);
 
 		/* format */
 		seconds = secondsLeft.toString().padStart(2, '0');
-		minutes = minutesLeft.toString().padStart(2, '0');
+		minutes = (minutes === minutesLeft ? minutes : minutesLeft)
+			.toString()
+			.padStart(2, '0');
 		hours = hours.toString().padStart(2, 0);
 
 		return hours > 0

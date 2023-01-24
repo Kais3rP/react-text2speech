@@ -1,2 +1,3 @@
-declare type T = number;
+export interface IOptionsProps {
+}
 //# sourceMappingURL=types.d.ts.map
