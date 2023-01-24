@@ -32,7 +32,7 @@ export interface IMainPropsContext {
 	options: { language: string };
 	styleOptions: IStyleOptions;
 	textContainer: HTMLElement;
-	bindReader: BindReader;
+	bindReader?: BindReader;
 }
 
 /* Providers */

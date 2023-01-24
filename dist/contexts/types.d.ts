@@ -24,7 +24,7 @@ export interface IMainPropsContext {
     };
     styleOptions: IStyleOptions;
     textContainer: HTMLElement;
-    bindReader: BindReader;
+    bindReader?: BindReader;
 }
 export interface IStoreProviderProps {
     children: JSX.Element | string;

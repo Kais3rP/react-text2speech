@@ -1997,6 +1997,8 @@ const useBindTextReader = () => {
         pause: () => reader === null || reader === void 0 ? void 0 : reader.pause(),
     }), [dispatch, reader]);
     React.useEffect(() => {
+        if (!bindReader || typeof bindReader !== 'function')
+            return;
         const exposedState = { isMinimized, isVisible, isReading, isLoading };
         bindReader(exposedState, handlers);
     }, [

@@ -40,50 +40,93 @@ yarn add react-text2speech
 
 ## Usage
 
-_Check the `example` folder for a comprehensive example of how to import and use the React Component in your application._
+Check the `example` folder for a comprehensive example of how to import and use the React Component in your application._
 
-1. Import the Component and the zustand store:
-   `import TextReader, { useTextReaderStore } from 'react-text2speech';`
-2. The store exports a set of global state variables and setters which are used internally by the Reader Component, and you should not mess with them, these are the ones you should use if you want to have an extra control on the reader and show extra UI behavior:
+1. Import the Component and hook that exports some methods and state variables that lets you control the reader also from your Application:
+   `import TextReader, { useTextReader } from 'react-text2speech';`
+2. The hook returns a set of state variables and some handlers which are used internally by the Reader Component and a "bindReader" method which has to be passed to the Textreader as a prop in order to be able to bind your Application state to the Reader state:
 
 ```javascript
-const {
-	isLoading,
-	isReading,
-	isVisible,
-	showTextReader,
-	hideTextReader,
-	startReading,
-	stopReading,
-} = useTextReaderStore();
+const { bindReader, handlers, state } = useTextReader();
+const { play, pause, showReader, hideReader, minimizeReader, maximizeReader } = handlers;
+const { isReading, isLoading, isVisible } = state;
 ```
 
-3. Using the Component is as easy as doing:
-   `<TextReader textContainer={node} />`
-   Where `node` must be an `HTMLElement` containing the text or HTML child nodes containing text, that you want to be read.
-   Since in React the DOM refs receive the reference to the DOM element after the first render, the best way to pass the `ref` to the `TextReader` Component is setting it as a React State:
+3. The basic usage is:
 
 ```javascript
 const [node, setNode] = useState(null);
 
-...
+```
+Then return:
+
+```javascript
 
 <div ref={setNode}>Some text to be read here</div>
 {node && <TextReader textContainer={node} />}
 
 ```
 
-4. The `TextReader` Component expects just the `textContainer` prop as required, you can pass two extra props though to tweak style and options:
+Where `node` must be an `HTMLElement` containing the text or HTML child nodes containing text, that you want to be read.
+Since in React the DOM refs receive the reference to the DOM element after the first render, the best way to pass the `ref` to the `TextReader` Component is setting it as a React State.
+
+4. A more complex usage, as the one showed in the example folder leverages the "useTextReader" hook:
+
+```javascript
+
+	const [node, setNode] = useState(null);
+
+	const { bindReader, handlers, state } = useTextReader();
+
+	const { play, pause, showReader } = handlers;
+	const { isReading, isLoading, isVisible } = state;
+
+	return (
+		<div>		
+			{node && (
+				<TextReader
+					textContainer={node}
+					options={{ language: 'en' }}
+					bindReader={bindReader}
+				/>
+			)}
+			<button
+				className={styles.play}
+				onClick={
+					isReading
+						? pause
+						: () => {
+								if (!isVisible) showReader();
+								play();
+						  }
+				}
+			>
+				{isReading ? 'Pause' : 'Play'}
+			</button>
+			{isLoading && <div className="loader">Loading...</div>}
+			<div ref={setNode}>
+				<h1>Ut vero dolorem ea illum fugit.</h1>
+			</div>
+		</div>
+	)
+```
+
+As you can see in this example we use some of the handlers exposed by the `useTextReader` hook to control the reader directly with a `button` and some of the *state variables* to control our UI.
+It's important ot remember to pass the `bindReader` function to the *reader* if we want to control it with custom controls.
+
+
+5. The `TextReader` Component expects just the `textContainer` prop as required, you can pass two extra props though to tweak style and options:
 
 ## API / Props
 
-| Props         | Default value                                                                      | Required |
-| ------------- | ---------------------------------------------------------------------------------- | -------- |
-| textContainer | undefined                                                                          | true     |
-| styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" } | false    |
-| options       | { language: 'en' }                                                                 | false    |
+| Props         | Default value                                                                      | Required | Type |
+| ------------- | ---------------------------------------------------------------------------------- | -------- | ---- |
+| textContainer | undefined                                                                          | true     | HTMLElement |
+| bindReader    | undefined                                                                          | false    | function |
+| styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" } | false    | object |
+| options       | { language: 'en' }                                                                 | false    | object |
 
-**_Remember to set the language accordingly to the language of the text that it's going to be read, it's enough you type the first locale letters e.g. "en", "de", "fr", etc... _**
+**Remember to set the language accordingly to the language of the text that it's going to be read, it's enough you type the first locale letters e.g. "en", "de", "fr", etc... **
 
 ## Edge Cases
 

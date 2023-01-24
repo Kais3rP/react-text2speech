@@ -44,6 +44,7 @@ export const useBindTextReader = () => {
 	);
 
 	useEffect(() => {
+		if (!bindReader || typeof bindReader !== 'function') return;
 		const exposedState = { isMinimized, isVisible, isReading, isLoading };
 		bindReader(exposedState, handlers);
 	}, [
