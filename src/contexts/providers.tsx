@@ -7,6 +7,8 @@ import {
 	setCurrentWordIndex,
 	changeSettings,
 	changeOptions,
+	changeHighlightStyle,
+	setDuration,
 } from 'store/actions';
 import { MainPropsContext, ReaderContext, StoreContext } from './contexts';
 import {
@@ -32,7 +34,7 @@ export const MainPropsProvider: FC<IMainPropsProviderProps> = ({
 /* Provides the reader instance */
 
 export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
-	const { dispatch } = useStore();
+	const { state, dispatch } = useStore();
 	const { textContainer, options, styleOptions } = useMainProps();
 
 	const readerRef = useRef<SpeechSynth>(
@@ -66,11 +68,6 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 				// console.log('Boundary event');
 			},
 			onSeek: (reader: SpeechSynth) => {
-				console.log(
-					'Index inside the seek event listener',
-					reader.state,
-					reader.state.currentWordIndex
-				);
 				dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
 			},
 			onTimeTick: (reader: SpeechSynth) => {
@@ -81,13 +78,21 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 				const idx: number = +(target.dataset.id as string);
 				reader?.seekTo(idx);
 			},
+			onStateChange: (reader: SpeechSynth) => {
+				if (state.duration !== reader.state.duration)
+					dispatch(setDuration(reader.state.duration));
+			},
 			onSettingsChange: (reader: SpeechSynth) => {
 				console.log('Settings change');
 				dispatch(changeSettings(reader.settings));
 			},
-			onOptionsChange: (reader: SpeechSynth, obj) => {
-				console.log('Options change', obj, reader.options);
+			onOptionsChange: (reader: SpeechSynth) => {
+				console.log('Options change', reader.options);
 				dispatch(changeOptions(reader.options));
+			},
+			onStyleChange: (reader: SpeechSynth) => {
+				console.log('Style change');
+				dispatch(changeHighlightStyle(reader.style));
 			},
 		})
 	);

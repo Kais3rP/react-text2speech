@@ -20,14 +20,17 @@ export interface IEvents {
 	onWordClick: (c: SpeechSynth, v?: any) => void;
 	onSeek: (c: SpeechSynth, v?: any) => void;
 	onChunksModeChange: (c: SpeechSynth, v?: any) => void;
+	onStateChange: (c: SpeechSynth, v?: any) => void;
 	onSettingsChange: (c: SpeechSynth, v?: any) => void;
 	onOptionsChange: (c: SpeechSynth, v?: any) => void;
+	onStyleChange: (c: SpeechSynth, v?: any) => void;
 }
 
 export interface IOptions {
 	isHighlightTextOn: boolean;
 	isPreserveHighlighting: boolean;
 	isChunksModeOn: boolean;
+	isUnderlinedOn: boolean;
 }
 
 export interface ISettings {

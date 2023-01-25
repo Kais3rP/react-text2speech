@@ -1,0 +1,28 @@
+.container {
+	position: relative;
+	font-size: 0.7em;
+	font-weight: bold;
+	color: var(--primaryColor);
+	cursor: pointer;
+	transition: all 0.5s linear;
+	border: none;
+	background: none;
+	padding: 1px 6px !important;
+}
+
+.container:hover {
+	color: var(--secondaryColor);
+}
+.container::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	bottom: -2px;
+	width: 0px;
+	height: 1.2px;
+	background-color: var(--primaryColor);
+	transition: all 0.2s ease-in;
+}
+.container:hover::after {
+	width: 100%;
+}

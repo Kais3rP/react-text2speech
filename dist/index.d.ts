@@ -15,5 +15,6 @@ export declare const useTextReader: () => {
     state: {};
     bindReader: (state: any, handlers: any) => void;
 };
+export { SpeechSynth } from './lib';
 export default App;
 //# sourceMappingURL=index.d.ts.map

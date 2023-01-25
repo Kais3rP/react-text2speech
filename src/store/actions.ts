@@ -1,4 +1,4 @@
-import { ISettings, IOptions } from 'lib/types';
+import { ISettings, IOptions, IStyle } from 'lib/types';
 
 export const createAction = (type: string, payload?: any): ActionType => ({
 	type,
@@ -46,3 +46,6 @@ export const changeSettings = (payload: Partial<ISettings>) =>
 
 export const changeOptions = (payload: Partial<IOptions>) =>
 	createAction('CHANGE_OPTIONS', payload);
+
+export const changeHighlightStyle = (payload: Partial<IStyle>) =>
+	createAction('CHANGE_HIGHLIGHT_STYLE', payload);
