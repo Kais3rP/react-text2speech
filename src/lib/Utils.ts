@@ -190,19 +190,6 @@ export class Utils {
 
 		hours = Math.floor(minutes / 60);
 
-		console.log(
-			'Seconds',
-			seconds,
-			'Seconds Left',
-			secondsLeft,
-			'Minutes',
-			minutes,
-			'Minutes Left',
-			minutesLeft,
-			'Hours',
-			hours
-		);
-
 		/* format */
 		seconds = secondsLeft.toString().padStart(2, '0');
 		minutes = (minutes === minutesLeft ? minutes : minutesLeft)

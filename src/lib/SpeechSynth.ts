@@ -129,7 +129,6 @@ export class SpeechSynth extends EventEmitter {
 		/* Reader Options */
 
 		const optionsSetter = (obj: any, key: string | symbol, value: any) => {
-			console.log('Options in the trap', this.options);
 			this.emit('options-change', this);
 			return Reflect.set(obj, key, value);
 		};
@@ -347,8 +346,8 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private addHTMLHighlightTags(node: Element) {
-		const tree = [...node.childNodes];
-		tree.forEach((el) => {
+		const nodes = [...node.childNodes];
+		nodes.forEach((el) => {
 			/* Exclude code tags and its content from parsing */
 			if (
 				el.nodeType === 1 &&
@@ -1096,8 +1095,7 @@ export class SpeechSynth extends EventEmitter {
 
 		this.resetTimeCount();
 
-		this.state = {
-			...this.state,
+		const propsToReset = {
 			textRemaining: this.state.wholeText,
 			currentWordIndex: 0,
 			currentChunkIndex: 0,
@@ -1106,9 +1104,15 @@ export class SpeechSynth extends EventEmitter {
 			isPaused: false,
 			isReading: false,
 		};
+		for (const entry of Object.entries(propsToReset))
+			this.state[entry[0]] = entry[1];
+
 		/* Reset the utterance state ( needed to reset the text utterance ) */
+
 		this.initUtterance();
+
 		/* Scroll back to top word */
+
 		this.scrollTo(1);
 
 		this.emit('reset', this);

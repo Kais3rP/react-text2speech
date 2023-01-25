@@ -499,7 +499,6 @@ class Utils {
         minutes = Math.floor(seconds / 60);
         minutesLeft = Math.floor(minutes % 60);
         hours = Math.floor(minutes / 60);
-        console.log('Seconds', seconds, 'Seconds Left', secondsLeft, 'Minutes', minutes, 'Minutes Left', minutesLeft, 'Hours', hours);
         /* format */
         seconds = secondsLeft.toString().padStart(2, '0');
         minutes = (minutes === minutesLeft ? minutes : minutesLeft)
@@ -601,7 +600,6 @@ class SpeechSynth extends EventEmitter {
         });
         /* Reader Options */
         const optionsSetter = (obj, key, value) => {
-            console.log('Options in the trap', this.options);
             this.emit('options-change', this);
             return Reflect.set(obj, key, value);
         };
@@ -752,8 +750,8 @@ class SpeechSynth extends EventEmitter {
         };
     }
     addHTMLHighlightTags(node) {
-        const tree = [...node.childNodes];
-        tree.forEach((el) => {
+        const nodes = [...node.childNodes];
+        nodes.forEach((el) => {
             /* Exclude code tags and its content from parsing */
             if (el.nodeType === 1 &&
                 (el.tagName === 'PRE' ||
@@ -1301,7 +1299,17 @@ class SpeechSynth extends EventEmitter {
         this.resetHighlight();
         /* Reset timer */
         this.resetTimeCount();
-        this.state = Object.assign(Object.assign({}, this.state), { textRemaining: this.state.wholeText, currentWordIndex: 0, currentChunkIndex: 0, highlightedWords: [], lastWordPosition: 0, isPaused: false, isReading: false });
+        const propsToReset = {
+            textRemaining: this.state.wholeText,
+            currentWordIndex: 0,
+            currentChunkIndex: 0,
+            highlightedWords: [],
+            lastWordPosition: 0,
+            isPaused: false,
+            isReading: false,
+        };
+        for (const entry of Object.entries(propsToReset))
+            this.state[entry[0]] = entry[1];
         /* Reset the utterance state ( needed to reset the text utterance ) */
         this.initUtterance();
         /* Scroll back to top word */
