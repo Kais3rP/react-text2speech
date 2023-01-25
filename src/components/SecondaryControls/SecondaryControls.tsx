@@ -1,10 +1,8 @@
 import React, { FC, useMemo } from 'react';
 import { ISecondaryControlsProps } from './types';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
-import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
 import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
-import GenericSlider from 'components/GenericSlider/GenericSlider';
 import Options from 'components/Options/Options';
 import ColorIcon from 'components/ColorIcon/ColorIcon';
 import UnderlinedTextIcon from 'components/UnderlinedTextIcon/UnderlinedTextIcon';
@@ -38,7 +36,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 
 	const {
 		voices,
-		settings: { voiceURI, volume, rate },
+		settings: { voiceURI, rate },
 		highlightStyle,
 	} = state;
 
@@ -52,11 +50,6 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 	const handleVoiceChange = (value: string) => {
 		if (!reader) return;
 		reader.settings.voiceURI = value;
-	};
-
-	const handleVolumeChange = (value: number) => {
-		if (!reader) return;
-		reader.settings.volume = value;
 	};
 
 	const handleHighlightColorChange = (value: string) => {
@@ -122,8 +115,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					title="Palette"
 					Icon={ColorIcon}
 				/>
-				{/* Reader Options Button */}
-				<Options />
+
 				{/* <ImInfo
 					style={{ marginLeft: '10px' }}
 					className={styles.icon}
@@ -132,17 +124,8 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 			</div>
 
 			<div className={styles.optionsWrapper2}>
-				<GenericSlider
-					icon={<BiVolumeFull />}
-					onChange={handleVolumeChange}
-					data={{
-						min: '0.1',
-						max: '1',
-						step: '0.1',
-						value: volume,
-						unit: '%',
-					}}
-				/>
+				{/* Reader Options Button */}
+				<Options />
 			</div>
 		</div>
 	);

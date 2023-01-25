@@ -1,7 +1,8 @@
 .icon {
 	display: inline-block;
-	width: 15px;
-	height: 15px;
+	width: 16px;
+	height: 16px;
+	margin: 0px 3px 0px 3px;
 	cursor: pointer;
 	border: 2px solid #111;
 	border-radius: 4px;

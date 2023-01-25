@@ -44,7 +44,7 @@
 
 .reset {
 	position: absolute;
-	top: 50%;
+	top: 12px;
 	right: 0px;
 	font-weight: bold;
 	cursor: pointer;
@@ -55,4 +55,10 @@
 
 .reset:hover {
 	color: var(--secondaryColor);
+}
+
+.volumeContainer {
+	position: absolute;
+	top: 12px;
+	left: 0;
 }

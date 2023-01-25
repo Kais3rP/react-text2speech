@@ -8,11 +8,18 @@ import { IMainControlsProps } from './types';
 import { setIsLoading } from 'store/actions';
 import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
+import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
+import GenericSlider from 'components/GenericSlider/GenericSlider';
 
 const MainControls: FC<IMainControlsProps> = () => {
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();
-	const { isReading, isLoading, isMinimized } = state;
+	const {
+		isReading,
+		isLoading,
+		isMinimized,
+		settings: { volume },
+	} = state;
 
 	const handleTextReadPlay = () => {
 		if (reader?.isPaused()) reader?.resume();
@@ -62,12 +69,32 @@ const MainControls: FC<IMainControlsProps> = () => {
 			reader.seekTo(reader.state.currentWordIndex + 1);
 	};
 
+	const handleVolumeChange = (value: number) => {
+		if (!reader) return;
+		reader.settings.volume = value;
+	};
+
 	return (
 		<div
 			className={`${styles.container} ${
 				isMinimized ? styles.minimized : styles.notMinimized
 			}`}
 		>
+			{!isMinimized && (
+				<div className={styles.volumeContainer}>
+					<GenericSlider
+						icon={<BiVolumeFull />}
+						onChange={handleVolumeChange}
+						data={{
+							min: '0.1',
+							max: '1',
+							step: '0.1',
+							value: volume,
+							unit: '%',
+						}}
+					/>
+				</div>
+			)}
 			<AiFillFastBackward
 				className={`${styles.button} ${
 					isLoading ? styles.loading : styles.notLoading
