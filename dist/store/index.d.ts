@@ -4,6 +4,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     isReading: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     voices: IVoiceInfo[];
     elapsedTime: number;
     isMinimized: boolean;
@@ -17,6 +21,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     isLoading: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;
@@ -30,6 +38,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     isMinimized: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;
@@ -43,6 +55,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     isVisible: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;
@@ -56,6 +72,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     isOptionsVisible: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;
@@ -69,6 +89,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     voices: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     elapsedTime: number;
     isMinimized: boolean;
@@ -82,6 +106,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     elapsedTime: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     isMinimized: boolean;
@@ -95,6 +123,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     duration: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;
@@ -108,6 +140,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     numberOfWords: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;
@@ -121,6 +157,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     currentWordIndex: any;
     settings: import("../lib/types").ISettings;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;
@@ -133,6 +173,10 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
 } | {
     settings: any;
     options: import("../lib/types").IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;
@@ -146,6 +190,24 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
 } | {
     options: any;
     settings: import("../lib/types").ISettings;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
+    isReading: boolean;
+    voices: IVoiceInfo[];
+    elapsedTime: number;
+    isMinimized: boolean;
+    isVisible: boolean;
+    isOptionsVisible: boolean;
+    numberOfWords: number;
+    currentWordIndex: number;
+    duration: number;
+    isLoading: boolean;
+} | {
+    highlightStyle: any;
+    settings: import("../lib/types").ISettings;
+    options: import("../lib/types").IOptions;
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;

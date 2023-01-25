@@ -12,6 +12,11 @@ export const globalState: IGlobalState = {
 		isPreserveHighlighting: true,
 		isHighlightTextOn: true,
 		isChunksModeOn: false,
+		isUnderlinedOn: true,
+	},
+	highlightStyle: {
+		color1: '',
+		color2: '',
 	},
 	isReading: false,
 	isLoading: false,
@@ -63,6 +68,12 @@ export const rootReducer = (state: IGlobalState, action: ActionType) => {
 		}
 		case 'CHANGE_OPTIONS': {
 			return { ...state, options: { ...state.options, ...payload } };
+		}
+		case 'CHANGE_HIGHLIGHT_STYLE': {
+			return {
+				...state,
+				highlightStyle: { ...state.highlightStyle, ...payload },
+			};
 		}
 		default:
 			return { ...state };

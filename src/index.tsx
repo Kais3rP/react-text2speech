@@ -46,8 +46,8 @@ App.defaultProps = {
 		secondaryColor: '#55F',
 		bgColor: '#FFF',
 		textColor: '#222',
-		highlightColor1: '#98AFC7',
-		highlightColor2: '#737CA1',
+		highlightColor1: '#306EFF', // background color
+		highlightColor2: '#FCDFFF', // font color
 	},
 };
 
@@ -65,5 +65,7 @@ export const useTextReader = () => {
 
 	return { handlers, state, bindReader };
 };
+
+export { SpeechSynth } from './lib';
 
 export default App;

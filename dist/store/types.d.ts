@@ -6,6 +6,10 @@ export declare type ActionType = {
 export interface IGlobalState {
     settings: ISettings;
     options: IOptions;
+    highlightStyle: {
+        color1: string;
+        color2: string;
+    };
     isReading: boolean;
     voices: IVoiceInfo[];
     elapsedTime: number;

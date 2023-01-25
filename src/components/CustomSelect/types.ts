@@ -1,3 +1,5 @@
+import { FC } from 'react';
+
 export interface IOption {
 	name: string;
 	value: string;
@@ -9,5 +11,6 @@ export interface ICustomSelectProps {
 	value: string;
 	title: string;
 	onChange: (v: string) => void;
+	Icon: FC<any>;
 	[key: string]: any;
 }

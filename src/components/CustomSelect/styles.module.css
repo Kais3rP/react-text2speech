@@ -1,34 +1,8 @@
 .container {
 	margin-right: 10px;
-}
-
-.button {
-	position: relative;
-	font-size: 0.7em;
-	font-weight: bold;
-	color: var(--primaryColor);
-	cursor: pointer;
-	transition: all 0.5s linear;
-	border: none;
-	background: none;
-	padding: 1px 6px !important;
-}
-
-.button:hover {
-	color: var(--secondaryColor);
-}
-.button::after {
-	content: '';
-	position: absolute;
-	left: 0;
-	bottom: -2px;
-	width: 0px;
-	height: 1.2px;
-	background-color: var(--primaryColor);
-	transition: all 0.2s ease-in;
-}
-.button:hover::after {
-	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .optionsContainer {
@@ -47,6 +21,10 @@
 	justify-content: center;
 	align-items: center;
 	overflow-x: hidden;
+}
+
+.optionsContainer i {
+	margin: 3px;
 }
 
 .visible {

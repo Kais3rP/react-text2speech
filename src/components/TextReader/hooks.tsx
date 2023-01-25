@@ -9,6 +9,7 @@ import {
 	setDuration,
 	setNumberOfWords,
 	setVoices,
+	changeHighlightStyle,
 } from 'store/actions';
 
 export const useBindTextReader = () => {
@@ -88,6 +89,7 @@ export const useInitializeReader = () => {
 
 				dispatch(changeSettings(reader.settings));
 				dispatch(changeOptions(reader.options));
+				dispatch(changeHighlightStyle(reader.style));
 			})
 			.catch((e) => console.log(e));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
