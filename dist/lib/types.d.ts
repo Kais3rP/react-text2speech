@@ -23,7 +23,7 @@ export interface IOptions {
     isHighlightTextOn: boolean;
     isPreserveHighlighting: boolean;
     isChunksModeOn: boolean;
-    isUnderlined: boolean;
+    isUnderlinedOn: boolean;
 }
 export interface ISettings {
     pitch: number;

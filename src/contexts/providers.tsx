@@ -86,8 +86,8 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 				console.log('Settings change');
 				dispatch(changeSettings(reader.settings));
 			},
-			onOptionsChange: (reader: SpeechSynth, obj) => {
-				console.log('Options change', obj, reader.options);
+			onOptionsChange: (reader: SpeechSynth) => {
+				console.log('Options change', reader.options);
 				dispatch(changeOptions(reader.options));
 			},
 			onStyleChange: (reader: SpeechSynth) => {

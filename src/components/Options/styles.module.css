@@ -37,13 +37,15 @@
 	flex-wrap: wrap;
 	transition: all 0.2s linear;
 	padding: 0px 0px 0px 10px;
+	overflow-x: hidden;
 	overflow-y: auto;
 }
 
 .overlayContainer label {
-	display: flex;
 	padding: 0px;
 	margin: 0px;
+	display: flex;
+	width: 130px;
 }
 
 .overlayContainer input {

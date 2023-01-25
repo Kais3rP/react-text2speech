@@ -66,4 +66,6 @@ export const useTextReader = () => {
 	return { handlers, state, bindReader };
 };
 
+export { SpeechSynth } from './lib';
+
 export default App;

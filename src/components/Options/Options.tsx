@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC, useRef } from 'react';
+import React, { ChangeEventHandler, FC, useMemo, useRef } from 'react';
 import styles from './styles.module.css';
 import { FcSettings } from '@react-icons/all-files/fc/FcSettings';
 import { useReader, useStore } from 'contexts';
@@ -13,7 +13,12 @@ const Options: FC<IOptionsProps> = () => {
 
 	const {
 		isOptionsVisible,
-		options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting },
+		options: {
+			isChunksModeOn,
+			isHighlightTextOn,
+			isPreserveHighlighting,
+			isUnderlinedOn,
+		},
 	} = state;
 
 	const showOptions = () => {
@@ -25,21 +30,62 @@ const Options: FC<IOptionsProps> = () => {
 	};
 	/* Options Handlers */
 
-	const handlePreserveHighlighting: ChangeEventHandler = (e) => {
-		const target = e.target as HTMLInputElement;
-		reader?.changeOptions({ isPreserveHighlighting: target.checked });
-	};
+	const options = useMemo(() => {
+		const handlePreserveHighlighting: ChangeEventHandler = (e) => {
+			const target = e.target as HTMLInputElement;
+			reader?.changeOptions({ isPreserveHighlighting: target.checked });
+		};
 
-	const handleIsHighlightTextOn: ChangeEventHandler = (e) => {
-		const target = e.target as HTMLInputElement;
-		reader?.changeOptions({ isHighlightTextOn: target.checked });
-	};
+		const handleIsHighlightTextOn: ChangeEventHandler = (e) => {
+			const target = e.target as HTMLInputElement;
+			reader?.changeOptions({ isHighlightTextOn: target.checked });
+		};
 
-	const handleIsChunksModeOn: ChangeEventHandler = (e) => {
-		if (reader?.state.isMobile) return; // Disable this option for mobile devices
-		const target = e.target as HTMLInputElement;
-		reader?.changeOptions({ isChunksModeOn: target.checked });
-	};
+		const handleIsChunksModeOn: ChangeEventHandler = (e) => {
+			if (reader?.state.isMobile) return; // Disable this option for mobile devices
+			const target = e.target as HTMLInputElement;
+			reader?.changeOptions({ isChunksModeOn: target.checked });
+		};
+
+		const handleIsUnderlinedOn: ChangeEventHandler = (e) => {
+			const target = e.target as HTMLInputElement;
+			console.log('Is underlined on', target.checked);
+			reader?.changeOptions({ isUnderlinedOn: target.checked });
+		};
+
+		return [
+			{
+				id: 'highlight-option',
+				label: 'Enable Highlighting',
+				value: isHighlightTextOn,
+				handler: handleIsHighlightTextOn,
+			},
+			{
+				id: 'preserve-option',
+				label: 'Preserve Highlighting',
+				value: isPreserveHighlighting,
+				handler: handlePreserveHighlighting,
+			},
+			{
+				id: 'chunksmode-option',
+				label: 'Enable Chunks Mode',
+				value: isChunksModeOn,
+				handler: handleIsChunksModeOn,
+			},
+			{
+				id: 'underlined-option',
+				label: 'Enable Underline',
+				value: isUnderlinedOn,
+				handler: handleIsUnderlinedOn,
+			},
+		];
+	}, [
+		isChunksModeOn,
+		isHighlightTextOn,
+		isPreserveHighlighting,
+		isUnderlinedOn,
+		reader,
+	]);
 
 	useOnClickOutside(ref, hideOptions);
 
@@ -52,42 +98,21 @@ const Options: FC<IOptionsProps> = () => {
 				}`}
 				onPointerDown={hideOptions}
 			>
-				<label
-					htmlFor="preserve-option"
-					onPointerDown={(e) => e.stopPropagation()}
-				>
-					<input
-						id="preserve-option"
-						type="checkbox"
-						checked={isPreserveHighlighting}
-						onChange={handlePreserveHighlighting}
-					/>
-					<h5>Preserve Highlighting</h5>
-				</label>
-				<label
-					htmlFor="highlight-option"
-					onPointerDown={(e) => e.stopPropagation()}
-				>
-					<input
-						id="highlight-option"
-						type="checkbox"
-						checked={isHighlightTextOn}
-						onChange={handleIsHighlightTextOn}
-					/>
-					<h5>Highlight Text</h5>
-				</label>
-				<label
-					htmlFor="mode-option"
-					onPointerDown={(e) => e.stopPropagation()}
-				>
-					<input
-						id="mode-option"
-						type="checkbox"
-						checked={isChunksModeOn}
-						onChange={handleIsChunksModeOn}
-					/>
-					<h5>Chunks Mode</h5>
-				</label>
+				{options.map((o) => (
+					<label
+						key={o.id}
+						htmlFor={o.id}
+						onPointerDown={(e) => e.stopPropagation()}
+					>
+						<input
+							id={o.id}
+							type="checkbox"
+							checked={o.value}
+							onChange={o.handler}
+						/>
+						<h5>{o.label}</h5>
+					</label>
+				))}
 			</div>
 		</div>
 	);

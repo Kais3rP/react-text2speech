@@ -609,6 +609,7 @@ class SpeechSynth extends EventEmitter {
             isHighlightTextOn: true,
             isChunksModeOn: Utils.isMobile(),
             isPreserveHighlighting: true,
+            isUnderlinedOn: true,
         }, {
             set: optionsSetter,
         });
@@ -1039,12 +1040,13 @@ class SpeechSynth extends EventEmitter {
     }
     applyStyleToWord(el) {
         el.style.backgroundColor = this.style.color1;
-        el.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
-        el.style.textDecoration = 'underline';
+        el.style.boxShadow = `10px 0px 0px 0px ${this.style.color1} -10px 0px 0px 0px ${this.style.color1}`;
+        el.style.textDecoration = this.options.isUnderlinedOn
+            ? 'underline'
+            : 'none';
     }
-    changeChunkMode(b) {
+    changeChunkMode() {
         this.clearTimeCount();
-        this.options.isChunksModeOn = b;
         /* Since che chunk mode change triggers a restart of the utterance playing,
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
@@ -1189,12 +1191,19 @@ class SpeechSynth extends EventEmitter {
         this.restart('edit-utterance');
     }
     changeOptions(obj) {
-        /* Handle chunks mode option change */
-        if ('isChunksModeOn' in obj) {
-            this.changeChunkMode(obj.isChunksModeOn);
-        }
         for (const entry of Object.entries(obj))
             this.options[entry[0]] = entry[1];
+        /* Handle chunks mode option change */
+        if ('isChunksModeOn' in obj) {
+            this.changeChunkMode();
+        }
+        /* Handle underline option change */
+        if ('isUnderlinedOn' in obj) {
+            this.changeStyle({
+                type: 'underline-mode',
+                value: obj.isUnderlinedOn,
+            });
+        }
     }
     changeStyle({ type, value }) {
         switch (type) {
@@ -1358,7 +1367,7 @@ const globalState = {
         isPreserveHighlighting: true,
         isHighlightTextOn: true,
         isChunksModeOn: false,
-        isUnderlined: true,
+        isUnderlinedOn: true,
     },
     highlightStyle: {
         color1: '',
@@ -1474,8 +1483,8 @@ const ReaderProvider = ({ children }) => {
         }, onSettingsChange: (reader) => {
             console.log('Settings change');
             dispatch(changeSettings(reader.settings));
-        }, onOptionsChange: (reader, obj) => {
-            console.log('Options change', obj, reader.options);
+        }, onOptionsChange: (reader) => {
+            console.log('Options change', reader.options);
             dispatch(changeOptions(reader.options));
         }, onStyleChange: (reader) => {
             console.log('Style change');
@@ -1722,7 +1731,7 @@ const GenericSlider = (_a) => {
         React.createElement("input", { className: styles$2.slider, min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: handleChange })));
 };
 
-var css_248z$1 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tdisplay: flex;\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
+var css_248z$1 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\twidth: 130px;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
 var styles$1 = {"container":"styles-module_container__bAbpe","icon":"styles-module_icon__J4xQk","overlayContainer":"styles-module_overlayContainer__iWVEa","visible":"styles-module_visible__Ci-XW"};
 styleInject(css_248z$1);
 
@@ -1736,7 +1745,7 @@ const Options = () => {
     const ref = React.useRef(null);
     const { reader } = useReader();
     const { state, dispatch } = useStore();
-    const { isOptionsVisible, options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting }, } = state;
+    const { isOptionsVisible, options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting, isUnderlinedOn, }, } = state;
     const showOptions = () => {
         dispatch(setIsOptionsVisible(true));
     };
@@ -1744,33 +1753,65 @@ const Options = () => {
         dispatch(setIsOptionsVisible(false));
     };
     /* Options Handlers */
-    const handlePreserveHighlighting = (e) => {
-        const target = e.target;
-        reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isPreserveHighlighting: target.checked });
-    };
-    const handleIsHighlightTextOn = (e) => {
-        const target = e.target;
-        reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isHighlightTextOn: target.checked });
-    };
-    const handleIsChunksModeOn = (e) => {
-        if (reader === null || reader === void 0 ? void 0 : reader.state.isMobile)
-            return; // Disable this option for mobile devices
-        const target = e.target;
-        reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isChunksModeOn: target.checked });
-    };
+    const options = React.useMemo(() => {
+        const handlePreserveHighlighting = (e) => {
+            const target = e.target;
+            reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isPreserveHighlighting: target.checked });
+        };
+        const handleIsHighlightTextOn = (e) => {
+            const target = e.target;
+            reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isHighlightTextOn: target.checked });
+        };
+        const handleIsChunksModeOn = (e) => {
+            if (reader === null || reader === void 0 ? void 0 : reader.state.isMobile)
+                return; // Disable this option for mobile devices
+            const target = e.target;
+            reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isChunksModeOn: target.checked });
+        };
+        const handleIsUnderlinedOn = (e) => {
+            const target = e.target;
+            console.log('Is underlined on', target.checked);
+            reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isUnderlinedOn: target.checked });
+        };
+        return [
+            {
+                id: 'highlight-option',
+                label: 'Enable Highlighting',
+                value: isHighlightTextOn,
+                handler: handleIsHighlightTextOn,
+            },
+            {
+                id: 'preserve-option',
+                label: 'Preserve Highlighting',
+                value: isPreserveHighlighting,
+                handler: handlePreserveHighlighting,
+            },
+            {
+                id: 'chunksmode-option',
+                label: 'Enable Chunks Mode',
+                value: isChunksModeOn,
+                handler: handleIsChunksModeOn,
+            },
+            {
+                id: 'underlined-option',
+                label: 'Enable Underline',
+                value: isUnderlinedOn,
+                handler: handleIsUnderlinedOn,
+            },
+        ];
+    }, [
+        isChunksModeOn,
+        isHighlightTextOn,
+        isPreserveHighlighting,
+        isUnderlinedOn,
+        reader,
+    ]);
     useOnClickOutside(ref, hideOptions);
     return (React.createElement("div", { className: styles$1.container, ref: ref },
         React.createElement(FcSettings_1, { className: styles$1.icon, onPointerDown: showOptions }),
-        React.createElement("div", { className: `${styles$1.overlayContainer} ${isOptionsVisible && styles$1.visible}`, onPointerDown: hideOptions },
-            React.createElement("label", { htmlFor: "preserve-option", onPointerDown: (e) => e.stopPropagation() },
-                React.createElement("input", { id: "preserve-option", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
-                React.createElement("h5", null, "Preserve Highlighting")),
-            React.createElement("label", { htmlFor: "highlight-option", onPointerDown: (e) => e.stopPropagation() },
-                React.createElement("input", { id: "highlight-option", type: "checkbox", checked: isHighlightTextOn, onChange: handleIsHighlightTextOn }),
-                React.createElement("h5", null, "Highlight Text")),
-            React.createElement("label", { htmlFor: "mode-option", onPointerDown: (e) => e.stopPropagation() },
-                React.createElement("input", { id: "mode-option", type: "checkbox", checked: isChunksModeOn, onChange: handleIsChunksModeOn }),
-                React.createElement("h5", null, "Chunks Mode")))));
+        React.createElement("div", { className: `${styles$1.overlayContainer} ${isOptionsVisible && styles$1.visible}`, onPointerDown: hideOptions }, options.map((o) => (React.createElement("label", { key: o.id, htmlFor: o.id, onPointerDown: (e) => e.stopPropagation() },
+            React.createElement("input", { id: o.id, type: "checkbox", checked: o.value, onChange: o.handler }),
+            React.createElement("h5", null, o.label)))))));
 };
 
 const palette = [
@@ -1971,6 +2012,7 @@ const useTextReader = () => {
     return { handlers, state, bindReader };
 };
 
+exports.SpeechSynth = SpeechSynth;
 exports.default = App;
 exports.useTextReader = useTextReader;
 //# sourceMappingURL=index.js.map

@@ -140,6 +140,7 @@ export class SpeechSynth extends EventEmitter {
 				isHighlightTextOn: true,
 				isChunksModeOn: Utils.isMobile(),
 				isPreserveHighlighting: true,
+				isUnderlinedOn: true,
 			},
 			{
 				set: optionsSetter,
@@ -753,13 +754,14 @@ export class SpeechSynth extends EventEmitter {
 
 	private applyStyleToWord(el: HTMLElement) {
 		el.style.backgroundColor = this.style.color1 as string;
-		el.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
-		el.style.textDecoration = 'underline';
+		el.style.boxShadow = `10px 0px 0px 0px ${this.style.color1} -10px 0px 0px 0px ${this.style.color1}`;
+		el.style.textDecoration = this.options.isUnderlinedOn
+			? 'underline'
+			: 'none';
 	}
 
-	private changeChunkMode(b: boolean) {
+	private changeChunkMode() {
 		this.clearTimeCount();
-		this.options.isChunksModeOn = b;
 
 		/* Since che chunk mode change triggers a restart of the utterance playing,
 		make sure the current word index gets synchronized with the current chunk index start word,
@@ -952,18 +954,28 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	changeOptions(obj: Partial<IOptions>) {
-		/* Handle chunks mode option change */
-		if ('isChunksModeOn' in obj) {
-			this.changeChunkMode(obj.isChunksModeOn as boolean);
-		}
 		for (const entry of Object.entries(obj))
 			this.options[entry[0]] = entry[1];
+
+		/* Handle chunks mode option change */
+		if ('isChunksModeOn' in obj) {
+			this.changeChunkMode();
+		}
+		/* Handle underline option change */
+		if ('isUnderlinedOn' in obj) {
+			this.changeStyle({
+				type: 'underline-mode',
+				value: obj.isUnderlinedOn,
+			});
+		}
 	}
 
 	changeStyle({ type, value }) {
 		switch (type) {
 			case 'highlight-color':
 				this.style.color1 = value;
+				break;
+			case 'underlined-mode':
 				break;
 			default:
 		}
