@@ -1,0 +1,13 @@
+.icon {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	cursor: pointer;
+	border: 2px solid #111;
+	border-radius: 4px;
+	transition: all 0.2s ease-in;
+}
+
+.icon:hover {
+	transform: scale(1.2);
+}

@@ -1,6 +1,5 @@
 import React, { FC, useState, useRef, useCallback } from 'react';
 import { useOnClickOutside } from '../../hooks/index';
-import Button from './Button';
 import { ICustomSelectProps } from './types';
 import styles from './styles.module.css';
 
@@ -10,6 +9,7 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 	title,
 	onChange,
 	style,
+	Icon,
 	...props
 }) => {
 	const [showOptions, setShowOptions] = useState(false);
@@ -32,9 +32,11 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 
 	return (
 		<div className={styles.container} {...props}>
-			<Button type="button" onClick={show}>
-				{options.find((o) => o.value === value)?.name}
-			</Button>
+			<Icon
+				onClick={show}
+				option={options.find((o) => o.value === value)}
+			/>
+
 			<div
 				ref={ref}
 				className={`${styles.optionsContainer} ${
@@ -43,15 +45,14 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 				onPointerDown={hide}
 			>
 				{options.map((opt) => (
-					<Button
+					<Icon
 						key={opt.value}
 						onPointerDown={(e) => {
 							e.stopPropagation();
 							onOptionClick(opt.value);
 						}}
-					>
-						{opt.name}
-					</Button>
+						option={opt}
+					/>
 				))}
 			</div>
 		</div>

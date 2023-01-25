@@ -1,22 +1,40 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { ISecondaryControlsProps } from './types';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
 import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
-import { setDuration } from 'store/actions';
 import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
 import GenericSlider from 'components/GenericSlider/GenericSlider';
 import Options from 'components/Options/Options';
+import ColorIcon from 'components/ColorIcon/ColorIcon';
+import UnderlinedTextIcon from 'components/UnderlinedTextIcon/UnderlinedTextIcon';
+import { IOption } from 'components/CustomSelect/types';
 
-const palette = [
-	{ name: 'Purple', value: '#98AFC7' },
-	{ name: 'Green', value: 'green' },
-	{ name: 'Yellow', value: 'yellow' },
+const rates: IOption[] = [
+	{ value: '0.5', name: '0.5x' },
+	{ value: '0.75', name: '0.75x' },
+	{ value: '1', name: '1x' },
+	{ value: '1.25', name: '1.25x' },
+	{ value: '1.5', name: '1.5x' },
+	{ value: '2', name: '2x' },
+];
+
+const palette: IOption[] = [
+	{ name: 'Chocolate', value: '#C85A17' },
+	{ name: 'Yellow', value: '#FFFF00' },
+	{ name: 'Orange', value: '#FFA500' },
+	{ name: 'Light Slate Blue', value: '#736AFF' },
+	{ name: 'Ruby Red', value: '#F62217' },
+	{ name: 'Bright Neon Pink', value: '#F433FF' },
+	{ name: 'Desert Sand', value: '#EDC9AF' },
+	{ name: 'Dark Goldenrod', value: '#AF7817' },
+	{ name: 'Cotton Candy', value: '#FCDFFF' },
+	{ name: 'Chartreuse', value: '#8AFB17' },
 ];
 
 const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 	const { reader } = useReader();
-	const { state, dispatch } = useStore();
+	const { state } = useStore();
 
 	const {
 		voices,
@@ -27,21 +45,40 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 	/* Settings Handlers */
 
 	const handleRateChange = (value: string) => {
-		reader?.changeSettings({ rate: +value });
-		dispatch(setDuration(reader?.state.duration || 0));
+		if (!reader) return;
+		reader.settings.rate = +value;
 	};
 
 	const handleVoiceChange = (value: string) => {
-		reader?.changeSettings({ voiceURI: value });
+		if (!reader) return;
+		reader.settings.voiceURI = value;
 	};
 
 	const handleVolumeChange = (value: number) => {
-		reader?.changeSettings({ volume: value });
+		if (!reader) return;
+		reader.settings.volume = value;
 	};
 
 	const handleHighlightColorChange = (value: string) => {
-		reader?.changeStyle({ type: 'highlight-color', value });
+		if (!reader) return;
+		reader.style.color1 = value;
 	};
+
+	const handleHighlightFontColorChange = (value: string) => {
+		if (!reader) return;
+		reader.style.color2 = value;
+	};
+
+	const colors = useMemo(() => {
+		const updatedPalette = [...palette];
+		for (const color of Object.values(highlightStyle))
+			if (!palette.find((c) => c.value === color))
+				updatedPalette.push({
+					name: color,
+					value: color,
+				});
+		return updatedPalette;
+	}, [highlightStyle]);
 
 	return (
 		<div className={styles.container}>
@@ -49,18 +86,12 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 				{/* Rate setting button */}
 				<CustomSelect
 					name="rate"
-					options={[
-						{ value: '0.5', name: '0.5x' },
-						{ value: '0.75', name: '0.75x' },
-						{ value: '1', name: '1x' },
-						{ value: '1.25', name: '1.25x' },
-						{ value: '1.5', name: '1.5x' },
-						{ value: '2', name: '2x' },
-					]}
+					options={rates}
 					onChange={handleRateChange}
 					value={rate.toString()}
 					defaultValue="1"
 					title="Rate"
+					Icon={UnderlinedTextIcon}
 				/>
 				{/* Voice setting button */}
 				<CustomSelect
@@ -70,18 +101,29 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					value={voiceURI || ''}
 					defaultValue="1"
 					title="Voices"
+					Icon={UnderlinedTextIcon}
+				/>
+				{/* Palette */}
+				<CustomSelect
+					name="palette"
+					options={colors}
+					onChange={handleHighlightColorChange}
+					value={highlightStyle.color1}
+					defaultValue="lavander"
+					title="Palette"
+					Icon={ColorIcon}
+				/>
+				<CustomSelect
+					name="palette"
+					options={colors}
+					onChange={handleHighlightFontColorChange}
+					value={highlightStyle.color2}
+					defaultValue="lavander"
+					title="Palette"
+					Icon={ColorIcon}
 				/>
 				{/* Reader Options Button */}
 				<Options />
-				<CustomSelect
-					name="palette"
-					options={palette}
-					onChange={handleHighlightColorChange}
-					value={highlightStyle.color1 || 'yellow'}
-					defaultValue="lavander"
-					title="Palette"
-				/>
-
 				{/* <ImInfo
 					style={{ marginLeft: '10px' }}
 					className={styles.icon}

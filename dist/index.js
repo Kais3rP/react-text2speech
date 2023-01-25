@@ -541,7 +541,7 @@ class SpeechSynth extends EventEmitter {
     /* Style */
     color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
-    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onSettingsChange = () => null, onOptionsChange = () => null, onStyleChange = () => null, } = {
+    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onStateChange = () => null, onSettingsChange = () => null, onOptionsChange = () => null, onStyleChange = () => null, } = {
         /* Generic Settings */
         language: 'en',
         /* Style */
@@ -558,6 +558,7 @@ class SpeechSynth extends EventEmitter {
         onTimeTick: () => null,
         onWordClick: () => null,
         onSeek: () => null,
+        onStateChange: () => null,
         onSettingsChange: () => null,
         onOptionsChange: () => null,
         onStyleChange: () => null,
@@ -569,7 +570,6 @@ class SpeechSynth extends EventEmitter {
         this.utterance = new window.SpeechSynthesisUtterance();
         /* Timeouts */
         this.timeoutRef = undefined;
-        this.editTimeoutRef = undefined;
         /* Events */
         this.events = [
             { type: 'boundary', handlers: [onBoundary] },
@@ -581,15 +581,33 @@ class SpeechSynth extends EventEmitter {
             { type: 'reset', handlers: [onReset] },
             { type: 'seek', handlers: [onSeek] },
             { type: 'end', handlers: [onEnd] },
+            { type: 'state-change', handlers: [onStateChange] },
             { type: 'settings-change', handlers: [onSettingsChange] },
             { type: 'options-change', handlers: [onOptionsChange] },
             { type: 'style-change', handlers: [onStyleChange] },
         ];
         /* @@@ Proxies @@@ */
+        /*
+        Remember to perform the Reflection before anything else so they modifications to the instance properties
+        are applied before any side effect is performed
+        */
         /* Settings (Utterance settings) */
         const settingsSetter = (obj, key, value) => {
+            const result = Reflect.set(obj, key, value);
+            this.clearTimeCount(); // Reset timer when a setting changes since the utterance has to be restarted
+            switch (key) {
+                case 'voiceURI':
+                    this.changeVoice();
+                    break;
+                case 'rate':
+                    this.changeRate();
+                    break;
+            }
+            /* Re initialize the utterance */
+            this.initUtterance();
+            this.restart('settings-change');
             this.emit('settings-change', this);
-            return Reflect.set(obj, key, value);
+            return result;
         };
         this.settings = new Proxy({
             pitch: 1,
@@ -602,8 +620,27 @@ class SpeechSynth extends EventEmitter {
         });
         /* Reader Options */
         const optionsSetter = (obj, key, value) => {
+            const result = Reflect.set(obj, key, value);
+            /* Extra actions to perform internally when an option gets changed */
+            switch (key) {
+                case 'isChunksModeOn':
+                    this.changeChunkMode();
+                    break;
+                case 'isUnderlinedOn':
+                    this.applyStyleToHighlightedWords();
+                    break;
+                case 'isHighlightTextOn':
+                    if (value) {
+                        if (this.options.isChunksModeOn)
+                            /* Highlight the current chunk */
+                            this.highlightChunk(this.state.currentChunkIndex);
+                    }
+                    else
+                        this.resetHighlight();
+                    break;
+            }
             this.emit('options-change', this);
-            return Reflect.set(obj, key, value);
+            return result;
         };
         this.options = new Proxy({
             isHighlightTextOn: true,
@@ -615,14 +652,21 @@ class SpeechSynth extends EventEmitter {
         });
         /* State */
         const stateSetter = (obj, key, value) => {
+            const result = Reflect.set(obj, key, value);
             switch (key) {
                 case 'currentWordIndex':
                     this.emit('seek', this);
                     break;
+                case 'elapsedTime':
+                    if (this.state.elapsedTime % 1000 === 0) {
+                        /* Instructions executed every 1000ms when the reader is active */
+                        this.emit('time-tick', this);
+                    }
+                    break;
                 //	console.log(key);
             }
-            this.emit('state-change');
-            return Reflect.set(obj, key, value);
+            this.emit('state-change', this);
+            return result;
         };
         this.state = new Proxy({
             isMobile: Utils.isMobile(),
@@ -653,8 +697,10 @@ class SpeechSynth extends EventEmitter {
             set: stateSetter,
         });
         const styleSetter = (obj, key, value) => {
+            const result = Reflect.set(obj, key, value);
+            this.applyStyleToHighlightedWords();
             this.emit('style-change', this);
-            return Reflect.set(obj, key, value);
+            return result;
         };
         this.style = new Proxy({ color1, color2 }, {
             set: styleSetter,
@@ -717,8 +763,8 @@ class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
         this.utterance.text = this.options.isChunksModeOn
-            ? this.state.chunksArray[this.state.currentChunkIndex].text
-            : this.state.wholeText;
+            ? this.getCurrentChunkText()
+            : this.getRemainingText();
         this.utterance.lang = this.settings.language;
         this.utterance.voice = this.state.voice;
         this.utterance.pitch = this.settings.pitch;
@@ -942,10 +988,6 @@ class SpeechSynth extends EventEmitter {
         if (frequency % 10 !== 0)
             throw new Error('Frequency must be a multiple of 10');
         this.state.elapsedTime += frequency;
-        if (this.state.elapsedTime % 1000 === 0) {
-            /* Instructions executed every 1000ms when the reader is active */
-            this.emit('time-tick', this, this.state.elapsedTime);
-        }
         this.timeoutRef = setTimeout(this.timeCount.bind(this, e, frequency), frequency);
     }
     clearTimeCount() {
@@ -1040,11 +1082,13 @@ class SpeechSynth extends EventEmitter {
     }
     applyStyleToWord(el) {
         el.style.backgroundColor = this.style.color1;
+        el.style.color = this.style.color2;
         el.style.boxShadow = `10px 0px 0px 0px ${this.style.color1} -10px 0px 0px 0px ${this.style.color1}`;
         el.style.textDecoration = this.options.isUnderlinedOn
             ? 'underline'
             : 'none';
     }
+    /* Private handlers for proxy traps */
     changeChunkMode() {
         this.clearTimeCount();
         /* Since che chunk mode change triggers a restart of the utterance playing,
@@ -1056,18 +1100,36 @@ class SpeechSynth extends EventEmitter {
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
             2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
-        if (this.options.isChunksModeOn)
+        if (this.options.isChunksModeOn) {
+            this.utterance.text = this.getCurrentChunkText();
             this.highlightChunk(this.state.currentChunkIndex);
-        else
+        }
+        else {
+            this.utterance.text = this.getRemainingText();
             this.resetHighlight();
-        this.utterance.text = this.options.isChunksModeOn
-            ? this.getCurrentChunkText(this.state.currentChunkIndex)
-            : this.getRemainingText(this.state.currentWordIndex);
+        }
         this.restart('chunks-mode-change');
+    }
+    changeVoice() {
+        const voice = this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI).length > 0
+            ? this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI)[0]
+            : this.state.voices[0];
+        this.state.voice = voice;
+        this.utterance.voice = voice;
+    }
+    changeRate() {
+        this.state.duration = this.getTextDuration(this.state.wholeText, this.settings.rate);
+        /* Recalculate time elapsed */
+        this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
+        this.emit('time-tick', this, this.state.elapsedTime);
+    }
+    applyStyleToHighlightedWords() {
+        this.state.highlightedWords.forEach((w) => this.applyStyleToWord(w));
     }
     resetHighlight() {
         this.state.highlightedWords.forEach((n) => {
             n.style.backgroundColor = '';
+            n.style.color = '';
             n.style.boxShadow = '';
             n.style.textDecoration = 'none';
             this.state.highlightedWords = [];
@@ -1088,11 +1150,11 @@ class SpeechSynth extends EventEmitter {
             el.addEventListener(type, fn);
         });
     }
-    getRemainingText(idx) {
+    getRemainingText() {
         const length = this.state.wholeTextArray.length;
         /* Calculate and set the remaining text */
         return this.state.wholeTextArray
-            .slice(idx, length + 1)
+            .slice(this.state.currentWordIndex, length + 1)
             .__join__((el, i, arr) => {
             if (Utils.isDot(arr[i + 1]) || Utils.isDot(el)) {
                 return '';
@@ -1101,8 +1163,8 @@ class SpeechSynth extends EventEmitter {
                 return ' ';
         });
     }
-    getCurrentChunkText(idx) {
-        return this.state.chunksArray[idx].text;
+    getCurrentChunkText() {
+        return this.state.chunksArray[this.state.currentChunkIndex].text;
     }
     retrieveNumberOfWords(node, selector) {
         return [...node.querySelectorAll(selector)].length;
@@ -1161,59 +1223,6 @@ class SpeechSynth extends EventEmitter {
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PUBLIC METHODS - EXPOSED API @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-    changeSettings(obj) {
-        /* Reset timeouts  */
-        this.clearTimeCount();
-        /* Update voice in the state if it changes */
-        if (obj.voiceURI) {
-            const voice = this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)
-                .length > 0
-                ? this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)[0]
-                : this.state.voices[0];
-            this.state.voice = voice;
-            this.utterance.voice = voice;
-        }
-        /* Recalculate total duration  and current elapsedTime when rate changes */
-        if (obj.rate) {
-            this.state.duration = this.getTextDuration(this.state.wholeText, obj.rate);
-            /* Recalculate time elapsed */
-            this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
-            this.emit('time-tick', this, this.state.elapsedTime);
-        }
-        /* Update utterance object, adding the remaining settings and remaining text left to be played */
-        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.options.isChunksModeOn
-                ? this.getCurrentChunkText(this.state.currentChunkIndex)
-                : this.getRemainingText(this.state.currentWordIndex) }));
-        /* Update instance settings object to keep them in sync with utterance settings and trigger the Proxy trap to emit the "change-settings" event */
-        for (const entry of Object.entries(obj))
-            this.settings[entry[0]] = entry[1];
-        /*  Debounce to handle volume change properly */
-        this.restart('edit-utterance');
-    }
-    changeOptions(obj) {
-        for (const entry of Object.entries(obj))
-            this.options[entry[0]] = entry[1];
-        /* Handle chunks mode option change */
-        if ('isChunksModeOn' in obj) {
-            this.changeChunkMode();
-        }
-        /* Handle underline option change */
-        if ('isUnderlinedOn' in obj) {
-            this.changeStyle({
-                type: 'underline-mode',
-                value: obj.isUnderlinedOn,
-            });
-        }
-    }
-    changeStyle({ type, value }) {
-        switch (type) {
-            case 'highlight-color':
-                this.style.color1 = value;
-                break;
-        }
-        /* Apply the new style to the previously highlighted words */
-        this.state.highlightedWords.forEach((w) => this.applyStyleToWord(w));
-    }
     /* Control methods */
     seekTo(idx) {
         /* Reset timeouts  */
@@ -1223,7 +1232,7 @@ class SpeechSynth extends EventEmitter {
         this.state.currentChunkIndex = chunk.idx;
         if (!this.options.isChunksModeOn) {
             /* Set the new text slice */
-            this.state.textRemaining = this.getRemainingText(idx);
+            this.state.textRemaining = this.getRemainingText();
             /* Update current word index */
             this.state.currentWordIndex = idx;
             /* Update utterance instance with  the new text slice */
@@ -1283,7 +1292,7 @@ class SpeechSynth extends EventEmitter {
                     };
                 });
             }
-            case 'edit-utterance-settings': {
+            case 'settings-change': {
                 return new Promise((resolve) => {
                     this.utterance.onstart = (e) => {
                         resolve(null);
@@ -1450,7 +1459,7 @@ const MainPropsProvider = ({ value, children, }) => {
 };
 /* Provides the reader instance */
 const ReaderProvider = ({ children }) => {
-    const { dispatch } = useStore();
+    const { state, dispatch } = useStore();
     const { textContainer, options, styleOptions } = useMainProps();
     const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
             console.log('Start');
@@ -1472,7 +1481,6 @@ const ReaderProvider = ({ children }) => {
         }, onBoundary: (reader, e) => {
             // console.log('Boundary event');
         }, onSeek: (reader) => {
-            console.log('Index inside the seek event listener', reader.state, reader.state.currentWordIndex);
             dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
         }, onTimeTick: (reader) => {
             dispatch(setElapsedTime(reader.state.elapsedTime));
@@ -1480,6 +1488,9 @@ const ReaderProvider = ({ children }) => {
             const target = e.target;
             const idx = +target.dataset.id;
             reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
+        }, onStateChange: (reader) => {
+            if (state.duration !== reader.state.duration)
+                dispatch(setDuration(reader.state.duration));
         }, onSettingsChange: (reader) => {
             console.log('Settings change');
             dispatch(changeSettings(reader.settings));
@@ -1525,9 +1536,9 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z$7 = ".styles-module_container__2RHmB {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tmargin: 5px 0px 5px 0px;\r\n}\r\n\r\n.styles-module_minimized__qd4bl {\r\n\tborder-bottom: 1px;\r\n\tpadding: 2px 0px 2px 0px;\r\n}\r\n\r\n.styles-module_notMinimized__vhRsj {\r\n\tpadding-top: 2px;\r\n}\r\n\r\n.styles-module_button__l6T6c {\r\n\tborder-radius: 50%;\r\n\tmargin: 2px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tfont-weight: normal !important;\r\n\tcursor: pointer;\r\n\tborder: 4px solid var(--secondaryColor);\r\n\ttransition: all 0.2s;\r\n\tfont-size: 1.5em;\r\n}\r\n\r\n.styles-module_button__l6T6c:hover {\r\n\tborder: 3px solid var(--primaryColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_loading__-h2hU {\r\n\tpointer-events: none;\r\n}\r\n\r\n.styles-module_notLoading__GJ8Ir {\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_reset__hvUvm {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\tright: 0px;\r\n\tfont-weight: bold;\r\n\tcursor: pointer;\r\n\ttransition: 0.2s ease-in;\r\n\tfont-size: 0.9em;\r\n\tcolor: var(--primaryColor);\r\n}\r\n\r\n.styles-module_reset__hvUvm:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n";
-var styles$7 = {"container":"styles-module_container__2RHmB","minimized":"styles-module_minimized__qd4bl","notMinimized":"styles-module_notMinimized__vhRsj","button":"styles-module_button__l6T6c","loading":"styles-module_loading__-h2hU","notLoading":"styles-module_notLoading__GJ8Ir","reset":"styles-module_reset__hvUvm"};
-styleInject(css_248z$7);
+var css_248z$9 = ".styles-module_container__2RHmB {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tmargin: 5px 0px 5px 0px;\r\n}\r\n\r\n.styles-module_minimized__qd4bl {\r\n\tborder-bottom: 1px;\r\n\tpadding: 2px 0px 2px 0px;\r\n}\r\n\r\n.styles-module_notMinimized__vhRsj {\r\n\tpadding-top: 2px;\r\n}\r\n\r\n.styles-module_button__l6T6c {\r\n\tborder-radius: 50%;\r\n\tmargin: 2px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tfont-weight: normal !important;\r\n\tcursor: pointer;\r\n\tborder: 4px solid var(--secondaryColor);\r\n\ttransition: all 0.2s;\r\n\tfont-size: 1.5em;\r\n}\r\n\r\n.styles-module_button__l6T6c:hover {\r\n\tborder: 3px solid var(--primaryColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_loading__-h2hU {\r\n\tpointer-events: none;\r\n}\r\n\r\n.styles-module_notLoading__GJ8Ir {\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_reset__hvUvm {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\tright: 0px;\r\n\tfont-weight: bold;\r\n\tcursor: pointer;\r\n\ttransition: 0.2s ease-in;\r\n\tfont-size: 0.9em;\r\n\tcolor: var(--primaryColor);\r\n}\r\n\r\n.styles-module_reset__hvUvm:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n";
+var styles$9 = {"container":"styles-module_container__2RHmB","minimized":"styles-module_minimized__qd4bl","notMinimized":"styles-module_notMinimized__vhRsj","button":"styles-module_button__l6T6c","loading":"styles-module_loading__-h2hU","notLoading":"styles-module_notLoading__GJ8Ir","reset":"styles-module_reset__hvUvm"};
+styleInject(css_248z$9);
 
 const MainControls = () => {
     const { reader } = useReader();
@@ -1572,15 +1583,15 @@ const MainControls = () => {
             reader.state.wholeTextArray.length)
             reader.seekTo(reader.state.currentWordIndex + 1);
     };
-    return (React.createElement("div", { className: `${styles$7.container} ${isMinimized ? styles$7.minimized : styles$7.notMinimized}` },
-        React.createElement(AiFillFastBackward_1, { className: `${styles$7.button} ${isLoading ? styles$7.loading : styles$7.notLoading}`, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward }),
+    return (React.createElement("div", { className: `${styles$9.container} ${isMinimized ? styles$9.minimized : styles$9.notMinimized}` },
+        React.createElement(AiFillFastBackward_1, { className: `${styles$9.button} ${isLoading ? styles$9.loading : styles$9.notLoading}`, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward }),
         isReading ? (React.createElement(AiFillPauseCircle_1, { style: {
                 fontSize: '2em',
-            }, className: `${styles$7.button} ${isLoading ? styles$7.loading : styles$7.notLoading}`, title: 'Pause', onPointerDown: handleTextReadPause })) : (React.createElement(AiFillPlayCircle_1, { style: {
+            }, className: `${styles$9.button} ${isLoading ? styles$9.loading : styles$9.notLoading}`, title: 'Pause', onPointerDown: handleTextReadPause })) : (React.createElement(AiFillPlayCircle_1, { style: {
                 fontSize: '2em',
-            }, className: `${styles$7.button} ${isLoading ? styles$7.loading : styles$7.notLoading}`, title: 'Play', onPointerDown: handleTextReadPlay })),
-        React.createElement(AiFillFastForward_1, { title: "Fast forward", className: `${styles$7.button} ${isLoading ? styles$7.loading : styles$7.notLoading}`, onPointerDown: handleFastForward }),
-        React.createElement(BiReset_1, { className: styles$7.reset, title: "reset", onClick: handleReset })));
+            }, className: `${styles$9.button} ${isLoading ? styles$9.loading : styles$9.notLoading}`, title: 'Play', onPointerDown: handleTextReadPlay })),
+        React.createElement(AiFillFastForward_1, { title: "Fast forward", className: `${styles$9.button} ${isLoading ? styles$9.loading : styles$9.notLoading}`, onPointerDown: handleFastForward }),
+        React.createElement(BiReset_1, { className: styles$9.reset, title: "reset", onClick: handleReset })));
 };
 
 // THIS FILE IS AUTO GENERATED
@@ -1601,9 +1612,9 @@ var MdClose_1 = function MdClose (props) {
   return GenIcon$2({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"}}]})(props);
 };
 
-var css_248z$6 = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.2s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n";
-var styles$6 = {"button":"styles-module_button__9sOag"};
-styleInject(css_248z$6);
+var css_248z$8 = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.2s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n";
+var styles$8 = {"button":"styles-module_button__9sOag"};
+styleInject(css_248z$8);
 
 const WindowControls = () => {
     const { reader } = useReader();
@@ -1620,14 +1631,14 @@ const WindowControls = () => {
         dispatch(setIsMinimized(false));
     };
     return (React.createElement(React.Fragment, null,
-        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '3px' }, title: 'Close', className: styles$6.button, onPointerDown: handleHideReader },
+        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '3px' }, title: 'Close', className: styles$8.button, onPointerDown: handleHideReader },
             React.createElement(MdClose_1, { title: "Close" })),
-        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', className: styles$6.button, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
+        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', className: styles$8.button, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
 };
 
-var css_248z$5 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 15px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 12px; /* Set a specific slider handle width */\r\n\theight: 12px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: #111;\r\n\tmargin: 0 !important;\r\n}\r\n";
-var styles$5 = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
-styleInject(css_248z$5);
+var css_248z$7 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 15px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 12px; /* Set a specific slider handle width */\r\n\theight: 12px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: #111;\r\n\tmargin: 0 !important;\r\n}\r\n";
+var styles$7 = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
+styleInject(css_248z$7);
 
 const SeekBar = () => {
     const { reader } = useReader();
@@ -1638,10 +1649,10 @@ const SeekBar = () => {
         const value = +e.target.value;
         debouncedHandleManualSeek(value);
     };
-    return (React.createElement("div", { className: `${styles$5.container} ${isMinimized && styles$5.minimized}` },
-        React.createElement("h5", { className: styles$5.time }, Utils.formatMsToTime(elapsedTime)),
-        React.createElement("input", { className: styles$5.seekbar, type: "range", min: "0", max: numberOfWords - 1, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
-        React.createElement("h5", { style: { left: 'auto', right: '-15px' }, className: styles$5.time },
+    return (React.createElement("div", { className: `${styles$7.container} ${isMinimized && styles$7.minimized}` },
+        React.createElement("h5", { className: styles$7.time }, Utils.formatMsToTime(elapsedTime)),
+        React.createElement("input", { className: styles$7.seekbar, type: "range", min: "0", max: numberOfWords - 1, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
+        React.createElement("h5", { style: { left: 'auto', right: '-15px' }, className: styles$7.time },
             Utils.formatMsToTime(duration),
             "*")));
 };
@@ -1671,19 +1682,12 @@ const useOnClickOutside = (ref, handler) => {
     [ref, handler]);
 };
 
-var css_248z$4 = ".styles-module_container__dB4nt {\r\n\tmargin-right: 10px;\r\n}\r\n\r\n.styles-module_button__oFwwA {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n}\r\n\r\n.styles-module_button__oFwwA:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_button__oFwwA::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_button__oFwwA:hover::after {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-x: hidden;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
-var styles$4 = {"container":"styles-module_container__dB4nt","button":"styles-module_button__oFwwA","optionsContainer":"styles-module_optionsContainer__miH3Q","visible":"styles-module_visible__eJpaP"};
-styleInject(css_248z$4);
-
-/* React Components */
-const Button = (_a) => {
-    var { children } = _a, props = __rest(_a, ["children"]);
-    return (React.createElement("div", Object.assign({ className: styles$4.button }, props), children));
-};
+var css_248z$6 = ".styles-module_container__dB4nt {\r\n\tmargin-right: 10px;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-x: hidden;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q i {\r\n\tmargin: 3px;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
+var styles$6 = {"container":"styles-module_container__dB4nt","optionsContainer":"styles-module_optionsContainer__miH3Q","visible":"styles-module_visible__eJpaP"};
+styleInject(css_248z$6);
 
 const CustomSelect = (_a) => {
-    var _b;
-    var { options, value, title, onChange, style } = _a, props = __rest(_a, ["options", "value", "title", "onChange", "style"]);
+    var { options, value, title, onChange, style, Icon } = _a, props = __rest(_a, ["options", "value", "title", "onChange", "style", "Icon"]);
     const [showOptions, setShowOptions] = React.useState(false);
     const ref = React.useRef(null);
     const show = () => {
@@ -1697,12 +1701,12 @@ const CustomSelect = (_a) => {
         hide();
     };
     useOnClickOutside(ref, hide);
-    return (React.createElement("div", Object.assign({ className: styles$4.container }, props),
-        React.createElement(Button, { type: "button", onClick: show }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
-        React.createElement("div", { ref: ref, className: `${styles$4.optionsContainer} ${showOptions && styles$4.visible}`, onPointerDown: hide }, options.map((opt) => (React.createElement(Button, { key: opt.value, onPointerDown: (e) => {
+    return (React.createElement("div", Object.assign({ className: styles$6.container }, props),
+        React.createElement(Icon, { onClick: show, option: options.find((o) => o.value === value) }),
+        React.createElement("div", { ref: ref, className: `${styles$6.optionsContainer} ${showOptions && styles$6.visible}`, onPointerDown: hide }, options.map((opt) => (React.createElement(Icon, { key: opt.value, onPointerDown: (e) => {
                 e.stopPropagation();
                 onOptionClick(opt.value);
-            } }, opt.name))))));
+            }, option: opt }))))));
 };
 
 // THIS FILE IS AUTO GENERATED
@@ -1711,13 +1715,13 @@ var BiVolumeFull_1 = function BiVolumeFull (props) {
   return GenIcon$1({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M16,21c3.527-1.547,5.999-4.909,5.999-9S19.527,4.547,16,3v2c2.387,1.386,3.999,4.047,3.999,7S18.387,17.614,16,19V21z"}},{"tag":"path","attr":{"d":"M16 7v10c1.225-1.1 2-3.229 2-5S17.225 8.1 16 7zM4 17h2.697l5.748 3.832C12.612 20.943 12.806 21 13 21c.162 0 .324-.039.472-.118C13.797 20.708 14 20.369 14 20V4c0-.369-.203-.708-.528-.882-.324-.175-.72-.154-1.026.05L6.697 7H4C2.897 7 2 7.897 2 9v6C2 16.103 2.897 17 4 17zM4 9h3c.033 0 .061-.016.093-.019.064-.006.125-.02.188-.038.068-.021.131-.045.192-.078.026-.015.057-.017.082-.033L12 5.868v12.264l-4.445-2.964c-.025-.017-.056-.02-.082-.033-.061-.033-.123-.058-.19-.078-.064-.019-.126-.032-.192-.038C7.059 15.016 7.032 15 7 15H4V9z"}}]})(props);
 };
 
-var css_248z$3 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\tpadding-bottom: 13px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
-var styles$3 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-"};
-styleInject(css_248z$3);
+var css_248z$5 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\tpadding-bottom: 13px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
+var styles$5 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-"};
+styleInject(css_248z$5);
 
-var css_248z$2 = ".styles-module_container__rkaUB {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_container__rkaUB input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Lf7kP {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Lf7kP:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Lf7kP::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__b92n5 {\r\n\tfont-size: 0.9rem;\r\n\tmargin-right: 5px;\r\n}\r\n\r\n.styles-module_icon__b92n5 * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
-var styles$2 = {"container":"styles-module_container__rkaUB","value":"styles-module_value__eh3ZO","slider":"styles-module_slider__Lf7kP","icon":"styles-module_icon__b92n5"};
-styleInject(css_248z$2);
+var css_248z$4 = ".styles-module_container__rkaUB {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_container__rkaUB input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Lf7kP {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Lf7kP:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Lf7kP::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__b92n5 {\r\n\tfont-size: 0.9rem;\r\n\tmargin-right: 5px;\r\n}\r\n\r\n.styles-module_icon__b92n5 * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
+var styles$4 = {"container":"styles-module_container__rkaUB","value":"styles-module_value__eh3ZO","slider":"styles-module_slider__Lf7kP","icon":"styles-module_icon__b92n5"};
+styleInject(css_248z$4);
 
 const GenericSlider = (_a) => {
     var { data, onChange, icon } = _a, props = __rest(_a, ["data", "onChange", "icon"]);
@@ -1726,14 +1730,14 @@ const GenericSlider = (_a) => {
         const value = +e.target.value;
         debouncedOnChange(value);
     };
-    return (React.createElement("div", Object.assign({ className: styles$2.container }, props),
-        icon && React.createElement("div", { className: styles$2.icon }, icon),
-        React.createElement("input", { className: styles$2.slider, min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: handleChange })));
+    return (React.createElement("div", Object.assign({ className: styles$4.container }, props),
+        icon && React.createElement("div", { className: styles$4.icon }, icon),
+        React.createElement("input", { className: styles$4.slider, min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: handleChange })));
 };
 
-var css_248z$1 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\twidth: 130px;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
-var styles$1 = {"container":"styles-module_container__bAbpe","icon":"styles-module_icon__J4xQk","overlayContainer":"styles-module_overlayContainer__iWVEa","visible":"styles-module_visible__Ci-XW"};
-styleInject(css_248z$1);
+var css_248z$3 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\twidth: 130px;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
+var styles$3 = {"container":"styles-module_container__bAbpe","icon":"styles-module_icon__J4xQk","overlayContainer":"styles-module_overlayContainer__iWVEa","visible":"styles-module_visible__Ci-XW"};
+styleInject(css_248z$3);
 
 // THIS FILE IS AUTO GENERATED
 var GenIcon = esm.GenIcon;
@@ -1755,23 +1759,29 @@ const Options = () => {
     /* Options Handlers */
     const options = React.useMemo(() => {
         const handlePreserveHighlighting = (e) => {
+            if (!reader)
+                return;
             const target = e.target;
-            reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isPreserveHighlighting: target.checked });
+            reader.options.isPreserveHighlighting = target.checked;
         };
         const handleIsHighlightTextOn = (e) => {
+            if (!reader)
+                return;
             const target = e.target;
-            reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isHighlightTextOn: target.checked });
+            reader.options.isHighlightTextOn = target.checked;
         };
         const handleIsChunksModeOn = (e) => {
-            if (reader === null || reader === void 0 ? void 0 : reader.state.isMobile)
+            if ((reader === null || reader === void 0 ? void 0 : reader.state.isMobile) || !reader)
                 return; // Disable this option for mobile devices
             const target = e.target;
-            reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isChunksModeOn: target.checked });
+            reader.options.isChunksModeOn = target.checked;
         };
         const handleIsUnderlinedOn = (e) => {
+            if (!reader)
+                return;
             const target = e.target;
             console.log('Is underlined on', target.checked);
-            reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isUnderlinedOn: target.checked });
+            reader.options.isUnderlinedOn = target.checked;
         };
         return [
             {
@@ -1807,50 +1817,102 @@ const Options = () => {
         reader,
     ]);
     useOnClickOutside(ref, hideOptions);
-    return (React.createElement("div", { className: styles$1.container, ref: ref },
-        React.createElement(FcSettings_1, { className: styles$1.icon, onPointerDown: showOptions }),
-        React.createElement("div", { className: `${styles$1.overlayContainer} ${isOptionsVisible && styles$1.visible}`, onPointerDown: hideOptions }, options.map((o) => (React.createElement("label", { key: o.id, htmlFor: o.id, onPointerDown: (e) => e.stopPropagation() },
+    return (React.createElement("div", { className: styles$3.container, ref: ref },
+        React.createElement(FcSettings_1, { className: styles$3.icon, onPointerDown: showOptions }),
+        React.createElement("div", { className: `${styles$3.overlayContainer} ${isOptionsVisible && styles$3.visible}`, onPointerDown: hideOptions }, options.map((o) => (React.createElement("label", { key: o.id, htmlFor: o.id, onPointerDown: (e) => e.stopPropagation() },
             React.createElement("input", { id: o.id, type: "checkbox", checked: o.value, onChange: o.handler }),
             React.createElement("h5", null, o.label)))))));
 };
 
+var css_248z$2 = ".styles-module_icon__Z2LW9 {\r\n\tdisplay: inline-block;\r\n\twidth: 15px;\r\n\theight: 15px;\r\n\tcursor: pointer;\r\n\tborder: 2px solid #111;\r\n\tborder-radius: 4px;\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n\r\n.styles-module_icon__Z2LW9:hover {\r\n\ttransform: scale(1.2);\r\n}\r\n";
+var styles$2 = {"icon":"styles-module_icon__Z2LW9"};
+styleInject(css_248z$2);
+
+/* React Components */
+const ColorIcon = (_a) => {
+    var { children, option } = _a, props = __rest(_a, ["children", "option"]);
+    return (option && (React.createElement("i", Object.assign({ className: styles$2.icon, style: { backgroundColor: option.value } }, props), children)));
+};
+
+var css_248z$1 = ".styles-module_container__dGcW- {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n}\r\n\r\n.styles-module_container__dGcW-:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_container__dGcW-::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_container__dGcW-:hover::after {\r\n\twidth: 100%;\r\n}\r\n";
+var styles$1 = {"container":"styles-module_container__dGcW-"};
+styleInject(css_248z$1);
+
+const UnderlinedTextIcon = (_a) => {
+    var { children, option } = _a, props = __rest(_a, ["children", "option"]);
+    return (option && (React.createElement("div", Object.assign({ className: styles$1.container }, props),
+        option.name,
+        children)));
+};
+
+const rates = [
+    { value: '0.5', name: '0.5x' },
+    { value: '0.75', name: '0.75x' },
+    { value: '1', name: '1x' },
+    { value: '1.25', name: '1.25x' },
+    { value: '1.5', name: '1.5x' },
+    { value: '2', name: '2x' },
+];
 const palette = [
-    { name: 'Purple', value: '#98AFC7' },
-    { name: 'Green', value: 'green' },
-    { name: 'Yellow', value: 'yellow' },
+    { name: 'Chocolate', value: '#C85A17' },
+    { name: 'Yellow', value: '#FFFF00' },
+    { name: 'Orange', value: '#FFA500' },
+    { name: 'Light Slate Blue', value: '#736AFF' },
+    { name: 'Ruby Red', value: '#F62217' },
+    { name: 'Bright Neon Pink', value: '#F433FF' },
+    { name: 'Desert Sand', value: '#EDC9AF' },
+    { name: 'Dark Goldenrod', value: '#AF7817' },
+    { name: 'Cotton Candy', value: '#FCDFFF' },
+    { name: 'Chartreuse', value: '#8AFB17' },
 ];
 const SecondaryControls = () => {
     const { reader } = useReader();
-    const { state, dispatch } = useStore();
+    const { state } = useStore();
     const { voices, settings: { voiceURI, volume, rate }, highlightStyle, } = state;
     /* Settings Handlers */
     const handleRateChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ rate: +value });
-        dispatch(setDuration((reader === null || reader === void 0 ? void 0 : reader.state.duration) || 0));
+        if (!reader)
+            return;
+        reader.settings.rate = +value;
     };
     const handleVoiceChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ voiceURI: value });
+        if (!reader)
+            return;
+        reader.settings.voiceURI = value;
     };
     const handleVolumeChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ volume: value });
+        if (!reader)
+            return;
+        reader.settings.volume = value;
     };
     const handleHighlightColorChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeStyle({ type: 'highlight-color', value });
+        if (!reader)
+            return;
+        reader.style.color1 = value;
     };
-    return (React.createElement("div", { className: styles$3.container },
-        React.createElement("div", { className: styles$3.optionsWrapper1 },
-            React.createElement(CustomSelect, { name: "rate", options: [
-                    { value: '0.5', name: '0.5x' },
-                    { value: '0.75', name: '0.75x' },
-                    { value: '1', name: '1x' },
-                    { value: '1.25', name: '1.25x' },
-                    { value: '1.5', name: '1.5x' },
-                    { value: '2', name: '2x' },
-                ], onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate" }),
-            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices" }),
-            React.createElement(Options, null),
-            React.createElement(CustomSelect, { name: "palette", options: palette, onChange: handleHighlightColorChange, value: highlightStyle.color1 || 'yellow', defaultValue: "lavander", title: "Palette" })),
-        React.createElement("div", { className: styles$3.optionsWrapper2 },
+    const handleHighlightFontColorChange = (value) => {
+        if (!reader)
+            return;
+        reader.style.color2 = value;
+    };
+    const colors = React.useMemo(() => {
+        const updatedPalette = [...palette];
+        for (const color of Object.values(highlightStyle))
+            if (!palette.find((c) => c.value === color))
+                updatedPalette.push({
+                    name: color,
+                    value: color,
+                });
+        return updatedPalette;
+    }, [highlightStyle]);
+    return (React.createElement("div", { className: styles$5.container },
+        React.createElement("div", { className: styles$5.optionsWrapper1 },
+            React.createElement(CustomSelect, { name: "rate", options: rates, onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", Icon: UnderlinedTextIcon }),
+            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices", Icon: UnderlinedTextIcon }),
+            React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightColorChange, value: highlightStyle.color1, defaultValue: "lavander", title: "Palette", Icon: ColorIcon }),
+            React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightFontColorChange, value: highlightStyle.color2, defaultValue: "lavander", title: "Palette", Icon: ColorIcon }),
+            React.createElement(Options, null)),
+        React.createElement("div", { className: styles$5.optionsWrapper2 },
             React.createElement(GenericSlider, { icon: React.createElement(BiVolumeFull_1, null), onChange: handleVolumeChange, data: {
                     min: '0.1',
                     max: '1',
@@ -1998,8 +2060,8 @@ App.defaultProps = {
         secondaryColor: '#55F',
         bgColor: '#FFF',
         textColor: '#222',
-        highlightColor1: '#98AFC7',
-        highlightColor2: '#737CA1',
+        highlightColor1: '#306EFF',
+        highlightColor2: '#FCDFFF', // font color
     },
 };
 const useTextReader = () => {

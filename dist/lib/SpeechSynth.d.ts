@@ -6,13 +6,12 @@ export declare class SpeechSynth extends EventEmitter {
     synth: SpeechSynthesis;
     utterance: SpeechSynthesisUtterance;
     timeoutRef: string | number | Timeout | undefined;
-    editTimeoutRef: string | number | Timeout | undefined;
-    style: IStyle;
     events: Events;
+    style: IStyle;
     settings: ISettings;
     options: IOptions;
     state: IState;
-    constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, onSettingsChange, onOptionsChange, onStyleChange, }?: Params);
+    constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, onStateChange, onSettingsChange, onOptionsChange, onStyleChange, }?: Params);
     init(): Promise<SpeechSynth>;
     private initUtterance;
     private addHTMLHighlightTags;
@@ -28,6 +27,9 @@ export declare class SpeechSynth extends EventEmitter {
     private highlightText;
     private applyStyleToWord;
     private changeChunkMode;
+    private changeVoice;
+    private changeRate;
+    private applyStyleToHighlightedWords;
     private resetHighlight;
     private addCustomEventListeners;
     private attachEventListenersToWords;
@@ -41,12 +43,6 @@ export declare class SpeechSynth extends EventEmitter {
     private getAverageTextElapsedTime;
     private delayRestart;
     private restart;
-    changeSettings(obj: Partial<ISettings>): void;
-    changeOptions(obj: Partial<IOptions>): void;
-    changeStyle({ type, value }: {
-        type: any;
-        value: any;
-    }): void;
     seekTo(idx: number): void;
     play(type?: string): Promise<null>;
     pause(): void;

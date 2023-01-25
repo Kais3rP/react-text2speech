@@ -32,25 +32,28 @@ const Options: FC<IOptionsProps> = () => {
 
 	const options = useMemo(() => {
 		const handlePreserveHighlighting: ChangeEventHandler = (e) => {
+			if (!reader) return;
 			const target = e.target as HTMLInputElement;
-			reader?.changeOptions({ isPreserveHighlighting: target.checked });
+			reader.options.isPreserveHighlighting = target.checked;
 		};
 
 		const handleIsHighlightTextOn: ChangeEventHandler = (e) => {
+			if (!reader) return;
 			const target = e.target as HTMLInputElement;
-			reader?.changeOptions({ isHighlightTextOn: target.checked });
+			reader.options.isHighlightTextOn = target.checked;
 		};
 
 		const handleIsChunksModeOn: ChangeEventHandler = (e) => {
-			if (reader?.state.isMobile) return; // Disable this option for mobile devices
+			if (reader?.state.isMobile || !reader) return; // Disable this option for mobile devices
 			const target = e.target as HTMLInputElement;
-			reader?.changeOptions({ isChunksModeOn: target.checked });
+			reader.options.isChunksModeOn = target.checked;
 		};
 
 		const handleIsUnderlinedOn: ChangeEventHandler = (e) => {
+			if (!reader) return;
 			const target = e.target as HTMLInputElement;
 			console.log('Is underlined on', target.checked);
-			reader?.changeOptions({ isUnderlinedOn: target.checked });
+			reader.options.isUnderlinedOn = target.checked;
 		};
 
 		return [
