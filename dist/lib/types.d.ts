@@ -17,11 +17,13 @@ export interface IEvents {
     onChunksModeChange: (c: SpeechSynth, v?: any) => void;
     onSettingsChange: (c: SpeechSynth, v?: any) => void;
     onOptionsChange: (c: SpeechSynth, v?: any) => void;
+    onStyleChange: (c: SpeechSynth, v?: any) => void;
 }
 export interface IOptions {
     isHighlightTextOn: boolean;
     isPreserveHighlighting: boolean;
     isChunksModeOn: boolean;
+    isUnderlined: boolean;
 }
 export interface ISettings {
     pitch: number;

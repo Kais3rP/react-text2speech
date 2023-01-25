@@ -45,7 +45,8 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 				{options.map((opt) => (
 					<Button
 						key={opt.value}
-						onClick={() => {
+						onPointerDown={(e) => {
+							e.stopPropagation();
 							onOptionClick(opt.value);
 						}}
 					>

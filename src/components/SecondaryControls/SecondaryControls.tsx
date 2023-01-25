@@ -3,18 +3,25 @@ import { ISecondaryControlsProps } from './types';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
 import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
 import { setDuration } from 'store/actions';
-import { useReader, useStore, useMainProps } from 'contexts';
+import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
 import GenericSlider from 'components/GenericSlider/GenericSlider';
 import Options from 'components/Options/Options';
 
+const palette = [
+	{ name: 'Purple', value: '#98AFC7' },
+	{ name: 'Green', value: 'green' },
+	{ name: 'Yellow', value: 'yellow' },
+];
+
 const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();
-	const { styleOptions } = useMainProps();
+
 	const {
 		voices,
 		settings: { voiceURI, volume, rate },
+		highlightStyle,
 	} = state;
 
 	/* Settings Handlers */
@@ -30,6 +37,10 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 
 	const handleVolumeChange = (value: number) => {
 		reader?.changeSettings({ volume: value });
+	};
+
+	const handleHighlightColorChange = (value: string) => {
+		reader?.changeStyle({ type: 'highlight-color', value });
 	};
 
 	return (
@@ -50,7 +61,6 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					value={rate.toString()}
 					defaultValue="1"
 					title="Rate"
-					styleOptions={styleOptions}
 				/>
 				{/* Voice setting button */}
 				<CustomSelect
@@ -60,10 +70,17 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					value={voiceURI || ''}
 					defaultValue="1"
 					title="Voices"
-					styleOptions={styleOptions}
 				/>
 				{/* Reader Options Button */}
 				<Options />
+				<CustomSelect
+					name="palette"
+					options={palette}
+					onChange={handleHighlightColorChange}
+					value={highlightStyle.color1 || 'yellow'}
+					defaultValue="lavander"
+					title="Palette"
+				/>
 
 				{/* <ImInfo
 					style={{ marginLeft: '10px' }}

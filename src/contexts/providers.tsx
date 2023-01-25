@@ -7,6 +7,7 @@ import {
 	setCurrentWordIndex,
 	changeSettings,
 	changeOptions,
+	changeHighlightStyle,
 } from 'store/actions';
 import { MainPropsContext, ReaderContext, StoreContext } from './contexts';
 import {
@@ -88,6 +89,10 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 			onOptionsChange: (reader: SpeechSynth, obj) => {
 				console.log('Options change', obj, reader.options);
 				dispatch(changeOptions(reader.options));
+			},
+			onStyleChange: (reader: SpeechSynth) => {
+				console.log('Style change');
+				dispatch(changeHighlightStyle(reader.style));
 			},
 		})
 	);

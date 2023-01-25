@@ -51,6 +51,7 @@ export class SpeechSynth extends EventEmitter {
 			onSeek = () => null,
 			onSettingsChange = () => null,
 			onOptionsChange = () => null,
+			onStyleChange = () => null,
 		}: Params = {
 			/* Generic Settings */
 			language: 'en',
@@ -70,12 +71,12 @@ export class SpeechSynth extends EventEmitter {
 			onSeek: () => null,
 			onSettingsChange: () => null,
 			onOptionsChange: () => null,
+			onStyleChange: () => null,
 		}
 	) {
 		super();
 
 		this.textContainer = textContainer;
-		this.style = { color1, color2 };
 
 		/* Instances */
 
@@ -102,6 +103,7 @@ export class SpeechSynth extends EventEmitter {
 			{ type: 'end', handlers: [onEnd] },
 			{ type: 'settings-change', handlers: [onSettingsChange] },
 			{ type: 'options-change', handlers: [onOptionsChange] },
+			{ type: 'style-change', handlers: [onStyleChange] },
 		];
 
 		/* @@@ Proxies @@@ */
@@ -187,6 +189,18 @@ export class SpeechSynth extends EventEmitter {
 			},
 			{
 				set: stateSetter,
+			}
+		);
+
+		const styleSetter = (obj: any, key: string | symbol, value: any) => {
+			this.emit('style-change', this);
+			return Reflect.set(obj, key, value);
+		};
+
+		this.style = new Proxy(
+			{ color1, color2 },
+			{
+				set: styleSetter,
 			}
 		);
 	}
@@ -734,9 +748,13 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Apply highlight style */
 
-		wordToHighlight.style.backgroundColor = this.style.color1 as string;
-		wordToHighlight.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
-		wordToHighlight.style.textDecoration = 'underline';
+		this.applyStyleToWord(wordToHighlight);
+	}
+
+	private applyStyleToWord(el: HTMLElement) {
+		el.style.backgroundColor = this.style.color1 as string;
+		el.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
+		el.style.textDecoration = 'underline';
 	}
 
 	private changeChunkMode(b: boolean) {
@@ -940,6 +958,17 @@ export class SpeechSynth extends EventEmitter {
 		}
 		for (const entry of Object.entries(obj))
 			this.options[entry[0]] = entry[1];
+	}
+
+	changeStyle({ type, value }) {
+		switch (type) {
+			case 'highlight-color':
+				this.style.color1 = value;
+				break;
+			default:
+		}
+		/* Apply the new style to the previously highlighted words */
+		this.state.highlightedWords.forEach((w) => this.applyStyleToWord(w));
 	}
 
 	/* Control methods */

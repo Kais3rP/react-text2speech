@@ -23,7 +23,6 @@ const SeekBar: FC<ISeekBarProps> = () => {
 
 	const handleManualSeek = (e) => {
 		const value = +(e.target as HTMLInputElement).value;
-		console.log('Value received from the input range', value);
 		debouncedHandleManualSeek(value);
 	};
 

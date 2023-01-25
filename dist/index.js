@@ -291,6 +291,7 @@ const setCurrentWordIndex = (payload) => createAction('SET_CURRENT_WORD_INDEX', 
 const setDuration = (payload) => createAction('SET_DURATION', payload);
 const changeSettings = (payload) => createAction('CHANGE_SETTINGS', payload);
 const changeOptions = (payload) => createAction('CHANGE_OPTIONS', payload);
+const changeHighlightStyle = (payload) => createAction('CHANGE_HIGHLIGHT_STYLE', payload);
 
 const StoreContext = React.createContext(null);
 const MainPropsContext = React.createContext(null);
@@ -540,7 +541,7 @@ class SpeechSynth extends EventEmitter {
     /* Style */
     color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
-    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onSettingsChange = () => null, onOptionsChange = () => null, } = {
+    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onSettingsChange = () => null, onOptionsChange = () => null, onStyleChange = () => null, } = {
         /* Generic Settings */
         language: 'en',
         /* Style */
@@ -559,10 +560,10 @@ class SpeechSynth extends EventEmitter {
         onSeek: () => null,
         onSettingsChange: () => null,
         onOptionsChange: () => null,
+        onStyleChange: () => null,
     }) {
         super();
         this.textContainer = textContainer;
-        this.style = { color1, color2 };
         /* Instances */
         this.synth = window.speechSynthesis;
         this.utterance = new window.SpeechSynthesisUtterance();
@@ -582,6 +583,7 @@ class SpeechSynth extends EventEmitter {
             { type: 'end', handlers: [onEnd] },
             { type: 'settings-change', handlers: [onSettingsChange] },
             { type: 'options-change', handlers: [onOptionsChange] },
+            { type: 'style-change', handlers: [onStyleChange] },
         ];
         /* @@@ Proxies @@@ */
         /* Settings (Utterance settings) */
@@ -648,6 +650,13 @@ class SpeechSynth extends EventEmitter {
             isReading: false,
         }, {
             set: stateSetter,
+        });
+        const styleSetter = (obj, key, value) => {
+            this.emit('style-change', this);
+            return Reflect.set(obj, key, value);
+        };
+        this.style = new Proxy({ color1, color2 }, {
+            set: styleSetter,
         });
     }
     /*
@@ -1026,9 +1035,12 @@ class SpeechSynth extends EventEmitter {
         /* Update last word position */
         this.state.lastWordPosition = position;
         /* Apply highlight style */
-        wordToHighlight.style.backgroundColor = this.style.color1;
-        wordToHighlight.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
-        wordToHighlight.style.textDecoration = 'underline';
+        this.applyStyleToWord(wordToHighlight);
+    }
+    applyStyleToWord(el) {
+        el.style.backgroundColor = this.style.color1;
+        el.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
+        el.style.textDecoration = 'underline';
     }
     changeChunkMode(b) {
         this.clearTimeCount();
@@ -1184,6 +1196,15 @@ class SpeechSynth extends EventEmitter {
         for (const entry of Object.entries(obj))
             this.options[entry[0]] = entry[1];
     }
+    changeStyle({ type, value }) {
+        switch (type) {
+            case 'highlight-color':
+                this.style.color1 = value;
+                break;
+        }
+        /* Apply the new style to the previously highlighted words */
+        this.state.highlightedWords.forEach((w) => this.applyStyleToWord(w));
+    }
     /* Control methods */
     seekTo(idx) {
         /* Reset timeouts  */
@@ -1337,6 +1358,11 @@ const globalState = {
         isPreserveHighlighting: true,
         isHighlightTextOn: true,
         isChunksModeOn: false,
+        isUnderlined: true,
+    },
+    highlightStyle: {
+        color1: '',
+        color2: '',
     },
     isReading: false,
     isLoading: false,
@@ -1387,6 +1413,9 @@ const rootReducer = (state, action) => {
         }
         case 'CHANGE_OPTIONS': {
             return Object.assign(Object.assign({}, state), { options: Object.assign(Object.assign({}, state.options), payload) });
+        }
+        case 'CHANGE_HIGHLIGHT_STYLE': {
+            return Object.assign(Object.assign({}, state), { highlightStyle: Object.assign(Object.assign({}, state.highlightStyle), payload) });
         }
         default:
             return Object.assign({}, state);
@@ -1448,6 +1477,9 @@ const ReaderProvider = ({ children }) => {
         }, onOptionsChange: (reader, obj) => {
             console.log('Options change', obj, reader.options);
             dispatch(changeOptions(reader.options));
+        }, onStyleChange: (reader) => {
+            console.log('Style change');
+            dispatch(changeHighlightStyle(reader.style));
         } })));
     return (React.createElement(ReaderContext.Provider, { value: { reader: readerRef.current } }, children));
 };
@@ -1595,7 +1627,6 @@ const SeekBar = () => {
     const debouncedHandleManualSeek = Utils.debounce((reader === null || reader === void 0 ? void 0 : reader.seekTo.bind(reader)) || Function, 3);
     const handleManualSeek = (e) => {
         const value = +e.target.value;
-        console.log('Value received from the input range', value);
         debouncedHandleManualSeek(value);
     };
     return (React.createElement("div", { className: `${styles$5.container} ${isMinimized && styles$5.minimized}` },
@@ -1659,7 +1690,8 @@ const CustomSelect = (_a) => {
     useOnClickOutside(ref, hide);
     return (React.createElement("div", Object.assign({ className: styles$4.container }, props),
         React.createElement(Button, { type: "button", onClick: show }, (_b = options.find((o) => o.value === value)) === null || _b === void 0 ? void 0 : _b.name),
-        React.createElement("div", { ref: ref, className: `${styles$4.optionsContainer} ${showOptions && styles$4.visible}`, onPointerDown: hide }, options.map((opt) => (React.createElement(Button, { key: opt.value, onClick: () => {
+        React.createElement("div", { ref: ref, className: `${styles$4.optionsContainer} ${showOptions && styles$4.visible}`, onPointerDown: hide }, options.map((opt) => (React.createElement(Button, { key: opt.value, onPointerDown: (e) => {
+                e.stopPropagation();
                 onOptionClick(opt.value);
             } }, opt.name))))));
 };
@@ -1741,11 +1773,15 @@ const Options = () => {
                 React.createElement("h5", null, "Chunks Mode")))));
 };
 
+const palette = [
+    { name: 'Purple', value: '#98AFC7' },
+    { name: 'Green', value: 'green' },
+    { name: 'Yellow', value: 'yellow' },
+];
 const SecondaryControls = () => {
     const { reader } = useReader();
     const { state, dispatch } = useStore();
-    const { styleOptions } = useMainProps();
-    const { voices, settings: { voiceURI, volume, rate }, } = state;
+    const { voices, settings: { voiceURI, volume, rate }, highlightStyle, } = state;
     /* Settings Handlers */
     const handleRateChange = (value) => {
         reader === null || reader === void 0 ? void 0 : reader.changeSettings({ rate: +value });
@@ -1757,6 +1793,9 @@ const SecondaryControls = () => {
     const handleVolumeChange = (value) => {
         reader === null || reader === void 0 ? void 0 : reader.changeSettings({ volume: value });
     };
+    const handleHighlightColorChange = (value) => {
+        reader === null || reader === void 0 ? void 0 : reader.changeStyle({ type: 'highlight-color', value });
+    };
     return (React.createElement("div", { className: styles$3.container },
         React.createElement("div", { className: styles$3.optionsWrapper1 },
             React.createElement(CustomSelect, { name: "rate", options: [
@@ -1766,9 +1805,10 @@ const SecondaryControls = () => {
                     { value: '1.25', name: '1.25x' },
                     { value: '1.5', name: '1.5x' },
                     { value: '2', name: '2x' },
-                ], onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
-            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
-            React.createElement(Options, null)),
+                ], onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate" }),
+            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices" }),
+            React.createElement(Options, null),
+            React.createElement(CustomSelect, { name: "palette", options: palette, onChange: handleHighlightColorChange, value: highlightStyle.color1 || 'yellow', defaultValue: "lavander", title: "Palette" })),
         React.createElement("div", { className: styles$3.optionsWrapper2 },
             React.createElement(GenericSlider, { icon: React.createElement(BiVolumeFull_1, null), onChange: handleVolumeChange, data: {
                     min: '0.1',
@@ -1866,6 +1906,7 @@ const useInitializeReader = () => {
             dispatch(setDuration(reader.state.duration));
             dispatch(changeSettings(reader.settings));
             dispatch(changeOptions(reader.options));
+            dispatch(changeHighlightStyle(reader.style));
         }).catch((e) => console.log(e));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
