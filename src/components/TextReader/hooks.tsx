@@ -92,6 +92,8 @@ export const useInitializeReader = () => {
 				dispatch(changeHighlightStyle(reader.style));
 			})
 			.catch((e) => console.log(e));
+		return () => window.speechSynthesis.cancel();
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 };

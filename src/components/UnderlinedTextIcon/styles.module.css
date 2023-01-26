@@ -8,6 +8,7 @@
 	border: none;
 	background: none;
 	padding: 1px 6px !important;
+	line-height: normal !important;
 }
 
 .container:hover {

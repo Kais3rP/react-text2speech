@@ -1866,7 +1866,7 @@ const ColorIcon = (_a) => {
     return (option && (React.createElement("i", Object.assign({ className: styles$2.icon, style: { backgroundColor: option.value } }, props), children)));
 };
 
-var css_248z$1 = ".styles-module_container__dGcW- {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n}\r\n\r\n.styles-module_container__dGcW-:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_container__dGcW-::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_container__dGcW-:hover::after {\r\n\twidth: 100%;\r\n}\r\n";
+var css_248z$1 = ".styles-module_container__dGcW- {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n\tline-height: normal !important;\r\n}\r\n\r\n.styles-module_container__dGcW-:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_container__dGcW-::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_container__dGcW-:hover::after {\r\n\twidth: 100%;\r\n}\r\n";
 var styles$1 = {"container":"styles-module_container__dGcW-"};
 styleInject(css_248z$1);
 
@@ -2031,6 +2031,7 @@ const useInitializeReader = () => {
             dispatch(changeOptions(reader.options));
             dispatch(changeHighlightStyle(reader.style));
         }).catch((e) => console.log(e));
+        return () => window.speechSynthesis.cancel();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 };
