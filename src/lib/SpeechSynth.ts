@@ -113,6 +113,7 @@ export class SpeechSynth extends EventEmitter {
 		/* Settings (Utterance settings) */
 
 		const settingsSetter = (obj: any, key: string | symbol, value: any) => {
+			console.log('Settings changed trap', key, value);
 			const result = Reflect.set(obj, key, value);
 			this.clearTimeCount(); // Reset timer when a setting changes since the utterance has to be restarted
 			switch (key) {
@@ -303,6 +304,8 @@ export class SpeechSynth extends EventEmitter {
 				'[data-id]'
 			) as string[];
 
+			/* Retrieve all chunks of text */
+
 			this.state.chunksArray = this.retrieveChunks();
 
 			/* -------------------------------------------------------------------- */
@@ -338,6 +341,9 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
+		console.log('Init utterance');
+		console.log('Current chunk,', this.getCurrentChunkText());
+
 		this.utterance.text = this.options.isChunksModeOn
 			? this.getCurrentChunkText()
 			: this.getRemainingText();
@@ -550,6 +556,7 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private retrieveChunks(): Chunk[] {
+		console.log('Retrieveing text chunks');
 		let currentPunctuationSymbol = '.';
 		const chunks: Chunk[] = [];
 		let previousEnd = 0;
@@ -904,7 +911,13 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private getCurrentChunkText() {
-		return this.state.chunksArray[this.state.currentChunkIndex].text;
+		console.log(
+			'Get Current chunk,',
+			this.state.chunksArray,
+			this.state.currentChunkIndex
+		);
+
+		return this.state.chunksArray[this.state.currentChunkIndex]?.text;
 	}
 
 	private retrieveNumberOfWords(node: Element, selector: string) {

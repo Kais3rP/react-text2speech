@@ -48,4 +48,5 @@ code {
 
 * {
 	box-sizing: border-box;
+	white-space: pre-line;
 }

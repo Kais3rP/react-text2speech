@@ -603,6 +603,7 @@ class SpeechSynth extends EventEmitter {
         */
         /* Settings (Utterance settings) */
         const settingsSetter = (obj, key, value) => {
+            console.log('Settings changed trap', key, value);
             const result = Reflect.set(obj, key, value);
             this.clearTimeCount(); // Reset timer when a setting changes since the utterance has to be restarted
             switch (key) {
@@ -741,6 +742,7 @@ class SpeechSynth extends EventEmitter {
                 this.state.duration = this.getTextDuration(this.state.wholeText, this.settings.rate);
                 /* Get the array of words that will be read */
                 this.state.wholeTextArray = this.retrieveWholeTextArray(this.textContainer, '[data-id]');
+                /* Retrieve all chunks of text */
                 this.state.chunksArray = this.retrieveChunks();
                 /* -------------------------------------------------------------------- */
                 /* Attach click event listener to words */
@@ -767,6 +769,8 @@ class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
+        console.log('Init utterance');
+        console.log('Current chunk,', this.getCurrentChunkText());
         this.utterance.text = this.options.isChunksModeOn
             ? this.getCurrentChunkText()
             : this.getRemainingText();
@@ -918,6 +922,7 @@ class SpeechSynth extends EventEmitter {
             this.highlightText(i);
     }
     retrieveChunks() {
+        console.log('Retrieveing text chunks');
         let currentPunctuationSymbol = '.';
         const chunks = [];
         let previousEnd = 0;
@@ -1174,7 +1179,9 @@ class SpeechSynth extends EventEmitter {
         });
     }
     getCurrentChunkText() {
-        return this.state.chunksArray[this.state.currentChunkIndex].text;
+        var _a;
+        console.log('Get Current chunk,', this.state.chunksArray, this.state.currentChunkIndex);
+        return (_a = this.state.chunksArray[this.state.currentChunkIndex]) === null || _a === void 0 ? void 0 : _a.text;
     }
     retrieveNumberOfWords(node, selector) {
         return [...node.querySelectorAll(selector)].length;
