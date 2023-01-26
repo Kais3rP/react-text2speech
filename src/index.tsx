@@ -51,6 +51,8 @@ App.defaultProps = {
 	},
 };
 
+/* Exported members */
+
 export const useTextReader = () => {
 	const [handlers, setHandlers] = useState({});
 	const [state, setState] = useState({});

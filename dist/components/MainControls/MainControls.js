@@ -7,10 +7,12 @@ import { BiReset } from '@react-icons/all-files/bi/BiReset';
 import { setIsLoading } from 'store/actions';
 import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
+import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
+import GenericSlider from 'components/GenericSlider/GenericSlider';
 const MainControls = () => {
     const { reader } = useReader();
     const { state, dispatch } = useStore();
-    const { isReading, isLoading, isMinimized } = state;
+    const { isReading, isLoading, isMinimized, settings: { volume }, } = state;
     const handleTextReadPlay = () => {
         if (reader === null || reader === void 0 ? void 0 : reader.isPaused())
             reader === null || reader === void 0 ? void 0 : reader.resume();
@@ -50,7 +52,20 @@ const MainControls = () => {
             reader.state.wholeTextArray.length)
             reader.seekTo(reader.state.currentWordIndex + 1);
     };
+    const handleVolumeChange = (value) => {
+        if (!reader)
+            return;
+        reader.settings.volume = value;
+    };
     return (React.createElement("div", { className: `${styles.container} ${isMinimized ? styles.minimized : styles.notMinimized}` },
+        !isMinimized && (React.createElement("div", { className: styles.volumeContainer },
+            React.createElement(GenericSlider, { icon: React.createElement(BiVolumeFull, null), onChange: handleVolumeChange, data: {
+                    min: '0.1',
+                    max: '1',
+                    step: '0.1',
+                    value: volume,
+                    unit: '%',
+                } }))),
         React.createElement(AiFillFastBackward, { className: `${styles.button} ${isLoading ? styles.loading : styles.notLoading}`, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward }),
         isReading ? (React.createElement(AiFillPauseCircle, { style: {
                 fontSize: '2em',

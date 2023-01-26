@@ -716,11 +716,6 @@ class SpeechSynth extends EventEmitter {
             set: styleSetter,
         });
     }
-    /*
-    This method handles the DOM traversing to add the Highlightint tags to the readable elements and all the logic in it is responsible
-    for how the text content appears visually
-    e.g. alignment of punctuation, spaces, etc...
-    */
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             /* Add custom methods to primitives */
@@ -815,6 +810,11 @@ class SpeechSynth extends EventEmitter {
             this.play('next-chunk-start');
         };
     }
+    /*
+    This method handles the DOM traversing to add the Highlightint tags to the readable elements and all the logic in it is responsible
+    for how the text content appears visually
+    e.g. alignment of punctuation, spaces, etc...
+    */
     addHTMLHighlightTags(node) {
         const nodes = [...node.childNodes];
         nodes.forEach((el) => {
@@ -1241,9 +1241,10 @@ class SpeechSynth extends EventEmitter {
         const chunk = this.state.chunksArray.find((c) => idx >= c.start && idx <= c.end);
         this.state.currentChunkIndex = chunk.idx;
         if (!this.options.isChunksModeOn) {
+            /* Update current word index */
+            this.state.currentWordIndex = idx;
             /* Set the new text slice */
             this.state.textRemaining = this.getRemainingText();
-            /* Update current word index */
             this.state.currentWordIndex = idx;
             /* Update utterance instance with  the new text slice */
             this.utterance.text = this.state.textRemaining;
@@ -1497,6 +1498,7 @@ const ReaderProvider = ({ children }) => {
         }, onWordClick: (reader, e) => {
             const target = e.target;
             const idx = +target.dataset.id;
+            console.log('Word click, seek to:', idx);
             reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
         }, onStateChange: (reader) => {
             if (state.duration !== reader.state.duration)
@@ -2082,6 +2084,7 @@ App.defaultProps = {
         highlightColor2: '#FCDFFF', // font color
     },
 };
+/* Exported members */
 const useTextReader = () => {
     const [handlers, setHandlers] = React.useState({});
     const [state, setState] = React.useState({});

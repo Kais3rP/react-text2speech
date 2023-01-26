@@ -9,7 +9,7 @@ export const setIsMinimized = (payload) => createAction('SET_IS_MINIMIZED', payl
 export const setIsVisible = (payload) => createAction('SET_IS_VISIBLE', payload);
 /* Actions used internally by the Reader  */
 export const setIsLoading = (payload) => createAction('SET_IS_LOADING', payload);
-export const setisOptionsVisible = (payload) => createAction('SET_IS_SETTINGS_VISIBLE', payload);
+export const setIsOptionsVisible = (payload) => createAction('SET_IS_OPTIONS_VISIBLE', payload);
 export const setVoices = (payload) => createAction('SET_VOICES', payload);
 export const setElapsedTime = (payload) => createAction('SET_ELAPSED_TIME', payload);
 export const setNumberOfWords = (payload) => createAction('SET_NUMBER_OF_WORDS', payload);
@@ -17,4 +17,5 @@ export const setCurrentWordIndex = (payload) => createAction('SET_CURRENT_WORD_I
 export const setDuration = (payload) => createAction('SET_DURATION', payload);
 export const changeSettings = (payload) => createAction('CHANGE_SETTINGS', payload);
 export const changeOptions = (payload) => createAction('CHANGE_OPTIONS', payload);
+export const changeHighlightStyle = (payload) => createAction('CHANGE_HIGHLIGHT_STYLE', payload);
 //# sourceMappingURL=actions.js.map

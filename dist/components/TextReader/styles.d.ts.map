@@ -1,1 +1,0 @@
-{"version":3,"file":"styles.d.ts","sourceRoot":"","sources":["../../../src/components/TextReader/styles.ts"],"names":[],"mappings":"AAGA,UAAU,eAAe;IACxB,SAAS,EAAE,MAAM,CAAC;IAClB,WAAW,EAAE,MAAM,CAAC;IACpB,YAAY,EAAE,aAAa,CAAC;CAC5B;AAED,UAAU,WAAW;IACpB,YAAY,EAAE,aAAa,CAAC;CAC5B;AAID,eAAO,MAAM,SAAS,iFAuBrB,CAAC;AAEF,eAAO,MAAM,eAAe,oEAE3B,CAAC;AAEF,eAAO,MAAM,UAAU,0GAOtB,CAAC"}

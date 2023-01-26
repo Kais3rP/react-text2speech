@@ -20,7 +20,7 @@ export class SpeechSynth extends EventEmitter {
     /* Style */
     color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
-    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onSettingsChange = () => null, onOptionsChange = () => null, } = {
+    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onStateChange = () => null, onSettingsChange = () => null, onOptionsChange = () => null, onStyleChange = () => null, } = {
         /* Generic Settings */
         language: 'en',
         /* Style */
@@ -37,18 +37,18 @@ export class SpeechSynth extends EventEmitter {
         onTimeTick: () => null,
         onWordClick: () => null,
         onSeek: () => null,
+        onStateChange: () => null,
         onSettingsChange: () => null,
         onOptionsChange: () => null,
+        onStyleChange: () => null,
     }) {
         super();
         this.textContainer = textContainer;
-        this.style = { color1, color2 };
         /* Instances */
         this.synth = window.speechSynthesis;
         this.utterance = new window.SpeechSynthesisUtterance();
         /* Timeouts */
         this.timeoutRef = undefined;
-        this.editTimeoutRef = undefined;
         /* Events */
         this.events = [
             { type: 'boundary', handlers: [onBoundary] },
@@ -60,14 +60,34 @@ export class SpeechSynth extends EventEmitter {
             { type: 'reset', handlers: [onReset] },
             { type: 'seek', handlers: [onSeek] },
             { type: 'end', handlers: [onEnd] },
+            { type: 'state-change', handlers: [onStateChange] },
             { type: 'settings-change', handlers: [onSettingsChange] },
             { type: 'options-change', handlers: [onOptionsChange] },
+            { type: 'style-change', handlers: [onStyleChange] },
         ];
         /* @@@ Proxies @@@ */
+        /*
+        Remember to perform the Reflection before anything else so they modifications to the instance properties
+        are applied before any side effect is performed
+        */
         /* Settings (Utterance settings) */
         const settingsSetter = (obj, key, value) => {
+            const result = Reflect.set(obj, key, value);
+            this.clearTimeCount(); // Reset timer when a setting changes since the utterance has to be restarted
+            switch (key) {
+                case 'voiceURI':
+                    this.changeVoice();
+                    break;
+                case 'rate':
+                    this.changeRate();
+                    break;
+                default:
+            }
+            /* Re initialize the utterance */
+            this.initUtterance();
+            this.restart('settings-change');
             this.emit('settings-change', this);
-            return Reflect.set(obj, key, value);
+            return result;
         };
         this.settings = new Proxy({
             pitch: 1,
@@ -80,22 +100,54 @@ export class SpeechSynth extends EventEmitter {
         });
         /* Reader Options */
         const optionsSetter = (obj, key, value) => {
+            const result = Reflect.set(obj, key, value);
+            /* Extra actions to perform internally when an option gets changed */
+            switch (key) {
+                case 'isChunksModeOn':
+                    this.changeChunkMode();
+                    break;
+                case 'isUnderlinedOn':
+                    this.applyStyleToHighlightedWords();
+                    break;
+                case 'isHighlightTextOn':
+                    if (value) {
+                        if (this.options.isChunksModeOn)
+                            /* Highlight the current chunk */
+                            this.highlightChunk(this.state.currentChunkIndex);
+                    }
+                    else
+                        this.resetHighlight();
+                    break;
+            }
             this.emit('options-change', this);
-            return Reflect.set(obj, key, value);
+            return result;
         };
         this.options = new Proxy({
             isHighlightTextOn: true,
             isChunksModeOn: Utils.isMobile(),
             isPreserveHighlighting: true,
+            isUnderlinedOn: true,
         }, {
             set: optionsSetter,
         });
         /* State */
         const stateSetter = (obj, key, value) => {
-            if (key === 'currentWordIndex')
-                this.emit('seek', this);
-            this.emit('state-change');
-            return Reflect.set(obj, key, value);
+            const result = Reflect.set(obj, key, value);
+            switch (key) {
+                case 'currentWordIndex':
+                    this.emit('seek', this);
+                    break;
+                case 'elapsedTime':
+                    if (this.state.elapsedTime % 1000 === 0) {
+                        /* Instructions executed every 1000ms when the reader is active */
+                        this.emit('time-tick', this);
+                    }
+                    break;
+                default:
+                //	console.log(key);
+            }
+            this.emit('state-change', this);
+            return result;
         };
         this.state = new Proxy({
             isMobile: Utils.isMobile(),
@@ -124,6 +176,15 @@ export class SpeechSynth extends EventEmitter {
             isReading: false,
         }, {
             set: stateSetter,
+        });
+        const styleSetter = (obj, key, value) => {
+            const result = Reflect.set(obj, key, value);
+            this.applyStyleToHighlightedWords();
+            this.emit('style-change', this);
+            return result;
+        };
+        this.style = new Proxy({ color1, color2 }, {
+            set: styleSetter,
         });
     }
     /*
@@ -183,8 +244,8 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
         this.utterance.text = this.options.isChunksModeOn
-            ? this.state.chunksArray[this.state.currentChunkIndex].text
-            : this.state.wholeText;
+            ? this.getCurrentChunkText()
+            : this.getRemainingText();
         this.utterance.lang = this.settings.language;
         this.utterance.voice = this.state.voice;
         this.utterance.pitch = this.settings.pitch;
@@ -226,8 +287,8 @@ export class SpeechSynth extends EventEmitter {
         };
     }
     addHTMLHighlightTags(node) {
-        const tree = [...node.childNodes];
-        tree.forEach((el) => {
+        const nodes = [...node.childNodes];
+        nodes.forEach((el) => {
             /* Exclude code tags and its content from parsing */
             if (el.nodeType === 1 &&
                 (el.tagName === 'PRE' ||
@@ -408,10 +469,6 @@ export class SpeechSynth extends EventEmitter {
         if (frequency % 10 !== 0)
             throw new Error('Frequency must be a multiple of 10');
         this.state.elapsedTime += frequency;
-        if (this.state.elapsedTime % 1000 === 0) {
-            /* Instructions executed every 1000ms when the reader is active */
-            this.emit('time-tick', this, this.state.elapsedTime);
-        }
         this.timeoutRef = setTimeout(this.timeCount.bind(this, e, frequency), frequency);
     }
     clearTimeCount() {
@@ -502,13 +559,19 @@ export class SpeechSynth extends EventEmitter {
         /* Update last word position */
         this.state.lastWordPosition = position;
         /* Apply highlight style */
-        wordToHighlight.style.backgroundColor = this.style.color1;
-        wordToHighlight.style.boxShadow = `10px 0px 0px 0px ${this.style.color1}`;
-        wordToHighlight.style.textDecoration = 'underline';
+        this.applyStyleToWord(wordToHighlight);
     }
-    changeChunkMode(b) {
+    applyStyleToWord(el) {
+        el.style.backgroundColor = this.style.color1;
+        el.style.color = this.style.color2;
+        el.style.boxShadow = `10px 0px 0px 0px ${this.style.color1} -10px 0px 0px 0px ${this.style.color1}`;
+        el.style.textDecoration = this.options.isUnderlinedOn
+            ? 'underline'
+            : 'none';
+    }
+    /* Private handlers for proxy traps */
+    changeChunkMode() {
         this.clearTimeCount();
-        this.options.isChunksModeOn = b;
         /* Since che chunk mode change triggers a restart of the utterance playing,
         make sure the current word index gets synchronized with the current chunk index start word,
         since the sentence is restarted from the first word of the sentence itself */
@@ -518,18 +581,36 @@ export class SpeechSynth extends EventEmitter {
         /* This manages the starting highlight if chunk mode is on or off:
             1. if it starts in single word mode and it gets changed to chunk mode, it highlights the whole chunk
             2. if it starts in chunk mode and it gets changed to single word mode, it resets all the current highlighthing and starts to highlight words singularly */
-        if (this.options.isChunksModeOn)
+        if (this.options.isChunksModeOn) {
+            this.utterance.text = this.getCurrentChunkText();
             this.highlightChunk(this.state.currentChunkIndex);
-        else
+        }
+        else {
+            this.utterance.text = this.getRemainingText();
             this.resetHighlight();
-        this.utterance.text = this.options.isChunksModeOn
-            ? this.getCurrentChunkText(this.state.currentChunkIndex)
-            : this.getRemainingText(this.state.currentWordIndex);
+        }
         this.restart('chunks-mode-change');
+    }
+    changeVoice() {
+        const voice = this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI).length > 0
+            ? this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI)[0]
+            : this.state.voices[0];
+        this.state.voice = voice;
+        this.utterance.voice = voice;
+    }
+    changeRate() {
+        this.state.duration = this.getTextDuration(this.state.wholeText, this.settings.rate);
+        /* Recalculate time elapsed */
+        this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
+        this.emit('time-tick', this, this.state.elapsedTime);
+    }
+    applyStyleToHighlightedWords() {
+        this.state.highlightedWords.forEach((w) => this.applyStyleToWord(w));
     }
     resetHighlight() {
         this.state.highlightedWords.forEach((n) => {
             n.style.backgroundColor = '';
+            n.style.color = '';
             n.style.boxShadow = '';
             n.style.textDecoration = 'none';
             this.state.highlightedWords = [];
@@ -550,11 +631,11 @@ export class SpeechSynth extends EventEmitter {
             el.addEventListener(type, fn);
         });
     }
-    getRemainingText(idx) {
+    getRemainingText() {
         const length = this.state.wholeTextArray.length;
         /* Calculate and set the remaining text */
         return this.state.wholeTextArray
-            .slice(idx, length + 1)
+            .slice(this.state.currentWordIndex, length + 1)
             .__join__((el, i, arr) => {
             if (Utils.isDot(arr[i + 1]) || Utils.isDot(el)) {
                 return '';
@@ -563,8 +644,8 @@ export class SpeechSynth extends EventEmitter {
                 return ' ';
         });
     }
-    getCurrentChunkText(idx) {
-        return this.state.chunksArray[idx].text;
+    getCurrentChunkText() {
+        return this.state.chunksArray[this.state.currentChunkIndex].text;
     }
     retrieveNumberOfWords(node, selector) {
         return [...node.querySelectorAll(selector)].length;
@@ -623,43 +704,6 @@ export class SpeechSynth extends EventEmitter {
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PUBLIC METHODS - EXPOSED API @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-    changeSettings(obj) {
-        /* Reset timeouts  */
-        this.clearTimeCount();
-        /* Update voice in the state if it changes */
-        if (obj.voiceURI) {
-            const voice = this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)
-                .length > 0
-                ? this.state.voices.filter((v) => v.voiceURI === obj.voiceURI)[0]
-                : this.state.voices[0];
-            this.state.voice = voice;
-            this.utterance.voice = voice;
-        }
-        /* Recalculate total duration  and current elapsedTime when rate changes */
-        if (obj.rate) {
-            this.state.duration = this.getTextDuration(this.state.wholeText, obj.rate);
-            /* Recalculate time elapsed */
-            this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
-            this.emit('time-tick', this, this.state.elapsedTime);
-        }
-        /* Update utterance object, adding the remaining settings and remaining text left to be played */
-        this.utterance = Object.assign(this.utterance, Object.assign(Object.assign({}, obj), { text: this.options.isChunksModeOn
-                ? this.getCurrentChunkText(this.state.currentChunkIndex)
-                : this.getRemainingText(this.state.currentWordIndex) }));
-        /* Update instance settings object to keep them in sync with utterance settings and trigger the Proxy trap to emit the "change-settings" event */
-        for (const entry of Object.entries(obj))
-            this.settings[entry[0]] = entry[1];
-        /*  Debounce to handle volume change properly */
-        this.restart('edit-utterance');
-    }
-    changeOptions(obj) {
-        /* Handle chunks mode option change */
-        if ('isChunksModeOn' in obj) {
-            this.changeChunkMode(obj.isChunksModeOn);
-        }
-        for (const entry of Object.entries(obj))
-            this.options[entry[0]] = entry[1];
-    }
     /* Control methods */
     seekTo(idx) {
         /* Reset timeouts  */
@@ -667,12 +711,10 @@ export class SpeechSynth extends EventEmitter {
         /* Sync the current chunk in both cases that the seeking is performed in chunk or non chunk mode */
         const chunk = this.state.chunksArray.find((c) => idx >= c.start && idx <= c.end);
         this.state.currentChunkIndex = chunk.idx;
-        this.state.currentWordIndex = chunk.start;
         if (!this.options.isChunksModeOn) {
             /* Set the new text slice */
-            this.state.textRemaining = this.getRemainingText(idx);
+            this.state.textRemaining = this.getRemainingText();
             /* Update current word index */
-            /* Need to increase the index by 1 */
             this.state.currentWordIndex = idx;
             /* Update utterance instance with  the new text slice */
             this.utterance.text = this.state.textRemaining;
@@ -681,6 +723,8 @@ export class SpeechSynth extends EventEmitter {
             this.highlightText(this.state.currentWordIndex);
         }
         else {
+            /* In Chunks mode sync the current word index with the start of the chunk */
+            this.state.currentWordIndex = chunk.start;
             this.utterance.text = chunk.text;
             /* Highlight */
             this.resetHighlight();
@@ -729,7 +773,7 @@ export class SpeechSynth extends EventEmitter {
                     };
                 });
             }
-            case 'edit-utterance-settings': {
+            case 'settings-change': {
                 return new Promise((resolve) => {
                     this.utterance.onstart = (e) => {
                         resolve(null);
@@ -775,7 +819,17 @@ export class SpeechSynth extends EventEmitter {
         this.resetHighlight();
         /* Reset timer */
         this.resetTimeCount();
-        this.state = Object.assign(Object.assign({}, this.state), { textRemaining: this.state.wholeText, currentWordIndex: 0, currentChunkIndex: 0, highlightedWords: [], lastWordPosition: 0, isPaused: false, isReading: false });
+        const propsToReset = {
+            textRemaining: this.state.wholeText,
+            currentWordIndex: 0,
+            currentChunkIndex: 0,
+            highlightedWords: [],
+            lastWordPosition: 0,
+            isPaused: false,
+            isReading: false,
+        };
+        for (const entry of Object.entries(propsToReset))
+            this.state[entry[0]] = entry[1];
         /* Reset the utterance state ( needed to reset the text utterance ) */
         this.initUtterance();
         /* Scroll back to top word */

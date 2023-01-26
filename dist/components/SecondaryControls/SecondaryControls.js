@@ -1,77 +1,95 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import CustomSelect from 'components/CustomSelect/CustomSelect';
-import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
-import { setDuration, setisOptionsVisible } from 'store/actions';
-import { useReader, useStore, useMainProps } from 'contexts';
+import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
-import { FcSettings } from '@react-icons/all-files/fc/FcSettings';
-import GenericSlider from 'components/GenericSlider/GenericSlider';
-/* import { ImInfo } from 'react-icons/im';
- */
+import Options from 'components/Options/Options';
+import ColorIcon from 'components/ColorIcon/ColorIcon';
+import UnderlinedTextIcon from 'components/UnderlinedTextIcon/UnderlinedTextIcon';
+const rates = [
+    { value: '0.5', name: '0.5x' },
+    { value: '0.75', name: '0.75x' },
+    { value: '1', name: '1x' },
+    { value: '1.25', name: '1.25x' },
+    { value: '1.5', name: '1.5x' },
+    { value: '2', name: '2x' },
+];
+const palette = [
+    { name: 'Chocolate', value: '#C85A17' },
+    { name: 'Yellow', value: '#FFFF00' },
+    { name: 'Orange', value: '#FFA500' },
+    { name: 'Light Slate Blue', value: '#736AFF' },
+    { name: 'Ruby Red', value: '#F62217' },
+    { name: 'Bright Neon Pink', value: '#F433FF' },
+    { name: 'Desert Sand', value: '#EDC9AF' },
+    { name: 'Dark Goldenrod', value: '#AF7817' },
+    { name: 'Cotton Candy', value: '#FCDFFF' },
+    { name: 'Chartreuse', value: '#8AFB17' },
+];
 const SecondaryControls = () => {
     const { reader } = useReader();
-    const { state, dispatch } = useStore();
-    const { styleOptions } = useMainProps();
-    const { voices, isOptionsVisible, settings: { voiceURI, volume, rate }, options: { isChunksModeOn, isHighlightTextOn, isPreserveHighlighting }, } = state;
-    const toggleSettings = () => {
-        dispatch(setisOptionsVisible(!isOptionsVisible));
-    };
+    const { state } = useStore();
+    const { voices, settings: { voiceURI, rate }, highlightStyle, } = state;
     /* Settings Handlers */
     const handleRateChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ rate: +value });
-        dispatch(setDuration((reader === null || reader === void 0 ? void 0 : reader.state.duration) || 0));
+        if (!reader)
+            return;
+        reader.settings.rate = +value;
     };
     const handleVoiceChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ voiceURI: value });
+        if (!reader)
+            return;
+        reader.settings.voiceURI = value;
     };
-    const handleVolumeChange = (value) => {
-        reader === null || reader === void 0 ? void 0 : reader.changeSettings({ volume: value });
+    const handleHighlightColorChange = (value) => {
+        if (!reader)
+            return;
+        reader.style.color1 = value;
     };
-    /* Options Handlers */
-    const handlePreserveHighlighting = (e) => {
-        const target = e.target;
-        reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isPreserveHighlighting: target.checked });
+    const handleHighlightFontColorChange = (value) => {
+        if (!reader)
+            return;
+        reader.style.color2 = value;
     };
-    const handleIsHighlightTextOn = (e) => {
-        const target = e.target;
-        reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isHighlightTextOn: target.checked });
-    };
-    const handleIsChunksModeOn = (e) => {
-        if (reader === null || reader === void 0 ? void 0 : reader.state.isMobile)
-            return; // Disable this option for mobile devices
-        const target = e.target;
-        reader === null || reader === void 0 ? void 0 : reader.changeOptions({ isChunksModeOn: target.checked });
-    };
+    const colors = useMemo(() => {
+        const updatedPalette = [...palette];
+        for (const color of Object.values(highlightStyle))
+            if (!palette.find((c) => c.value === color))
+                updatedPalette.push({
+                    name: color,
+                    value: color,
+                });
+        return updatedPalette;
+    }, [highlightStyle]);
     return (React.createElement("div", { className: styles.container },
         React.createElement("div", { className: styles.optionsWrapper1 },
-            React.createElement(CustomSelect, { name: "rate", options: [
-                    { value: '0.5', name: '0.5x' },
-                    { value: '0.75', name: '0.75x' },
-                    { value: '1', name: '1x' },
-                    { value: '1.25', name: '1.25x' },
-                    { value: '1.5', name: '1.5x' },
-                    { value: '2', name: '2x' },
-                ], onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", styleOptions: styleOptions }),
-            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices", styleOptions: styleOptions }),
-            React.createElement(FcSettings, { className: styles.icon, onPointerDown: toggleSettings })),
+            React.createElement(CustomSelect, { name: "rate", options: rates, onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", Icon: UnderlinedTextIcon }),
+            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices", Icon: UnderlinedTextIcon }),
+            React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightColorChange, value: highlightStyle.color1, defaultValue: "lavander", title: "Palette", Icon: ColorIcon }),
+            React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightFontColorChange, value: highlightStyle.color2, defaultValue: "lavander", title: "Palette", Icon: ColorIcon })),
         React.createElement("div", { className: styles.optionsWrapper2 },
-            React.createElement(GenericSlider, { icon: React.createElement(BiVolumeFull, null), onChange: handleVolumeChange, data: {
-                    min: '0.1',
-                    max: '1',
-                    step: '0.1',
-                    value: volume,
-                    unit: '%',
-                } })),
-        React.createElement("div", { className: `${styles.overlayContainer} ${isOptionsVisible && styles.visible}`, onPointerDown: toggleSettings },
-            React.createElement("label", { htmlFor: "preserve-option", onPointerDown: (e) => e.stopPropagation() },
-                React.createElement("input", { id: "preserve-option", type: "checkbox", checked: isPreserveHighlighting, onChange: handlePreserveHighlighting }),
-                React.createElement("h5", null, "Preserve Highlighting")),
-            React.createElement("label", { htmlFor: "highlight-option", onPointerDown: (e) => e.stopPropagation() },
-                React.createElement("input", { id: "highlight-option", type: "checkbox", checked: isHighlightTextOn, onChange: handleIsHighlightTextOn }),
-                React.createElement("h5", null, "Highlight Text")),
-            React.createElement("label", { htmlFor: "mode-option", onPointerDown: (e) => e.stopPropagation() },
-                React.createElement("input", { id: "mode-option", type: "checkbox", checked: isChunksModeOn, onChange: handleIsChunksModeOn }),
-                React.createElement("h5", null, "Chunks Mode")))));
+            React.createElement(Options, null))));
 };
 export default SecondaryControls;
+// "The Sea's Symphony"
+/*
+Deep in the ocean blue,
+Where colorful fishes swim,
+They sing a melody,
+A symphony within.
+
+The whales and dolphins join in,
+Their songs so grand and true,
+The sea is alive, gives chillings,
+A symphony for me and you.
+
+The coral reefs, the seaweed beds,
+All play their part,
+That's a real work of art.
+
+The ocean is a treasure,
+We must protect it still,
+For the sea's symphony,
+Is a melody worth the thrill.
+
+*/
 //# sourceMappingURL=SecondaryControls.js.map

@@ -12,9 +12,9 @@ var __rest = (this && this.__rest) || function (s, e) {
 import React from 'react';
 import styles from './styles.module.css';
 /* React Components */
-export const Button = (_a) => {
-    var { children } = _a, props = __rest(_a, ["children"]);
-    return (React.createElement("div", Object.assign({ className: styles.button }, props), children));
+export const ColorIcon = (_a) => {
+    var { children, option } = _a, props = __rest(_a, ["children", "option"]);
+    return (option && (React.createElement("i", Object.assign({ className: styles.icon, style: { backgroundColor: option.value } }, props), children)));
 };
-export default Button;
-//# sourceMappingURL=Button.js.map
+export default ColorIcon;
+//# sourceMappingURL=ColorIcon.js.map

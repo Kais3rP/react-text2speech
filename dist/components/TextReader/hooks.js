@@ -1,6 +1,6 @@
 import { useReader, useStore, useMainProps } from 'contexts';
 import { useMemo, useEffect } from 'react';
-import { setIsVisible, setIsMinimized, setIsLoading, changeOptions, changeSettings, setDuration, setNumberOfWords, setVoices, } from 'store/actions';
+import { setIsVisible, setIsMinimized, setIsLoading, changeOptions, changeSettings, setDuration, setNumberOfWords, setVoices, changeHighlightStyle, } from 'store/actions';
 export const useBindTextReader = () => {
     const { reader } = useReader();
     const { state, dispatch } = useStore();
@@ -66,6 +66,7 @@ export const useInitializeReader = () => {
             dispatch(setDuration(reader.state.duration));
             dispatch(changeSettings(reader.settings));
             dispatch(changeOptions(reader.options));
+            dispatch(changeHighlightStyle(reader.style));
         }).catch((e) => console.log(e));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

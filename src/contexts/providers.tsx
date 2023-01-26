@@ -76,6 +76,8 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 			onWordClick: (reader: SpeechSynth, e: MouseEvent) => {
 				const target: HTMLElement = e.target as HTMLElement;
 				const idx: number = +(target.dataset.id as string);
+				console.log('Word click, seek to:', idx);
+
 				reader?.seekTo(idx);
 			},
 			onStateChange: (reader: SpeechSynth) => {

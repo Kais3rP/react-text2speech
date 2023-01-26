@@ -14,7 +14,7 @@ import styles from './styles.module.css';
 import { Utils } from 'lib';
 const GenericSlider = (_a) => {
     var { data, onChange, icon } = _a, props = __rest(_a, ["data", "onChange", "icon"]);
-    const debouncedOnChange = Utils.debounce(onChange, 20);
+    const debouncedOnChange = Utils.debounce(onChange, 5);
     const handleChange = (e) => {
         const value = +e.target.value;
         debouncedOnChange(value);

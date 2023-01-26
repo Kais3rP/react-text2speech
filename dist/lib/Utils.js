@@ -154,6 +154,26 @@ export class Utils {
     static isFunction(fn) {
         return fn && typeof fn === 'function';
     }
+    /* Utilities */
+    static formatMsToTime(n) {
+        let seconds, minutes, hours;
+        let secondsLeft = 0;
+        let minutesLeft = 0;
+        seconds = Math.floor(n / 1000);
+        secondsLeft = Math.floor(seconds % 60);
+        minutes = Math.floor(seconds / 60);
+        minutesLeft = Math.floor(minutes % 60);
+        hours = Math.floor(minutes / 60);
+        /* format */
+        seconds = secondsLeft.toString().padStart(2, '0');
+        minutes = (minutes === minutesLeft ? minutes : minutesLeft)
+            .toString()
+            .padStart(2, '0');
+        hours = hours.toString().padStart(2, 0);
+        return hours > 0
+            ? `${hours}:${minutes}:${seconds}`
+            : `${minutes}:${seconds}`;
+    }
     static debounce(fn, delay) {
         let timeout;
         return function (...args) {
@@ -162,8 +182,17 @@ export class Utils {
             timeout = setTimeout(() => fn(...args), delay);
         };
     }
+    static hexToRGB(hex) {
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result
+            ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16),
+            }
+            : null;
+    }
 }
-/* Array utils */
 Utils.__join__ = function (fn) {
     let str = ``;
     let i = 0;

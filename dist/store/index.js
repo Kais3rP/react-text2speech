@@ -10,6 +10,11 @@ export const globalState = {
         isPreserveHighlighting: true,
         isHighlightTextOn: true,
         isChunksModeOn: false,
+        isUnderlinedOn: true,
+    },
+    highlightStyle: {
+        color1: '',
+        color2: '',
     },
     isReading: false,
     isLoading: false,
@@ -37,7 +42,7 @@ export const rootReducer = (state, action) => {
         case 'SET_IS_VISIBLE': {
             return Object.assign(Object.assign({}, state), { isVisible: payload });
         }
-        case 'SET_IS_SETTINGS_VISIBLE': {
+        case 'SET_IS_OPTIONS_VISIBLE': {
             return Object.assign(Object.assign({}, state), { isOptionsVisible: payload });
         }
         case 'SET_VOICES': {
@@ -60,6 +65,9 @@ export const rootReducer = (state, action) => {
         }
         case 'CHANGE_OPTIONS': {
             return Object.assign(Object.assign({}, state), { options: Object.assign(Object.assign({}, state.options), payload) });
+        }
+        case 'CHANGE_HIGHLIGHT_STYLE': {
+            return Object.assign(Object.assign({}, state), { highlightStyle: Object.assign(Object.assign({}, state.highlightStyle), payload) });
         }
         default:
             return Object.assign({}, state);

@@ -248,12 +248,6 @@ export class SpeechSynth extends EventEmitter {
 		);
 	}
 
-	/* 
-	This method handles the DOM traversing to add the Highlightint tags to the readable elements and all the logic in it is responsible
-	for how the text content appears visually
-	e.g. alignment of punctuation, spaces, etc...
-	*/
-
 	public async init(): Promise<SpeechSynth> {
 		/* Add custom methods to primitives */
 
@@ -401,6 +395,12 @@ export class SpeechSynth extends EventEmitter {
 			this.play('next-chunk-start');
 		};
 	}
+
+	/* 
+	This method handles the DOM traversing to add the Highlightint tags to the readable elements and all the logic in it is responsible
+	for how the text content appears visually
+	e.g. alignment of punctuation, spaces, etc...
+	*/
 
 	private addHTMLHighlightTags(node: Element) {
 		const nodes = [...node.childNodes];
@@ -988,11 +988,13 @@ export class SpeechSynth extends EventEmitter {
 		this.state.currentChunkIndex = chunk.idx as number;
 
 		if (!this.options.isChunksModeOn) {
+			/* Update current word index */
+
+			this.state.currentWordIndex = idx;
+
 			/* Set the new text slice */
 
 			this.state.textRemaining = this.getRemainingText();
-
-			/* Update current word index */
 
 			this.state.currentWordIndex = idx;
 

@@ -1,7 +1,7 @@
 import React, { useRef, useReducer } from 'react';
 import { SpeechSynth } from 'lib';
 import { rootReducer, globalState } from 'store';
-import { setIsReading, setElapsedTime, setCurrentWordIndex, changeSettings, changeOptions, } from 'store/actions';
+import { setIsReading, setElapsedTime, setCurrentWordIndex, changeSettings, changeOptions, changeHighlightStyle, setDuration, } from 'store/actions';
 import { MainPropsContext, ReaderContext, StoreContext } from './contexts';
 import { useStore, useMainProps } from './hooks';
 /* Provides the main props */
@@ -10,7 +10,7 @@ export const MainPropsProvider = ({ value, children, }) => {
 };
 /* Provides the reader instance */
 export const ReaderProvider = ({ children }) => {
-    const { dispatch } = useStore();
+    const { state, dispatch } = useStore();
     const { textContainer, options, styleOptions } = useMainProps();
     const readerRef = useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
             console.log('Start');
@@ -30,7 +30,7 @@ export const ReaderProvider = ({ children }) => {
             console.log('End');
             reader.reset();
         }, onBoundary: (reader, e) => {
-            console.log('Boundary event');
+            // console.log('Boundary event');
         }, onSeek: (reader) => {
             dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
         }, onTimeTick: (reader) => {
@@ -39,12 +39,18 @@ export const ReaderProvider = ({ children }) => {
             const target = e.target;
             const idx = +target.dataset.id;
             reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
+        }, onStateChange: (reader) => {
+            if (state.duration !== reader.state.duration)
+                dispatch(setDuration(reader.state.duration));
         }, onSettingsChange: (reader) => {
             console.log('Settings change');
             dispatch(changeSettings(reader.settings));
-        }, onOptionsChange: (reader, obj) => {
-            console.log('Options change', obj);
+        }, onOptionsChange: (reader) => {
+            console.log('Options change', reader.options);
             dispatch(changeOptions(reader.options));
+        }, onStyleChange: (reader) => {
+            console.log('Style change');
+            dispatch(changeHighlightStyle(reader.style));
         } })));
     return (React.createElement(ReaderContext.Provider, { value: { reader: readerRef.current } }, children));
 };
