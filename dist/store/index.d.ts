@@ -7,6 +7,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     voices: IVoiceInfo[];
     elapsedTime: number;
@@ -24,6 +25,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
@@ -41,6 +43,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
@@ -58,6 +61,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
@@ -75,6 +79,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
@@ -92,6 +97,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     elapsedTime: number;
@@ -109,6 +115,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
@@ -126,6 +133,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
@@ -143,6 +151,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
@@ -160,6 +169,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
@@ -176,6 +186,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
@@ -193,6 +204,7 @@ export declare const rootReducer: (state: IGlobalState, action: ActionType) => {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];

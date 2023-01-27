@@ -37,6 +37,10 @@ export declare class Utils {
         g: number;
         b: number;
     } | null;
+    static getBrushURL(name: string, color: string): {
+        http: string;
+        css: string;
+    };
     static __join__: (fn: (el: any, i: number, arr: any[]) => string) => string;
 }
 //# sourceMappingURL=Utils.d.ts.map

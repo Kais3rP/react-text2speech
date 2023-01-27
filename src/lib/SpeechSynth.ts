@@ -242,7 +242,7 @@ export class SpeechSynth extends EventEmitter {
 		};
 
 		this.style = new Proxy(
-			{ color1, color2 },
+			{ color1, color2, brush: 'brush-1' },
 			{
 				set: styleSetter,
 			}
@@ -780,13 +780,11 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private async isBrushAvailable() {
-		const color = this.style.color1?.replace('#', '');
-		const URL = `https://s2.svgbox.net/pen-brushes.svg?ic=brush-4&color=${color}`;
+		const URL = Utils.getBrushURL(this.style.brush, this.style.color1).http;
+
 		try {
 			const res = await fetch(URL);
-			console.log(res);
 			const data = await res.blob();
-			console.log(data);
 			if (res.ok && /image/.test(data?.type)) return true;
 			else return false;
 		} catch (e) {
@@ -795,11 +793,10 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private applyStyleToWord(el: HTMLElement) {
-		const color = this.style.color1?.replace('#', '');
-		const URL = `s2.svgbox.net/pen-brushes.svg?ic=brush-4&color=${color}`;
+		const URL = Utils.getBrushURL(this.style.brush, this.style.color1).css;
 
 		el.style.background = this.state.isBrushAvailable
-			? `url(//${URL})`
+			? URL
 			: this.style.color1;
 		el.style.margin = '0px -6px';
 		el.style.padding = '0px 6px';

@@ -238,6 +238,12 @@ export class Utils {
 		}
 	}
 
+	static getBrushURL(name: string, color: string) {
+		const _color = color.replace('#', '');
+		const URL = `s2.svgbox.net/pen-brushes.svg?ic=${name}&color=${_color}`;
+		return { http: `https://${URL}`, css: `url(//${URL})` };
+	}
+
 	static __join__ = function (
 		fn: (el: any, i: number, arr: any[]) => string
 	) {

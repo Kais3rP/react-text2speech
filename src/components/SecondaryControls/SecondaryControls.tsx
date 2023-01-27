@@ -8,6 +8,8 @@ import ColorIcon from 'components/ColorIcon/ColorIcon';
 import UnderlinedTextIcon from 'components/UnderlinedTextIcon/UnderlinedTextIcon';
 import { IOption } from 'components/CustomSelect/types';
 import ColorPreview from 'components/ColorPreview/ColorPreview';
+import BrushIcon from 'components/BrushIcon/BrushIcon';
+import BrushPreview from 'components/BrushPreview/ColorPreview';
 
 const rates: IOption[] = [
 	{ value: '0.5', name: '0.5x' },
@@ -31,6 +33,19 @@ const palette: IOption[] = [
 	{ name: 'Chartreuse', value: '#8AFB17' },
 	{ name: 'White', value: '#FFFFFF' },
 	{ name: 'Black', value: '#000000' },
+];
+
+const brushes: IOption[] = [
+	{ name: '1', value: 'brush-1' },
+	{ name: '2', value: 'brush-2' },
+	{ name: '3', value: 'brush-3' },
+	{ name: '4', value: 'brush-4' },
+	{ name: '5', value: 'brush-5' },
+	{ name: '6', value: 'brush-6' },
+	{ name: '7', value: 'brush-7' },
+	{ name: '8', value: 'brush-8' },
+	{ name: '9', value: 'brush-9' },
+	{ name: '10', value: 'brush-10' },
 ];
 
 const SecondaryControls: FC<ISecondaryControlsProps> = () => {
@@ -65,15 +80,23 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 		reader.style.color2 = value;
 	};
 
+	const handleBrushChange = (value: string) => {
+		if (!reader) return;
+		reader.style.brush = value;
+	};
+
 	/* Update the palette colors shown adding the custom highlight colors passed by props on the initial TextReader render */
 
 	const colors = useMemo(() => {
 		const updatedPalette = [...palette];
-		for (const color of Object.values(highlightStyle))
-			if (!palette.find((c) => c.value === color))
+		for (const entry of Object.entries(highlightStyle))
+			if (
+				!palette.find((c) => c.value === entry[1]) &&
+				/color/.test(entry[0])
+			)
 				updatedPalette.push({
-					name: color,
-					value: color,
+					name: entry[1],
+					value: entry[1],
 				});
 		return updatedPalette;
 	}, [highlightStyle]);
@@ -81,7 +104,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 	return (
 		<div className={styles.container}>
 			<div className={styles.optionsWrapper1}>
-				{/* Rate setting button */}
+				{/* Rate setting  */}
 				<CustomSelect
 					name="rate"
 					options={rates}
@@ -91,7 +114,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					title="Rate"
 					Icon={UnderlinedTextIcon}
 				/>
-				{/* Voice setting button */}
+				{/* Voice setting  */}
 				<CustomSelect
 					name="voice"
 					options={voices}
@@ -101,7 +124,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					title="Voices"
 					Icon={UnderlinedTextIcon}
 				/>
-				{/* Palette */}
+				{/* Palette style */}
 				<CustomSelect
 					name="palette"
 					options={colors}
@@ -121,6 +144,17 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					title="Palette"
 					Icon={ColorIcon}
 					ExtraComponent={ColorPreview}
+				/>
+				{/* Brush type */}
+				<CustomSelect
+					name="palette"
+					options={brushes}
+					onChange={handleBrushChange}
+					value={highlightStyle.brush}
+					defaultValue="lavander"
+					title="Palette"
+					Icon={BrushIcon}
+					ExtraComponent={BrushPreview}
 				/>
 
 				{/* <ImInfo

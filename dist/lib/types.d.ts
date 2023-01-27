@@ -66,12 +66,14 @@ export interface IState {
     currentChunkIndex: number;
     chunksArray: Chunk[];
     isBrushAvailable: boolean;
+    brush: string;
     isPaused: boolean;
     isReading: boolean;
 }
 export interface IStyle {
     color1: string;
     color2: string;
+    brush: string;
 }
 export interface ICurrentWordProps {
     charIndex: number;

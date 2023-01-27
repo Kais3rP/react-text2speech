@@ -81,6 +81,7 @@ export interface IState {
 	currentChunkIndex: number;
 	chunksArray: Chunk[];
 	isBrushAvailable: boolean;
+	brush: string;
 	/* Controls  */
 	isPaused: boolean;
 	isReading: boolean;
@@ -89,6 +90,7 @@ export interface IState {
 export interface IStyle {
 	color1: string;
 	color2: string;
+	brush: string;
 }
 
 export interface ICurrentWordProps {

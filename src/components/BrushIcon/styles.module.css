@@ -1,15 +1,24 @@
 .icon {
-	display: inline-block;
+	position: relative;
 	width: 16px;
 	height: 16px;
 	margin: 0px 5px 0px 5px;
 	cursor: pointer;
-	/* border: 2px solid #111; */
-	border-radius: 4px;
+	border-radius: 2px;
+	padding: 2px;
 	transition: all 0.1s ease-in;
 	box-shadow: 0px 0px 2px 1px var(--primaryColor);
 }
 
 .icon:hover {
 	transform: scale(1.05);
+}
+
+.label {
+	position: absolute;
+	bottom: 2px;
+	right: 2px;
+	color: var(--bgColor);
+	/* mix-blend-mode: exclusion; */
+	font-size: 8px;
 }

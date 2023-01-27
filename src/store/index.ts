@@ -17,6 +17,7 @@ export const globalState: IGlobalState = {
 	highlightStyle: {
 		color1: '',
 		color2: '',
+		brush: 'brush-1',
 	},
 	isReading: false,
 	isLoading: false,

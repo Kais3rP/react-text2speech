@@ -9,6 +9,7 @@ export interface IGlobalState {
     highlightStyle: {
         color1: string;
         color2: string;
+        brush: string;
     };
     isReading: boolean;
     voices: IVoiceInfo[];
