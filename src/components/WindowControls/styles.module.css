@@ -49,8 +49,6 @@
 }
 
 .showButton:hover .arrow {
-	/* 	animation: movingArrow 0.5s infinite linear;
- */
 	fill: var(--primaryColor);
 	left: -60px;
 	transform: scale(3) translateY(-3px);
@@ -78,6 +76,7 @@
 	fill: var(--bgColor);
 	transition: all 0.7s ease-out;
 	pointer-events: none;
+	/* animation: movingArrow 0.5s infinite linear; */
 }
 
 @keyframes movingArrow {

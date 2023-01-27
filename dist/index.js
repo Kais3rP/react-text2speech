@@ -1122,8 +1122,8 @@ class SpeechSynth extends EventEmitter {
         el.style.background = this.state.isBrushAvailable
             ? URL
             : this.style.color1;
-        el.style.margin = '0px -6px';
-        el.style.padding = '0px 6px';
+        el.style.margin = '0px -0.3em';
+        el.style.padding = '0.3em 0.3em';
         el.style.color = this.style.color2;
         el.style.textDecoration = this.options.isUnderlinedOn
             ? 'underline'
@@ -1227,11 +1227,12 @@ class SpeechSynth extends EventEmitter {
     }
     applyBasicStyleToWords(node, selector) {
         [...node.querySelectorAll(selector)]
-            .filter((el) => el && !Utils.isPunctuation(el.textContent))
+            /* .filter(
+                (el) => el && !Utils.isPunctuation(el.textContent as string)
+            ) */
             .forEach((el) => {
-            if (!el)
-                return;
-            el.style.transition = 'all 0.4s';
+            el.style.transition =
+                'backgroundColor 0.2s linear, color 0.2s linear';
         });
     }
     getTextDuration(str, rate) {
@@ -1697,7 +1698,7 @@ var IoMdArrowBack_1 = function IoMdArrowBack (props) {
   return GenIcon$1({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M427 234.625H167.296l119.702-119.702L256 85 85 256l171 171 29.922-29.924-118.626-119.701H427v-42.75z"}}]})(props);
 };
 
-var css_248z$a = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 3px;\r\n}\r\n\r\n.styles-module_showButton__TG0yv {\r\n\tposition: fixed;\r\n\tbottom: 20px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\tz-index: 100;\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\r\n\tbackground-color: var(--bgColor);\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover .styles-module_arrow__Ab9DG {\r\n\t/* \tanimation: movingArrow 0.5s infinite linear;\r\n */\r\n\tfill: var(--primaryColor);\r\n\tleft: -60px;\r\n\ttransform: scale(3) translateY(-3px);\r\n\topacity: 0;\r\n}\r\n\r\n.styles-module_line__vh-Pe {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__Ab9DG {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.7s ease-out;\r\n\tpointer-events: none;\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -2px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n";
+var css_248z$a = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 3px;\r\n}\r\n\r\n.styles-module_showButton__TG0yv {\r\n\tposition: fixed;\r\n\tbottom: 20px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\tz-index: 100;\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\r\n\tbackground-color: var(--bgColor);\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover .styles-module_arrow__Ab9DG {\r\n\tfill: var(--primaryColor);\r\n\tleft: -60px;\r\n\ttransform: scale(3) translateY(-3px);\r\n\topacity: 0;\r\n}\r\n\r\n.styles-module_line__vh-Pe {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__Ab9DG {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.7s ease-out;\r\n\tpointer-events: none;\r\n\t/* animation: movingArrow 0.5s infinite linear; */\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -2px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n";
 var styles$a = {"button":"styles-module_button__9sOag","hideButton":"styles-module_hideButton__ysi6M","showButton":"styles-module_showButton__TG0yv","arrow":"styles-module_arrow__Ab9DG","line":"styles-module_line__vh-Pe","movingArrow":"styles-module_movingArrow__FUSwM"};
 styleInject(css_248z$a);
 
@@ -1857,7 +1858,6 @@ const useOptions = () => {
             if (!reader)
                 return;
             const target = e.target;
-            console.log('Is underlined on', target.checked);
             reader.options.isUnderlinedOn = target.checked;
         };
         return [

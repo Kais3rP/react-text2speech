@@ -1,4 +1,6 @@
+import { IOption } from 'components/CustomSelect/types';
+
 export interface IColorIconProps {
-	bgColor: string;
+	option: IOption;
 	[key: string]: any;
 }

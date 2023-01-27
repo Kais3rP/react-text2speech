@@ -798,8 +798,8 @@ export class SpeechSynth extends EventEmitter {
 		el.style.background = this.state.isBrushAvailable
 			? URL
 			: this.style.color1;
-		el.style.margin = '0px -6px';
-		el.style.padding = '0px 6px';
+		el.style.margin = '0px -0.3em';
+		el.style.padding = '0.3em 0.3em';
 		el.style.color = this.style.color2 as string;
 		el.style.textDecoration = this.options.isUnderlinedOn
 			? 'underline'
@@ -937,12 +937,12 @@ export class SpeechSynth extends EventEmitter {
 
 	private applyBasicStyleToWords(node: Element, selector: string) {
 		[...node.querySelectorAll(selector)]
-			.filter(
+			/* .filter(
 				(el) => el && !Utils.isPunctuation(el.textContent as string)
-			)
+			) */
 			.forEach((el) => {
-				if (!el) return;
-				(el as HTMLElement).style.transition = 'all 0.4s';
+				(el as HTMLElement).style.transition =
+					'backgroundColor 0.2s linear, color 0.2s linear';
 			});
 	}
 

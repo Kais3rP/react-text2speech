@@ -9,7 +9,7 @@ import UnderlinedTextIcon from 'components/UnderlinedTextIcon/UnderlinedTextIcon
 import { IOption } from 'components/CustomSelect/types';
 import ColorPreview from 'components/ColorPreview/ColorPreview';
 import BrushIcon from 'components/BrushIcon/BrushIcon';
-import BrushPreview from 'components/BrushPreview/ColorPreview';
+import BrushPreview from 'components/BrushPreview/BrushPreview';
 
 const rates: IOption[] = [
 	{ value: '0.5', name: '0.5x' },

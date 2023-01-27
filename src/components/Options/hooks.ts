@@ -38,7 +38,6 @@ export const useOptions = () => {
 		const handleIsUnderlinedOn: ChangeEventHandler = (e) => {
 			if (!reader) return;
 			const target = e.target as HTMLInputElement;
-			console.log('Is underlined on', target.checked);
 			reader.options.isUnderlinedOn = target.checked;
 		};
 
