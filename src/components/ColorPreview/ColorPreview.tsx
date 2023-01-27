@@ -11,7 +11,7 @@ const ColorPreview: FC<IColorPreviewProps> = ({ option }) => {
 			style={{ backgroundColor: option.value }}
 		>
 			<h5 className={styles.label}>{option.name}</h5>
-			<h5 className={styles.ascii}>{option.value}</h5>
+			{/* <h5 className={styles.ascii}>{option.value}</h5> */}
 		</div>
 	);
 };

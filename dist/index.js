@@ -711,6 +711,7 @@ class SpeechSynth extends EventEmitter {
             elapsedTime: 0,
             currentChunkIndex: 0,
             chunksArray: [],
+            isBrushAvailable: false,
             /* Controls  */
             isPaused: false,
             isReading: false,
@@ -737,23 +738,16 @@ class SpeechSynth extends EventEmitter {
                 this.state.voices = yield this.getVoices();
                 this.state.voice = this.state.voices[0];
                 this.settings.voiceURI = this.state.voice.voiceURI;
-                /* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags"
-        on stringified HTML */
                 this.addHTMLHighlightTags(this.textContainer);
-                /* Add basic style to the words that have just been tagged wit HTML tags */
                 this.applyBasicStyleToWords(this.textContainer, '[data-id]');
                 /* Init state properties */
-                /* Get the total number of words to highlight */
                 this.state.numberOfWords = this.retrieveNumberOfWords(this.textContainer, '[data-id]');
-                /* Get the whole raw text */
                 this.state.wholeText = this.retrieveWholeText(this.textContainer, '[data-id]');
                 this.state.textRemaining = this.state.wholeText;
-                /* Get the total estimated duration of reading */
                 this.state.duration = this.getTextDuration(this.state.wholeText, this.settings.rate);
-                /* Get the array of words that will be read */
                 this.state.wholeTextArray = this.retrieveWholeTextArray(this.textContainer, '[data-id]');
-                /* Retrieve all chunks of text */
                 this.state.chunksArray = this.retrieveChunks();
+                this.state.isBrushAvailable = yield this.isBrushAvailable();
                 /* -------------------------------------------------------------------- */
                 /* Attach click event listener to words */
                 this.attachEventListenersToWords(this.textContainer, '[data-id]', {
@@ -1102,19 +1096,33 @@ class SpeechSynth extends EventEmitter {
         /* Apply highlight style */
         this.applyStyleToWord(wordToHighlight);
     }
+    isBrushAvailable() {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const color = (_a = this.style.color1) === null || _a === void 0 ? void 0 : _a.replace('#', '');
+            const URL = `https://s2.svgbox.net/pen-brushes.svg?ic=brush-4&color=${color}`;
+            try {
+                const res = yield fetch(URL);
+                console.log(res);
+                const data = yield res.blob();
+                console.log(data);
+                if (res.ok && /image/.test(data === null || data === void 0 ? void 0 : data.type))
+                    return true;
+                else
+                    return false;
+            }
+            catch (e) {
+                return false;
+            }
+        });
+    }
     applyStyleToWord(el) {
         var _a;
         const color = (_a = this.style.color1) === null || _a === void 0 ? void 0 : _a.replace('#', '');
         const URL = `s2.svgbox.net/pen-brushes.svg?ic=brush-4&color=${color}`;
-        /* 	fetch(URL)
-            .then((res) => {
-                console.log('Res', res);
-                return res;
-            })
-
-            .then((data) => console.log('Data', data))
-            .catch((e) => console.log('Error', e)); */
-        el.style.background = `url(//${URL})`;
+        el.style.background = this.state.isBrushAvailable
+            ? `url(//${URL})`
+            : this.style.color1;
         el.style.margin = '0px -6px';
         el.style.padding = '0px 6px';
         el.style.color = this.style.color2;
@@ -1689,8 +1697,8 @@ var IoMdArrowBack_1 = function IoMdArrowBack (props) {
   return GenIcon$1({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M427 234.625H167.296l119.702-119.702L256 85 85 256l171 171 29.922-29.924-118.626-119.701H427v-42.75z"}}]})(props);
 };
 
-var css_248z$8 = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 3px;\r\n}\r\n\r\n.styles-module_showButton__TG0yv {\r\n\tposition: fixed;\r\n\tbottom: 20px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\tz-index: 100;\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\r\n\tbackground-color: var(--bgColor);\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover .styles-module_arrow__Ab9DG {\r\n\tanimation: styles-module_movingArrow__FUSwM 0.5s infinite linear;\r\n\tfill: var(--primaryColor);\r\n}\r\n\r\n.styles-module_line__vh-Pe {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__Ab9DG {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -4px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n";
-var styles$8 = {"button":"styles-module_button__9sOag","hideButton":"styles-module_hideButton__ysi6M","showButton":"styles-module_showButton__TG0yv","arrow":"styles-module_arrow__Ab9DG","movingArrow":"styles-module_movingArrow__FUSwM","line":"styles-module_line__vh-Pe"};
+var css_248z$8 = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 3px;\r\n}\r\n\r\n.styles-module_showButton__TG0yv {\r\n\tposition: fixed;\r\n\tbottom: 20px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\tz-index: 100;\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\r\n\tbackground-color: var(--bgColor);\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover .styles-module_arrow__Ab9DG {\r\n\t/* \tanimation: movingArrow 0.5s infinite linear;\r\n */\r\n\tfill: var(--primaryColor);\r\n\tleft: -60px;\r\n\ttransform: scale(3) translateY(-3px);\r\n\topacity: 0;\r\n}\r\n\r\n.styles-module_line__vh-Pe {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__Ab9DG {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.7s ease-out;\r\n\tpointer-events: none;\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -2px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n";
+var styles$8 = {"button":"styles-module_button__9sOag","hideButton":"styles-module_hideButton__ysi6M","showButton":"styles-module_showButton__TG0yv","arrow":"styles-module_arrow__Ab9DG","line":"styles-module_line__vh-Pe","movingArrow":"styles-module_movingArrow__FUSwM"};
 styleInject(css_248z$8);
 
 const WindowControls = () => {
@@ -1907,7 +1915,7 @@ const Options = () => {
             React.createElement("h5", null, o.label)))))));
 };
 
-var css_248z$3 = ".styles-module_icon__Z2LW9 {\r\n\tdisplay: inline-block;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 3px 0px 3px;\r\n\tcursor: pointer;\r\n\tborder: 2px solid #111;\r\n\tborder-radius: 4px;\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n\r\n.styles-module_icon__Z2LW9:hover {\r\n\ttransform: scale(1.2);\r\n}\r\n";
+var css_248z$3 = ".styles-module_icon__Z2LW9 {\r\n\tdisplay: inline-block;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\t/* border: 2px solid #111; */\r\n\tborder-radius: 4px;\r\n\ttransition: all 0.2s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_icon__Z2LW9:hover {\r\n\ttransform: scale(1.2);\r\n}\r\n";
 var styles$3 = {"icon":"styles-module_icon__Z2LW9"};
 styleInject(css_248z$3);
 
@@ -1928,15 +1936,14 @@ const UnderlinedTextIcon = (_a) => {
         children)));
 };
 
-var css_248z$1 = ".styles-module_container__k5Fas {\r\n\tposition: relative;\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\toverflow: hidden;\r\n}\r\n\r\n.styles-module_label__9Eq-Q {\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n}\r\n\r\n.styles-module_ascii__iK7ja {\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n}\r\n";
+var css_248z$1 = ".styles-module_container__k5Fas {\r\n\tposition: relative;\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__9Eq-Q {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: difference;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n}\r\n\r\n.styles-module_ascii__iK7ja {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
 var styles$1 = {"container":"styles-module_container__k5Fas","label":"styles-module_label__9Eq-Q","ascii":"styles-module_ascii__iK7ja"};
 styleInject(css_248z$1);
 
 /* React Components */
 const ColorPreview = ({ option }) => {
     return (React.createElement("div", { className: styles$1.container, style: { backgroundColor: option.value } },
-        React.createElement("h5", { className: styles$1.label }, option.name),
-        React.createElement("h5", { className: styles$1.ascii }, option.value)));
+        React.createElement("h5", { className: styles$1.label }, option.name)));
 };
 
 const rates = [

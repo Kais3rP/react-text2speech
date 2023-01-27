@@ -224,6 +224,7 @@ export class SpeechSynth extends EventEmitter {
 				elapsedTime: 0,
 				currentChunkIndex: 0,
 				chunksArray: [],
+				isBrushAvailable: false,
 				/* Controls  */
 				isPaused: false,
 				isReading: false,
@@ -263,24 +264,16 @@ export class SpeechSynth extends EventEmitter {
 
 			this.settings.voiceURI = this.state.voice.voiceURI;
 
-			/* Add HTML highlight tags if SSR is off, in SSR the tags are added server side invoking the method ".addHTMLHighlightTags" 
-    on stringified HTML */
-
 			this.addHTMLHighlightTags(this.textContainer);
-
-			/* Add basic style to the words that have just been tagged wit HTML tags */
 
 			this.applyBasicStyleToWords(this.textContainer, '[data-id]');
 
 			/* Init state properties */
-			/* Get the total number of words to highlight */
 
 			this.state.numberOfWords = this.retrieveNumberOfWords(
 				this.textContainer,
 				'[data-id]'
 			);
-
-			/* Get the whole raw text */
 
 			this.state.wholeText = this.retrieveWholeText(
 				this.textContainer,
@@ -289,24 +282,19 @@ export class SpeechSynth extends EventEmitter {
 
 			this.state.textRemaining = this.state.wholeText;
 
-			/* Get the total estimated duration of reading */
-
 			this.state.duration = this.getTextDuration(
 				this.state.wholeText,
 				this.settings.rate as number
 			);
-
-			/* Get the array of words that will be read */
 
 			this.state.wholeTextArray = this.retrieveWholeTextArray(
 				this.textContainer,
 				'[data-id]'
 			) as string[];
 
-			/* Retrieve all chunks of text */
-
 			this.state.chunksArray = this.retrieveChunks();
 
+			this.state.isBrushAvailable = await this.isBrushAvailable();
 			/* -------------------------------------------------------------------- */
 
 			/* Attach click event listener to words */
@@ -791,19 +779,28 @@ export class SpeechSynth extends EventEmitter {
 		this.applyStyleToWord(wordToHighlight);
 	}
 
+	private async isBrushAvailable() {
+		const color = this.style.color1?.replace('#', '');
+		const URL = `https://s2.svgbox.net/pen-brushes.svg?ic=brush-4&color=${color}`;
+		try {
+			const res = await fetch(URL);
+			console.log(res);
+			const data = await res.blob();
+			console.log(data);
+			if (res.ok && /image/.test(data?.type)) return true;
+			else return false;
+		} catch (e) {
+			return false;
+		}
+	}
+
 	private applyStyleToWord(el: HTMLElement) {
 		const color = this.style.color1?.replace('#', '');
 		const URL = `s2.svgbox.net/pen-brushes.svg?ic=brush-4&color=${color}`;
-		/* 	fetch(URL)
-			.then((res) => {
-				console.log('Res', res);
-				return res;
-			})
 
-			.then((data) => console.log('Data', data))
-			.catch((e) => console.log('Error', e)); */
-
-		el.style.background = `url(//${URL})`;
+		el.style.background = this.state.isBrushAvailable
+			? `url(//${URL})`
+			: this.style.color1;
 		el.style.margin = '0px -6px';
 		el.style.padding = '0px 6px';
 		el.style.color = this.style.color2 as string;
