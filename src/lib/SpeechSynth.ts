@@ -173,7 +173,7 @@ export class SpeechSynth extends EventEmitter {
 				isHighlightTextOn: true,
 				isChunksModeOn: Utils.isMobile(),
 				isPreserveHighlighting: true,
-				isUnderlinedOn: true,
+				isUnderlinedOn: false,
 			},
 			{
 				set: optionsSetter,
@@ -792,9 +792,21 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private applyStyleToWord(el: HTMLElement) {
-		el.style.backgroundColor = this.style.color1 as string;
+		const color = this.style.color1?.replace('#', '');
+		const URL = `s2.svgbox.net/pen-brushes.svg?ic=brush-4&color=${color}`;
+		/* 	fetch(URL)
+			.then((res) => {
+				console.log('Res', res);
+				return res;
+			})
+
+			.then((data) => console.log('Data', data))
+			.catch((e) => console.log('Error', e)); */
+
+		el.style.background = `url(//${URL})`;
+		el.style.margin = '0px -6px';
+		el.style.padding = '0px 6px';
 		el.style.color = this.style.color2 as string;
-		el.style.boxShadow = `10px 0px 0px 0px ${this.style.color1} -10px 0px 0px 0px ${this.style.color1}`;
 		el.style.textDecoration = this.options.isUnderlinedOn
 			? 'underline'
 			: 'none';
@@ -863,9 +875,8 @@ export class SpeechSynth extends EventEmitter {
 
 	private resetHighlight() {
 		this.state.highlightedWords.forEach((n) => {
-			(n as HTMLElement).style.backgroundColor = '';
+			(n as HTMLElement).style.background = '';
 			(n as HTMLElement).style.color = '';
-			(n as HTMLElement).style.boxShadow = '';
 			(n as HTMLElement).style.textDecoration = 'none';
 
 			this.state.highlightedWords = [];

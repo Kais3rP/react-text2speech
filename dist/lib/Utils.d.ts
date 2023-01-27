@@ -32,7 +32,7 @@ export declare class Utils {
     static isFunction(fn: any): any;
     static formatMsToTime(n: number): string;
     static debounce(fn: (...arg: any[]) => any, delay: number): (...args: any[]) => void;
-    static hexToRGB(hex: string): {
+    static hexToRGB(hex: string, format?: 'object' | 'string'): string | {
         r: number;
         g: number;
         b: number;

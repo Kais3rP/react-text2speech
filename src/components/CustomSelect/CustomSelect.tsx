@@ -1,6 +1,6 @@
-import React, { FC, useState, useRef, useCallback } from 'react';
+import React, { FC, useState, useRef, useCallback, useMemo } from 'react';
 import { useOnClickOutside } from '../../hooks/index';
-import { ICustomSelectProps } from './types';
+import { ICustomSelectProps, IOption } from './types';
 import styles from './styles.module.css';
 
 const CustomSelect: FC<ICustomSelectProps> = ({
@@ -8,11 +8,18 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 	value,
 	title,
 	onChange,
-	style,
 	Icon,
+	ExtraComponent,
 	...props
 }) => {
+	const currentOption = useMemo(
+		() => options.find((o) => o.value === value),
+		[options, value]
+	);
+
 	const [showOptions, setShowOptions] = useState(false);
+	const [localOption, setLocalOption] = useState(currentOption); // This state is used only locally to the selector
+
 	const ref = useRef(null);
 
 	const show = () => {
@@ -28,14 +35,15 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 		hide();
 	};
 
+	const changeLocalOption = (value: IOption) => {
+		setLocalOption(value);
+	};
+
 	useOnClickOutside(ref, hide);
 
 	return (
 		<div className={styles.container} {...props}>
-			<Icon
-				onClick={show}
-				option={options.find((o) => o.value === value)}
-			/>
+			<Icon onClick={show} option={currentOption} />
 
 			<div
 				ref={ref}
@@ -44,16 +52,24 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 				}`}
 				onPointerDown={hide}
 			>
-				{options.map((opt) => (
-					<Icon
-						key={opt.value}
-						onPointerDown={(e) => {
-							e.stopPropagation();
-							onOptionClick(opt.value);
-						}}
-						option={opt}
-					/>
-				))}
+				<div className={styles.optionsWrapper}>
+					{options.map((opt) => (
+						<Icon
+							key={opt.value}
+							onPointerDown={(e) => {
+								e.stopPropagation();
+								onOptionClick(opt.value);
+							}}
+							onMouseEnter={() => changeLocalOption(opt)}
+							option={opt}
+						/>
+					))}
+				</div>
+				{ExtraComponent && (
+					<div className={styles.extraComponentWrapper}>
+						<ExtraComponent option={localOption} />
+					</div>
+				)}
 			</div>
 		</div>
 	);

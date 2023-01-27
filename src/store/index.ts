@@ -12,7 +12,7 @@ export const globalState: IGlobalState = {
 		isPreserveHighlighting: true,
 		isHighlightTextOn: true,
 		isChunksModeOn: false,
-		isUnderlinedOn: true,
+		isUnderlinedOn: false,
 	},
 	highlightStyle: {
 		color1: '',

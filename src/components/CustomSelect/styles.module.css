@@ -2,7 +2,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width:auto;
+	width: auto;
 }
 
 .optionsContainer {
@@ -17,10 +17,16 @@
 	color: var(--primaryColor);
 	z-index: 100;
 	display: flex;
-	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
 	overflow-x: hidden;
+}
+
+.optionsWrapper {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
 }
 
 .optionsContainer i {
@@ -30,4 +36,12 @@
 .visible {
 	opacity: 1;
 	pointer-events: all;
+}
+
+.extraComponentWrapper {
+	padding: 0px 5px 0px 10px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
 }
