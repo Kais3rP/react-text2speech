@@ -29,16 +29,8 @@ const WindowControls: FC<IWindowControlsProps> = () => {
 	};
 	return (
 		<>
-			{/* Hide button */}
-			{isVisible ? (
-				<div
-					title={'Hide'}
-					className={`${styles.button} ${styles.hideButton}`}
-					onPointerDown={handleHideReader}
-				>
-					<MdClose />
-				</div>
-			) : (
+			{/* Show button overlay */}
+			{!isVisible && (
 				<div
 					title={'Show'}
 					className={styles.showButton}
@@ -48,6 +40,14 @@ const WindowControls: FC<IWindowControlsProps> = () => {
 					<IoMdArrowBack className={styles.arrow} />
 				</div>
 			)}
+			{/* Hide button */}
+			<div
+				title={'Hide'}
+				className={`${styles.button} ${styles.hideButton}`}
+				onPointerDown={handleHideReader}
+			>
+				<MdClose />
+			</div>
 			{/* Minimize button */}
 			<div
 				style={{ position: 'absolute', top: '2px', right: '24px' }}

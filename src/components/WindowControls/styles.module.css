@@ -12,12 +12,13 @@
 	color: var(--textColor);
 	font-weight: bold !important;
 	cursor: pointer;
-	transition: all 0.2s linear;
+	transition: all 0.1s linear;
 }
 
 .button:hover {
 	background-color: var(--bgColor);
 	color: var(--secondaryColor);
+	transform: scale(1.05);
 }
 
 .hideButton {
@@ -28,7 +29,7 @@
 
 .showButton {
 	position: fixed;
-	bottom: 25px;
+	bottom: 20px;
 	right: -19px;
 	border-radius: 50%;
 	border: 2px solid var(--primaryColor);
@@ -36,19 +37,20 @@
 	height: 40px;
 	background-color: var(--secondaryColor);
 	cursor: pointer;
-	transition: background-color 0.2s linear, border 0.2s linear,
-		box-shadow 0.2s linear;
+	z-index: 100;
+	transition: all 0.2s ease-out;
 }
 
 .showButton:hover {
 	border: 2px solid var(--secondaryColor);
-	transform: scale(1.1);
-	box-shadow: 2px 2px 3px 2px var(--bgColor);
-	background-color: var(--primaryColor);
+	transform: scale(1.05);
+	box-shadow: 0px 0px 10px 2px var(--secondaryColor);
+	background-color: var(--bgColor);
 }
 
 .showButton:hover .arrow {
 	animation: movingArrow 0.5s infinite linear;
+	fill: var(--primaryColor);
 }
 
 .line {
