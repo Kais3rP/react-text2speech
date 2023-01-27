@@ -65,12 +65,13 @@ export interface IState {
     elapsedTime: number;
     currentChunkIndex: number;
     chunksArray: Chunk[];
+    isBrushAvailable: boolean;
     isPaused: boolean;
     isReading: boolean;
 }
 export interface IStyle {
-    color1?: string;
-    color2?: string;
+    color1: string;
+    color2: string;
 }
 export interface ICurrentWordProps {
     charIndex: number;

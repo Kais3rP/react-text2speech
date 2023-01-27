@@ -12,5 +12,6 @@ export interface ICustomSelectProps {
 	title: string;
 	onChange: (v: string) => void;
 	Icon: FC<any>;
+	ExtraComponent?: FC<any>;
 	[key: string]: any;
 }

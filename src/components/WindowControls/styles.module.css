@@ -49,8 +49,12 @@
 }
 
 .showButton:hover .arrow {
-	animation: movingArrow 0.5s infinite linear;
+	/* 	animation: movingArrow 0.5s infinite linear;
+ */
 	fill: var(--primaryColor);
+	left: -60px;
+	transform: scale(3) translateY(-3px);
+	opacity: 0;
 }
 
 .line {
@@ -72,7 +76,8 @@
 	height: 20px;
 	font-size: 340px;
 	fill: var(--bgColor);
-	transition: all 0.2s ease-out;
+	transition: all 0.7s ease-out;
+	pointer-events: none;
 }
 
 @keyframes movingArrow {
@@ -81,7 +86,7 @@
 	}
 
 	25% {
-		left: -4px;
+		left: -2px;
 	}
 
 	50% {

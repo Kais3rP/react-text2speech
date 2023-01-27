@@ -25,6 +25,7 @@ export declare class SpeechSynth extends EventEmitter {
     private handleBoundary;
     private getVoices;
     private highlightText;
+    private isBrushAvailable;
     private applyStyleToWord;
     private changeChunkMode;
     private changeVoice;
