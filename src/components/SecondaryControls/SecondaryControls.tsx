@@ -7,6 +7,7 @@ import Options from 'components/Options/Options';
 import ColorIcon from 'components/ColorIcon/ColorIcon';
 import UnderlinedTextIcon from 'components/UnderlinedTextIcon/UnderlinedTextIcon';
 import { IOption } from 'components/CustomSelect/types';
+import ColorPreview from 'components/ColorPreview/ColorPreview';
 
 const rates: IOption[] = [
 	{ value: '0.5', name: '0.5x' },
@@ -28,6 +29,8 @@ const palette: IOption[] = [
 	{ name: 'Dark Goldenrod', value: '#AF7817' },
 	{ name: 'Cotton Candy', value: '#FCDFFF' },
 	{ name: 'Chartreuse', value: '#8AFB17' },
+	{ name: 'White', value: '#FFFFFF' },
+	{ name: 'Black', value: '#000000' },
 ];
 
 const SecondaryControls: FC<ISecondaryControlsProps> = () => {
@@ -61,6 +64,8 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 		if (!reader) return;
 		reader.style.color2 = value;
 	};
+
+	/* Update the palette colors shown adding the custom highlight colors passed by props on the initial TextReader render */
 
 	const colors = useMemo(() => {
 		const updatedPalette = [...palette];
@@ -105,6 +110,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					defaultValue="lavander"
 					title="Palette"
 					Icon={ColorIcon}
+					ExtraComponent={ColorPreview}
 				/>
 				<CustomSelect
 					name="palette"
@@ -114,6 +120,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					defaultValue="lavander"
 					title="Palette"
 					Icon={ColorIcon}
+					ExtraComponent={ColorPreview}
 				/>
 
 				{/* <ImInfo

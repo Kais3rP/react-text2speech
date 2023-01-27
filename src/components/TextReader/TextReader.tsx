@@ -7,21 +7,23 @@ import SecondaryControls from 'components/SecondaryControls/SecondaryControls';
 import {
 	useBindTextReader,
 	useInitializeReader,
-	useSetCSSVAriables,
+	useSetCSSVariables,
 } from './hooks';
 import { useStore } from 'contexts';
 import styles from './styles.module.css';
+import { useScrollToTop } from 'hooks';
 
 const TextReader: FC<ITextReaderProps> = () => {
 	const { state } = useStore();
 	const { isMinimized, isVisible } = state;
 
-	useSetCSSVAriables();
+	useScrollToTop();
+
+	useSetCSSVariables();
 
 	useBindTextReader();
 
 	useInitializeReader();
-
 	return (
 		<div
 			className={`${styles.container} ${isVisible && styles.visible} ${

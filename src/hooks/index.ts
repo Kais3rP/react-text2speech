@@ -37,3 +37,17 @@ export const useIsFirstRender = () => {
 	}, []);
 	return ref.current;
 };
+
+export const useScrollToTop = () => {
+	useEffect(() => {
+		setTimeout(
+			() =>
+				window.scrollTo({
+					top: 0,
+					left: 0,
+					behavior: 'smooth',
+				}),
+			0
+		);
+	}, []);
+};

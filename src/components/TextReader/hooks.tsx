@@ -67,7 +67,6 @@ export const useInitializeReader = () => {
 		/* Reset browser active speech synth queue on refresh or new load */
 
 		window.speechSynthesis.cancel();
-
 		reader
 			?.init()
 			.then((reader) => {
@@ -98,7 +97,7 @@ export const useInitializeReader = () => {
 	}, []);
 };
 
-export const useSetCSSVAriables = () => {
+export const useSetCSSVariables = () => {
 	const { styleOptions } = useMainProps();
 
 	useEffect(() => {
