@@ -20,9 +20,10 @@
 	padding: 0;
 	color: #fff;
 	text-overflow: ellipsis;
-	mix-blend-mode: difference;
+	mix-blend-mode: exclusion;
 	overflow: hidden;
 	white-space: pre-wrap;
+	font-weight: normal;
 }
 
 .ascii {
