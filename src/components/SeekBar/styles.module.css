@@ -3,12 +3,12 @@
 	text-align: center;
 	position: relative;
 	z-index: 2;
-	margin: 10px 0px 0px 0px;
+	margin: 20px 0px 0px 0px;
 }
 
 .minimized {
 	width: 90%;
-	margin: 15px 0px 10px 0px;
+	margin: 18px 0px 10px 0px;
 }
 
 .seekbar {

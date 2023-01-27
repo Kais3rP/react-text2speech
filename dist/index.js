@@ -195,7 +195,7 @@ function Tree2Element(tree) {
   });
 }
 
-function GenIcon$a(data) {
+function GenIcon$b(data) {
   return function (props) {
     return React.createElement(IconBase, __assign({
       attr: __assign({}, data.attr)
@@ -236,40 +236,40 @@ function IconBase(props) {
 var esm = /*#__PURE__*/Object.freeze({
   __proto__: null,
   DefaultContext: DefaultContext,
-  GenIcon: GenIcon$a,
+  GenIcon: GenIcon$b,
   IconBase: IconBase,
   IconContext: IconContext,
   IconsManifest: IconsManifest
 });
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$9 = esm.GenIcon;
+var GenIcon$a = esm.GenIcon;
 var AiFillFastBackward_1 = function AiFillFastBackward (props) {
-  return GenIcon$9({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M517.6 273.5L230.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm320 0L550.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm-620-25.5h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
+  return GenIcon$a({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M517.6 273.5L230.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm320 0L550.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm-620-25.5h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
+};
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon$9 = esm.GenIcon;
+var AiFillFastForward_1 = function AiFillFastForward (props) {
+  return GenIcon$9({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M793.8 499.3L506.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.6c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8a16.14 16.14 0 0 0 0-25.4zm-320 0L186.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.5c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8c4.1-3.2 6.2-8 6.2-12.7 0-4.6-2.1-9.4-6.2-12.6zM857.6 248h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
 var GenIcon$8 = esm.GenIcon;
-var AiFillFastForward_1 = function AiFillFastForward (props) {
-  return GenIcon$8({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M793.8 499.3L506.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.6c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8a16.14 16.14 0 0 0 0-25.4zm-320 0L186.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.5c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8c4.1-3.2 6.2-8 6.2-12.7 0-4.6-2.1-9.4-6.2-12.6zM857.6 248h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
+var AiFillPlayCircle_1 = function AiFillPlayCircle (props) {
+  return GenIcon$8({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
 var GenIcon$7 = esm.GenIcon;
-var AiFillPlayCircle_1 = function AiFillPlayCircle (props) {
-  return GenIcon$7({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z"}}]})(props);
+var AiFillPauseCircle_1 = function AiFillPauseCircle (props) {
+  return GenIcon$7({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-80 600c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304zm224 0c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304z"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
 var GenIcon$6 = esm.GenIcon;
-var AiFillPauseCircle_1 = function AiFillPauseCircle (props) {
-  return GenIcon$6({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-80 600c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304zm224 0c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304z"}}]})(props);
-};
-
-// THIS FILE IS AUTO GENERATED
-var GenIcon$5 = esm.GenIcon;
 var BiReset_1 = function BiReset (props) {
-  return GenIcon$5({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M12,16c1.671,0,3-1.331,3-3s-1.329-3-3-3s-3,1.331-3,3S10.329,16,12,16z"}},{"tag":"path","attr":{"d":"M20.817,11.186c-0.12-0.583-0.297-1.151-0.525-1.688c-0.225-0.532-0.504-1.046-0.83-1.531 c-0.324-0.479-0.693-0.926-1.098-1.329c-0.404-0.406-0.853-0.776-1.332-1.101c-0.483-0.326-0.998-0.604-1.528-0.829 c-0.538-0.229-1.106-0.405-1.691-0.526c-0.6-0.123-1.219-0.182-1.838-0.18V2L8,5l3.975,3V6.002C12.459,6,12.943,6.046,13.41,6.142 c0.454,0.094,0.896,0.231,1.314,0.409c0.413,0.174,0.813,0.392,1.188,0.644c0.373,0.252,0.722,0.54,1.038,0.857 c0.315,0.314,0.604,0.663,0.854,1.035c0.254,0.376,0.471,0.776,0.646,1.191c0.178,0.417,0.314,0.859,0.408,1.311 C18.952,12.048,19,12.523,19,13s-0.048,0.952-0.142,1.41c-0.094,0.454-0.23,0.896-0.408,1.315 c-0.175,0.413-0.392,0.813-0.644,1.188c-0.253,0.373-0.542,0.722-0.858,1.039c-0.315,0.316-0.663,0.603-1.036,0.854 c-0.372,0.251-0.771,0.468-1.189,0.645c-0.417,0.177-0.858,0.314-1.311,0.408c-0.92,0.188-1.906,0.188-2.822,0 c-0.454-0.094-0.896-0.231-1.314-0.409c-0.416-0.176-0.815-0.393-1.189-0.645c-0.371-0.25-0.719-0.538-1.035-0.854 c-0.315-0.316-0.604-0.665-0.855-1.036c-0.254-0.376-0.471-0.776-0.646-1.19c-0.178-0.418-0.314-0.86-0.408-1.312 C5.048,13.952,5,13.477,5,13H3c0,0.611,0.062,1.221,0.183,1.814c0.12,0.582,0.297,1.15,0.525,1.689 c0.225,0.532,0.504,1.046,0.831,1.531c0.323,0.477,0.692,0.924,1.097,1.329c0.406,0.407,0.854,0.777,1.331,1.099 c0.479,0.325,0.994,0.604,1.529,0.83c0.538,0.229,1.106,0.405,1.691,0.526C10.779,21.938,11.389,22,12,22s1.221-0.062,1.814-0.183 c0.583-0.121,1.151-0.297,1.688-0.525c0.537-0.227,1.052-0.506,1.53-0.83c0.478-0.322,0.926-0.692,1.331-1.099 c0.405-0.405,0.774-0.853,1.1-1.332c0.325-0.483,0.604-0.998,0.829-1.528c0.229-0.54,0.405-1.108,0.525-1.692 C20.938,14.221,21,13.611,21,13S20.938,11.779,20.817,11.186z"}}]})(props);
+  return GenIcon$6({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M12,16c1.671,0,3-1.331,3-3s-1.329-3-3-3s-3,1.331-3,3S10.329,16,12,16z"}},{"tag":"path","attr":{"d":"M20.817,11.186c-0.12-0.583-0.297-1.151-0.525-1.688c-0.225-0.532-0.504-1.046-0.83-1.531 c-0.324-0.479-0.693-0.926-1.098-1.329c-0.404-0.406-0.853-0.776-1.332-1.101c-0.483-0.326-0.998-0.604-1.528-0.829 c-0.538-0.229-1.106-0.405-1.691-0.526c-0.6-0.123-1.219-0.182-1.838-0.18V2L8,5l3.975,3V6.002C12.459,6,12.943,6.046,13.41,6.142 c0.454,0.094,0.896,0.231,1.314,0.409c0.413,0.174,0.813,0.392,1.188,0.644c0.373,0.252,0.722,0.54,1.038,0.857 c0.315,0.314,0.604,0.663,0.854,1.035c0.254,0.376,0.471,0.776,0.646,1.191c0.178,0.417,0.314,0.859,0.408,1.311 C18.952,12.048,19,12.523,19,13s-0.048,0.952-0.142,1.41c-0.094,0.454-0.23,0.896-0.408,1.315 c-0.175,0.413-0.392,0.813-0.644,1.188c-0.253,0.373-0.542,0.722-0.858,1.039c-0.315,0.316-0.663,0.603-1.036,0.854 c-0.372,0.251-0.771,0.468-1.189,0.645c-0.417,0.177-0.858,0.314-1.311,0.408c-0.92,0.188-1.906,0.188-2.822,0 c-0.454-0.094-0.896-0.231-1.314-0.409c-0.416-0.176-0.815-0.393-1.189-0.645c-0.371-0.25-0.719-0.538-1.035-0.854 c-0.315-0.316-0.604-0.665-0.855-1.036c-0.254-0.376-0.471-0.776-0.646-1.19c-0.178-0.418-0.314-0.86-0.408-1.312 C5.048,13.952,5,13.477,5,13H3c0,0.611,0.062,1.221,0.183,1.814c0.12,0.582,0.297,1.15,0.525,1.689 c0.225,0.532,0.504,1.046,0.831,1.531c0.323,0.477,0.692,0.924,1.097,1.329c0.406,0.407,0.854,0.777,1.331,1.099 c0.479,0.325,0.994,0.604,1.529,0.83c0.538,0.229,1.106,0.405,1.691,0.526C10.779,21.938,11.389,22,12,22s1.221-0.062,1.814-0.183 c0.583-0.121,1.151-0.297,1.688-0.525c0.537-0.227,1.052-0.506,1.53-0.83c0.478-0.322,0.926-0.692,1.331-1.099 c0.405-0.405,0.774-0.853,1.1-1.332c0.325-0.483,0.604-0.998,0.829-1.528c0.229-0.54,0.405-1.108,0.525-1.692 C20.938,14.221,21,13.611,21,13S20.938,11.779,20.817,11.186z"}}]})(props);
 };
 
 const createAction = (type, payload) => ({
@@ -603,7 +603,6 @@ class SpeechSynth extends EventEmitter {
         */
         /* Settings (Utterance settings) */
         const settingsSetter = (obj, key, value) => {
-            console.log('Settings changed trap', key, value);
             const result = Reflect.set(obj, key, value);
             this.clearTimeCount(); // Reset timer when a setting changes since the utterance has to be restarted
             switch (key) {
@@ -769,8 +768,6 @@ class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
-        console.log('Init utterance');
-        console.log('Current chunk,', this.getCurrentChunkText());
         this.utterance.text = this.options.isChunksModeOn
             ? this.getCurrentChunkText()
             : this.getRemainingText();
@@ -922,7 +919,6 @@ class SpeechSynth extends EventEmitter {
             this.highlightText(i);
     }
     retrieveChunks() {
-        console.log('Retrieveing text chunks');
         let currentPunctuationSymbol = '.';
         const chunks = [];
         let previousEnd = 0;
@@ -1180,7 +1176,6 @@ class SpeechSynth extends EventEmitter {
     }
     getCurrentChunkText() {
         var _a;
-        console.log('Get Current chunk,', this.state.chunksArray, this.state.currentChunkIndex);
         return (_a = this.state.chunksArray[this.state.currentChunkIndex]) === null || _a === void 0 ? void 0 : _a.text;
     }
     retrieveNumberOfWords(node, selector) {
@@ -1405,7 +1400,7 @@ const globalState = {
     voices: [],
     elapsedTime: 0,
     isMinimized: true,
-    isVisible: true,
+    isVisible: false,
     isOptionsVisible: false,
     numberOfWords: 0,
     currentWordIndex: 1,
@@ -1560,9 +1555,9 @@ var styles$9 = {"container":"styles-module_container__2RHmB","minimized":"styles
 styleInject(css_248z$9);
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$4 = esm.GenIcon;
+var GenIcon$5 = esm.GenIcon;
 var BiVolumeFull_1 = function BiVolumeFull (props) {
-  return GenIcon$4({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M16,21c3.527-1.547,5.999-4.909,5.999-9S19.527,4.547,16,3v2c2.387,1.386,3.999,4.047,3.999,7S18.387,17.614,16,19V21z"}},{"tag":"path","attr":{"d":"M16 7v10c1.225-1.1 2-3.229 2-5S17.225 8.1 16 7zM4 17h2.697l5.748 3.832C12.612 20.943 12.806 21 13 21c.162 0 .324-.039.472-.118C13.797 20.708 14 20.369 14 20V4c0-.369-.203-.708-.528-.882-.324-.175-.72-.154-1.026.05L6.697 7H4C2.897 7 2 7.897 2 9v6C2 16.103 2.897 17 4 17zM4 9h3c.033 0 .061-.016.093-.019.064-.006.125-.02.188-.038.068-.021.131-.045.192-.078.026-.015.057-.017.082-.033L12 5.868v12.264l-4.445-2.964c-.025-.017-.056-.02-.082-.033-.061-.033-.123-.058-.19-.078-.064-.019-.126-.032-.192-.038C7.059 15.016 7.032 15 7 15H4V9z"}}]})(props);
+  return GenIcon$5({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M16,21c3.527-1.547,5.999-4.909,5.999-9S19.527,4.547,16,3v2c2.387,1.386,3.999,4.047,3.999,7S18.387,17.614,16,19V21z"}},{"tag":"path","attr":{"d":"M16 7v10c1.225-1.1 2-3.229 2-5S17.225 8.1 16 7zM4 17h2.697l5.748 3.832C12.612 20.943 12.806 21 13 21c.162 0 .324-.039.472-.118C13.797 20.708 14 20.369 14 20V4c0-.369-.203-.708-.528-.882-.324-.175-.72-.154-1.026.05L6.697 7H4C2.897 7 2 7.897 2 9v6C2 16.103 2.897 17 4 17zM4 9h3c.033 0 .061-.016.093-.019.064-.006.125-.02.188-.038.068-.021.131-.045.192-.078.026-.015.057-.017.082-.033L12 5.868v12.264l-4.445-2.964c-.025-.017-.056-.02-.082-.033-.061-.033-.123-.058-.19-.078-.064-.019-.126-.032-.192-.038C7.059 15.016 7.032 15 7 15H4V9z"}}]})(props);
 };
 
 var css_248z$8 = ".styles-module_container__rkaUB {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_container__rkaUB input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Lf7kP {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Lf7kP:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Lf7kP::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__b92n5 {\r\n\tfont-size: 0.9rem;\r\n\tmargin-right: 5px;\r\n}\r\n\r\n.styles-module_icon__b92n5 * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
@@ -1649,34 +1644,41 @@ const MainControls = () => {
 };
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$3 = esm.GenIcon;
+var GenIcon$4 = esm.GenIcon;
 var FiMaximize_1 = function FiMaximize (props) {
-  return GenIcon$3({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"}}]})(props);
+  return GenIcon$4({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"}}]})(props);
+};
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon$3 = esm.GenIcon;
+var FiMinimize_1 = function FiMinimize (props) {
+  return GenIcon$3({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
 var GenIcon$2 = esm.GenIcon;
-var FiMinimize_1 = function FiMinimize (props) {
-  return GenIcon$2({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"}}]})(props);
+var MdClose_1 = function MdClose (props) {
+  return GenIcon$2({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
 var GenIcon$1 = esm.GenIcon;
-var MdClose_1 = function MdClose (props) {
-  return GenIcon$1({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"}}]})(props);
+var IoMdArrowBack_1 = function IoMdArrowBack (props) {
+  return GenIcon$1({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M427 234.625H167.296l119.702-119.702L256 85 85 256l171 171 29.922-29.924-118.626-119.701H427v-42.75z"}}]})(props);
 };
 
-var css_248z$7 = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.2s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n";
-var styles$7 = {"button":"styles-module_button__9sOag"};
+var css_248z$7 = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.2s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 3px;\r\n}\r\n\r\n.styles-module_showButton__TG0yv {\r\n\tposition: fixed;\r\n\tbottom: 25px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\ttransition: background-color 0.2s linear, border 0.2s linear,\r\n\t\tbox-shadow 0.2s linear;\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 2px 2px 3px 2px var(--bgColor);\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover .styles-module_arrow__Ab9DG {\r\n\tanimation: styles-module_movingArrow__FUSwM 0.5s infinite linear;\r\n}\r\n\r\n.styles-module_line__vh-Pe {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__Ab9DG {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -4px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n";
+var styles$7 = {"button":"styles-module_button__9sOag","hideButton":"styles-module_hideButton__ysi6M","showButton":"styles-module_showButton__TG0yv","arrow":"styles-module_arrow__Ab9DG","movingArrow":"styles-module_movingArrow__FUSwM","line":"styles-module_line__vh-Pe"};
 styleInject(css_248z$7);
 
 const WindowControls = () => {
-    const { reader } = useReader();
     const { state, dispatch } = useStore();
-    const { isMinimized } = state;
+    const { isMinimized, isVisible } = state;
+    const handleShowReader = () => {
+        dispatch(setIsVisible(true));
+    };
     const handleHideReader = () => {
         dispatch(setIsVisible(false));
-        reader === null || reader === void 0 ? void 0 : reader.reset();
     };
     const handleMinimizeReader = () => {
         dispatch(setIsMinimized(true));
@@ -1685,12 +1687,14 @@ const WindowControls = () => {
         dispatch(setIsMinimized(false));
     };
     return (React.createElement(React.Fragment, null,
-        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '3px' }, title: 'Close', className: styles$7.button, onPointerDown: handleHideReader },
-            React.createElement(MdClose_1, { title: "Close" })),
+        isVisible ? (React.createElement("div", { title: 'Hide', className: `${styles$7.button} ${styles$7.hideButton}`, onPointerDown: handleHideReader },
+            React.createElement(MdClose_1, null))) : (React.createElement("div", { title: 'Show', className: styles$7.showButton, onPointerDown: handleShowReader },
+            React.createElement("div", { className: styles$7.line }),
+            React.createElement(IoMdArrowBack_1, { className: styles$7.arrow }))),
         React.createElement("div", { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', className: styles$7.button, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
 };
 
-var css_248z$6 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 15px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 12px; /* Set a specific slider handle width */\r\n\theight: 12px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: #111;\r\n\tmargin: 0 !important;\r\n}\r\n";
+var css_248z$6 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 20px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 18px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 12px; /* Set a specific slider handle width */\r\n\theight: 12px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: #111;\r\n\tmargin: 0 !important;\r\n}\r\n";
 var styles$6 = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
 styleInject(css_248z$6);
 
@@ -2050,7 +2054,7 @@ const useSetCSSVAriables = () => {
     }, [styleOptions]);
 };
 
-var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: 300px;\r\n\theight: 125px;\r\n\tright: -2000px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 5px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\ttransition: all 200ms linear;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tpadding: 15px;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\toverflow: hidden;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 10px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
+var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: min(100vw, 350px);\r\n\theight: 135px;\r\n\tright: -2000px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\ttransition: all 200ms linear;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tpadding: 15px;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\toverflow: hidden;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 5px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
 var styles = {"container":"styles-module_container__xkMLR","visible":"styles-module_visible__ZUiLT","minimized":"styles-module_minimized__W5TJy"};
 styleInject(css_248z);
 

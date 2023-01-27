@@ -23,7 +23,7 @@ export const globalState: IGlobalState = {
 	voices: [],
 	elapsedTime: 0,
 	isMinimized: true,
-	isVisible: true,
+	isVisible: false,
 	isOptionsVisible: false,
 	numberOfWords: 0,
 	currentWordIndex: 1,

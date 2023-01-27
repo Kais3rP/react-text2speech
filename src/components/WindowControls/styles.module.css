@@ -19,3 +19,78 @@
 	background-color: var(--bgColor);
 	color: var(--secondaryColor);
 }
+
+.hideButton {
+	position: absolute;
+	top: 2px;
+	right: 3px;
+}
+
+.showButton {
+	position: fixed;
+	bottom: 25px;
+	right: -19px;
+	border-radius: 50%;
+	border: 2px solid var(--primaryColor);
+	width: 40px;
+	height: 40px;
+	background-color: var(--secondaryColor);
+	cursor: pointer;
+	transition: background-color 0.2s linear, border 0.2s linear,
+		box-shadow 0.2s linear;
+}
+
+.showButton:hover {
+	border: 2px solid var(--secondaryColor);
+	transform: scale(1.1);
+	box-shadow: 2px 2px 3px 2px var(--bgColor);
+	background-color: var(--primaryColor);
+}
+
+.showButton:hover .arrow {
+	animation: movingArrow 0.5s infinite linear;
+}
+
+.line {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	height: 38px;
+	width: 2px;
+	background-color: var(--primaryColor);
+}
+
+.arrow {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	left: -1px;
+	width: 20px;
+	height: 20px;
+	font-size: 340px;
+	fill: var(--bgColor);
+	transition: all 0.2s ease-out;
+}
+
+@keyframes movingArrow {
+	0% {
+		left: -1px;
+	}
+
+	25% {
+		left: -4px;
+	}
+
+	50% {
+		left: -1px;
+	}
+
+	75% {
+		left: 0px;
+	}
+
+	100% {
+		left: -1px;
+	}
+}

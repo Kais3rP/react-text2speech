@@ -1,11 +1,11 @@
 .container {
-	width: 300px;
-	height: 125px;
+	width: min(100vw, 350px);
+	height: 135px;
 	right: -2000px;
 	font-size: 16px;
 	position: fixed;
 	z-index: 1000;
-	bottom: 5px;
+	bottom: 2px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -25,7 +25,7 @@
 }
 
 .visible {
-	right: 10px;
+	right: 5px;
 }
 
 .minimized {

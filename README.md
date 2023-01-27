@@ -123,7 +123,7 @@ It's important ot remember to pass the `bindReader` function to the *reader* if 
 | ------------- | ---------------------------------------------------------------------------------- | -------- | ---- |
 | textContainer | undefined                                                                          | true     | HTMLElement |
 | bindReader    | undefined                                                                          | false    | function |
-| styleOptions  | { primaryColor: "#00D", secondaryColor: "55F", bgColor: "#FFF", textColor: "222" } | false    | object |
+| styleOptions  | { primaryColor: '#00D', secondaryColor: '#55F', bgColor: '#FFF', textColor: '#222', highlightColor1: '#306EFF', highlightColor2: '#FCDFFF', } | false    | object |
 | options       | { language: 'en' }                                                                 | false    | object |
 
 **Remember to set the language accordingly to the language of the text that it's going to be read, it's enough you type the first locale letters e.g. "en", "de", "fr", etc... **

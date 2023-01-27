@@ -3,18 +3,21 @@ import { IWindowControlsProps } from './types';
 import { FiMaximize } from '@react-icons/all-files/fi/FiMaximize';
 import { FiMinimize } from '@react-icons/all-files/fi/FiMinimize';
 import { MdClose } from '@react-icons/all-files/md/MdClose';
+import { IoMdArrowBack } from '@react-icons/all-files/io/IoMdArrowBack';
 import { setIsMinimized, setIsVisible } from 'store/actions';
-import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
+import { useStore } from 'contexts';
 
 const WindowControls: FC<IWindowControlsProps> = () => {
-	const { reader } = useReader();
 	const { state, dispatch } = useStore();
-	const { isMinimized } = state;
+	const { isMinimized, isVisible } = state;
+
+	const handleShowReader = () => {
+		dispatch(setIsVisible(true));
+	};
 
 	const handleHideReader = () => {
 		dispatch(setIsVisible(false));
-		reader?.reset();
 	};
 
 	const handleMinimizeReader = () => {
@@ -26,14 +29,25 @@ const WindowControls: FC<IWindowControlsProps> = () => {
 	};
 	return (
 		<>
-			<div
-				style={{ position: 'absolute', top: '2px', right: '3px' }}
-				title={'Close'}
-				className={styles.button}
-				onPointerDown={handleHideReader}
-			>
-				<MdClose title="Close" />
-			</div>
+			{/* Hide button */}
+			{isVisible ? (
+				<div
+					title={'Hide'}
+					className={`${styles.button} ${styles.hideButton}`}
+					onPointerDown={handleHideReader}
+				>
+					<MdClose />
+				</div>
+			) : (
+				<div
+					title={'Show'}
+					className={styles.showButton}
+					onPointerDown={handleShowReader}
+				>
+					<div className={styles.line} />
+					<IoMdArrowBack className={styles.arrow} />
+				</div>
+			)}
 			{/* Minimize button */}
 			<div
 				style={{ position: 'absolute', top: '2px', right: '24px' }}
