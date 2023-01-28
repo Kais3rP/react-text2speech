@@ -2,6 +2,7 @@ import styles from './styles.module.css';
 import { useState, useEffect } from 'react';
 import TextReader, { useTextReader } from 'react-text2speech';
 import { highlightAll, languages } from 'prismjs/components/prism-core';
+import format from 'format-duration';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-css';
@@ -17,8 +18,8 @@ function App() {
 	const { bindReader, handlers, state } = useTextReader();
 
 	const { play, pause, showReader } = handlers;
-	const { isReading, isLoading, isVisible } = state;
-
+	const { isReading, isLoading, isVisible, elapsedTime = 0 } = state;
+	console.log(elapsedTime);
 	useEffect(() => {
 		if (node) {
 			highlightAll(languages.js);
@@ -27,6 +28,7 @@ function App() {
 
 	return (
 		<div className={styles.container}>
+			<h5>{format(elapsedTime)}</h5>
 			<a
 				href="https://github.com/Kais3rP/react-text2speech"
 				className={styles.title}
