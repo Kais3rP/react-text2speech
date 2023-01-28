@@ -1,7 +1,7 @@
 .container {
 	position: relative;
-	width: 40px;
-	height: 40px;
+	width: 35px;
+	height: 35px;
 	overflow: hidden;
 	border-radius: 5px;
 	transition: all 0.2s ease-in-out;

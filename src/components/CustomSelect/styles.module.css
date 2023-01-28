@@ -10,7 +10,7 @@
 	opacity: 0;
 	pointer-events: none;
 	width: 100%;
-	height: 46px;
+	height: 40px;
 	bottom: 0px;
 	right: 0;
 	background-color: var(--bgColor);
@@ -19,14 +19,15 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	overflow-x: hidden;
 }
 
 .optionsWrapper {
+	height: 100%;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
+	overflow-y: auto;
 }
 
 .optionsContainer i {

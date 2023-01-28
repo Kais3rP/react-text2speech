@@ -24,7 +24,7 @@
 	pointer-events: none;
 	position: absolute;
 	width: 100%;
-	height: 46px;
+	height: 40px;
 	bottom: 0px;
 	right: 0px;
 	background-color: var(--bgColor);

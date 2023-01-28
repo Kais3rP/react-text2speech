@@ -1,5 +1,5 @@
 import { useReader, useStore, useMainProps } from 'contexts';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useLayoutEffect, useEffect } from 'react';
 import {
 	setIsVisible,
 	setIsMinimized,
@@ -15,7 +15,7 @@ import {
 export const useBindTextReader = () => {
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();
-	const { isMinimized, isVisible, isReading, isLoading } = state;
+	const { isMinimized, isVisible, isReading, isLoading, elapsedTime } = state;
 	const { bindReader } = useMainProps();
 
 	const handlers = useMemo(
@@ -44,9 +44,17 @@ export const useBindTextReader = () => {
 		[dispatch, reader]
 	);
 
-	useEffect(() => {
+	console.log('Elapsed time', elapsedTime);
+
+	useLayoutEffect(() => {
 		if (!bindReader || typeof bindReader !== 'function') return;
-		const exposedState = { isMinimized, isVisible, isReading, isLoading };
+		const exposedState = {
+			isMinimized,
+			isVisible,
+			isReading,
+			isLoading,
+			elapsedTime,
+		};
 		bindReader(exposedState, handlers);
 	}, [
 		bindReader,
@@ -56,6 +64,7 @@ export const useBindTextReader = () => {
 		isMinimized,
 		isReading,
 		isVisible,
+		elapsedTime,
 	]);
 };
 

@@ -1,6 +1,6 @@
 .container {
 	width: min(100vw, 350px);
-	height: 135px;
+	/* height: 135px; */
 	right: -350px;
 	font-size: 16px;
 	position: fixed;
@@ -21,6 +21,12 @@
 
 .container * {
 	box-sizing: border-box;
+}
+
+.container h5 {
+	margin-block-end: auto;
+	margin: 0;
+	padding: 0;
 }
 
 .visible {

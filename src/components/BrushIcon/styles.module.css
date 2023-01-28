@@ -16,7 +16,7 @@
 
 .label {
 	position: absolute;
-	bottom: 2px;
+	bottom: 0px;
 	right: 2px;
 	color: var(--bgColor);
 	/* mix-blend-mode: exclusion; */

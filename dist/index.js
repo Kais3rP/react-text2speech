@@ -1726,7 +1726,7 @@ const WindowControls = () => {
         React.createElement("div", { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', className: styles$a.button, onPointerDown: isMinimized ? handleMaximizeReader : handleMinimizeReader }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
 };
 
-var css_248z$9 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 20px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 18px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 12px; /* Set a specific slider handle width */\r\n\theight: 12px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: #111;\r\n\tmargin: 0 !important;\r\n}\r\n";
+var css_248z$9 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 15px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 18px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 12px; /* Set a specific slider handle width */\r\n\theight: 12px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: #111;\r\n\tmargin: 0 !important;\r\n}\r\n";
 var styles$9 = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
 styleInject(css_248z$9);
 
@@ -1781,7 +1781,7 @@ const useScrollToTop = () => {
     }, []);
 };
 
-var css_248z$8 = ".styles-module_container__dB4nt {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-x: hidden;\r\n}\r\n\r\n.styles-module_optionsWrapper__JBONI {\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q i {\r\n\tmargin: 3px;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_extraComponentWrapper__3xRJY {\r\n\tpadding: 0px 5px 0px 10px;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n";
+var css_248z$8 = ".styles-module_container__dB4nt {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_optionsWrapper__JBONI {\r\n\theight: 100%;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q i {\r\n\tmargin: 3px;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_extraComponentWrapper__3xRJY {\r\n\tpadding: 0px 5px 0px 10px;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n";
 var styles$8 = {"container":"styles-module_container__dB4nt","optionsContainer":"styles-module_optionsContainer__miH3Q","optionsWrapper":"styles-module_optionsWrapper__JBONI","visible":"styles-module_visible__eJpaP","extraComponentWrapper":"styles-module_extraComponentWrapper__3xRJY"};
 styleInject(css_248z$8);
 
@@ -1816,11 +1816,11 @@ const CustomSelect = (_a) => {
                 React.createElement(ExtraComponent, { option: localOption }))))));
 };
 
-var css_248z$7 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\tpadding-bottom: 13px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
+var css_248z$7 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
 var styles$7 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-"};
 styleInject(css_248z$7);
 
-var css_248z$6 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 46px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\twidth: 130px;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
+var css_248z$6 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\twidth: 130px;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
 var styles$6 = {"container":"styles-module_container__bAbpe","icon":"styles-module_icon__J4xQk","overlayContainer":"styles-module_overlayContainer__iWVEa","visible":"styles-module_visible__Ci-XW"};
 styleInject(css_248z$6);
 
@@ -1936,7 +1936,7 @@ const UnderlinedTextIcon = (_a) => {
         children)));
 };
 
-var css_248z$3 = ".styles-module_container__k5Fas {\r\n\tposition: relative;\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__9Eq-Q {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__iK7ja {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
+var css_248z$3 = ".styles-module_container__k5Fas {\r\n\tposition: relative;\r\n\twidth: 35px;\r\n\theight: 35px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__9Eq-Q {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__iK7ja {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
 var styles$3 = {"container":"styles-module_container__k5Fas","label":"styles-module_label__9Eq-Q","ascii":"styles-module_ascii__iK7ja"};
 styleInject(css_248z$3);
 
@@ -1946,7 +1946,7 @@ const ColorPreview = ({ option }) => {
         React.createElement("h5", { className: styles$3.label }, option.name)));
 };
 
-var css_248z$2 = ".styles-module_icon__zepm5 {\r\n\tposition: relative;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\tborder-radius: 2px;\r\n\tpadding: 2px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_icon__zepm5:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_label__y4R48 {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tright: 2px;\r\n\tcolor: var(--bgColor);\r\n\t/* mix-blend-mode: exclusion; */\r\n\tfont-size: 8px;\r\n}\r\n";
+var css_248z$2 = ".styles-module_icon__zepm5 {\r\n\tposition: relative;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\tborder-radius: 2px;\r\n\tpadding: 2px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_icon__zepm5:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_label__y4R48 {\r\n\tposition: absolute;\r\n\tbottom: 0px;\r\n\tright: 2px;\r\n\tcolor: var(--bgColor);\r\n\t/* mix-blend-mode: exclusion; */\r\n\tfont-size: 8px;\r\n}\r\n";
 var styles$2 = {"icon":"styles-module_icon__zepm5","label":"styles-module_label__y4R48"};
 styleInject(css_248z$2);
 
@@ -1961,7 +1961,7 @@ const BrushIcon = (_a) => {
         children)));
 };
 
-var css_248z$1 = ".styles-module_container__UeFFK {\r\n\tposition: relative;\r\n\twidth: 60px;\r\n\theight: 40px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__e3y03 {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__MLhac {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
+var css_248z$1 = ".styles-module_container__UeFFK {\r\n\tposition: relative;\r\n\twidth: 60px;\r\n\theight: 28px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__e3y03 {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__MLhac {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
 var styles$1 = {"container":"styles-module_container__UeFFK","label":"styles-module_label__e3y03","ascii":"styles-module_ascii__MLhac"};
 styleInject(css_248z$1);
 
@@ -2085,7 +2085,7 @@ Is a melody worth the thrill.
 const useBindTextReader = () => {
     const { reader } = useReader();
     const { state, dispatch } = useStore();
-    const { isMinimized, isVisible, isReading, isLoading } = state;
+    const { isMinimized, isVisible, isReading, isLoading, elapsedTime } = state;
     const { bindReader } = useMainProps();
     const handlers = React.useMemo(() => ({
         showReader: () => {
@@ -2110,10 +2110,17 @@ const useBindTextReader = () => {
         },
         pause: () => reader === null || reader === void 0 ? void 0 : reader.pause(),
     }), [dispatch, reader]);
-    React.useEffect(() => {
+    console.log('Elapsed time', elapsedTime);
+    React.useLayoutEffect(() => {
         if (!bindReader || typeof bindReader !== 'function')
             return;
-        const exposedState = { isMinimized, isVisible, isReading, isLoading };
+        const exposedState = {
+            isMinimized,
+            isVisible,
+            isReading,
+            isLoading,
+            elapsedTime,
+        };
         bindReader(exposedState, handlers);
     }, [
         bindReader,
@@ -2123,6 +2130,7 @@ const useBindTextReader = () => {
         isMinimized,
         isReading,
         isVisible,
+        elapsedTime,
     ]);
 };
 const useInitializeReader = () => {
@@ -2161,7 +2169,7 @@ const useSetCSSVariables = () => {
     }, [styleOptions]);
 };
 
-var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: min(100vw, 350px);\r\n\theight: 135px;\r\n\tright: -350px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tpadding: 15px;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\ttransition: right 0.2s ease-out, width 0.2s linear, height 0.2s linear;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 5px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
+var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: min(100vw, 350px);\r\n\t/* height: 135px; */\r\n\tright: -350px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tpadding: 15px;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\ttransition: right 0.2s ease-out, width 0.2s linear, height 0.2s linear;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_container__xkMLR h5 {\r\n\tmargin-block-end: auto;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 5px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
 var styles = {"container":"styles-module_container__xkMLR","visible":"styles-module_visible__ZUiLT","minimized":"styles-module_minimized__W5TJy"};
 styleInject(css_248z);
 
