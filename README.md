@@ -114,6 +114,15 @@ Since in React the DOM refs receive the reference to the DOM element after the f
 As you can see in this example we use some of the handlers exposed by the `useTextReader` hook to control the reader directly with a `button` and some of the *state variables* to control our UI.
 It's important ot remember to pass the `bindReader` function to the *reader* if we want to control it with custom controls.
 
+If you are using **NextJS** and you have issues importing it properly try this way:
+
+```javascript
+const TextReader = dynamic(() => import("react-text2speech"), {
+  ssr: false,
+});
+const { useTextReader } = require("react-text2speech");
+```
+Since this module exports both a default and a named export, and NextJS doesn't like that.
 
 5. The `TextReader` Component expects just the `textContainer` prop as required, you can pass two extra props though to tweak style and options:
 
@@ -132,7 +141,7 @@ It's important ot remember to pass the `bindReader` function to the *reader* if 
 
 There are some edge cases not yet covered and hardly coverable with extreme precision since the speech synth handles some special characters like "/" or "." and "," in numbers ( 1.000 , 1,000 ) in different ways depending on the language choosen, some locales use "." for decimals, others use ",".
 Some cases are automically covered during the content parsing, for example if you happen to have grammar inconstencies like "word , word" instead of "word, word", they are going to be fixed automatically.
-Some edge cases like dots in the middle of word like "some.word" are going to be parsed and read as "dot" in english, while dots used as punctuation marks won't be read by the synth.
+Some edge cases like dots in the middle of word like "some.word" are going to be parsed and spelled as "dot" in english, while dots used as punctuation marks won't be read by the synth.
 These are currently the issues and edge cases not yet covered:
 
 -   Punctuation marks directly after an HTML tag won't be taken into account as a chunk delimiter.
