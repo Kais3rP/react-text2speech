@@ -15,7 +15,8 @@ A React Component that leverages WEB Speech API to implement a text reader for w
 
 -   Voice language customization
 -   Highlight of text during reading
--   Full control on timeline by sliding seekbar or by manually clicking text words
+-   Highlight style customization ( brush style, colors, underline, etc... )
+-   Full control on timeline by sliding the seekbar or by manually clicking on text words
 -   Preview of reading time ( time is averagely calculated )
 -   Control reading speed
 -   Select voice type and language
