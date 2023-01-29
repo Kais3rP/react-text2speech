@@ -67,6 +67,6 @@
 	top: 19px;
 	left: -15px;
 	z-index: 100 !important;
-	color: #111;
+	color: var(--textColor);
 	margin: 0 !important;
 }

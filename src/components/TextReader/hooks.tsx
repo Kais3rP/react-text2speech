@@ -105,8 +105,8 @@ export const useSetCSSVariables = () => {
 
 	const { styleOptions } = useMainProps();
 
-	const { lightSet, darkSet } = useMemo(() => {
-		let lightSet: IStyleTheme = {
+	const { lightTheme, darkTheme } = useMemo(() => {
+		let lightTheme: IStyleTheme = {
 			primaryColor: '',
 			secondaryColor: '',
 			bgColor: '',
@@ -114,7 +114,7 @@ export const useSetCSSVariables = () => {
 			highlightColor1: '',
 			highlightColor2: '',
 		};
-		let darkSet: IStyleTheme = {
+		let darkTheme: IStyleTheme = {
 			primaryColor: '',
 			secondaryColor: '',
 			bgColor: '',
@@ -132,25 +132,25 @@ export const useSetCSSVariables = () => {
 			{}
 		);
 
-		lightSet = Utils.isDarkColor(styleOptions.bgColor)
+		lightTheme = Utils.isDarkColor(styleOptions.bgColor)
 			? (inverted as IStyleTheme)
 			: { ...styleOptions };
-		darkSet = Utils.isDarkColor(styleOptions.bgColor)
+		darkTheme = Utils.isDarkColor(styleOptions.bgColor)
 			? { ...styleOptions }
 			: (inverted as IStyleTheme);
 
-		return { lightSet, darkSet };
+		return { lightTheme, darkTheme };
 	}, [styleOptions]);
 
 	useEffect(() => {
-		const theme = isDark ? darkSet : lightSet;
-
+		const theme = isDark ? darkTheme : lightTheme;
+		console.log(darkTheme, lightTheme);
 		for (const entry of Object.entries(theme))
 			document.documentElement.style.setProperty(
 				`--${entry[0]}`,
 				entry[1] as string
 			);
-	}, [isDark, darkSet, lightSet]);
+	}, [isDark, darkTheme, lightTheme]);
 };
 
 /* Check the User Agent color scheme */
