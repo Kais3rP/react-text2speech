@@ -28,14 +28,6 @@ function App() {
 
 	return (
 		<div className={styles.container}>
-			<h5>{format(elapsedTime)}</h5>
-			<a
-				href="https://github.com/Kais3rP/react-text2speech"
-				className={styles.title}
-				rel="no-referrer"
-			>
-				react-text2speech
-			</a>
 			{node && (
 				<TextReader
 					textContainer={node}
@@ -43,6 +35,14 @@ function App() {
 					bindReader={bindReader}
 				/>
 			)}
+			<a
+				href="https://github.com/Kais3rP/react-text2speech"
+				className={styles.title}
+				rel="no-referrer"
+			>
+				react-text2speech
+			</a>
+
 			<button
 				className={styles.play}
 				onClick={
@@ -56,6 +56,7 @@ function App() {
 			>
 				{isReading ? 'Pause' : 'Play'}
 			</button>
+			<h5 className={styles.time}>{format(elapsedTime)}</h5>
 			{isLoading && <div className="loader"></div>}
 			<div className={styles.text} ref={setNode}>
 				<h1>Ut vero dolorem ea illum fugit.</h1>

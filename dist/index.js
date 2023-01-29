@@ -272,27 +272,6 @@ var BiReset_1 = function BiReset (props) {
   return GenIcon$7({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M12,16c1.671,0,3-1.331,3-3s-1.329-3-3-3s-3,1.331-3,3S10.329,16,12,16z"}},{"tag":"path","attr":{"d":"M20.817,11.186c-0.12-0.583-0.297-1.151-0.525-1.688c-0.225-0.532-0.504-1.046-0.83-1.531 c-0.324-0.479-0.693-0.926-1.098-1.329c-0.404-0.406-0.853-0.776-1.332-1.101c-0.483-0.326-0.998-0.604-1.528-0.829 c-0.538-0.229-1.106-0.405-1.691-0.526c-0.6-0.123-1.219-0.182-1.838-0.18V2L8,5l3.975,3V6.002C12.459,6,12.943,6.046,13.41,6.142 c0.454,0.094,0.896,0.231,1.314,0.409c0.413,0.174,0.813,0.392,1.188,0.644c0.373,0.252,0.722,0.54,1.038,0.857 c0.315,0.314,0.604,0.663,0.854,1.035c0.254,0.376,0.471,0.776,0.646,1.191c0.178,0.417,0.314,0.859,0.408,1.311 C18.952,12.048,19,12.523,19,13s-0.048,0.952-0.142,1.41c-0.094,0.454-0.23,0.896-0.408,1.315 c-0.175,0.413-0.392,0.813-0.644,1.188c-0.253,0.373-0.542,0.722-0.858,1.039c-0.315,0.316-0.663,0.603-1.036,0.854 c-0.372,0.251-0.771,0.468-1.189,0.645c-0.417,0.177-0.858,0.314-1.311,0.408c-0.92,0.188-1.906,0.188-2.822,0 c-0.454-0.094-0.896-0.231-1.314-0.409c-0.416-0.176-0.815-0.393-1.189-0.645c-0.371-0.25-0.719-0.538-1.035-0.854 c-0.315-0.316-0.604-0.665-0.855-1.036c-0.254-0.376-0.471-0.776-0.646-1.19c-0.178-0.418-0.314-0.86-0.408-1.312 C5.048,13.952,5,13.477,5,13H3c0,0.611,0.062,1.221,0.183,1.814c0.12,0.582,0.297,1.15,0.525,1.689 c0.225,0.532,0.504,1.046,0.831,1.531c0.323,0.477,0.692,0.924,1.097,1.329c0.406,0.407,0.854,0.777,1.331,1.099 c0.479,0.325,0.994,0.604,1.529,0.83c0.538,0.229,1.106,0.405,1.691,0.526C10.779,21.938,11.389,22,12,22s1.221-0.062,1.814-0.183 c0.583-0.121,1.151-0.297,1.688-0.525c0.537-0.227,1.052-0.506,1.53-0.83c0.478-0.322,0.926-0.692,1.331-1.099 c0.405-0.405,0.774-0.853,1.1-1.332c0.325-0.483,0.604-0.998,0.829-1.528c0.229-0.54,0.405-1.108,0.525-1.692 C20.938,14.221,21,13.611,21,13S20.938,11.779,20.817,11.186z"}}]})(props);
 };
 
-const createAction = (type, payload) => ({
-    type,
-    payload,
-});
-/* Actions */
-/* Actions that might be used to control the Reader externally */
-const setIsReading = (payload) => createAction('SET_IS_READING', payload);
-const setIsMinimized = (payload) => createAction('SET_IS_MINIMIZED', payload);
-const setIsVisible = (payload) => createAction('SET_IS_VISIBLE', payload);
-/* Actions used internally by the Reader  */
-const setIsLoading = (payload) => createAction('SET_IS_LOADING', payload);
-const setIsOptionsVisible = (payload) => createAction('SET_IS_OPTIONS_VISIBLE', payload);
-const setVoices = (payload) => createAction('SET_VOICES', payload);
-const setElapsedTime = (payload) => createAction('SET_ELAPSED_TIME', payload);
-const setNumberOfWords = (payload) => createAction('SET_NUMBER_OF_WORDS', payload);
-const setCurrentWordIndex = (payload) => createAction('SET_CURRENT_WORD_INDEX', payload);
-const setDuration = (payload) => createAction('SET_DURATION', payload);
-const changeSettings = (payload) => createAction('CHANGE_SETTINGS', payload);
-const changeOptions = (payload) => createAction('CHANGE_OPTIONS', payload);
-const changeHighlightStyle = (payload) => createAction('CHANGE_HIGHLIGHT_STYLE', payload);
-
 const StoreContext = React.createContext(null);
 const MainPropsContext = React.createContext(null);
 const ReaderContext = React.createContext(null);
@@ -577,23 +556,13 @@ class SpeechSynth extends EventEmitter {
     /* Style */
     color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
-    onEnd = () => null, onStart = () => null, onPause = () => null, onResume = () => null, onReset = () => null, onBoundary = () => null, onTimeTick = () => null, onWordClick = () => null, onSeek = () => null, onStateChange = () => null, onSettingsChange = () => null, onOptionsChange = () => null, onStyleChange = () => null, } = {
+    onStateChange = () => null, onSettingsChange = () => null, onOptionsChange = () => null, onStyleChange = () => null, } = {
         /* Generic Settings */
         language: 'en',
         /* Style */
         color1: '#DEE',
         color2: '#9DE',
         /* Ev handlers */
-        onPlay: () => null,
-        onEnd: () => null,
-        onStart: () => null,
-        onPause: () => null,
-        onResume: () => null,
-        onReset: () => null,
-        onBoundary: () => null,
-        onTimeTick: () => null,
-        onWordClick: () => null,
-        onSeek: () => null,
         onStateChange: () => null,
         onSettingsChange: () => null,
         onOptionsChange: () => null,
@@ -608,15 +577,6 @@ class SpeechSynth extends EventEmitter {
         this.timeoutRef = undefined;
         /* Events */
         this.events = [
-            { type: 'boundary', handlers: [onBoundary] },
-            { type: 'time-tick', handlers: [onTimeTick] },
-            { type: 'word-click', handlers: [onWordClick] },
-            { type: 'start', handlers: [onStart] },
-            { type: 'pause', handlers: [onPause] },
-            { type: 'resume', handlers: [onResume] },
-            { type: 'reset', handlers: [onReset] },
-            { type: 'seek', handlers: [onSeek] },
-            { type: 'end', handlers: [onEnd] },
             { type: 'state-change', handlers: [onStateChange] },
             { type: 'settings-change', handlers: [onSettingsChange] },
             { type: 'options-change', handlers: [onOptionsChange] },
@@ -642,7 +602,6 @@ class SpeechSynth extends EventEmitter {
                     this.changeLanguage();
                     break;
             }
-            console.log('Settings change', this.settings);
             /* Re initialize the utterance */
             this.initUtterance();
             this.restart('settings-change');
@@ -693,18 +652,6 @@ class SpeechSynth extends EventEmitter {
         /* State */
         const stateSetter = (obj, key, value) => {
             const result = Reflect.set(obj, key, value);
-            switch (key) {
-                case 'currentWordIndex':
-                    this.emit('seek', this);
-                    break;
-                case 'elapsedTime':
-                    if (this.state.elapsedTime % 1000 === 0) {
-                        /* Instructions executed every 1000ms when the reader is active */
-                        this.emit('time-tick', this);
-                    }
-                    break;
-                //	console.log(key);
-            }
             this.emit('state-change', this, key);
             return result;
         };
@@ -714,7 +661,7 @@ class SpeechSynth extends EventEmitter {
             voice: {},
             voices: [],
             /* UI */
-            isLoading: true,
+            isLoading: false,
             /* Highlight & Reading time */
             tagIndex: 0,
             currentWord: '',
@@ -770,7 +717,10 @@ class SpeechSynth extends EventEmitter {
                 this.attachEventListenersToWords(this.textContainer, '[data-id]', {
                     type: 'click',
                     fn: (e) => {
-                        this.emit('word-click', this, e);
+                        const target = e.target;
+                        const idx = +target.dataset.id;
+                        // console.log('Word click, seek to:', idx);
+                        this.seekTo(idx);
                     },
                 });
                 /* Add class custom event listeners */
@@ -790,7 +740,6 @@ class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
-        console.log('Init utterance', this.settings);
         this.utterance.text = this.options.isChunksModeOn
             ? this.getCurrentChunkText()
             : this.getRemainingText();
@@ -1432,6 +1381,10 @@ class SpeechSynth extends EventEmitter {
 }
 
 const globalState = {
+    UIState: {
+        isMinimized: true,
+        isVisible: false,
+    },
     settings: {
         rate: 1,
         voiceURI: '',
@@ -1450,49 +1403,42 @@ const globalState = {
         color2: '',
         brush: 'brush-1',
     },
-    isReading: false,
-    isLoading: false,
-    voices: [],
-    elapsedTime: 0,
-    isMinimized: true,
-    isVisible: false,
-    isOptionsVisible: false,
-    numberOfWords: 0,
-    currentWordIndex: 1,
-    duration: 0,
+    state: {
+        isMobile: Utils.isMobile(),
+        /* Internal properties */
+        voice: {},
+        voices: [],
+        /* UI */
+        isLoading: false,
+        /* Highlight & Reading time */
+        tagIndex: 0,
+        currentWord: '',
+        currentWordIndex: 0,
+        currentWordProps: { charIndex: 0, charLength: 0 },
+        highlightedWords: [],
+        lastWordPosition: 0,
+        numberOfWords: 0,
+        wholeText: '',
+        wholeTextArray: [],
+        textRemaining: '',
+        duration: 0,
+        elapsedTime: 0,
+        currentChunkIndex: 0,
+        chunksArray: [],
+        isBrushAvailable: false,
+        /* Controls  */
+        isPaused: false,
+        isReading: false,
+    },
 };
 const rootReducer = (state, action) => {
     const { type, payload } = action;
     switch (type) {
-        case 'SET_IS_READING': {
-            return Object.assign(Object.assign({}, state), { isReading: payload });
+        case 'CHANGE_UISTATE': {
+            return Object.assign(Object.assign({}, state), { UIState: Object.assign(Object.assign({}, state.UIState), payload) });
         }
-        case 'SET_IS_LOADING': {
-            return Object.assign(Object.assign({}, state), { isLoading: payload });
-        }
-        case 'SET_IS_MINIMIZED': {
-            return Object.assign(Object.assign({}, state), { isMinimized: payload });
-        }
-        case 'SET_IS_VISIBLE': {
-            return Object.assign(Object.assign({}, state), { isVisible: payload });
-        }
-        case 'SET_IS_OPTIONS_VISIBLE': {
-            return Object.assign(Object.assign({}, state), { isOptionsVisible: payload });
-        }
-        case 'SET_VOICES': {
-            return Object.assign(Object.assign({}, state), { voices: payload });
-        }
-        case 'SET_ELAPSED_TIME': {
-            return Object.assign(Object.assign({}, state), { elapsedTime: payload });
-        }
-        case 'SET_DURATION': {
-            return Object.assign(Object.assign({}, state), { duration: payload });
-        }
-        case 'SET_NUMBER_OF_WORDS': {
-            return Object.assign(Object.assign({}, state), { numberOfWords: payload });
-        }
-        case 'SET_CURRENT_WORD_INDEX': {
-            return Object.assign(Object.assign({}, state), { currentWordIndex: payload });
+        case 'CHANGE_STATE': {
+            return Object.assign(Object.assign({}, state), { state: Object.assign(Object.assign({}, state.state), payload) });
         }
         case 'CHANGE_SETTINGS': {
             return Object.assign(Object.assign({}, state), { settings: Object.assign(Object.assign({}, state.settings), payload) });
@@ -1507,6 +1453,17 @@ const rootReducer = (state, action) => {
             return Object.assign({}, state);
     }
 };
+
+const createAction = (type, payload) => ({
+    type,
+    payload,
+});
+/* Actions */
+const changeUIState = (payload) => createAction('CHANGE_UISTATE', payload);
+const changeSettings = (payload) => createAction('CHANGE_SETTINGS', payload);
+const changeOptions = (payload) => createAction('CHANGE_OPTIONS', payload);
+const changeState = (payload) => createAction('CHANGE_STATE', payload);
+const changeHighlightStyle = (payload) => createAction('CHANGE_HIGHLIGHT_STYLE', payload);
 
 const useStore = () => {
     const store = React.useContext(StoreContext);
@@ -1529,52 +1486,21 @@ const MainPropsProvider = ({ value, children, }) => {
 const ReaderProvider = ({ children }) => {
     const { dispatch } = useStore();
     const { textContainer, options, styleOptions } = useMainProps();
-    const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
-            console.log('Start');
-            dispatch(setIsReading(reader.state.isReading));
-        }, onPause: (reader) => {
-            console.log('Pause');
-            dispatch(setIsReading(reader.state.isReading));
-        }, onResume: (reader) => {
-            console.log('Resume');
-            dispatch(setIsReading(reader.state.isReading));
-        }, onReset: (reader) => {
-            console.log('Reset Event called', reader.state.elapsedTime);
-            dispatch(setIsReading(reader.state.isReading));
-            dispatch(setElapsedTime(reader.state.elapsedTime));
-            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-        }, onEnd: (reader) => {
-            console.log('End');
-            reader.reset();
-        }, onBoundary: (reader, e) => {
-            // console.log('Boundary event');
-        }, onSeek: (reader) => {
-            dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-        }, onTimeTick: (reader) => {
-            dispatch(setElapsedTime(reader.state.elapsedTime));
-        }, onWordClick: (reader, e) => {
-            const target = e.target;
-            const idx = +target.dataset.id;
-            console.log('Word click, seek to:', idx);
-            reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
-        }, onStateChange: (reader, key) => {
-            switch (key) {
-                case 'duration':
-                    dispatch(setDuration(reader.state.duration));
-                    break;
-                case 'voices':
-                    dispatch(setVoices(Utils.formatVoices(reader.state.voices)));
-                    break;
-                /* Synchronize UI state with reader initial state */
-            }
+    const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStateChange: (reader, key) => {
+            // console.log('State change', key);
+            /* Avoid unnecessary rerenders, update elapsedTime only each second */
+            if (key === 'elapsedTime' && reader.state[key] % 1000 === 0)
+                dispatch(changeState({ [key]: reader.state[key] }));
+            else
+                dispatch(changeState({ [key]: reader.state[key] }));
         }, onSettingsChange: (reader) => {
-            console.log('Settings change');
+            // console.log('Settings change');
             dispatch(changeSettings(reader.settings));
         }, onOptionsChange: (reader) => {
-            console.log('Options change', reader.options);
+            // console.log('Options change', reader.options);
             dispatch(changeOptions(reader.options));
         }, onStyleChange: (reader) => {
-            console.log('Style change');
+            // console.log('Style change');
             dispatch(changeHighlightStyle(reader.style));
         } })));
     return (React.createElement(ReaderContext.Provider, { value: { reader: readerRef.current } }, children));
@@ -1646,14 +1572,14 @@ const GenericSlider = (_a) => {
 
 const MainControls = () => {
     const { reader } = useReader();
-    const { state, dispatch } = useStore();
-    const { isReading, isLoading, isMinimized, settings: { volume, pitch }, } = state;
+    const { state } = useStore();
+    const { state: { isReading, isLoading }, UIState: { isMinimized }, settings: { volume, pitch }, } = state;
     const handleTextReadPlay = () => {
         if (reader === null || reader === void 0 ? void 0 : reader.isPaused())
             reader === null || reader === void 0 ? void 0 : reader.resume();
         else
             reader === null || reader === void 0 ? void 0 : reader.play('start').then(() => {
-                dispatch(setIsLoading(false));
+                reader.state.isLoading = false;
             });
     };
     const handleTextReadPause = () => {
@@ -1757,18 +1683,18 @@ styleInject(css_248z$a);
 
 const WindowControls = () => {
     const { state, dispatch } = useStore();
-    const { isMinimized, isVisible } = state;
+    const { isMinimized, isVisible } = state.UIState;
     const handleShowReader = () => {
-        dispatch(setIsVisible(true));
+        dispatch(changeUIState({ isVisible: true }));
     };
     const handleHideReader = () => {
-        dispatch(setIsVisible(false));
+        dispatch(changeUIState({ isVisible: false }));
     };
     const handleMinimizeReader = () => {
-        dispatch(setIsMinimized(true));
+        dispatch(changeUIState({ isMinimized: true }));
     };
     const handleMaximizeReader = () => {
-        dispatch(setIsMinimized(false));
+        dispatch(changeUIState({ isMinimized: false }));
     };
     return (React.createElement(React.Fragment, null,
         !isVisible && (React.createElement("div", { title: 'Show', className: styles$a.showButton, onPointerDown: handleShowReader },
@@ -1786,7 +1712,7 @@ styleInject(css_248z$9);
 const SeekBar = () => {
     const { reader } = useReader();
     const { state } = useStore();
-    const { elapsedTime, numberOfWords, currentWordIndex, isMinimized, duration, } = state;
+    const { state: { elapsedTime, numberOfWords, currentWordIndex, duration }, UIState: { isMinimized }, } = state;
     const debouncedHandleManualSeek = Utils.debounce((reader === null || reader === void 0 ? void 0 : reader.seekTo.bind(reader)) || Function, 3);
     const handleManualSeek = (e) => {
         const value = +e.target.value;
@@ -1950,14 +1876,13 @@ const useOptions = () => {
 };
 
 const Options = () => {
+    const [isOptionsVisible, setIsOptionsVisible] = React.useState(false);
     const ref = React.useRef(null);
-    const { state, dispatch } = useStore();
-    const { isOptionsVisible } = state;
     const showOptions = () => {
-        dispatch(setIsOptionsVisible(true));
+        setIsOptionsVisible(true);
     };
     const hideOptions = () => {
-        dispatch(setIsOptionsVisible(false));
+        setIsOptionsVisible(false);
     };
     const options = useOptions();
     useOnClickOutside(ref, hideOptions);
@@ -2071,7 +1996,7 @@ const languages = [
 const SecondaryControls = () => {
     const { reader } = useReader();
     const { state } = useStore();
-    const { voices, settings: { voiceURI, rate, language }, highlightStyle, } = state;
+    const { state: { voices }, settings: { voiceURI, rate, language }, highlightStyle, } = state;
     /* Settings Handlers */
     const handleRateChange = (value) => {
         if (!reader)
@@ -2115,11 +2040,12 @@ const SecondaryControls = () => {
                 });
         return updatedPalette;
     }, [highlightStyle]);
+    const formattedVoices = React.useMemo(() => Utils.formatVoices(voices), [voices]);
     return (React.createElement("div", { className: styles$7.container },
         React.createElement("div", { className: styles$7.optionsWrapper1 },
             React.createElement(CustomSelect, { name: "rate", options: rates, onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", Icon: UnderlinedTextIcon }),
             React.createElement(CustomSelect, { name: "language", options: languages, onChange: handleLanguageChange, value: language || '', defaultValue: "1", title: "Language", Icon: UnderlinedTextIcon }),
-            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voice", Icon: UnderlinedTextIcon }),
+            React.createElement(CustomSelect, { name: "voice", options: formattedVoices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voice", Icon: UnderlinedTextIcon }),
             React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightColorChange, value: highlightStyle.color1, defaultValue: "lavander", title: "Palette", Icon: ColorIcon, ExtraComponent: ColorPreview }),
             React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightFontColorChange, value: highlightStyle.color2, defaultValue: "lavander", title: "Palette", Icon: ColorIcon, ExtraComponent: ColorPreview }),
             React.createElement(CustomSelect, { name: "brush-type", options: brushes, onChange: handleBrushChange, value: highlightStyle.brush, defaultValue: "lavander", title: "Palette", Icon: BrushIcon, ExtraComponent: BrushPreview })),
@@ -2152,27 +2078,28 @@ Is a melody worth the thrill.
 const useBindTextReader = () => {
     const { reader } = useReader();
     const { state, dispatch } = useStore();
-    const { isMinimized, isVisible, isReading, isLoading, elapsedTime } = state;
+    const { isMinimized, isVisible } = state.UIState;
+    const { isReading, isLoading, elapsedTime } = state.state;
     const { bindReader } = useMainProps();
     const handlers = React.useMemo(() => ({
         showReader: () => {
-            dispatch(setIsVisible(true));
+            dispatch(changeUIState({ isVisible: true }));
         },
         hideReader: () => {
-            dispatch(setIsVisible(false));
+            dispatch(changeUIState({ isVisible: false }));
         },
         minimizeReader: () => {
-            dispatch(setIsMinimized(true));
+            dispatch(changeUIState({ isMinimized: true }));
         },
         maximizeReader: () => {
-            dispatch(setIsMinimized(false));
+            dispatch(changeUIState({ isMinimized: false }));
         },
         play: () => {
             if (reader === null || reader === void 0 ? void 0 : reader.isPaused())
                 reader === null || reader === void 0 ? void 0 : reader.resume();
             else
                 reader === null || reader === void 0 ? void 0 : reader.play('start').then(() => {
-                    dispatch(setIsLoading(false));
+                    reader.state.isLoading = false;
                 });
         },
         pause: () => reader === null || reader === void 0 ? void 0 : reader.pause(),
@@ -2206,19 +2133,8 @@ const useInitializeReader = () => {
         /* Reset browser active speech synth queue on refresh or new load */
         window.speechSynthesis.cancel();
         reader === null || reader === void 0 ? void 0 : reader.init().then((reader) => {
-            var _a;
-            const formattedVoices = (_a = reader.state.voices) === null || _a === void 0 ? void 0 : _a.map((voice) => {
-                var _a;
-                return ({
-                    name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
-                    ''),
-                    value: voice.voiceURI,
-                });
-            });
             /* Synchronize UI state with reader initial state */
-            dispatch(setVoices(formattedVoices));
-            dispatch(setNumberOfWords(reader.state.numberOfWords));
-            dispatch(setDuration(reader.state.duration));
+            dispatch(changeState(reader.state));
             dispatch(changeSettings(reader.settings));
             dispatch(changeOptions(reader.options));
             dispatch(changeHighlightStyle(reader.style));
@@ -2241,7 +2157,7 @@ styleInject(css_248z);
 
 const TextReader = () => {
     const { state } = useStore();
-    const { isMinimized, isVisible } = state;
+    const { isMinimized, isVisible } = state.UIState;
     useScrollToTop();
     useSetCSSVariables();
     useBindTextReader();
