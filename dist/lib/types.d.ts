@@ -4,17 +4,7 @@ export interface IGenericSettings {
     language: string;
 }
 export interface IEvents {
-    onPlay: (c: SpeechSynth, v?: any) => void;
-    onEnd: (c: SpeechSynth, v?: any) => void;
-    onStart: (c: SpeechSynth, v?: any) => void;
-    onPause: (c: SpeechSynth, v?: any) => void;
-    onResume: (c: SpeechSynth, v?: any) => void;
-    onReset: (c: SpeechSynth, v?: any) => void;
-    onBoundary: (c: SpeechSynth, v?: any) => void;
-    onTimeTick: (c: SpeechSynth, v?: any) => void;
     onWordClick: (c: SpeechSynth, v?: any) => void;
-    onSeek: (c: SpeechSynth, v?: any) => void;
-    onChunksModeChange: (c: SpeechSynth, v?: any) => void;
     onStateChange: (c: SpeechSynth, v?: any) => void;
     onSettingsChange: (c: SpeechSynth, v?: any) => void;
     onOptionsChange: (c: SpeechSynth, v?: any) => void;
@@ -66,7 +56,6 @@ export interface IState {
     currentChunkIndex: number;
     chunksArray: Chunk[];
     isBrushAvailable: boolean;
-    brush: string;
     isPaused: boolean;
     isReading: boolean;
 }

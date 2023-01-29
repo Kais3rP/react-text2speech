@@ -1,6 +1,11 @@
+import { Utils } from 'lib';
 import { IGlobalState } from './types';
 
 export const globalState: IGlobalState = {
+	UIState: {
+		isMinimized: true,
+		isVisible: false,
+	},
 	settings: {
 		rate: 1,
 		voiceURI: '',
@@ -19,50 +24,43 @@ export const globalState: IGlobalState = {
 		color2: '',
 		brush: 'brush-1',
 	},
-	isReading: false,
-	isLoading: false,
-	voices: [],
-	elapsedTime: 0,
-	isMinimized: true,
-	isVisible: false,
-	isOptionsVisible: false,
-	numberOfWords: 0,
-	currentWordIndex: 1,
-	duration: 0,
+	state: {
+		isMobile: Utils.isMobile(),
+		/* Internal properties */
+		voice: {} as SpeechSynthesisVoice,
+		voices: [] as SpeechSynthesisVoice[],
+		/* UI */
+		isLoading: false,
+		/* Highlight & Reading time */
+		tagIndex: 0,
+		currentWord: '',
+		currentWordIndex: 0,
+		currentWordProps: { charIndex: 0, charLength: 0 },
+		highlightedWords: [] as HTMLElement[],
+		lastWordPosition: 0,
+		numberOfWords: 0,
+		wholeText: '',
+		wholeTextArray: [],
+		textRemaining: '',
+		duration: 0,
+		elapsedTime: 0,
+		currentChunkIndex: 0,
+		chunksArray: [],
+		isBrushAvailable: false,
+		/* Controls  */
+		isPaused: false,
+		isReading: false,
+	},
 };
 
 export const rootReducer = (state: IGlobalState, action: ActionType) => {
 	const { type, payload } = action;
 	switch (type) {
-		case 'SET_IS_READING': {
-			return { ...state, isReading: payload };
+		case 'CHANGE_UISTATE': {
+			return { ...state, UIState: { ...state.UIState, ...payload } };
 		}
-		case 'SET_IS_LOADING': {
-			return { ...state, isLoading: payload };
-		}
-		case 'SET_IS_MINIMIZED': {
-			return { ...state, isMinimized: payload };
-		}
-		case 'SET_IS_VISIBLE': {
-			return { ...state, isVisible: payload };
-		}
-		case 'SET_IS_OPTIONS_VISIBLE': {
-			return { ...state, isOptionsVisible: payload };
-		}
-		case 'SET_VOICES': {
-			return { ...state, voices: payload };
-		}
-		case 'SET_ELAPSED_TIME': {
-			return { ...state, elapsedTime: payload };
-		}
-		case 'SET_DURATION': {
-			return { ...state, duration: payload };
-		}
-		case 'SET_NUMBER_OF_WORDS': {
-			return { ...state, numberOfWords: payload };
-		}
-		case 'SET_CURRENT_WORD_INDEX': {
-			return { ...state, currentWordIndex: payload };
+		case 'CHANGE_STATE': {
+			return { ...state, state: { ...state.state, ...payload } };
 		}
 		case 'CHANGE_SETTINGS': {
 			return { ...state, settings: { ...state.settings, ...payload } };

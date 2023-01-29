@@ -1,23 +1,16 @@
-import { ISettings, IOptions } from 'lib/types';
+import { ISettings, IOptions, IState, IStyle } from 'lib/types';
 
 export type ActionType = { type: string; payload: any };
 
-export interface IGlobalState {
-	settings: ISettings;
-	options: IOptions;
-	highlightStyle: {
-		color1: string;
-		color2: string;
-		brush: string;
-	};
-	isReading: boolean;
-	voices: IVoiceInfo[];
-	elapsedTime: number;
+export interface IUIState {
 	isMinimized: boolean;
 	isVisible: boolean;
-	isOptionsVisible: boolean;
-	numberOfWords: number;
-	currentWordIndex: number;
-	duration: number;
-	isLoading: boolean;
+}
+
+export interface IGlobalState {
+	UIState: IUIState;
+	settings: ISettings;
+	options: IOptions;
+	highlightStyle: IStyle;
+	state: IState;
 }

@@ -1,42 +1,39 @@
 import { useReader, useStore, useMainProps } from 'contexts';
 import { useMemo, useLayoutEffect, useEffect } from 'react';
 import {
-	setIsVisible,
-	setIsMinimized,
-	setIsLoading,
 	changeOptions,
 	changeSettings,
-	setDuration,
-	setNumberOfWords,
-	setVoices,
+	changeState,
 	changeHighlightStyle,
+	changeUIState,
 } from 'store/actions';
 
 export const useBindTextReader = () => {
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();
-	const { isMinimized, isVisible, isReading, isLoading, elapsedTime } = state;
+	const { isMinimized, isVisible } = state.UIState;
+	const { isReading, isLoading, elapsedTime } = state.state;
 	const { bindReader } = useMainProps();
 
 	const handlers = useMemo(
 		() => ({
 			showReader: () => {
-				dispatch(setIsVisible(true));
+				dispatch(changeUIState({ isVisible: true }));
 			},
 			hideReader: () => {
-				dispatch(setIsVisible(false));
+				dispatch(changeUIState({ isVisible: false }));
 			},
 			minimizeReader: () => {
-				dispatch(setIsMinimized(true));
+				dispatch(changeUIState({ isMinimized: true }));
 			},
 			maximizeReader: () => {
-				dispatch(setIsMinimized(false));
+				dispatch(changeUIState({ isMinimized: false }));
 			},
 			play: () => {
 				if (reader?.isPaused()) reader?.resume();
 				else
 					reader?.play('start').then(() => {
-						dispatch(setIsLoading(false));
+						reader.state.isLoading = false;
 					});
 			},
 			pause: () => reader?.pause(),
@@ -77,22 +74,9 @@ export const useInitializeReader = () => {
 		reader
 			?.init()
 			.then((reader) => {
-				const formattedVoices: IVoiceInfo[] = reader.state.voices?.map(
-					(voice) => ({
-						name: voice.name?.replace(
-							/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
-							''
-						),
-						value: voice.voiceURI,
-					})
-				);
-
 				/* Synchronize UI state with reader initial state */
 
-				dispatch(setVoices(formattedVoices));
-				dispatch(setNumberOfWords(reader.state.numberOfWords));
-				dispatch(setDuration(reader.state.duration));
-
+				dispatch(changeState(reader.state));
 				dispatch(changeSettings(reader.settings));
 				dispatch(changeOptions(reader.options));
 				dispatch(changeHighlightStyle(reader.style));

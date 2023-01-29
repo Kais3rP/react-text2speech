@@ -5,7 +5,6 @@ import { AiFillPlayCircle } from '@react-icons/all-files/ai/AiFillPlayCircle';
 import { AiFillPauseCircle } from '@react-icons/all-files/ai/AiFillPauseCircle';
 import { BiReset } from '@react-icons/all-files/bi/BiReset';
 import { IMainControlsProps } from './types';
-import { setIsLoading } from 'store/actions';
 import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
 import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
@@ -14,11 +13,10 @@ import GenericSlider from 'components/GenericSlider/GenericSlider';
 
 const MainControls: FC<IMainControlsProps> = () => {
 	const { reader } = useReader();
-	const { state, dispatch } = useStore();
+	const { state } = useStore();
 	const {
-		isReading,
-		isLoading,
-		isMinimized,
+		state: { isReading, isLoading },
+		UIState: { isMinimized },
 		settings: { volume, pitch },
 	} = state;
 
@@ -26,7 +24,7 @@ const MainControls: FC<IMainControlsProps> = () => {
 		if (reader?.isPaused()) reader?.resume();
 		else
 			reader?.play('start').then(() => {
-				dispatch(setIsLoading(false));
+				reader.state.isLoading = false;
 			});
 	};
 

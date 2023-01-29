@@ -10,6 +10,7 @@ import { IOption } from 'components/CustomSelect/types';
 import ColorPreview from 'components/ColorPreview/ColorPreview';
 import BrushIcon from 'components/BrushIcon/BrushIcon';
 import BrushPreview from 'components/BrushPreview/BrushPreview';
+import { Utils } from 'lib';
 
 const rates: IOption[] = [
 	{ value: '0.5', name: '0.5x' },
@@ -62,7 +63,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 	const { state } = useStore();
 
 	const {
-		voices,
+		state: { voices },
 		settings: { voiceURI, rate, language },
 		highlightStyle,
 	} = state;
@@ -115,6 +116,11 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 		return updatedPalette;
 	}, [highlightStyle]);
 
+	const formattedVoices: IVoiceInfo[] = useMemo(
+		() => Utils.formatVoices(voices),
+		[voices]
+	);
+
 	return (
 		<div className={styles.container}>
 			<div className={styles.optionsWrapper1}>
@@ -141,7 +147,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 				{/* Voice setting  */}
 				<CustomSelect
 					name="voice"
-					options={voices}
+					options={formattedVoices}
 					onChange={handleVoiceChange}
 					value={voiceURI || ''}
 					defaultValue="1"

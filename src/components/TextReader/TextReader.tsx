@@ -15,7 +15,7 @@ import { useScrollToTop } from 'hooks';
 
 const TextReader: FC<ITextReaderProps> = () => {
 	const { state } = useStore();
-	const { isMinimized, isVisible } = state;
+	const { isMinimized, isVisible } = state.UIState;
 
 	useScrollToTop();
 
@@ -24,6 +24,7 @@ const TextReader: FC<ITextReaderProps> = () => {
 	useBindTextReader();
 
 	useInitializeReader();
+
 	return (
 		<div
 			className={`${styles.container} ${isVisible && styles.visible} ${

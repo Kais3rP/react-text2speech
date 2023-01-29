@@ -1,24 +1,20 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styles from './styles.module.css';
 import { FcSettings } from '@react-icons/all-files/fc/FcSettings';
-import { useStore } from 'contexts';
 import { useOnClickOutside } from 'hooks';
-import { setIsOptionsVisible } from 'store/actions';
 import { IOptionsProps } from './types';
 import { useOptions } from './hooks';
 
 const Options: FC<IOptionsProps> = () => {
+	const [isOptionsVisible, setIsOptionsVisible] = useState(false);
 	const ref = useRef(null);
-	const { state, dispatch } = useStore();
-
-	const { isOptionsVisible } = state;
 
 	const showOptions = () => {
-		dispatch(setIsOptionsVisible(true));
+		setIsOptionsVisible(true);
 	};
 
 	const hideOptions = () => {
-		dispatch(setIsOptionsVisible(false));
+		setIsOptionsVisible(false);
 	};
 
 	const options = useOptions();

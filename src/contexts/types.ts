@@ -1,11 +1,10 @@
 import { SpeechSynth } from 'lib';
+import { IState } from 'lib/types';
 import { Dispatch } from 'react';
-import { IGlobalState } from 'store/types';
+import { IGlobalState, IUIState } from 'store/types';
 
-export type IBoundState = Pick<
-	IGlobalState,
-	'isVisible' | 'isMinimized' | 'isReading' | 'isLoading'
->;
+export type IBoundState = IUIState & Pick<IState, 'isReading' | 'isLoading'>;
+
 export interface IBoundHandlers {
 	play: () => void;
 	pause: () => void;

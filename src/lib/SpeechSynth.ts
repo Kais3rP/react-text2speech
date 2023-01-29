@@ -37,15 +37,7 @@ export class SpeechSynth extends EventEmitter {
 			color1 = '#DEE',
 			color2 = '#9DE',
 			/* Ev handlers */
-			onEnd = () => null,
-			onStart = () => null,
-			onPause = () => null,
-			onResume = () => null,
-			onReset = () => null,
-			onBoundary = () => null,
-			onTimeTick = () => null,
 			onWordClick = () => null,
-			onSeek = () => null,
 			onStateChange = () => null,
 			onSettingsChange = () => null,
 			onOptionsChange = () => null,
@@ -57,16 +49,7 @@ export class SpeechSynth extends EventEmitter {
 			color1: '#DEE',
 			color2: '#9DE',
 			/* Ev handlers */
-			onPlay: () => null,
-			onEnd: () => null,
-			onStart: () => null,
-			onPause: () => null,
-			onResume: () => null,
-			onReset: () => null,
-			onBoundary: () => null,
-			onTimeTick: () => null,
 			onWordClick: () => null,
-			onSeek: () => null,
 			onStateChange: () => null,
 			onSettingsChange: () => null,
 			onOptionsChange: () => null,
@@ -89,15 +72,7 @@ export class SpeechSynth extends EventEmitter {
 		/* Events */
 
 		this.events = [
-			{ type: 'boundary', handlers: [onBoundary] },
-			{ type: 'time-tick', handlers: [onTimeTick] },
 			{ type: 'word-click', handlers: [onWordClick] },
-			{ type: 'start', handlers: [onStart] },
-			{ type: 'pause', handlers: [onPause] },
-			{ type: 'resume', handlers: [onResume] },
-			{ type: 'reset', handlers: [onReset] },
-			{ type: 'seek', handlers: [onSeek] },
-			{ type: 'end', handlers: [onEnd] },
 			{ type: 'state-change', handlers: [onStateChange] },
 			{ type: 'settings-change', handlers: [onSettingsChange] },
 			{ type: 'options-change', handlers: [onOptionsChange] },
@@ -128,7 +103,6 @@ export class SpeechSynth extends EventEmitter {
 				default:
 			}
 
-			console.log('Settings change', this.settings);
 			/* Re initialize the utterance */
 			this.initUtterance();
 			this.restart('settings-change');
@@ -189,19 +163,6 @@ export class SpeechSynth extends EventEmitter {
 
 		const stateSetter = (obj: any, key: string | symbol, value: any) => {
 			const result = Reflect.set(obj, key, value);
-			switch (key) {
-				case 'currentWordIndex':
-					this.emit('seek', this);
-					break;
-				case 'elapsedTime':
-					if (this.state.elapsedTime % 1000 === 0) {
-						/* Instructions executed every 1000ms when the reader is active */
-						this.emit('time-tick', this);
-					}
-					break;
-				default:
-				//	console.log(key);
-			}
 			this.emit('state-change', this, key);
 			return result;
 		};
@@ -213,7 +174,7 @@ export class SpeechSynth extends EventEmitter {
 				voice: {} as SpeechSynthesisVoice,
 				voices: [] as SpeechSynthesisVoice[],
 				/* UI */
-				isLoading: true,
+				isLoading: false,
 				/* Highlight & Reading time */
 				tagIndex: 0,
 				currentWord: '',
@@ -329,7 +290,6 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
-		console.log('Init utterance', this.settings);
 		this.utterance.text = this.options.isChunksModeOn
 			? this.getCurrentChunkText()
 			: this.getRemainingText();

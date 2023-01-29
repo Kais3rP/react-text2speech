@@ -4,28 +4,28 @@ import { FiMaximize } from '@react-icons/all-files/fi/FiMaximize';
 import { FiMinimize } from '@react-icons/all-files/fi/FiMinimize';
 import { MdClose } from '@react-icons/all-files/md/MdClose';
 import { IoMdArrowBack } from '@react-icons/all-files/io/IoMdArrowBack';
-import { setIsMinimized, setIsVisible } from 'store/actions';
+import { changeUIState } from 'store/actions';
 import styles from './styles.module.css';
 import { useStore } from 'contexts';
 
 const WindowControls: FC<IWindowControlsProps> = () => {
 	const { state, dispatch } = useStore();
-	const { isMinimized, isVisible } = state;
+	const { isMinimized, isVisible } = state.UIState;
 
 	const handleShowReader = () => {
-		dispatch(setIsVisible(true));
+		dispatch(changeUIState({ isVisible: true }));
 	};
 
 	const handleHideReader = () => {
-		dispatch(setIsVisible(false));
+		dispatch(changeUIState({ isVisible: false }));
 	};
 
 	const handleMinimizeReader = () => {
-		dispatch(setIsMinimized(true));
+		dispatch(changeUIState({ isMinimized: true }));
 	};
 
 	const handleMaximizeReader = () => {
-		dispatch(setIsMinimized(false));
+		dispatch(changeUIState({ isMinimized: false }));
 	};
 	return (
 		<>

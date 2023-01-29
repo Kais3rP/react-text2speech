@@ -9,11 +9,8 @@ const SeekBar: FC<ISeekBarProps> = () => {
 	const { state } = useStore();
 
 	const {
-		elapsedTime,
-		numberOfWords,
-		currentWordIndex,
-		isMinimized,
-		duration,
+		state: { elapsedTime, numberOfWords, currentWordIndex, duration },
+		UIState: { isMinimized },
 	} = state;
 
 	const debouncedHandleManualSeek = Utils.debounce(

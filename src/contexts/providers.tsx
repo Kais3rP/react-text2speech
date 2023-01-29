@@ -1,15 +1,11 @@
 import React, { FC, useRef, useReducer } from 'react';
-import { SpeechSynth, Utils } from 'lib';
+import { SpeechSynth } from 'lib';
 import { rootReducer, globalState } from 'store';
 import {
-	setIsReading,
-	setElapsedTime,
-	setCurrentWordIndex,
 	changeSettings,
 	changeOptions,
 	changeHighlightStyle,
-	setDuration,
-	setVoices,
+	changeState,
 } from 'store/actions';
 import { MainPropsContext, ReaderContext, StoreContext } from './contexts';
 import {
@@ -43,68 +39,29 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 			...options,
 			color1: styleOptions?.highlightColor1 || '#DEE',
 			color2: styleOptions.highlightColor2 || '#9DE',
-			onStart: (reader: SpeechSynth) => {
-				console.log('Start');
-				dispatch(setIsReading(reader.state.isReading));
-			},
-			onPause: (reader: SpeechSynth) => {
-				console.log('Pause');
-				dispatch(setIsReading(reader.state.isReading));
-			},
-			onResume: (reader: SpeechSynth) => {
-				console.log('Resume');
-				dispatch(setIsReading(reader.state.isReading));
-			},
-			onReset: (reader: SpeechSynth) => {
-				console.log('Reset Event called', reader.state.elapsedTime);
-				dispatch(setIsReading(reader.state.isReading));
-				dispatch(setElapsedTime(reader.state.elapsedTime));
-				dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-			},
-			onEnd: (reader: SpeechSynth) => {
-				console.log('End');
-				reader.reset();
-			},
-			onBoundary: (reader: SpeechSynth, e: Event) => {
-				// console.log('Boundary event');
-			},
-			onSeek: (reader: SpeechSynth) => {
-				dispatch(setCurrentWordIndex(reader.state.currentWordIndex));
-			},
-			onTimeTick: (reader: SpeechSynth) => {
-				dispatch(setElapsedTime(reader.state.elapsedTime));
-			},
 			onWordClick: (reader: SpeechSynth, e: MouseEvent) => {
 				const target: HTMLElement = e.target as HTMLElement;
 				const idx: number = +(target.dataset.id as string);
-				console.log('Word click, seek to:', idx);
-
+				// console.log('Word click, seek to:', idx);
 				reader?.seekTo(idx);
 			},
 			onStateChange: (reader: SpeechSynth, key) => {
-				switch (key) {
-					case 'duration':
-						dispatch(setDuration(reader.state.duration));
-						break;
-					case 'voices':
-						dispatch(
-							setVoices(Utils.formatVoices(reader.state.voices))
-						);
-						break;
-					default:
-					/* Synchronize UI state with reader initial state */
-				}
+				// console.log('State change', key);
+				/* Avoid unnecessary rerenders, update elapsedTime only each second */
+				if (key === 'elapsedTime' && reader.state[key] % 1000 === 0)
+					dispatch(changeState({ [key]: reader.state[key] }));
+				else dispatch(changeState({ [key]: reader.state[key] }));
 			},
 			onSettingsChange: (reader: SpeechSynth) => {
-				console.log('Settings change');
+				// console.log('Settings change');
 				dispatch(changeSettings(reader.settings));
 			},
 			onOptionsChange: (reader: SpeechSynth) => {
-				console.log('Options change', reader.options);
+				// console.log('Options change', reader.options);
 				dispatch(changeOptions(reader.options));
 			},
 			onStyleChange: (reader: SpeechSynth) => {
-				console.log('Style change');
+				// console.log('Style change');
 				dispatch(changeHighlightStyle(reader.style));
 			},
 		})
