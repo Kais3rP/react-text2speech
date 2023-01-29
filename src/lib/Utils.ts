@@ -238,6 +238,16 @@ export class Utils {
 		}
 	}
 
+	static formatVoices(voices: SpeechSynthesisVoice[]) {
+		return voices.map((voice) => ({
+			name: voice.name?.replace(
+				/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
+				''
+			),
+			value: voice.voiceURI,
+		}));
+	}
+
 	static getBrushURL(name: string, color: string) {
 		const _color = color.replace('#', '');
 		const URL = `s2.svgbox.net/pen-brushes.svg?ic=${name}&color=${_color}`;

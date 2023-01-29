@@ -1,5 +1,5 @@
 import React, { FC, useRef, useReducer } from 'react';
-import { SpeechSynth } from 'lib';
+import { SpeechSynth, Utils } from 'lib';
 import { rootReducer, globalState } from 'store';
 import {
 	setIsReading,
@@ -9,6 +9,7 @@ import {
 	changeOptions,
 	changeHighlightStyle,
 	setDuration,
+	setVoices,
 } from 'store/actions';
 import { MainPropsContext, ReaderContext, StoreContext } from './contexts';
 import {
@@ -34,7 +35,7 @@ export const MainPropsProvider: FC<IMainPropsProviderProps> = ({
 /* Provides the reader instance */
 
 export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
-	const { state, dispatch } = useStore();
+	const { dispatch } = useStore();
 	const { textContainer, options, styleOptions } = useMainProps();
 
 	const readerRef = useRef<SpeechSynth>(
@@ -80,9 +81,19 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 
 				reader?.seekTo(idx);
 			},
-			onStateChange: (reader: SpeechSynth) => {
-				if (state.duration !== reader.state.duration)
-					dispatch(setDuration(reader.state.duration));
+			onStateChange: (reader: SpeechSynth, key) => {
+				switch (key) {
+					case 'duration':
+						dispatch(setDuration(reader.state.duration));
+						break;
+					case 'voices':
+						dispatch(
+							setVoices(Utils.formatVoices(reader.state.voices))
+						);
+						break;
+					default:
+					/* Synchronize UI state with reader initial state */
+				}
 			},
 			onSettingsChange: (reader: SpeechSynth) => {
 				console.log('Settings change');

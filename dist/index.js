@@ -539,6 +539,16 @@ class Utils {
                     : null;
         }
     }
+    static formatVoices(voices) {
+        return voices.map((voice) => {
+            var _a;
+            return ({
+                name: (_a = voice.name) === null || _a === void 0 ? void 0 : _a.replace(/(Microsoft\s)|(Online\s)|(\(Natural\))|(\s-.*$)/gm, // Display only the plain voice name
+                ''),
+                value: voice.voiceURI,
+            });
+        });
+    }
     static getBrushURL(name, color) {
         const _color = color.replace('#', '');
         const URL = `s2.svgbox.net/pen-brushes.svg?ic=${name}&color=${_color}`;
@@ -628,7 +638,11 @@ class SpeechSynth extends EventEmitter {
                 case 'rate':
                     this.changeRate();
                     break;
+                case 'language':
+                    this.changeLanguage();
+                    break;
             }
+            console.log('Settings change', this.settings);
             /* Re initialize the utterance */
             this.initUtterance();
             this.restart('settings-change');
@@ -691,7 +705,7 @@ class SpeechSynth extends EventEmitter {
                     break;
                 //	console.log(key);
             }
-            this.emit('state-change', this);
+            this.emit('state-change', this, key);
             return result;
         };
         this.state = new Proxy({
@@ -740,9 +754,7 @@ class SpeechSynth extends EventEmitter {
             Array.prototype.__join__ = Utils.__join__;
             /* Get voices */
             try {
-                this.state.voices = yield this.getVoices();
-                this.state.voice = this.state.voices[0];
-                this.settings.voiceURI = this.state.voice.voiceURI;
+                this.setVoice();
                 this.addHTMLHighlightTags(this.textContainer);
                 this.applyBasicStyleToWords(this.textContainer, '[data-id]');
                 /* Init state properties */
@@ -778,6 +790,7 @@ class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
+        console.log('Init utterance', this.settings);
         this.utterance.text = this.options.isChunksModeOn
             ? this.getCurrentChunkText()
             : this.getRemainingText();
@@ -1074,6 +1087,13 @@ class SpeechSynth extends EventEmitter {
             }
         });
     }
+    setVoice() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.state.voices = yield this.getVoices();
+            this.state.voice = this.state.voices[0];
+            this.settings.voiceURI = this.state.voice.voiceURI;
+        });
+    }
     highlightText(wordIndex) {
         /* Do not highlight if the option is disabled */
         if (!this.options.isHighlightTextOn)
@@ -1130,6 +1150,7 @@ class SpeechSynth extends EventEmitter {
             : 'none';
     }
     /* Private handlers for proxy traps */
+    /* Proxy trap handlers */
     changeChunkMode() {
         this.clearTimeCount();
         /* Since che chunk mode change triggers a restart of the utterance playing,
@@ -1151,10 +1172,9 @@ class SpeechSynth extends EventEmitter {
         }
         this.restart('chunks-mode-change');
     }
+    /* Settings trap handlers */
     changeVoice() {
-        const voice = this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI).length > 0
-            ? this.state.voices.filter((v) => v.voiceURI === this.settings.voiceURI)[0]
-            : this.state.voices[0];
+        const voice = this.state.voices.find((v) => v.voiceURI === this.settings.voiceURI) || this.state.voices[0];
         this.state.voice = voice;
         this.utterance.voice = voice;
     }
@@ -1164,6 +1184,10 @@ class SpeechSynth extends EventEmitter {
         this.state.elapsedTime = this.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
         this.emit('time-tick', this, this.state.elapsedTime);
     }
+    changeLanguage() {
+        this.setVoice();
+    }
+    /* Style handlers */
     applyStyleToHighlightedWords() {
         this.state.highlightedWords.forEach((w) => this.applyStyleToWord(w));
     }
@@ -1503,7 +1527,7 @@ const MainPropsProvider = ({ value, children, }) => {
 };
 /* Provides the reader instance */
 const ReaderProvider = ({ children }) => {
-    const { state, dispatch } = useStore();
+    const { dispatch } = useStore();
     const { textContainer, options, styleOptions } = useMainProps();
     const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStart: (reader) => {
             console.log('Start');
@@ -1533,9 +1557,16 @@ const ReaderProvider = ({ children }) => {
             const idx = +target.dataset.id;
             console.log('Word click, seek to:', idx);
             reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
-        }, onStateChange: (reader) => {
-            if (state.duration !== reader.state.duration)
-                dispatch(setDuration(reader.state.duration));
+        }, onStateChange: (reader, key) => {
+            switch (key) {
+                case 'duration':
+                    dispatch(setDuration(reader.state.duration));
+                    break;
+                case 'voices':
+                    dispatch(setVoices(Utils.formatVoices(reader.state.voices)));
+                    break;
+                /* Synchronize UI state with reader initial state */
+            }
         }, onSettingsChange: (reader) => {
             console.log('Settings change');
             dispatch(changeSettings(reader.settings));
@@ -2029,10 +2060,18 @@ const brushes = [
     { name: '9', value: 'brush-9' },
     { name: '10', value: 'brush-10' },
 ];
+const languages = [
+    { name: 'English', value: 'en' },
+    { name: 'Italian', value: 'it' },
+    { name: 'French', value: 'fr' },
+    { name: 'Spanish', value: 'es' },
+    { name: 'German', value: 'de' },
+    { name: 'Chinese', value: 'ch' },
+];
 const SecondaryControls = () => {
     const { reader } = useReader();
     const { state } = useStore();
-    const { voices, settings: { voiceURI, rate }, highlightStyle, } = state;
+    const { voices, settings: { voiceURI, rate, language }, highlightStyle, } = state;
     /* Settings Handlers */
     const handleRateChange = (value) => {
         if (!reader)
@@ -2043,6 +2082,11 @@ const SecondaryControls = () => {
         if (!reader)
             return;
         reader.settings.voiceURI = value;
+    };
+    const handleLanguageChange = (value) => {
+        if (!reader)
+            return;
+        reader.settings.language = value;
     };
     const handleHighlightColorChange = (value) => {
         if (!reader)
@@ -2074,10 +2118,11 @@ const SecondaryControls = () => {
     return (React.createElement("div", { className: styles$7.container },
         React.createElement("div", { className: styles$7.optionsWrapper1 },
             React.createElement(CustomSelect, { name: "rate", options: rates, onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", Icon: UnderlinedTextIcon }),
-            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voices", Icon: UnderlinedTextIcon }),
+            React.createElement(CustomSelect, { name: "language", options: languages, onChange: handleLanguageChange, value: language || '', defaultValue: "1", title: "Language", Icon: UnderlinedTextIcon }),
+            React.createElement(CustomSelect, { name: "voice", options: voices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voice", Icon: UnderlinedTextIcon }),
             React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightColorChange, value: highlightStyle.color1, defaultValue: "lavander", title: "Palette", Icon: ColorIcon, ExtraComponent: ColorPreview }),
             React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightFontColorChange, value: highlightStyle.color2, defaultValue: "lavander", title: "Palette", Icon: ColorIcon, ExtraComponent: ColorPreview }),
-            React.createElement(CustomSelect, { name: "palette", options: brushes, onChange: handleBrushChange, value: highlightStyle.brush, defaultValue: "lavander", title: "Palette", Icon: BrushIcon, ExtraComponent: BrushPreview })),
+            React.createElement(CustomSelect, { name: "brush-type", options: brushes, onChange: handleBrushChange, value: highlightStyle.brush, defaultValue: "lavander", title: "Palette", Icon: BrushIcon, ExtraComponent: BrushPreview })),
         React.createElement("div", { className: styles$7.optionsWrapper2 },
             React.createElement(Options, null))));
 };

@@ -24,12 +24,14 @@ export declare class SpeechSynth extends EventEmitter {
     private resetTimeCount;
     private handleBoundary;
     private getVoices;
+    private setVoice;
     private highlightText;
     private isBrushAvailable;
     private applyStyleToWord;
     private changeChunkMode;
     private changeVoice;
     private changeRate;
+    private changeLanguage;
     private applyStyleToHighlightedWords;
     private resetHighlight;
     private addCustomEventListeners;

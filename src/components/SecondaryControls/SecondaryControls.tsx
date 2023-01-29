@@ -48,13 +48,22 @@ const brushes: IOption[] = [
 	{ name: '10', value: 'brush-10' },
 ];
 
+const languages: IOption[] = [
+	{ name: 'English', value: 'en' },
+	{ name: 'Italian', value: 'it' },
+	{ name: 'French', value: 'fr' },
+	{ name: 'Spanish', value: 'es' },
+	{ name: 'German', value: 'de' },
+	{ name: 'Chinese', value: 'ch' },
+];
+
 const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 	const { reader } = useReader();
 	const { state } = useStore();
 
 	const {
 		voices,
-		settings: { voiceURI, rate },
+		settings: { voiceURI, rate, language },
 		highlightStyle,
 	} = state;
 
@@ -68,6 +77,11 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 	const handleVoiceChange = (value: string) => {
 		if (!reader) return;
 		reader.settings.voiceURI = value;
+	};
+
+	const handleLanguageChange = (value: string) => {
+		if (!reader) return;
+		reader.settings.language = value;
 	};
 
 	const handleHighlightColorChange = (value: string) => {
@@ -114,6 +128,16 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					title="Rate"
 					Icon={UnderlinedTextIcon}
 				/>
+				{/* Language setting  */}
+				<CustomSelect
+					name="language"
+					options={languages}
+					onChange={handleLanguageChange}
+					value={language || ''}
+					defaultValue="1"
+					title="Language"
+					Icon={UnderlinedTextIcon}
+				/>
 				{/* Voice setting  */}
 				<CustomSelect
 					name="voice"
@@ -121,7 +145,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					onChange={handleVoiceChange}
 					value={voiceURI || ''}
 					defaultValue="1"
-					title="Voices"
+					title="Voice"
 					Icon={UnderlinedTextIcon}
 				/>
 				{/* Palette style */}
@@ -147,7 +171,7 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 				/>
 				{/* Brush type */}
 				<CustomSelect
-					name="palette"
+					name="brush-type"
 					options={brushes}
 					onChange={handleBrushChange}
 					value={highlightStyle.brush}

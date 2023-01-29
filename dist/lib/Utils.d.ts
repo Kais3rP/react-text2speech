@@ -37,6 +37,10 @@ export declare class Utils {
         g: number;
         b: number;
     } | null;
+    static formatVoices(voices: SpeechSynthesisVoice[]): {
+        name: string;
+        value: string;
+    }[];
     static getBrushURL(name: string, color: string): {
         http: string;
         css: string;

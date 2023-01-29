@@ -122,8 +122,13 @@ export class SpeechSynth extends EventEmitter {
 				case 'rate':
 					this.changeRate();
 					break;
+				case 'language':
+					this.changeLanguage();
+					break;
 				default:
 			}
+
+			console.log('Settings change', this.settings);
 			/* Re initialize the utterance */
 			this.initUtterance();
 			this.restart('settings-change');
@@ -197,7 +202,7 @@ export class SpeechSynth extends EventEmitter {
 				default:
 				//	console.log(key);
 			}
-			this.emit('state-change', this);
+			this.emit('state-change', this, key);
 			return result;
 		};
 
@@ -258,11 +263,7 @@ export class SpeechSynth extends EventEmitter {
 		/* Get voices */
 
 		try {
-			this.state.voices = await this.getVoices();
-
-			this.state.voice = this.state.voices[0];
-
-			this.settings.voiceURI = this.state.voice.voiceURI;
+			this.setVoice();
 
 			this.addHTMLHighlightTags(this.textContainer);
 
@@ -328,6 +329,7 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
+		console.log('Init utterance', this.settings);
 		this.utterance.text = this.options.isChunksModeOn
 			? this.getCurrentChunkText()
 			: this.getRemainingText();
@@ -736,6 +738,12 @@ export class SpeechSynth extends EventEmitter {
 		});
 	}
 
+	private async setVoice() {
+		this.state.voices = await this.getVoices();
+		this.state.voice = this.state.voices[0];
+		this.settings.voiceURI = this.state.voice.voiceURI;
+	}
+
 	private highlightText(wordIndex: number): void {
 		/* Do not highlight if the option is disabled */
 		if (!this.options.isHighlightTextOn) return;
@@ -808,6 +816,8 @@ export class SpeechSynth extends EventEmitter {
 
 	/* Private handlers for proxy traps */
 
+	/* Proxy trap handlers */
+
 	private changeChunkMode() {
 		this.clearTimeCount();
 
@@ -834,15 +844,13 @@ export class SpeechSynth extends EventEmitter {
 		this.restart('chunks-mode-change');
 	}
 
+	/* Settings trap handlers */
+
 	private changeVoice() {
 		const voice =
-			this.state.voices.filter(
+			this.state.voices.find(
 				(v) => v.voiceURI === this.settings.voiceURI
-			).length > 0
-				? this.state.voices.filter(
-						(v) => v.voiceURI === this.settings.voiceURI
-				  )[0]
-				: this.state.voices[0];
+			) || this.state.voices[0];
 		this.state.voice = voice;
 		this.utterance.voice = voice as SpeechSynthesisVoice;
 	}
@@ -862,6 +870,12 @@ export class SpeechSynth extends EventEmitter {
 
 		this.emit('time-tick', this, this.state.elapsedTime);
 	}
+
+	private changeLanguage() {
+		this.setVoice();
+	}
+
+	/* Style handlers */
 
 	private applyStyleToHighlightedWords() {
 		this.state.highlightedWords.forEach((w) => this.applyStyleToWord(w));
