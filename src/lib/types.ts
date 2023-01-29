@@ -9,7 +9,6 @@ export interface IGenericSettings {
 }
 
 export interface IEvents {
-	onWordClick: (c: SpeechSynth, v?: any) => void;
 	onStateChange: (c: SpeechSynth, v?: any) => void;
 	onSettingsChange: (c: SpeechSynth, v?: any) => void;
 	onOptionsChange: (c: SpeechSynth, v?: any) => void;

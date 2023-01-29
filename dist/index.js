@@ -556,14 +556,13 @@ class SpeechSynth extends EventEmitter {
     /* Style */
     color1 = '#DEE', color2 = '#9DE', 
     /* Ev handlers */
-    onWordClick = () => null, onStateChange = () => null, onSettingsChange = () => null, onOptionsChange = () => null, onStyleChange = () => null, } = {
+    onStateChange = () => null, onSettingsChange = () => null, onOptionsChange = () => null, onStyleChange = () => null, } = {
         /* Generic Settings */
         language: 'en',
         /* Style */
         color1: '#DEE',
         color2: '#9DE',
         /* Ev handlers */
-        onWordClick: () => null,
         onStateChange: () => null,
         onSettingsChange: () => null,
         onOptionsChange: () => null,
@@ -578,7 +577,6 @@ class SpeechSynth extends EventEmitter {
         this.timeoutRef = undefined;
         /* Events */
         this.events = [
-            { type: 'word-click', handlers: [onWordClick] },
             { type: 'state-change', handlers: [onStateChange] },
             { type: 'settings-change', handlers: [onSettingsChange] },
             { type: 'options-change', handlers: [onOptionsChange] },
@@ -719,7 +717,10 @@ class SpeechSynth extends EventEmitter {
                 this.attachEventListenersToWords(this.textContainer, '[data-id]', {
                     type: 'click',
                     fn: (e) => {
-                        this.emit('word-click', this, e);
+                        const target = e.target;
+                        const idx = +target.dataset.id;
+                        // console.log('Word click, seek to:', idx);
+                        this.seekTo(idx);
                     },
                 });
                 /* Add class custom event listeners */
@@ -1485,12 +1486,7 @@ const MainPropsProvider = ({ value, children, }) => {
 const ReaderProvider = ({ children }) => {
     const { dispatch } = useStore();
     const { textContainer, options, styleOptions } = useMainProps();
-    const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onWordClick: (reader, e) => {
-            const target = e.target;
-            const idx = +target.dataset.id;
-            // console.log('Word click, seek to:', idx);
-            reader === null || reader === void 0 ? void 0 : reader.seekTo(idx);
-        }, onStateChange: (reader, key) => {
+    const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStateChange: (reader, key) => {
             // console.log('State change', key);
             /* Avoid unnecessary rerenders, update elapsedTime only each second */
             if (key === 'elapsedTime' && reader.state[key] % 1000 === 0)

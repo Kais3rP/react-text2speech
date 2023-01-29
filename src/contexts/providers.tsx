@@ -39,12 +39,6 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 			...options,
 			color1: styleOptions?.highlightColor1 || '#DEE',
 			color2: styleOptions.highlightColor2 || '#9DE',
-			onWordClick: (reader: SpeechSynth, e: MouseEvent) => {
-				const target: HTMLElement = e.target as HTMLElement;
-				const idx: number = +(target.dataset.id as string);
-				// console.log('Word click, seek to:', idx);
-				reader?.seekTo(idx);
-			},
 			onStateChange: (reader: SpeechSynth, key) => {
 				// console.log('State change', key);
 				/* Avoid unnecessary rerenders, update elapsedTime only each second */

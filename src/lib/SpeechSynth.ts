@@ -37,7 +37,6 @@ export class SpeechSynth extends EventEmitter {
 			color1 = '#DEE',
 			color2 = '#9DE',
 			/* Ev handlers */
-			onWordClick = () => null,
 			onStateChange = () => null,
 			onSettingsChange = () => null,
 			onOptionsChange = () => null,
@@ -49,7 +48,6 @@ export class SpeechSynth extends EventEmitter {
 			color1: '#DEE',
 			color2: '#9DE',
 			/* Ev handlers */
-			onWordClick: () => null,
 			onStateChange: () => null,
 			onSettingsChange: () => null,
 			onOptionsChange: () => null,
@@ -72,7 +70,6 @@ export class SpeechSynth extends EventEmitter {
 		/* Events */
 
 		this.events = [
-			{ type: 'word-click', handlers: [onWordClick] },
 			{ type: 'state-change', handlers: [onStateChange] },
 			{ type: 'settings-change', handlers: [onSettingsChange] },
 			{ type: 'options-change', handlers: [onOptionsChange] },
@@ -264,7 +261,10 @@ export class SpeechSynth extends EventEmitter {
 			this.attachEventListenersToWords(this.textContainer, '[data-id]', {
 				type: 'click',
 				fn: (e) => {
-					this.emit('word-click', this, e);
+					const target: HTMLElement = e.target as HTMLElement;
+					const idx: number = +(target.dataset.id as string);
+					// console.log('Word click, seek to:', idx);
+					this.seekTo(idx);
 				},
 			});
 
