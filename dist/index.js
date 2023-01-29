@@ -333,6 +333,8 @@ class Utils {
         ];
     }
     static isMobile() {
+        if (!navigator || !window)
+            return false;
         /* Dev mode */
         //	return true;
         // check the user agent string
@@ -1449,7 +1451,7 @@ const globalState = {
         brush: 'brush-1',
     },
     state: {
-        isMobile: Utils.isMobile(),
+        isMobile: false,
         /* Internal properties */
         voice: {},
         voices: [],
@@ -2240,7 +2242,6 @@ const useSetCSSVariables = () => {
     }, [styleOptions]);
     React.useEffect(() => {
         const theme = isDark ? darkTheme : lightTheme;
-        console.log(darkTheme, lightTheme);
         for (const entry of Object.entries(theme))
             document.documentElement.style.setProperty(`--${entry[0]}`, entry[1]);
     }, [isDark, darkTheme, lightTheme]);

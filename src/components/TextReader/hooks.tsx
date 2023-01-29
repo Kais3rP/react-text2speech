@@ -144,7 +144,7 @@ export const useSetCSSVariables = () => {
 
 	useEffect(() => {
 		const theme = isDark ? darkTheme : lightTheme;
-		console.log(darkTheme, lightTheme);
+
 		for (const entry of Object.entries(theme))
 			document.documentElement.style.setProperty(
 				`--${entry[0]}`,

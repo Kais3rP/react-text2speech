@@ -1,4 +1,3 @@
-import { Utils } from 'lib';
 import { IGlobalState } from './types';
 
 export const globalState: IGlobalState = {
@@ -26,7 +25,7 @@ export const globalState: IGlobalState = {
 		brush: 'brush-1',
 	},
 	state: {
-		isMobile: Utils.isMobile(),
+		isMobile: false,
 		/* Internal properties */
 		voice: {} as SpeechSynthesisVoice,
 		voices: [] as SpeechSynthesisVoice[],

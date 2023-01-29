@@ -21,6 +21,7 @@ export class Utils {
 	}
 
 	static isMobile() {
+		if (!navigator || !window) return false;
 		/* Dev mode */
 		//	return true;
 		// check the user agent string
