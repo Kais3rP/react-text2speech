@@ -3,7 +3,7 @@
 	text-align: center;
 	position: relative;
 	z-index: 2;
-	margin: 15px 0px 0px 0px;
+	margin: 10px 0px 5px 0px;
 }
 
 .minimized {
@@ -36,8 +36,8 @@
 }
 .seekbar::-moz-range-thumb {
 	appearance: none;
-	width: 12px; /* Set a specific slider handle width */
-	height: 12px; /* Slider handle height */
+	width: 14px; /* Set a specific slider handle width */
+	height: 14px; /* Slider handle height */
 	background: var(--bgColor);
 	cursor: pointer; /* Cursor on hover */
 	border: 2px solid var(--primaryColor);

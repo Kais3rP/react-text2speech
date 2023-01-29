@@ -44,8 +44,6 @@ export const useBindTextReader = () => {
 		[dispatch, reader]
 	);
 
-	console.log('Elapsed time', elapsedTime);
-
 	useLayoutEffect(() => {
 		if (!bindReader || typeof bindReader !== 'function') return;
 		const exposedState = {

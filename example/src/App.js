@@ -19,7 +19,7 @@ function App() {
 
 	const { play, pause, showReader } = handlers;
 	const { isReading, isLoading, isVisible, elapsedTime = 0 } = state;
-	console.log(elapsedTime);
+
 	useEffect(() => {
 		if (node) {
 			highlightAll(languages.js);

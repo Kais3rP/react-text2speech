@@ -9,6 +9,7 @@ import { setIsLoading } from 'store/actions';
 import { useReader, useStore } from 'contexts';
 import styles from './styles.module.css';
 import { BiVolumeFull } from '@react-icons/all-files/bi/BiVolumeFull';
+import { BsMusicNote } from '@react-icons/all-files/bs/BsMusicNote';
 import GenericSlider from 'components/GenericSlider/GenericSlider';
 
 const MainControls: FC<IMainControlsProps> = () => {
@@ -18,7 +19,7 @@ const MainControls: FC<IMainControlsProps> = () => {
 		isReading,
 		isLoading,
 		isMinimized,
-		settings: { volume },
+		settings: { volume, pitch },
 	} = state;
 
 	const handleTextReadPlay = () => {
@@ -74,6 +75,11 @@ const MainControls: FC<IMainControlsProps> = () => {
 		reader.settings.volume = value;
 	};
 
+	const handlePitchChange = (value: number) => {
+		if (!reader) return;
+		reader.settings.pitch = value;
+	};
+
 	return (
 		<div
 			className={`${styles.container} ${
@@ -81,60 +87,93 @@ const MainControls: FC<IMainControlsProps> = () => {
 			}`}
 		>
 			{!isMinimized && (
-				<div className={styles.volumeContainer}>
+				<div className={styles.sliderContainer}>
+					<div className={styles.volumeContainer}>
+						<GenericSlider
+							title="Volume"
+							icon={<BiVolumeFull />}
+							onChange={handleVolumeChange}
+							data={{
+								min: '0.1',
+								max: '1',
+								step: '0.1',
+								value: volume,
+								unit: 'x',
+							}}
+						/>
+					</div>
+					<div className={styles.pitchContainer}>
+						{' '}
+						<GenericSlider
+							title="Pitch"
+							icon={<BsMusicNote />}
+							onChange={handlePitchChange}
+							data={{
+								min: '0.1',
+								max: '2',
+								step: '0.1',
+								value: pitch,
+								unit: 'x',
+							}}
+						/>
+					</div>
+				</div>
+			)}
+			<div className={styles.controlsContainer}>
+				<AiFillFastBackward
+					className={`${styles.button} ${
+						isLoading ? styles.loading : styles.notLoading
+					}`}
+					title="Fast backward"
+					onDoubleClick={(e) => e.preventDefault()}
+					onPointerDown={handleFastBackward}
+				/>
+				{isReading ? (
+					<AiFillPauseCircle
+						style={{
+							fontSize: '2em',
+						}}
+						className={`${styles.button} ${
+							isLoading ? styles.loading : styles.notLoading
+						}`}
+						title={'Pause'}
+						onPointerDown={handleTextReadPause}
+					/>
+				) : (
+					<AiFillPlayCircle
+						style={{
+							fontSize: '2em',
+						}}
+						className={`${styles.button} ${
+							isLoading ? styles.loading : styles.notLoading
+						}`}
+						title={'Play'}
+						onPointerDown={handleTextReadPlay}
+					/>
+				)}
+				<AiFillFastForward
+					title="Fast forward"
+					className={`${styles.button} ${
+						isLoading ? styles.loading : styles.notLoading
+					}`}
+					onPointerDown={handleFastForward}
+				/>
+			</div>
+			{/* {!isMinimized && (
+				<div className={styles.pitchContainer}>
 					<GenericSlider
-						icon={<BiVolumeFull />}
-						onChange={handleVolumeChange}
+						icon={<BsMusicNote />}
+						onChange={handlePitchChange}
 						data={{
 							min: '0.1',
-							max: '1',
+							max: '2',
 							step: '0.1',
-							value: volume,
-							unit: '%',
+							value: pitch,
+							unit: 'x',
 						}}
 					/>
 				</div>
-			)}
-			<AiFillFastBackward
-				className={`${styles.button} ${
-					isLoading ? styles.loading : styles.notLoading
-				}`}
-				title="Fast backward"
-				onDoubleClick={(e) => e.preventDefault()}
-				onPointerDown={handleFastBackward}
-			/>
-
-			{isReading ? (
-				<AiFillPauseCircle
-					style={{
-						fontSize: '2em',
-					}}
-					className={`${styles.button} ${
-						isLoading ? styles.loading : styles.notLoading
-					}`}
-					title={'Pause'}
-					onPointerDown={handleTextReadPause}
-				/>
-			) : (
-				<AiFillPlayCircle
-					style={{
-						fontSize: '2em',
-					}}
-					className={`${styles.button} ${
-						isLoading ? styles.loading : styles.notLoading
-					}`}
-					title={'Play'}
-					onPointerDown={handleTextReadPlay}
-				/>
-			)}
-
-			<AiFillFastForward
-				title="Fast forward"
-				className={`${styles.button} ${
-					isLoading ? styles.loading : styles.notLoading
-				}`}
-				onPointerDown={handleFastForward}
-			/>
+			)} */}
 			<BiReset
 				className={styles.reset}
 				title="reset"

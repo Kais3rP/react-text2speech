@@ -57,8 +57,34 @@
 	color: var(--secondaryColor);
 }
 
-.volumeContainer {
+.controlsContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.sliderContainer {
 	position: absolute;
-	top: 12px;
-	left: 0;
+	top: 5px;
+	left: 2px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 50px;
+}
+
+.volumeContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.pitchContainer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
 }
