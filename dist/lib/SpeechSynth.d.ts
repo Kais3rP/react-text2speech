@@ -11,7 +11,7 @@ export declare class SpeechSynth extends EventEmitter {
     settings: ISettings;
     options: IOptions;
     state: IState;
-    constructor(textContainer: HTMLElement, { language, color1, color2, onStateChange, onSettingsChange, onOptionsChange, onStyleChange, }?: Params);
+    constructor(textContainer: HTMLElement, { language, color1, color2, onEnd, onStart, onPause, onResume, onReset, onBoundary, onTimeTick, onWordClick, onSeek, onStateChange, onSettingsChange, onOptionsChange, onStyleChange, }?: Params);
     init(): Promise<SpeechSynth>;
     private initUtterance;
     private addHTMLHighlightTags;

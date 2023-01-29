@@ -1,8 +1,7 @@
 import { SpeechSynth } from 'lib';
-import { IState } from 'lib/types';
 import { Dispatch } from 'react';
-import { IGlobalState, IUIState } from 'store/types';
-export declare type IBoundState = IUIState & Pick<IState, 'isReading' | 'isLoading'>;
+import { IGlobalState } from 'store/types';
+export declare type IBoundState = Pick<IGlobalState, 'isVisible' | 'isMinimized' | 'isReading' | 'isLoading'>;
 export interface IBoundHandlers {
     play: () => void;
     pause: () => void;
