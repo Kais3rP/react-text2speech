@@ -1,4 +1,5 @@
 import { useReader, useStore, useMainProps } from 'contexts';
+import { Utils } from 'lib';
 import { useMemo, useLayoutEffect, useEffect } from 'react';
 import {
 	changeOptions,
@@ -8,10 +9,12 @@ import {
 	changeUIState,
 } from 'store/actions';
 
+/* Produce the binder to pass the state and the state handlers to the Consumer Component */
+
 export const useBindTextReader = () => {
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();
-	const { isMinimized, isVisible } = state.UIState;
+	const { isMinimized, isVisible, isDark } = state.UIState;
 	const { isReading, isLoading, elapsedTime } = state.state;
 	const { bindReader } = useMainProps();
 
@@ -49,6 +52,7 @@ export const useBindTextReader = () => {
 			isReading,
 			isLoading,
 			elapsedTime,
+			isDark,
 		};
 		bindReader(exposedState, handlers);
 	}, [
@@ -60,8 +64,11 @@ export const useBindTextReader = () => {
 		isReading,
 		isVisible,
 		elapsedTime,
+		isDark,
 	]);
 };
+
+/* Initialize the Reader and synchronize its internal state with the TextReader state */
 
 export const useInitializeReader = () => {
 	const { reader } = useReader();
@@ -75,7 +82,6 @@ export const useInitializeReader = () => {
 			?.init()
 			.then((reader) => {
 				/* Synchronize UI state with reader initial state */
-
 				dispatch(changeState(reader.state));
 				dispatch(changeSettings(reader.settings));
 				dispatch(changeOptions(reader.options));
@@ -88,14 +94,74 @@ export const useInitializeReader = () => {
 	}, []);
 };
 
+/* Set the theme passed by props as CSS root variables ( calculate the inverted theme for dark/light mode ) */
+
 export const useSetCSSVariables = () => {
+	const {
+		state: {
+			UIState: { isDark },
+		},
+	} = useStore();
+
 	const { styleOptions } = useMainProps();
 
+	const { lightSet, darkSet } = useMemo(() => {
+		let lightSet: IStyleTheme = {
+			primaryColor: '',
+			secondaryColor: '',
+			bgColor: '',
+			textColor: '',
+			highlightColor1: '',
+			highlightColor2: '',
+		};
+		let darkSet: IStyleTheme = {
+			primaryColor: '',
+			secondaryColor: '',
+			bgColor: '',
+			textColor: '',
+			highlightColor1: '',
+			highlightColor2: '',
+		};
+
+		const inverted: IStyleTheme | {} = Object.entries(styleOptions).reduce(
+			(acc, [key, value]) => {
+				if (key === 'highlightColor1' || key === 'highlightColor2')
+					return { ...acc, [key]: value };
+				else return { ...acc, [key]: Utils.invertColor(value) };
+			},
+			{}
+		);
+
+		lightSet = Utils.isDarkColor(styleOptions.bgColor)
+			? (inverted as IStyleTheme)
+			: { ...styleOptions };
+		darkSet = Utils.isDarkColor(styleOptions.bgColor)
+			? { ...styleOptions }
+			: (inverted as IStyleTheme);
+
+		return { lightSet, darkSet };
+	}, [styleOptions]);
+
 	useEffect(() => {
-		for (const entry of Object.entries(styleOptions))
+		const theme = isDark ? darkSet : lightSet;
+
+		for (const entry of Object.entries(theme))
 			document.documentElement.style.setProperty(
 				`--${entry[0]}`,
-				entry[1]
+				entry[1] as string
 			);
-	}, [styleOptions]);
+	}, [isDark, darkSet, lightSet]);
+};
+
+/* Check the User Agent color scheme */
+
+export const useUserColorScheme = () => {
+	const { dispatch } = useStore();
+
+	useEffect(() => {
+		const isDark = window.matchMedia(
+			'(prefers-color-scheme: dark)'
+		).matches;
+		dispatch(changeUIState({ isDark }));
+	}, [dispatch]);
 };

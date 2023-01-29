@@ -100,3 +100,15 @@
 		left: -1px;
 	}
 }
+
+.minimizeButton {
+	position: absolute;
+	top: 2px;
+	right: 15px;
+}
+
+.darkModeButton {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+}

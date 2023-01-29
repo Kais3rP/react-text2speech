@@ -5,6 +5,7 @@ export type ActionType = { type: string; payload: any };
 export interface IUIState {
 	isMinimized: boolean;
 	isVisible: boolean;
+	isDark: boolean;
 }
 
 export interface IGlobalState {

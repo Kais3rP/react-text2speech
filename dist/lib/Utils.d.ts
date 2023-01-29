@@ -37,6 +37,8 @@ export declare class Utils {
         g: number;
         b: number;
     } | null;
+    static isDarkColor(hex: string): boolean;
+    static invertColor(hex: string): string;
     static formatVoices(voices: SpeechSynthesisVoice[]): {
         name: string;
         value: string;

@@ -8,7 +8,7 @@ import React, { FC, useCallback, useState } from 'react';
 export interface IProps {
 	children?: JSX.Element | string;
 	options: { language: string };
-	styleOptions: IStyleOptions;
+	styleOptions: IStyleTheme;
 	textContainer: HTMLElement;
 	bindReader?: BindReader;
 }

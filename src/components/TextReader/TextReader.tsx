@@ -8,18 +8,24 @@ import {
 	useBindTextReader,
 	useInitializeReader,
 	useSetCSSVariables,
+	useUserColorScheme,
 } from './hooks';
 import { useStore } from 'contexts';
 import styles from './styles.module.css';
 import { useScrollToTop } from 'hooks';
 
 const TextReader: FC<ITextReaderProps> = () => {
-	const { state } = useStore();
-	const { isMinimized, isVisible } = state.UIState;
+	const {
+		state: {
+			UIState: { isMinimized, isVisible },
+		},
+	} = useStore();
 
 	useScrollToTop();
 
 	useSetCSSVariables();
+
+	useUserColorScheme();
 
 	useBindTextReader();
 

@@ -11,7 +11,7 @@ declare global {
 		__join__(fn: (el: any, i: number, arr: T[]) => string): string;
 	}
 
-	interface IStyleOptions {
+	interface IStyleTheme {
 		primaryColor: string;
 		secondaryColor: string;
 		bgColor: string;

@@ -29,7 +29,7 @@ export interface IReaderContext {
 
 export interface IMainPropsContext {
 	options: { language: string };
-	styleOptions: IStyleOptions;
+	styleOptions: IStyleTheme;
 	textContainer: HTMLElement;
 	bindReader?: BindReader;
 }

@@ -5,6 +5,7 @@ export const globalState: IGlobalState = {
 	UIState: {
 		isMinimized: true,
 		isVisible: false,
+		isDark: false,
 	},
 	settings: {
 		rate: 1,

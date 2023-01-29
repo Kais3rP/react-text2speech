@@ -238,6 +238,52 @@ export class Utils {
 		}
 	}
 
+	static isDarkColor(hex: string) {
+		if (hex.indexOf('#') === 0) {
+			hex = hex.slice(1);
+		}
+		// convert 3-digit hex to 6-digits.
+		if (hex.length === 3) {
+			hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+		}
+		if (hex.length !== 6) {
+			throw new Error('Invalid HEX color.');
+		}
+		// extract color components
+		const r = parseInt(hex.slice(0, 2), 16);
+		const g = parseInt(hex.slice(2, 4), 16);
+		const b = parseInt(hex.slice(4, 6), 16);
+		// calculate luminance
+		const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+		// return true if color is dark, false otherwise
+		return luminance < 128;
+	}
+
+	static invertColor(hex: string) {
+		if (hex.indexOf('#') === 0) {
+			hex = hex.slice(1);
+		}
+		// convert 3-digit hex to 6-digits.
+		if (hex.length === 3) {
+			hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+		}
+		if (hex.length !== 6) {
+			throw new Error('Invalid HEX color.');
+		}
+		// invert color components
+		const r = (255 - parseInt(hex.slice(0, 2), 16))
+			.toString(16)
+			.padStart(2, '0');
+		const g = (255 - parseInt(hex.slice(2, 4), 16))
+			.toString(16)
+			.padStart(2, '0');
+		const b = (255 - parseInt(hex.slice(4, 6), 16))
+			.toString(16)
+			.padStart(2, '0');
+		// return inverted color
+		return '#' + r + g + b;
+	}
+
 	static formatVoices(voices: SpeechSynthesisVoice[]) {
 		return voices.map((voice) => ({
 			name: voice.name?.replace(

@@ -5,7 +5,7 @@ export interface IProps {
     options: {
         language: string;
     };
-    styleOptions: IStyleOptions;
+    styleOptions: IStyleTheme;
     textContainer: HTMLElement;
     bindReader?: BindReader;
 }

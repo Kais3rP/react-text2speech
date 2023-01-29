@@ -6,6 +6,7 @@ export declare type ActionType = {
 export interface IUIState {
     isMinimized: boolean;
     isVisible: boolean;
+    isDark: boolean;
 }
 export interface IGlobalState {
     UIState: IUIState;
