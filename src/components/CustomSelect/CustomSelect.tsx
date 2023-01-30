@@ -22,9 +22,9 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 
 	const ref = useRef(null);
 
-	const show = () => {
+	const show = useCallback(() => {
 		setShowOptions(true);
-	};
+	}, []);
 
 	const hide = useCallback(() => {
 		setShowOptions(false);
@@ -42,15 +42,20 @@ const CustomSelect: FC<ICustomSelectProps> = ({
 	useOnClickOutside(ref, hide);
 
 	return (
-		<div className={styles.container} {...props}>
-			<Icon onClick={show} option={currentOption} />
+		<div className={styles.container} {...props} ref={ref}>
+			<Icon
+				onPointerDown={(e) => {
+					e.stopPropagation();
+					show();
+				}}
+				option={currentOption}
+			/>
 
 			<div
-				ref={ref}
 				className={`${styles.optionsContainer} ${
 					showOptions && styles.visible
 				}`}
-				onPointerDown={hide}
+				// onPointerDown={hide}
 			>
 				<div className={styles.optionsWrapper}>
 					{options.map((opt) => (

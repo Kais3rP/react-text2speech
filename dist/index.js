@@ -1595,7 +1595,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z$c = ".styles-module_container__2RHmB {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tmargin: 5px 0px 5px 0px;\r\n}\r\n\r\n.styles-module_minimized__qd4bl {\r\n\tborder-bottom: 1px;\r\n\tpadding: 2px 0px 2px 0px;\r\n}\r\n\r\n.styles-module_notMinimized__vhRsj {\r\n\tpadding-top: 2px;\r\n}\r\n\r\n.styles-module_button__l6T6c {\r\n\tborder-radius: 50%;\r\n\tmargin: 2px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tfont-weight: normal !important;\r\n\tcursor: pointer;\r\n\tborder: 4px solid var(--secondaryColor);\r\n\ttransition: all 0.2s;\r\n\tfont-size: 1.5em;\r\n}\r\n\r\n.styles-module_button__l6T6c:hover {\r\n\tborder: 3px solid var(--primaryColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_loading__-h2hU {\r\n\tpointer-events: none;\r\n}\r\n\r\n.styles-module_notLoading__GJ8Ir {\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_reset__hvUvm {\r\n\tposition: absolute;\r\n\ttop: 12px;\r\n\tright: 0px;\r\n\tfont-weight: bold;\r\n\tcursor: pointer;\r\n\ttransition: 0.2s ease-in;\r\n\tfont-size: 0.9em;\r\n\tcolor: var(--primaryColor);\r\n}\r\n\r\n.styles-module_reset__hvUvm:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_controlsContainer__nBn7j {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_sliderContainer__1XPS- {\r\n\tposition: absolute;\r\n\ttop: 5px;\r\n\tleft: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 50px;\r\n}\r\n\r\n.styles-module_volumeContainer__UORe9 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_pitchContainer__cBB1f {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n";
+var css_248z$c = ".styles-module_container__2RHmB {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__qd4bl {\r\n\tborder-bottom: 1px;\r\n\tpadding: 2px 0px 2px 0px;\r\n}\r\n\r\n.styles-module_notMinimized__vhRsj {\r\n\tpadding-top: 2px;\r\n}\r\n\r\n.styles-module_button__l6T6c {\r\n\tborder-radius: 50%;\r\n\tmargin: 2px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tfont-weight: normal !important;\r\n\tcursor: pointer;\r\n\tborder: 4px solid var(--secondaryColor);\r\n\ttransition: all 0.2s;\r\n\tfont-size: 1.5em;\r\n}\r\n\r\n.styles-module_button__l6T6c:hover {\r\n\tborder: 3px solid var(--primaryColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_loading__-h2hU {\r\n\tpointer-events: none;\r\n}\r\n\r\n.styles-module_notLoading__GJ8Ir {\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_reset__hvUvm {\r\n\tposition: absolute;\r\n\ttop: 12px;\r\n\tright: 0px;\r\n\tfont-weight: bold;\r\n\tcursor: pointer;\r\n\ttransition: 0.2s ease-in;\r\n\tfont-size: 0.9em;\r\n\tcolor: var(--primaryColor);\r\n}\r\n\r\n.styles-module_reset__hvUvm:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_controlsContainer__nBn7j {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_sliderContainer__1XPS- {\r\n\tposition: absolute;\r\n\ttop: 5px;\r\n\tleft: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_volumeContainer__UORe9 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n\theight: 20px;\r\n}\r\n\r\n.styles-module_pitchContainer__cBB1f {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n\theight: 20px;\r\n}\r\n";
 var styles$c = {"container":"styles-module_container__2RHmB","minimized":"styles-module_minimized__qd4bl","notMinimized":"styles-module_notMinimized__vhRsj","button":"styles-module_button__l6T6c","loading":"styles-module_loading__-h2hU","notLoading":"styles-module_notLoading__GJ8Ir","reset":"styles-module_reset__hvUvm","controlsContainer":"styles-module_controlsContainer__nBn7j","sliderContainer":"styles-module_sliderContainer__1XPS-","volumeContainer":"styles-module_volumeContainer__UORe9","pitchContainer":"styles-module_pitchContainer__cBB1f"};
 styleInject(css_248z$c);
 
@@ -1707,7 +1707,7 @@ const MainControls = () => {
                     fontSize: '2em',
                 }, className: `${styles$c.button} ${isLoading ? styles$c.loading : styles$c.notLoading}`, title: 'Play', onPointerDown: handleTextReadPlay })),
             React.createElement(AiFillFastForward_1, { title: "Fast forward", className: `${styles$c.button} ${isLoading ? styles$c.loading : styles$c.notLoading}`, onPointerDown: handleFastForward })),
-        React.createElement(BiReset_1, { className: styles$c.reset, title: "reset", onClick: handleReset })));
+        React.createElement(BiReset_1, { className: styles$c.reset, title: "reset", onPointerDown: handleReset })));
 };
 
 // THIS FILE IS AUTO GENERATED
@@ -1734,8 +1734,8 @@ var IoMdArrowBack_1 = function IoMdArrowBack (props) {
   return GenIcon$3({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M427 234.625H167.296l119.702-119.702L256 85 85 256l171 171 29.922-29.924-118.626-119.701H427v-42.75z"}}]})(props);
 };
 
-var css_248z$a = ".styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 3px;\r\n}\r\n\r\n.styles-module_showButton__TG0yv {\r\n\tposition: fixed;\r\n\tbottom: 20px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\tz-index: 100;\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\r\n\tbackground-color: var(--bgColor);\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover .styles-module_arrow__Ab9DG {\r\n\tfill: var(--primaryColor);\r\n\tleft: -60px;\r\n\ttransform: scale(3) translateY(-3px);\r\n\topacity: 0;\r\n}\r\n\r\n.styles-module_line__vh-Pe {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__Ab9DG {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.7s ease-out;\r\n\tpointer-events: none;\r\n\t/* animation: movingArrow 0.5s infinite linear; */\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -2px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n\r\n.styles-module_minimizeButton__wcU-y {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 15px;\r\n}\r\n\r\n.styles-module_darkModeButton__sdB-D {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tleft: 2px;\r\n}\r\n";
-var styles$a = {"button":"styles-module_button__9sOag","hideButton":"styles-module_hideButton__ysi6M","showButton":"styles-module_showButton__TG0yv","arrow":"styles-module_arrow__Ab9DG","line":"styles-module_line__vh-Pe","minimizeButton":"styles-module_minimizeButton__wcU-y","darkModeButton":"styles-module_darkModeButton__sdB-D","movingArrow":"styles-module_movingArrow__FUSwM"};
+var css_248z$a = ".styles-module_container__i2xy1 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\theight: 30px;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_showButton__TG0yv {\r\n\tposition: fixed;\r\n\tbottom: 20px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\tz-index: 100;\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\r\n\tbackground-color: var(--bgColor);\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover .styles-module_arrow__Ab9DG {\r\n\tfill: var(--primaryColor);\r\n\tleft: -60px;\r\n\ttransform: scale(3) translateY(-3px);\r\n\topacity: 0;\r\n}\r\n\r\n.styles-module_line__vh-Pe {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__Ab9DG {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.7s ease-out;\r\n\tpointer-events: none;\r\n\t/* animation: movingArrow 0.5s infinite linear; */\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -2px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: -11px;\r\n}\r\n\r\n.styles-module_minimizeButton__wcU-y {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 11px;\r\n}\r\n\r\n.styles-module_darkModeButton__sdB-D {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tleft: -11px;\r\n}\r\n";
+var styles$a = {"container":"styles-module_container__i2xy1","button":"styles-module_button__9sOag","showButton":"styles-module_showButton__TG0yv","arrow":"styles-module_arrow__Ab9DG","line":"styles-module_line__vh-Pe","hideButton":"styles-module_hideButton__ysi6M","minimizeButton":"styles-module_minimizeButton__wcU-y","darkModeButton":"styles-module_darkModeButton__sdB-D","movingArrow":"styles-module_movingArrow__FUSwM"};
 styleInject(css_248z$a);
 
 // THIS FILE IS AUTO GENERATED
@@ -1752,29 +1752,45 @@ var BsMoon_1 = function BsMoon (props) {
 
 const WindowControls = () => {
     const { state: { UIState: { isMinimized, isVisible, isDark }, }, dispatch, } = useStore();
-    const handleShowReader = () => {
+    const handleShowReader = (e) => {
+        e.stopPropagation();
         dispatch(changeUIState({ isVisible: true }));
     };
-    const handleHideReader = () => {
+    const handleHideReader = (e) => {
+        e.stopPropagation();
         dispatch(changeUIState({ isVisible: false }));
     };
-    const toggleMinimizeReader = () => {
+    const toggleMinimizeReader = (e) => {
+        e.stopPropagation();
         dispatch(changeUIState({ isMinimized: !isMinimized }));
     };
-    const toggleDarkMode = () => {
+    const toggleDarkMode = (e) => {
+        e.stopPropagation();
         dispatch(changeUIState({ isDark: !isDark }));
     };
-    return (React.createElement(React.Fragment, null,
-        !isVisible && (React.createElement("div", { title: 'Show', className: styles$a.showButton, onPointerDown: handleShowReader },
+    return (React.createElement("div", { className: styles$a.container },
+        !isVisible && (React.createElement("div", { title: 'Show', className: styles$a.showButton, onPointerDown: handleShowReader, onTouchEnd: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            } },
             React.createElement("div", { className: styles$a.line }),
             React.createElement(IoMdArrowBack_1, { className: styles$a.arrow }))),
-        React.createElement("div", { title: `${isDark ? 'Light' : 'Dark'} Mode`, className: `${styles$a.button} ${styles$a.darkModeButton}`, onPointerDown: toggleDarkMode }, isDark ? React.createElement(BsSun_1, null) : React.createElement(BsMoon_1, null)),
-        React.createElement("div", { title: 'Hide', className: `${styles$a.button} ${styles$a.hideButton}`, onPointerDown: handleHideReader },
+        React.createElement("div", { title: `${isDark ? 'Light' : 'Dark'} Mode`, className: `${styles$a.button} ${styles$a.darkModeButton}`, onPointerDown: toggleDarkMode, onTouchEnd: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            } }, isDark ? React.createElement(BsSun_1, null) : React.createElement(BsMoon_1, null)),
+        React.createElement("div", { title: 'Hide', className: `${styles$a.button} ${styles$a.hideButton}`, onPointerDown: handleHideReader, onTouchEnd: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            } },
             React.createElement(MdClose_1, null)),
-        React.createElement("div", { style: { position: 'absolute', top: '2px', right: '24px' }, title: isMinimized ? 'Maximize' : 'Minimize', className: `${styles$a.button} ${styles$a.minimizeButton}`, onPointerDown: toggleMinimizeReader }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
+        React.createElement("div", { title: isMinimized ? 'Maximize' : 'Minimize', className: `${styles$a.button} ${styles$a.minimizeButton}`, onPointerDown: toggleMinimizeReader, onTouchEnd: (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            } }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
 };
 
-var css_248z$9 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\tmargin: 10px 0px 5px 0px;\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\tmargin: 18px 0px 10px 0px;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 19px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: var(--textColor);\r\n\tmargin: 0 !important;\r\n}\r\n";
+var css_248z$9 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\t/* margin: 25x 0px 5px 0px; */\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\t/* margin: 30px 0px 10px 0px; */\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 20px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: var(--textColor);\r\n\tmargin: 0 !important;\r\n\tline-height: normal;\r\n}\r\n";
 var styles$9 = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
 styleInject(css_248z$9);
 
@@ -1806,9 +1822,11 @@ const useOnClickOutside = (ref, handler) => {
         };
         document.addEventListener('mousedown', listener);
         document.addEventListener('touchstart', listener);
+        document.addEventListener('pointerDown', listener);
         return () => {
             document.removeEventListener('mousedown', listener);
             document.removeEventListener('touchstart', listener);
+            document.removeEventListener('pointerDown', listener);
         };
     }, 
     // Add ref and handler to effect dependencies
@@ -1829,7 +1847,7 @@ const useScrollToTop = () => {
     }, []);
 };
 
-var css_248z$8 = ".styles-module_container__dB4nt {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_optionsWrapper__JBONI {\r\n\theight: 100%;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q i {\r\n\tmargin: 3px;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_extraComponentWrapper__3xRJY {\r\n\tpadding: 0px 5px 0px 10px;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n";
+var css_248z$8 = ".styles-module_container__dB4nt {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n\theight: 100%;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_optionsWrapper__JBONI {\r\n\theight: 100%;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q i {\r\n\tmargin: 3px;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_extraComponentWrapper__3xRJY {\r\n\tpadding: 0px 5px 0px 10px;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n";
 var styles$8 = {"container":"styles-module_container__dB4nt","optionsContainer":"styles-module_optionsContainer__miH3Q","optionsWrapper":"styles-module_optionsWrapper__JBONI","visible":"styles-module_visible__eJpaP","extraComponentWrapper":"styles-module_extraComponentWrapper__3xRJY"};
 styleInject(css_248z$8);
 
@@ -1839,9 +1857,9 @@ const CustomSelect = (_a) => {
     const [showOptions, setShowOptions] = React.useState(false);
     const [localOption, setLocalOption] = React.useState(currentOption); // This state is used only locally to the selector
     const ref = React.useRef(null);
-    const show = () => {
+    const show = React.useCallback(() => {
         setShowOptions(true);
-    };
+    }, []);
     const hide = React.useCallback(() => {
         setShowOptions(false);
     }, []);
@@ -1853,9 +1871,12 @@ const CustomSelect = (_a) => {
         setLocalOption(value);
     };
     useOnClickOutside(ref, hide);
-    return (React.createElement("div", Object.assign({ className: styles$8.container }, props),
-        React.createElement(Icon, { onClick: show, option: currentOption }),
-        React.createElement("div", { ref: ref, className: `${styles$8.optionsContainer} ${showOptions && styles$8.visible}`, onPointerDown: hide },
+    return (React.createElement("div", Object.assign({ className: styles$8.container }, props, { ref: ref }),
+        React.createElement(Icon, { onPointerDown: (e) => {
+                e.stopPropagation();
+                show();
+            }, option: currentOption }),
+        React.createElement("div", { className: `${styles$8.optionsContainer} ${showOptions && styles$8.visible}` },
             React.createElement("div", { className: styles$8.optionsWrapper }, options.map((opt) => (React.createElement(Icon, { key: opt.value, onPointerDown: (e) => {
                     e.stopPropagation();
                     onOptionClick(opt.value);
@@ -1864,7 +1885,7 @@ const CustomSelect = (_a) => {
                 React.createElement(ExtraComponent, { option: localOption }))))));
 };
 
-var css_248z$7 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
+var css_248z$7 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\theight: 50px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
 var styles$7 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-"};
 styleInject(css_248z$7);
 
@@ -2265,7 +2286,7 @@ const useUserColorScheme = () => {
     }, [dispatch]);
 };
 
-var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: min(100vw, 350px);\r\n\t/* height: 135px; */\r\n\tright: -350px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tpadding: 15px;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\ttransition: right 0.2s ease-out, width 0.2s linear, height 0.2s linear;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_container__xkMLR h5 {\r\n\tmargin-block-end: auto;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 5px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
+var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: min(100vw, 350px);\r\n\t/* height: 135px; */\r\n\tright: -350px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\ttransition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear;\r\n\tpadding: 0px 15px;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_container__xkMLR h5 {\r\n\tmargin-block-end: auto;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 5px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
 var styles = {"container":"styles-module_container__xkMLR","visible":"styles-module_visible__ZUiLT","minimized":"styles-module_minimized__W5TJy"};
 styleInject(css_248z);
 

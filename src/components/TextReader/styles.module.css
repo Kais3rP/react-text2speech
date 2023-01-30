@@ -12,11 +12,11 @@
 	justify-content: center;
 	border-radius: 5px;
 	box-shadow: 0px 0px 10px 2px #aaa;
-	padding: 15px;
 	background-color: var(--bgColor);
 	font-family: Arial, sans-serif !important;
 	box-sizing: border-box;
-	transition: right 0.2s ease-out, width 0.2s linear, height 0.2s linear;
+	transition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear;
+	padding: 0px 15px;
 }
 
 .container * {

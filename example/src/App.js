@@ -45,7 +45,7 @@ function App() {
 
 			<button
 				className={styles.play}
-				onClick={
+				onPointerDown={
 					isReading
 						? pause
 						: () => {
@@ -233,7 +233,7 @@ function App() {
 			)}
 			<button
 				className={styles.play}
-				onClick={
+				onPointerDOwn={
 					isReading
 						? pause()
 						: () => {

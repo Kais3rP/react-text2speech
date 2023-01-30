@@ -175,7 +175,7 @@ const MainControls: FC<IMainControlsProps> = () => {
 			<BiReset
 				className={styles.reset}
 				title="reset"
-				onClick={handleReset}
+				onPointerDown={handleReset}
 			/>
 		</div>
 	);

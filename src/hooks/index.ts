@@ -15,9 +15,12 @@ export const useOnClickOutside = (
 			};
 			document.addEventListener('mousedown', listener);
 			document.addEventListener('touchstart', listener);
+			document.addEventListener('pointerDown', listener);
+
 			return () => {
 				document.removeEventListener('mousedown', listener);
 				document.removeEventListener('touchstart', listener);
+				document.removeEventListener('pointerDown', listener);
 			};
 		},
 		// Add ref and handler to effect dependencies

@@ -21,30 +21,38 @@ const WindowControls: FC<IWindowControlsProps> = () => {
 		dispatch,
 	} = useStore();
 
-	const handleShowReader = () => {
+	const handleShowReader = (e) => {
+		e.stopPropagation();
 		dispatch(changeUIState({ isVisible: true }));
 	};
 
-	const handleHideReader = () => {
+	const handleHideReader = (e) => {
+		e.stopPropagation();
 		dispatch(changeUIState({ isVisible: false }));
 	};
 
-	const toggleMinimizeReader = () => {
+	const toggleMinimizeReader = (e) => {
+		e.stopPropagation();
 		dispatch(changeUIState({ isMinimized: !isMinimized }));
 	};
 
-	const toggleDarkMode = () => {
+	const toggleDarkMode = (e) => {
+		e.stopPropagation();
 		dispatch(changeUIState({ isDark: !isDark }));
 	};
 
 	return (
-		<>
+		<div className={styles.container}>
 			{/* Show button overlay */}
 			{!isVisible && (
 				<div
 					title={'Show'}
 					className={styles.showButton}
 					onPointerDown={handleShowReader}
+					onTouchEnd={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+					}}
 				>
 					<div className={styles.line} />
 					<IoMdArrowBack className={styles.arrow} />
@@ -55,6 +63,10 @@ const WindowControls: FC<IWindowControlsProps> = () => {
 				title={`${isDark ? 'Light' : 'Dark'} Mode`}
 				className={`${styles.button} ${styles.darkModeButton}`}
 				onPointerDown={toggleDarkMode}
+				onTouchEnd={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+				}}
 			>
 				{isDark ? <BsSun /> : <BsMoon />}
 			</div>
@@ -63,19 +75,26 @@ const WindowControls: FC<IWindowControlsProps> = () => {
 				title={'Hide'}
 				className={`${styles.button} ${styles.hideButton}`}
 				onPointerDown={handleHideReader}
+				onTouchEnd={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+				}}
 			>
 				<MdClose />
 			</div>
 			{/* Minimize button */}
 			<div
-				style={{ position: 'absolute', top: '2px', right: '24px' }}
 				title={isMinimized ? 'Maximize' : 'Minimize'}
 				className={`${styles.button} ${styles.minimizeButton}`}
 				onPointerDown={toggleMinimizeReader}
+				onTouchEnd={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+				}}
 			>
 				{isMinimized ? <FiMaximize /> : <FiMinimize />}
 			</div>
-		</>
+		</div>
 	);
 };
 

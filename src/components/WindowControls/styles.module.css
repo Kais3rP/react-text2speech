@@ -1,3 +1,12 @@
+.container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	height: 30px;
+	width: 100%;
+}
+
 .button {
 	display: flex;
 	justify-content: center;
@@ -19,12 +28,6 @@
 	background-color: var(--bgColor);
 	color: var(--secondaryColor);
 	transform: scale(1.05);
-}
-
-.hideButton {
-	position: absolute;
-	top: 2px;
-	right: 3px;
 }
 
 .showButton {
@@ -101,14 +104,20 @@
 	}
 }
 
+.hideButton {
+	position: absolute;
+	top: 2px;
+	right: -11px;
+}
+
 .minimizeButton {
 	position: absolute;
 	top: 2px;
-	right: 15px;
+	right: 11px;
 }
 
 .darkModeButton {
 	position: absolute;
 	top: 2px;
-	left: 2px;
+	left: -11px;
 }
