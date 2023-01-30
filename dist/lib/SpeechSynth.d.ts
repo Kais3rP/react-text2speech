@@ -23,8 +23,10 @@ export declare class SpeechSynth extends EventEmitter {
     private clearTimeCount;
     private resetTimeCount;
     private handleBoundary;
-    private getVoices;
-    private setVoice;
+    private filterVoices;
+    private getAllVoices;
+    private updateVoices;
+    private retrieveAndSetVoices;
     private highlightText;
     private isBrushAvailable;
     private applyStyleToWord;

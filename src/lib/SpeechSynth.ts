@@ -168,8 +168,9 @@ export class SpeechSynth extends EventEmitter {
 			{
 				isMobile: Utils.isMobile(),
 				/* Internal properties */
-				voice: {} as SpeechSynthesisVoice,
+				allVoices: [] as SpeechSynthesisVoice[],
 				voices: [] as SpeechSynthesisVoice[],
+				voice: {} as SpeechSynthesisVoice,
 				/* UI */
 				isLoading: false,
 				/* Highlight & Reading time */
@@ -221,7 +222,7 @@ export class SpeechSynth extends EventEmitter {
 		/* Get voices */
 
 		try {
-			this.setVoice();
+			await this.retrieveAndSetVoices();
 
 			this.addHTMLHighlightTags(this.textContainer);
 
@@ -673,21 +674,21 @@ export class SpeechSynth extends EventEmitter {
 
 	/* VOICES ARE POPULATED ASYNCHRONOUSLY ON BROWSER LOAD */
 
-	private getVoices(): Promise<SpeechSynthesisVoice[]> {
+	private filterVoices(
+		voices: SpeechSynthesisVoice[]
+	): SpeechSynthesisVoice[] {
+		return voices.filter((voice) =>
+			voice.lang.startsWith(this.settings.language as string)
+		);
+	}
+
+	private getAllVoices(): Promise<SpeechSynthesisVoice[]> {
 		return new Promise((resolve, reject) => {
 			let id: Interval | null = null;
 			try {
 				id = setInterval(() => {
 					if (this.synth.getVoices().length !== 0) {
-						resolve(
-							this.synth
-								.getVoices()
-								.filter((voice) =>
-									voice.lang.startsWith(
-										this.settings.language as string
-									)
-								)
-						);
+						resolve(this.synth.getVoices());
 						clearInterval(id as Interval);
 					}
 				}, 10);
@@ -698,11 +699,18 @@ export class SpeechSynth extends EventEmitter {
 		});
 	}
 
-	private async setVoice() {
-		this.state.voices = await this.getVoices();
+	private updateVoices() {
+		this.state.voices = this.filterVoices(this.state.allVoices);
 		this.state.voice = this.state.voices[0];
 		this.settings.voiceURI = this.state.voice.voiceURI;
 	}
+
+	private async retrieveAndSetVoices() {
+		this.state.allVoices = await this.getAllVoices();
+		this.updateVoices();
+	}
+
+	/* Highlight */
 
 	private highlightText(wordIndex: number): void {
 		/* Do not highlight if the option is disabled */
@@ -831,8 +839,8 @@ export class SpeechSynth extends EventEmitter {
 		this.emit('time-tick', this, this.state.elapsedTime);
 	}
 
-	private changeLanguage() {
-		this.setVoice();
+	private async changeLanguage() {
+		this.updateVoices();
 	}
 
 	/* Style handlers */

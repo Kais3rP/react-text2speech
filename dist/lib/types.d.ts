@@ -37,6 +37,7 @@ export declare type Chunk = {
 };
 export interface IState {
     isMobile: boolean;
+    allVoices: SpeechSynthesisVoice[];
     voice: SpeechSynthesisVoice;
     voices: SpeechSynthesisVoice[];
     isLoading: boolean;

@@ -50,6 +50,7 @@ export type Chunk = {
 export interface IState {
 	isMobile: boolean;
 	/* Internal properties */
+	allVoices: SpeechSynthesisVoice[];
 	voice: SpeechSynthesisVoice;
 	voices: SpeechSynthesisVoice[];
 	/* UI */

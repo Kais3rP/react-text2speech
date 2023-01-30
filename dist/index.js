@@ -704,8 +704,9 @@ class SpeechSynth extends EventEmitter {
         this.state = new Proxy({
             isMobile: Utils.isMobile(),
             /* Internal properties */
-            voice: {},
+            allVoices: [],
             voices: [],
+            voice: {},
             /* UI */
             isLoading: false,
             /* Highlight & Reading time */
@@ -747,7 +748,7 @@ class SpeechSynth extends EventEmitter {
             Array.prototype.__join__ = Utils.__join__;
             /* Get voices */
             try {
-                this.setVoice();
+                yield this.retrieveAndSetVoices();
                 this.addHTMLHighlightTags(this.textContainer);
                 this.applyBasicStyleToWords(this.textContainer, '[data-id]');
                 /* Init state properties */
@@ -1063,15 +1064,16 @@ class SpeechSynth extends EventEmitter {
         this.emit('boundary', this, e);
     }
     /* VOICES ARE POPULATED ASYNCHRONOUSLY ON BROWSER LOAD */
-    getVoices() {
+    filterVoices(voices) {
+        return voices.filter((voice) => voice.lang.startsWith(this.settings.language));
+    }
+    getAllVoices() {
         return new Promise((resolve, reject) => {
             let id = null;
             try {
                 id = setInterval(() => {
                     if (this.synth.getVoices().length !== 0) {
-                        resolve(this.synth
-                            .getVoices()
-                            .filter((voice) => voice.lang.startsWith(this.settings.language)));
+                        resolve(this.synth.getVoices());
                         clearInterval(id);
                     }
                 }, 10);
@@ -1082,13 +1084,18 @@ class SpeechSynth extends EventEmitter {
             }
         });
     }
-    setVoice() {
+    updateVoices() {
+        this.state.voices = this.filterVoices(this.state.allVoices);
+        this.state.voice = this.state.voices[0];
+        this.settings.voiceURI = this.state.voice.voiceURI;
+    }
+    retrieveAndSetVoices() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.state.voices = yield this.getVoices();
-            this.state.voice = this.state.voices[0];
-            this.settings.voiceURI = this.state.voice.voiceURI;
+            this.state.allVoices = yield this.getAllVoices();
+            this.updateVoices();
         });
     }
+    /* Highlight */
     highlightText(wordIndex) {
         /* Do not highlight if the option is disabled */
         if (!this.options.isHighlightTextOn)
@@ -1180,7 +1187,9 @@ class SpeechSynth extends EventEmitter {
         this.emit('time-tick', this, this.state.elapsedTime);
     }
     changeLanguage() {
-        this.setVoice();
+        return __awaiter(this, void 0, void 0, function* () {
+            this.updateVoices();
+        });
     }
     /* Style handlers */
     applyStyleToHighlightedWords() {
@@ -1453,6 +1462,7 @@ const globalState = {
     state: {
         isMobile: false,
         /* Internal properties */
+        allVoices: [],
         voice: {},
         voices: [],
         /* UI */
@@ -1962,7 +1972,7 @@ const ColorIcon = (_a) => {
     return (option && (React.createElement("i", Object.assign({ className: styles$5.icon, style: { backgroundColor: option.value } }, props), children)));
 };
 
-var css_248z$4 = ".styles-module_container__dGcW- {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n\tline-height: normal !important;\r\n}\r\n\r\n.styles-module_container__dGcW-:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_container__dGcW-::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_container__dGcW-:hover::after {\r\n\twidth: 100%;\r\n}\r\n";
+var css_248z$4 = ".styles-module_container__dGcW- {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n\tline-height: normal !important;\r\n\twhite-space: nowrap;\r\n}\r\n\r\n.styles-module_container__dGcW-:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_container__dGcW-::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_container__dGcW-:hover::after {\r\n\twidth: 100%;\r\n}\r\n";
 var styles$4 = {"container":"styles-module_container__dGcW-"};
 styleInject(css_248z$4);
 

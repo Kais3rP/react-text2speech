@@ -9,6 +9,7 @@
 	background: none;
 	padding: 1px 6px !important;
 	line-height: normal !important;
+	white-space: nowrap;
 }
 
 .container:hover {
