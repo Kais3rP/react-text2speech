@@ -32,7 +32,6 @@
 	z-index: 100;
 	display: flex;
 	justify-content: start;
-	flex-direction: column;
 	align-items: start;
 	flex-wrap: wrap;
 	transition: all 0.2s linear;
@@ -45,7 +44,7 @@
 	padding: 0px;
 	margin: 0px;
 	display: flex;
-	width: 130px;
+	width: 50%;
 }
 
 .overlayContainer input {
