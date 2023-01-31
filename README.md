@@ -9,7 +9,7 @@ Try it [here](https://kais3rp.github.io/react-text2speech/)
 
 ## Introduction
 
-A React Component that leverages WEB Speech API to implement a text reader for web pages.
+A React Component that leverages WEB Speech API to implement a multi featured text reader/ text highlighter.
 
 ## Features:
 
@@ -25,7 +25,7 @@ A React Component that leverages WEB Speech API to implement a text reader for w
 -   Control reading speed
 -   Select voice type and language
 -   Control volume and pitch
--   Light/Dark mode automatically calculated on the initial theme passed by
+-   Light/Dark mode 
 
 ## Notes
 
