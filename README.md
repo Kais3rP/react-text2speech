@@ -31,7 +31,7 @@ A React Component that leverages WEB Speech API to implement a text reader for w
 
 Since the speech engine behaves differently on mobile browsers or according to the selected language, there are some optimization workaround to prevent special characters like "/" or "-" to send out of sync the highlighting of text. There surely are some cases that have not yet been taken into account, if you are experiencing any problem you are kindly asked to open an issue.
 Stuff inside `<code>` tags won't be parsed and the engine is not going to read it, for the same reason stated above.
-More info are provided in the _Edge Cases_ section.
+More info are provided in the **Edge Cases** section.
 
 ## Install
 
@@ -47,7 +47,7 @@ yarn add react-text2speech
 
 ## Usage
 
-Check the `example` folder for a comprehensive example of how to import and use the React Component in your application._
+Check the `example` folder for a comprehensive example of how to import and use the React Component in your application.
 
 1. Import the Component and hook that exports some methods and state variables that lets you control the reader also from your Application:
    `import TextReader, { useTextReader } from 'react-text2speech';`
@@ -119,7 +119,7 @@ Since in React the DOM refs receive the reference to the DOM element after the f
 ```
 
 As you can see in this example we use some of the handlers exposed by the `useTextReader` hook to control the reader directly with a `button` and some of the *state variables* to control our UI.
-It's important ot remember to pass the `bindReader` function to the *reader* if we want to control it with custom controls.
+It's important to remember to pass the `bindReader` function to the *reader* if we want to control it with custom controls.
 
 If you are using **NextJS** and you have issues importing it properly try this way:
 
@@ -147,7 +147,7 @@ Since this module exports both a default and a named export, and NextJS doesn't 
 ## Edge Cases
 
 There are some edge cases not yet covered and hardly coverable with extreme precision since the speech synth handles some special characters like "/" or "." and "," in numbers ( 1.000 , 1,000 ) in different ways depending on the language choosen, some locales use "." for decimals, others use ",".
-Some cases are automically covered during the content parsing, for example if you happen to have grammar inconstencies like "word , word" instead of "word, word", they are going to be fixed automatically.
+Some cases are automatically covered during the content parsing, for example if you happen to have grammar inconsistencies like "word , word" instead of "word, word", they are going to be fixed automatically.
 Some edge cases like dots in the middle of word like "some.word" are going to be parsed and spelled as "dot" in english, while dots used as punctuation marks won't be read by the synth.
 These are currently the issues and edge cases not yet covered:
 
