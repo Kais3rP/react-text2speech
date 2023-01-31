@@ -781,6 +781,9 @@ class DOMUtils {
             .forEach((el) => {
             el.style.transition =
                 'backgroundColor 0.2s linear, color 0.2s linear';
+            el.style.margin = '0px -0.3em';
+            el.style.padding = '0.3em 0.3em';
+            el.style.backgroundSize = 'cover';
         });
     }
     static addCustomEventListeners(events, emitter) {
@@ -934,6 +937,12 @@ class SpeechSynth extends EventEmitter {
         /* State */
         const stateSetter = (obj, key, value) => {
             const result = Reflect.set(obj, key, value);
+            switch (key) {
+                case 'elapsedTime':
+                    if (value % 1000 === 0)
+                        this.emit('state-change', this, key);
+                    return result;
+            }
             this.emit('state-change', this, key);
             return result;
         };
@@ -1216,11 +1225,10 @@ class SpeechSynth extends EventEmitter {
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     applyStyleToWord(el) {
         const URL = Utils.getBrushURL(this.style.brush, this.style.color1).css;
-        el.style.background = this.state.isBrushAvailable
-            ? URL
+        el.style.backgroundImage = this.state.isBrushAvailable ? URL : 'none';
+        el.style.backgroundColor = this.state.isBrushAvailable
+            ? 'transparent'
             : this.style.color1;
-        el.style.margin = '0px -0.3em';
-        el.style.padding = '0.3em 0.3em';
         el.style.color = this.style.color2;
         el.style.textDecoration = this.options.isUnderlinedOn
             ? 'underline'
@@ -1653,7 +1661,6 @@ const MainControls = () => {
             return;
         reader.settings.pitch = value;
     };
-    console.log('Is loading', isLoading, reader === null || reader === void 0 ? void 0 : reader.state.isLoading);
     return (React.createElement("div", { className: `${styles$d.container} ${isMinimized ? styles$d.minimized : styles$d.notMinimized}` },
         !isMinimized && (React.createElement("div", { className: styles$d.sliderContainer },
             React.createElement("div", { className: styles$d.volumeContainer },

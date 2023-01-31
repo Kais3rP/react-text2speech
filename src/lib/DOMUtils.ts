@@ -179,6 +179,9 @@ export class DOMUtils {
 			.forEach((el) => {
 				(el as HTMLElement).style.transition =
 					'backgroundColor 0.2s linear, color 0.2s linear';
+				(el as HTMLElement).style.margin = '0px -0.3em';
+				(el as HTMLElement).style.padding = '0.3em 0.3em';
+				(el as HTMLElement).style.backgroundSize = 'cover';
 			});
 	}
 

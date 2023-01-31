@@ -75,8 +75,6 @@ const MainControls: FC<IMainControlsProps> = () => {
 		reader.settings.pitch = value;
 	};
 
-	console.log('Is loading', isLoading, reader?.state.isLoading);
-
 	return (
 		<div
 			className={`${styles.container} ${

@@ -166,6 +166,14 @@ export class SpeechSynth extends EventEmitter {
 		const stateSetter = (obj: any, key: string | symbol, value: any) => {
 			const result = Reflect.set(obj, key, value);
 
+			switch (key) {
+				case 'elapsedTime':
+					if (value % 1000 === 0)
+						this.emit('state-change', this, key);
+					return result;
+				default:
+			}
+
 			this.emit('state-change', this, key);
 			return result;
 		};
@@ -579,11 +587,11 @@ export class SpeechSynth extends EventEmitter {
 	private applyStyleToWord(el: HTMLElement) {
 		const URL = Utils.getBrushURL(this.style.brush, this.style.color1).css;
 
-		el.style.background = this.state.isBrushAvailable
-			? URL
+		el.style.backgroundImage = this.state.isBrushAvailable ? URL : 'none';
+		el.style.backgroundColor = this.state.isBrushAvailable
+			? 'transparent'
 			: this.style.color1;
-		el.style.margin = '0px -0.3em';
-		el.style.padding = '0.3em 0.3em';
+
 		el.style.color = this.style.color2 as string;
 		el.style.textDecoration = this.options.isUnderlinedOn
 			? 'underline'
