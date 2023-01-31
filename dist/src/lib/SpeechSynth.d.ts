@@ -39,7 +39,7 @@ export declare class SpeechSynth extends EventEmitter {
     private delayRestart;
     private restart;
     seekTo(idx: number): void;
-    play(type?: string): Promise<null>;
+    play(): Promise<null>;
     pause(): void;
     resume(): void;
     reset(): void;

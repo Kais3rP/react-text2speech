@@ -107,7 +107,7 @@ export class SpeechSynth extends EventEmitter {
 
 			/* Re initialize the utterance */
 			this.initUtterance();
-			this.restart('settings-change');
+			this.restart();
 			this.emit('settings-change', this);
 			return result;
 		};
@@ -277,7 +277,6 @@ export class SpeechSynth extends EventEmitter {
 					fn: (e) => {
 						const target: HTMLElement = e.target as HTMLElement;
 						const idx: number = +(target.dataset.id as string);
-						// console.log('Word click, seek to:', idx);
 						this.seekTo(idx);
 					},
 				}
@@ -355,7 +354,7 @@ export class SpeechSynth extends EventEmitter {
 
 			/* Finally play the next chunk */
 
-			this.play('next-chunk-start');
+			this.play();
 		};
 	}
 
@@ -622,7 +621,7 @@ export class SpeechSynth extends EventEmitter {
 			this.resetHighlight();
 		}
 
-		this.restart('chunks-mode-change');
+		this.restart();
 	}
 
 	private changeVoice() {
@@ -671,22 +670,22 @@ export class SpeechSynth extends EventEmitter {
 		return this.state.chunksArray[this.state.currentChunkIndex]?.text;
 	}
 
-	private delayRestart(type: string, delay: number) {
+	private delayRestart(delay: number) {
 		return setTimeout(() => {
 			this.synth.cancel();
-			if (this.isReading()) this.play(type);
+			if (this.isReading()) this.play();
 			if (this.isPaused()) {
-				this.play(type).then(() => this.pause());
+				this.play().then(() => this.pause());
 				this.pause();
 			}
 		}, 500);
 	}
 
-	private restart(type: string) {
+	private restart() {
 		this.synth.cancel();
-		if (this.isReading()) this.play(type);
+		if (this.isReading()) this.play();
 		if (this.isPaused()) {
-			this.play(type).then(() => this.pause());
+			this.play().then(() => this.pause());
 			this.pause();
 		}
 	}
@@ -746,14 +745,14 @@ export class SpeechSynth extends EventEmitter {
 		)(this.settings.rate as number);
 
 		this.emit('time-tick', this, this.state.elapsedTime);
-		this.restart('seek');
+		this.restart();
 	}
 
 	/* ------------------------------------------------------------------------------------ */
 	/* Public Methods to control the player state */
 	/* ------------------------------------------------------------------------------------ */
 
-	play(type?: string): Promise<null> {
+	play(): Promise<null> {
 		this.synth.cancel(); // Makes sure the queue is empty when starting
 		this.clearTimeCount(); // Makes sure to not trigger multiple timeouts
 
@@ -761,61 +760,17 @@ export class SpeechSynth extends EventEmitter {
 
 		this.state.isPaused = false;
 		this.state.isReading = true;
+		this.state.isLoading = true;
 
-		this.timeCount(null, 20);
-
-		switch (type) {
-			case 'start': {
-				this.emit('start', this);
-				return new Promise((resolve) => {
-					this.utterance.onstart = (e) => {
-						/* Highlight the first chunk on the first start if it's chunks mode ON / mobile */
-						if (this.options.isChunksModeOn) this.highlightChunk(0);
-						resolve(null);
-					};
-				});
-			}
-			case 'resume-chunk-mode': {
-				this.emit('resume-chunk-mode', this);
-				return new Promise((resolve) => {
-					this.utterance.onstart = (e) => {
-						resolve(null);
-					};
-				});
-			}
-			case 'next-chunk-start': {
-				this.emit(
-					'next-chunk-start',
-					this,
-					this.state.chunksArray[this.state.currentChunkIndex]
-				);
-				return new Promise((resolve) => {
-					this.utterance.onstart = (e) => {
-						resolve(null);
-					};
-				});
-			}
-			case 'settings-change': {
-				return new Promise((resolve) => {
-					this.utterance.onstart = (e) => {
-						resolve(null);
-					};
-				});
-			}
-			case 'chunks-mode-change': {
-				return new Promise((resolve) => {
-					this.utterance.onstart = (e) => {
-						resolve(null);
-					};
-				});
-			}
-			default:
-				return new Promise((resolve) => {
-					this.utterance.onstart = (e) => {
-						resolve(null);
-					};
-				});
-		}
+		return new Promise((resolve) => {
+			this.utterance.onstart = (e) => {
+				/* Highlight the first chunk on the first start if it's chunks mode ON / mobile */
+				if (this.options.isChunksModeOn) this.highlightChunk(0);
+				this.state.isLoading = false;
+				this.timeCount(null, 20);
+				resolve(null);
+			};
+		});
 	}
 
 	pause() {
@@ -830,7 +785,7 @@ export class SpeechSynth extends EventEmitter {
 
 	resume() {
 		if (!this.options.isChunksModeOn) this.synth.resume();
-		else this.play('resume-chunk-mode');
+		else this.play();
 		this.state.isPaused = false;
 		this.state.isReading = true;
 		this.emit('resume', this);

@@ -886,7 +886,7 @@ class SpeechSynth extends EventEmitter {
             }
             /* Re initialize the utterance */
             this.initUtterance();
-            this.restart('settings-change');
+            this.restart();
             this.emit('settings-change', this);
             return result;
         };
@@ -1001,7 +1001,6 @@ class SpeechSynth extends EventEmitter {
                     fn: (e) => {
                         const target = e.target;
                         const idx = +target.dataset.id;
-                        // console.log('Word click, seek to:', idx);
                         this.seekTo(idx);
                     },
                 });
@@ -1060,7 +1059,7 @@ class SpeechSynth extends EventEmitter {
             if (this.options.isChunksModeOn && this.state.isReading)
                 this.handleChunkHighlighting();
             /* Finally play the next chunk */
-            this.play('next-chunk-start');
+            this.play();
         };
     }
     /*
@@ -1252,7 +1251,7 @@ class SpeechSynth extends EventEmitter {
             this.utterance.text = this.getRemainingText();
             this.resetHighlight();
         }
-        this.restart('chunks-mode-change');
+        this.restart();
     }
     changeVoice() {
         const voice = this.state.voices.find((v) => v.voiceURI === this.settings.voiceURI) || this.state.voices[0];
@@ -1287,23 +1286,23 @@ class SpeechSynth extends EventEmitter {
         var _a;
         return (_a = this.state.chunksArray[this.state.currentChunkIndex]) === null || _a === void 0 ? void 0 : _a.text;
     }
-    delayRestart(type, delay) {
+    delayRestart(delay) {
         return setTimeout(() => {
             this.synth.cancel();
             if (this.isReading())
-                this.play(type);
+                this.play();
             if (this.isPaused()) {
-                this.play(type).then(() => this.pause());
+                this.play().then(() => this.pause());
                 this.pause();
             }
         }, 500);
     }
-    restart(type) {
+    restart() {
         this.synth.cancel();
         if (this.isReading())
-            this.play(type);
+            this.play();
         if (this.isPaused()) {
-            this.play(type).then(() => this.pause());
+            this.play().then(() => this.pause());
             this.pause();
         }
     }
@@ -1339,67 +1338,28 @@ class SpeechSynth extends EventEmitter {
         /* Recalculate time elapsed */
         this.state.elapsedTime = TextUtils.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
         this.emit('time-tick', this, this.state.elapsedTime);
-        this.restart('seek');
+        this.restart();
     }
     /* ------------------------------------------------------------------------------------ */
     /* Public Methods to control the player state */
     /* ------------------------------------------------------------------------------------ */
-    play(type) {
+    play() {
         this.synth.cancel(); // Makes sure the queue is empty when starting
         this.clearTimeCount(); // Makes sure to not trigger multiple timeouts
         this.synth.speak(this.utterance);
         this.state.isPaused = false;
         this.state.isReading = true;
-        this.timeCount(null, 20);
-        switch (type) {
-            case 'start': {
-                this.emit('start', this);
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        /* Highlight the first chunk on the first start if it's chunks mode ON / mobile */
-                        if (this.options.isChunksModeOn)
-                            this.highlightChunk(0);
-                        resolve(null);
-                    };
-                });
-            }
-            case 'resume-chunk-mode': {
-                this.emit('resume-chunk-mode', this);
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-            }
-            case 'next-chunk-start': {
-                this.emit('next-chunk-start', this, this.state.chunksArray[this.state.currentChunkIndex]);
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-            }
-            case 'settings-change': {
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-            }
-            case 'chunks-mode-change': {
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-            }
-            default:
-                return new Promise((resolve) => {
-                    this.utterance.onstart = (e) => {
-                        resolve(null);
-                    };
-                });
-        }
+        this.state.isLoading = true;
+        return new Promise((resolve) => {
+            this.utterance.onstart = (e) => {
+                /* Highlight the first chunk on the first start if it's chunks mode ON / mobile */
+                if (this.options.isChunksModeOn)
+                    this.highlightChunk(0);
+                this.state.isLoading = false;
+                this.timeCount(null, 20);
+                resolve(null);
+            };
+        });
     }
     pause() {
         this.synth.pause();
@@ -1413,7 +1373,7 @@ class SpeechSynth extends EventEmitter {
         if (!this.options.isChunksModeOn)
             this.synth.resume();
         else
-            this.play('resume-chunk-mode');
+            this.play();
         this.state.isPaused = false;
         this.state.isReading = true;
         this.emit('resume', this);
@@ -1650,9 +1610,7 @@ const MainControls = () => {
         if (reader === null || reader === void 0 ? void 0 : reader.isPaused())
             reader === null || reader === void 0 ? void 0 : reader.resume();
         else
-            reader === null || reader === void 0 ? void 0 : reader.play('start').then(() => {
-                reader.state.isLoading = false;
-            });
+            reader === null || reader === void 0 ? void 0 : reader.play();
     };
     const handleTextReadPause = () => {
         reader === null || reader === void 0 ? void 0 : reader.pause();
@@ -1695,6 +1653,7 @@ const MainControls = () => {
             return;
         reader.settings.pitch = value;
     };
+    console.log('Is loading', isLoading, reader === null || reader === void 0 ? void 0 : reader.state.isLoading);
     return (React.createElement("div", { className: `${styles$d.container} ${isMinimized ? styles$d.minimized : styles$d.notMinimized}` },
         !isMinimized && (React.createElement("div", { className: styles$d.sliderContainer },
             React.createElement("div", { className: styles$d.volumeContainer },
@@ -2283,9 +2242,7 @@ const useBindTextReader = () => {
             if (reader === null || reader === void 0 ? void 0 : reader.isPaused())
                 reader === null || reader === void 0 ? void 0 : reader.resume();
             else
-                reader === null || reader === void 0 ? void 0 : reader.play('start').then(() => {
-                    reader.state.isLoading = false;
-                });
+                reader === null || reader === void 0 ? void 0 : reader.play();
         },
         pause: () => reader === null || reader === void 0 ? void 0 : reader.pause(),
     }), [dispatch, reader]);

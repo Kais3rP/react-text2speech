@@ -22,10 +22,7 @@ const MainControls: FC<IMainControlsProps> = () => {
 
 	const handleTextReadPlay = () => {
 		if (reader?.isPaused()) reader?.resume();
-		else
-			reader?.play('start').then(() => {
-				reader.state.isLoading = false;
-			});
+		else reader?.play();
 	};
 
 	const handleTextReadPause = () => {
@@ -77,6 +74,8 @@ const MainControls: FC<IMainControlsProps> = () => {
 		if (!reader) return;
 		reader.settings.pitch = value;
 	};
+
+	console.log('Is loading', isLoading, reader?.state.isLoading);
 
 	return (
 		<div

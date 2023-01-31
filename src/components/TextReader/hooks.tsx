@@ -34,10 +34,7 @@ export const useBindTextReader = () => {
 			},
 			play: () => {
 				if (reader?.isPaused()) reader?.resume();
-				else
-					reader?.play('start').then(() => {
-						reader.state.isLoading = false;
-					});
+				else reader?.play();
 			},
 			pause: () => reader?.pause(),
 		}),
