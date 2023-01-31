@@ -195,7 +195,7 @@ function Tree2Element(tree) {
   });
 }
 
-function GenIcon$e(data) {
+function GenIcon$i(data) {
   return function (props) {
     return React.createElement(IconBase, __assign({
       attr: __assign({}, data.attr)
@@ -236,40 +236,40 @@ function IconBase(props) {
 var esm = /*#__PURE__*/Object.freeze({
   __proto__: null,
   DefaultContext: DefaultContext,
-  GenIcon: GenIcon$e,
+  GenIcon: GenIcon$i,
   IconBase: IconBase,
   IconContext: IconContext,
   IconsManifest: IconsManifest
 });
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$d = esm.GenIcon;
+var GenIcon$h = esm.GenIcon;
 var AiFillFastBackward_1 = function AiFillFastBackward (props) {
-  return GenIcon$d({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M517.6 273.5L230.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm320 0L550.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm-620-25.5h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
+  return GenIcon$h({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M517.6 273.5L230.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm320 0L550.2 499.3a16.14 16.14 0 0 0 0 25.4l287.4 225.8c10.7 8.4 26.4.8 26.4-12.7V286.2c0-13.5-15.7-21.1-26.4-12.7zm-620-25.5h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$c = esm.GenIcon;
+var GenIcon$g = esm.GenIcon;
 var AiFillFastForward_1 = function AiFillFastForward (props) {
-  return GenIcon$c({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M793.8 499.3L506.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.6c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8a16.14 16.14 0 0 0 0-25.4zm-320 0L186.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.5c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8c4.1-3.2 6.2-8 6.2-12.7 0-4.6-2.1-9.4-6.2-12.6zM857.6 248h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
+  return GenIcon$g({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M793.8 499.3L506.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.6c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8a16.14 16.14 0 0 0 0-25.4zm-320 0L186.4 273.5c-10.7-8.4-26.4-.8-26.4 12.7v451.5c0 13.5 15.7 21.1 26.4 12.7l287.4-225.8c4.1-3.2 6.2-8 6.2-12.7 0-4.6-2.1-9.4-6.2-12.6zM857.6 248h-51.2c-3.5 0-6.4 2.7-6.4 6v516c0 3.3 2.9 6 6.4 6h51.2c3.5 0 6.4-2.7 6.4-6V254c0-3.3-2.9-6-6.4-6z"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$b = esm.GenIcon;
+var GenIcon$f = esm.GenIcon;
 var AiFillPlayCircle_1 = function AiFillPlayCircle (props) {
-  return GenIcon$b({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z"}}]})(props);
+  return GenIcon$f({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 0 1-12.7-6.5V353.7a8 8 0 0 1 12.7-6.5L656.1 506a7.9 7.9 0 0 1 0 12.9z"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$a = esm.GenIcon;
+var GenIcon$e = esm.GenIcon;
 var AiFillPauseCircle_1 = function AiFillPauseCircle (props) {
-  return GenIcon$a({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-80 600c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304zm224 0c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304z"}}]})(props);
+  return GenIcon$e({"tag":"svg","attr":{"viewBox":"0 0 1024 1024"},"child":[{"tag":"path","attr":{"d":"M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-80 600c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304zm224 0c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V360c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v304z"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$9 = esm.GenIcon;
+var GenIcon$d = esm.GenIcon;
 var BiReset_1 = function BiReset (props) {
-  return GenIcon$9({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M12,16c1.671,0,3-1.331,3-3s-1.329-3-3-3s-3,1.331-3,3S10.329,16,12,16z"}},{"tag":"path","attr":{"d":"M20.817,11.186c-0.12-0.583-0.297-1.151-0.525-1.688c-0.225-0.532-0.504-1.046-0.83-1.531 c-0.324-0.479-0.693-0.926-1.098-1.329c-0.404-0.406-0.853-0.776-1.332-1.101c-0.483-0.326-0.998-0.604-1.528-0.829 c-0.538-0.229-1.106-0.405-1.691-0.526c-0.6-0.123-1.219-0.182-1.838-0.18V2L8,5l3.975,3V6.002C12.459,6,12.943,6.046,13.41,6.142 c0.454,0.094,0.896,0.231,1.314,0.409c0.413,0.174,0.813,0.392,1.188,0.644c0.373,0.252,0.722,0.54,1.038,0.857 c0.315,0.314,0.604,0.663,0.854,1.035c0.254,0.376,0.471,0.776,0.646,1.191c0.178,0.417,0.314,0.859,0.408,1.311 C18.952,12.048,19,12.523,19,13s-0.048,0.952-0.142,1.41c-0.094,0.454-0.23,0.896-0.408,1.315 c-0.175,0.413-0.392,0.813-0.644,1.188c-0.253,0.373-0.542,0.722-0.858,1.039c-0.315,0.316-0.663,0.603-1.036,0.854 c-0.372,0.251-0.771,0.468-1.189,0.645c-0.417,0.177-0.858,0.314-1.311,0.408c-0.92,0.188-1.906,0.188-2.822,0 c-0.454-0.094-0.896-0.231-1.314-0.409c-0.416-0.176-0.815-0.393-1.189-0.645c-0.371-0.25-0.719-0.538-1.035-0.854 c-0.315-0.316-0.604-0.665-0.855-1.036c-0.254-0.376-0.471-0.776-0.646-1.19c-0.178-0.418-0.314-0.86-0.408-1.312 C5.048,13.952,5,13.477,5,13H3c0,0.611,0.062,1.221,0.183,1.814c0.12,0.582,0.297,1.15,0.525,1.689 c0.225,0.532,0.504,1.046,0.831,1.531c0.323,0.477,0.692,0.924,1.097,1.329c0.406,0.407,0.854,0.777,1.331,1.099 c0.479,0.325,0.994,0.604,1.529,0.83c0.538,0.229,1.106,0.405,1.691,0.526C10.779,21.938,11.389,22,12,22s1.221-0.062,1.814-0.183 c0.583-0.121,1.151-0.297,1.688-0.525c0.537-0.227,1.052-0.506,1.53-0.83c0.478-0.322,0.926-0.692,1.331-1.099 c0.405-0.405,0.774-0.853,1.1-1.332c0.325-0.483,0.604-0.998,0.829-1.528c0.229-0.54,0.405-1.108,0.525-1.692 C20.938,14.221,21,13.611,21,13S20.938,11.779,20.817,11.186z"}}]})(props);
+  return GenIcon$d({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M12,16c1.671,0,3-1.331,3-3s-1.329-3-3-3s-3,1.331-3,3S10.329,16,12,16z"}},{"tag":"path","attr":{"d":"M20.817,11.186c-0.12-0.583-0.297-1.151-0.525-1.688c-0.225-0.532-0.504-1.046-0.83-1.531 c-0.324-0.479-0.693-0.926-1.098-1.329c-0.404-0.406-0.853-0.776-1.332-1.101c-0.483-0.326-0.998-0.604-1.528-0.829 c-0.538-0.229-1.106-0.405-1.691-0.526c-0.6-0.123-1.219-0.182-1.838-0.18V2L8,5l3.975,3V6.002C12.459,6,12.943,6.046,13.41,6.142 c0.454,0.094,0.896,0.231,1.314,0.409c0.413,0.174,0.813,0.392,1.188,0.644c0.373,0.252,0.722,0.54,1.038,0.857 c0.315,0.314,0.604,0.663,0.854,1.035c0.254,0.376,0.471,0.776,0.646,1.191c0.178,0.417,0.314,0.859,0.408,1.311 C18.952,12.048,19,12.523,19,13s-0.048,0.952-0.142,1.41c-0.094,0.454-0.23,0.896-0.408,1.315 c-0.175,0.413-0.392,0.813-0.644,1.188c-0.253,0.373-0.542,0.722-0.858,1.039c-0.315,0.316-0.663,0.603-1.036,0.854 c-0.372,0.251-0.771,0.468-1.189,0.645c-0.417,0.177-0.858,0.314-1.311,0.408c-0.92,0.188-1.906,0.188-2.822,0 c-0.454-0.094-0.896-0.231-1.314-0.409c-0.416-0.176-0.815-0.393-1.189-0.645c-0.371-0.25-0.719-0.538-1.035-0.854 c-0.315-0.316-0.604-0.665-0.855-1.036c-0.254-0.376-0.471-0.776-0.646-1.19c-0.178-0.418-0.314-0.86-0.408-1.312 C5.048,13.952,5,13.477,5,13H3c0,0.611,0.062,1.221,0.183,1.814c0.12,0.582,0.297,1.15,0.525,1.689 c0.225,0.532,0.504,1.046,0.831,1.531c0.323,0.477,0.692,0.924,1.097,1.329c0.406,0.407,0.854,0.777,1.331,1.099 c0.479,0.325,0.994,0.604,1.529,0.83c0.538,0.229,1.106,0.405,1.691,0.526C10.779,21.938,11.389,22,12,22s1.221-0.062,1.814-0.183 c0.583-0.121,1.151-0.297,1.688-0.525c0.537-0.227,1.052-0.506,1.53-0.83c0.478-0.322,0.926-0.692,1.331-1.099 c0.405-0.405,0.774-0.853,1.1-1.332c0.325-0.483,0.604-0.998,0.829-1.528c0.229-0.54,0.405-1.108,0.525-1.692 C20.938,14.221,21,13.611,21,13S20.938,11.779,20.817,11.186z"}}]})(props);
 };
 
 const StoreContext = React.createContext(null);
@@ -1595,25 +1595,25 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z$c = ".styles-module_container__2RHmB {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__qd4bl {\r\n\tborder-bottom: 1px;\r\n\tpadding: 2px 0px 2px 0px;\r\n}\r\n\r\n.styles-module_notMinimized__vhRsj {\r\n\tpadding-top: 2px;\r\n}\r\n\r\n.styles-module_button__l6T6c {\r\n\tborder-radius: 50%;\r\n\tmargin: 2px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tfont-weight: normal !important;\r\n\tcursor: pointer;\r\n\tborder: 4px solid var(--secondaryColor);\r\n\ttransition: all 0.2s;\r\n\tfont-size: 1.5em;\r\n}\r\n\r\n.styles-module_button__l6T6c:hover {\r\n\tborder: 3px solid var(--primaryColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_loading__-h2hU {\r\n\tpointer-events: none;\r\n}\r\n\r\n.styles-module_notLoading__GJ8Ir {\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_reset__hvUvm {\r\n\tposition: absolute;\r\n\ttop: 12px;\r\n\tright: 0px;\r\n\tfont-weight: bold;\r\n\tcursor: pointer;\r\n\ttransition: 0.2s ease-in;\r\n\tfont-size: 0.9em;\r\n\tcolor: var(--primaryColor);\r\n}\r\n\r\n.styles-module_reset__hvUvm:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_controlsContainer__nBn7j {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_sliderContainer__1XPS- {\r\n\tposition: absolute;\r\n\ttop: 5px;\r\n\tleft: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_volumeContainer__UORe9 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n\theight: 20px;\r\n}\r\n\r\n.styles-module_pitchContainer__cBB1f {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n\theight: 20px;\r\n}\r\n";
-var styles$c = {"container":"styles-module_container__2RHmB","minimized":"styles-module_minimized__qd4bl","notMinimized":"styles-module_notMinimized__vhRsj","button":"styles-module_button__l6T6c","loading":"styles-module_loading__-h2hU","notLoading":"styles-module_notLoading__GJ8Ir","reset":"styles-module_reset__hvUvm","controlsContainer":"styles-module_controlsContainer__nBn7j","sliderContainer":"styles-module_sliderContainer__1XPS-","volumeContainer":"styles-module_volumeContainer__UORe9","pitchContainer":"styles-module_pitchContainer__cBB1f"};
-styleInject(css_248z$c);
+var css_248z$d = ".styles-module_container__2RHmB {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__qd4bl {\r\n\tborder-bottom: 1px;\r\n\tpadding: 2px 0px 2px 0px;\r\n}\r\n\r\n.styles-module_notMinimized__vhRsj {\r\n\tpadding-top: 2px;\r\n}\r\n\r\n.styles-module_button__l6T6c {\r\n\tborder-radius: 50%;\r\n\tmargin: 2px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tfont-weight: normal !important;\r\n\tcursor: pointer;\r\n\tborder: 4px solid var(--secondaryColor);\r\n\ttransition: all 0.2s;\r\n\tfont-size: 1.5em;\r\n}\r\n\r\n.styles-module_button__l6T6c:hover {\r\n\tborder: 3px solid var(--primaryColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_loading__-h2hU {\r\n\tpointer-events: none;\r\n}\r\n\r\n.styles-module_notLoading__GJ8Ir {\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_reset__hvUvm {\r\n\tposition: absolute;\r\n\ttop: 12px;\r\n\tright: 0px;\r\n\tfont-weight: bold;\r\n\tcursor: pointer;\r\n\ttransition: 0.2s ease-in;\r\n\tfont-size: 0.9em;\r\n\tcolor: var(--primaryColor);\r\n}\r\n\r\n.styles-module_reset__hvUvm:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_controlsContainer__nBn7j {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_sliderContainer__1XPS- {\r\n\tposition: absolute;\r\n\ttop: 5px;\r\n\tleft: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_volumeContainer__UORe9 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n\theight: 20px;\r\n}\r\n\r\n.styles-module_pitchContainer__cBB1f {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n\theight: 20px;\r\n}\r\n";
+var styles$d = {"container":"styles-module_container__2RHmB","minimized":"styles-module_minimized__qd4bl","notMinimized":"styles-module_notMinimized__vhRsj","button":"styles-module_button__l6T6c","loading":"styles-module_loading__-h2hU","notLoading":"styles-module_notLoading__GJ8Ir","reset":"styles-module_reset__hvUvm","controlsContainer":"styles-module_controlsContainer__nBn7j","sliderContainer":"styles-module_sliderContainer__1XPS-","volumeContainer":"styles-module_volumeContainer__UORe9","pitchContainer":"styles-module_pitchContainer__cBB1f"};
+styleInject(css_248z$d);
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$8 = esm.GenIcon;
+var GenIcon$c = esm.GenIcon;
 var BiVolumeFull_1 = function BiVolumeFull (props) {
-  return GenIcon$8({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M16,21c3.527-1.547,5.999-4.909,5.999-9S19.527,4.547,16,3v2c2.387,1.386,3.999,4.047,3.999,7S18.387,17.614,16,19V21z"}},{"tag":"path","attr":{"d":"M16 7v10c1.225-1.1 2-3.229 2-5S17.225 8.1 16 7zM4 17h2.697l5.748 3.832C12.612 20.943 12.806 21 13 21c.162 0 .324-.039.472-.118C13.797 20.708 14 20.369 14 20V4c0-.369-.203-.708-.528-.882-.324-.175-.72-.154-1.026.05L6.697 7H4C2.897 7 2 7.897 2 9v6C2 16.103 2.897 17 4 17zM4 9h3c.033 0 .061-.016.093-.019.064-.006.125-.02.188-.038.068-.021.131-.045.192-.078.026-.015.057-.017.082-.033L12 5.868v12.264l-4.445-2.964c-.025-.017-.056-.02-.082-.033-.061-.033-.123-.058-.19-.078-.064-.019-.126-.032-.192-.038C7.059 15.016 7.032 15 7 15H4V9z"}}]})(props);
+  return GenIcon$c({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M16,21c3.527-1.547,5.999-4.909,5.999-9S19.527,4.547,16,3v2c2.387,1.386,3.999,4.047,3.999,7S18.387,17.614,16,19V21z"}},{"tag":"path","attr":{"d":"M16 7v10c1.225-1.1 2-3.229 2-5S17.225 8.1 16 7zM4 17h2.697l5.748 3.832C12.612 20.943 12.806 21 13 21c.162 0 .324-.039.472-.118C13.797 20.708 14 20.369 14 20V4c0-.369-.203-.708-.528-.882-.324-.175-.72-.154-1.026.05L6.697 7H4C2.897 7 2 7.897 2 9v6C2 16.103 2.897 17 4 17zM4 9h3c.033 0 .061-.016.093-.019.064-.006.125-.02.188-.038.068-.021.131-.045.192-.078.026-.015.057-.017.082-.033L12 5.868v12.264l-4.445-2.964c-.025-.017-.056-.02-.082-.033-.061-.033-.123-.058-.19-.078-.064-.019-.126-.032-.192-.038C7.059 15.016 7.032 15 7 15H4V9z"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$7 = esm.GenIcon;
+var GenIcon$b = esm.GenIcon;
 var BsMusicNote_1 = function BsMusicNote (props) {
-  return GenIcon$7({"tag":"svg","attr":{"viewBox":"0 0 16 16","fill":"currentColor"},"child":[{"tag":"path","attr":{"d":"M9 13c0 1.105-1.12 2-2.5 2S4 14.105 4 13s1.12-2 2.5-2 2.5.895 2.5 2z"}},{"tag":"path","attr":{"fillRule":"evenodd","d":"M9 3v10H8V3h1z","clipRule":"evenodd"}},{"tag":"path","attr":{"d":"M8 2.82a1 1 0 01.804-.98l3-.6A1 1 0 0113 2.22V4L8 5V2.82z"}}]})(props);
+  return GenIcon$b({"tag":"svg","attr":{"viewBox":"0 0 16 16","fill":"currentColor"},"child":[{"tag":"path","attr":{"d":"M9 13c0 1.105-1.12 2-2.5 2S4 14.105 4 13s1.12-2 2.5-2 2.5.895 2.5 2z"}},{"tag":"path","attr":{"fillRule":"evenodd","d":"M9 3v10H8V3h1z","clipRule":"evenodd"}},{"tag":"path","attr":{"d":"M8 2.82a1 1 0 01.804-.98l3-.6A1 1 0 0113 2.22V4L8 5V2.82z"}}]})(props);
 };
 
-var css_248z$b = ".styles-module_container__rkaUB {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Lf7kP {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Lf7kP:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Lf7kP::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__b92n5 {\r\n\tfont-size: 0.8rem;\r\n\t/* margin-right: 3px; */\r\n}\r\n\r\n.styles-module_icon__b92n5 * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
-var styles$b = {"container":"styles-module_container__rkaUB","value":"styles-module_value__eh3ZO","slider":"styles-module_slider__Lf7kP","icon":"styles-module_icon__b92n5"};
-styleInject(css_248z$b);
+var css_248z$c = ".styles-module_container__rkaUB {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Lf7kP {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Lf7kP:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Lf7kP::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__b92n5 {\r\n\tfont-size: 0.8rem;\r\n\t/* margin-right: 3px; */\r\n}\r\n\r\n.styles-module_icon__b92n5 * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
+var styles$c = {"container":"styles-module_container__rkaUB","value":"styles-module_value__eh3ZO","slider":"styles-module_slider__Lf7kP","icon":"styles-module_icon__b92n5"};
+styleInject(css_248z$c);
 
 const GenericSlider = (_a) => {
     var { data, onChange, icon } = _a, props = __rest(_a, ["data", "onChange", "icon"]);
@@ -1622,9 +1622,9 @@ const GenericSlider = (_a) => {
         const value = +e.target.value;
         debouncedOnChange(value);
     };
-    return (React.createElement("div", Object.assign({ className: styles$b.container }, props),
-        icon && React.createElement("div", { className: styles$b.icon }, icon),
-        React.createElement("input", { className: styles$b.slider, min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: handleChange })));
+    return (React.createElement("div", Object.assign({ className: styles$c.container }, props),
+        icon && React.createElement("div", { className: styles$c.icon }, icon),
+        React.createElement("input", { className: styles$c.slider, min: data.min, max: data.max, step: data.step, type: "range", value: data.value, onChange: handleChange })));
 };
 
 const MainControls = () => {
@@ -1680,9 +1680,9 @@ const MainControls = () => {
             return;
         reader.settings.pitch = value;
     };
-    return (React.createElement("div", { className: `${styles$c.container} ${isMinimized ? styles$c.minimized : styles$c.notMinimized}` },
-        !isMinimized && (React.createElement("div", { className: styles$c.sliderContainer },
-            React.createElement("div", { className: styles$c.volumeContainer },
+    return (React.createElement("div", { className: `${styles$d.container} ${isMinimized ? styles$d.minimized : styles$d.notMinimized}` },
+        !isMinimized && (React.createElement("div", { className: styles$d.sliderContainer },
+            React.createElement("div", { className: styles$d.volumeContainer },
                 React.createElement(GenericSlider, { title: "Volume", icon: React.createElement(BiVolumeFull_1, null), onChange: handleVolumeChange, data: {
                         min: '0.1',
                         max: '1',
@@ -1690,7 +1690,7 @@ const MainControls = () => {
                         value: volume,
                         unit: 'x',
                     } })),
-            React.createElement("div", { className: styles$c.pitchContainer },
+            React.createElement("div", { className: styles$d.pitchContainer },
                 ' ',
                 React.createElement(GenericSlider, { title: "Pitch", icon: React.createElement(BsMusicNote_1, null), onChange: handlePitchChange, data: {
                         min: '0.1',
@@ -1699,55 +1699,55 @@ const MainControls = () => {
                         value: pitch,
                         unit: 'x',
                     } })))),
-        React.createElement("div", { className: styles$c.controlsContainer },
-            React.createElement(AiFillFastBackward_1, { className: `${styles$c.button} ${isLoading ? styles$c.loading : styles$c.notLoading}`, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward }),
+        React.createElement("div", { className: styles$d.controlsContainer },
+            React.createElement(AiFillFastBackward_1, { className: `${styles$d.button} ${isLoading ? styles$d.loading : styles$d.notLoading}`, title: "Fast backward", onDoubleClick: (e) => e.preventDefault(), onPointerDown: handleFastBackward }),
             isReading ? (React.createElement(AiFillPauseCircle_1, { style: {
                     fontSize: '2em',
-                }, className: `${styles$c.button} ${isLoading ? styles$c.loading : styles$c.notLoading}`, title: 'Pause', onPointerDown: handleTextReadPause })) : (React.createElement(AiFillPlayCircle_1, { style: {
+                }, className: `${styles$d.button} ${isLoading ? styles$d.loading : styles$d.notLoading}`, title: 'Pause', onPointerDown: handleTextReadPause })) : (React.createElement(AiFillPlayCircle_1, { style: {
                     fontSize: '2em',
-                }, className: `${styles$c.button} ${isLoading ? styles$c.loading : styles$c.notLoading}`, title: 'Play', onPointerDown: handleTextReadPlay })),
-            React.createElement(AiFillFastForward_1, { title: "Fast forward", className: `${styles$c.button} ${isLoading ? styles$c.loading : styles$c.notLoading}`, onPointerDown: handleFastForward })),
-        React.createElement(BiReset_1, { className: styles$c.reset, title: "reset", onPointerDown: handleReset })));
+                }, className: `${styles$d.button} ${isLoading ? styles$d.loading : styles$d.notLoading}`, title: 'Play', onPointerDown: handleTextReadPlay })),
+            React.createElement(AiFillFastForward_1, { title: "Fast forward", className: `${styles$d.button} ${isLoading ? styles$d.loading : styles$d.notLoading}`, onPointerDown: handleFastForward })),
+        React.createElement(BiReset_1, { className: styles$d.reset, title: "reset", onPointerDown: handleReset })));
 };
 
 // THIS FILE IS AUTO GENERATED
-var GenIcon$6 = esm.GenIcon;
+var GenIcon$a = esm.GenIcon;
 var FiMaximize_1 = function FiMaximize (props) {
-  return GenIcon$6({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"}}]})(props);
+  return GenIcon$a({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"}}]})(props);
+};
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon$9 = esm.GenIcon;
+var FiMinimize_1 = function FiMinimize (props) {
+  return GenIcon$9({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"}}]})(props);
+};
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon$8 = esm.GenIcon;
+var MdClose_1 = function MdClose (props) {
+  return GenIcon$8({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"}}]})(props);
+};
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon$7 = esm.GenIcon;
+var IoMdArrowBack_1 = function IoMdArrowBack (props) {
+  return GenIcon$7({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M427 234.625H167.296l119.702-119.702L256 85 85 256l171 171 29.922-29.924-118.626-119.701H427v-42.75z"}}]})(props);
+};
+
+var css_248z$b = ".styles-module_container__i2xy1 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\theight: 30px;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_showButton__TG0yv {\r\n\tposition: fixed;\r\n\tbottom: 20px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\tz-index: 100;\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\r\n\tbackground-color: var(--bgColor);\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover .styles-module_arrow__Ab9DG {\r\n\tfill: var(--primaryColor);\r\n\tleft: -60px;\r\n\ttransform: scale(3) translateY(-3px);\r\n\topacity: 0;\r\n}\r\n\r\n.styles-module_line__vh-Pe {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__Ab9DG {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.7s ease-out;\r\n\tpointer-events: none;\r\n\t/* animation: movingArrow 0.5s infinite linear; */\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -2px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: -11px;\r\n}\r\n\r\n.styles-module_minimizeButton__wcU-y {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 11px;\r\n}\r\n\r\n.styles-module_darkModeButton__sdB-D {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tleft: -11px;\r\n}\r\n";
+var styles$b = {"container":"styles-module_container__i2xy1","button":"styles-module_button__9sOag","showButton":"styles-module_showButton__TG0yv","arrow":"styles-module_arrow__Ab9DG","line":"styles-module_line__vh-Pe","hideButton":"styles-module_hideButton__ysi6M","minimizeButton":"styles-module_minimizeButton__wcU-y","darkModeButton":"styles-module_darkModeButton__sdB-D","movingArrow":"styles-module_movingArrow__FUSwM"};
+styleInject(css_248z$b);
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon$6 = esm.GenIcon;
+var BsSun_1 = function BsSun (props) {
+  return GenIcon$6({"tag":"svg","attr":{"viewBox":"0 0 16 16","fill":"currentColor"},"child":[{"tag":"path","attr":{"d":"M3.5 8a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z"}},{"tag":"path","attr":{"fillRule":"evenodd","d":"M8.202.28a.25.25 0 00-.404 0l-.91 1.255a.25.25 0 01-.334.067L5.232.79a.25.25 0 00-.374.155l-.36 1.508a.25.25 0 01-.282.19l-1.532-.245a.25.25 0 00-.286.286l.244 1.532a.25.25 0 01-.189.282l-1.509.36a.25.25 0 00-.154.374l.812 1.322a.25.25 0 01-.067.333l-1.256.91a.25.25 0 000 .405l1.256.91a.25.25 0 01.067.334L.79 10.768a.25.25 0 00.154.374l1.51.36a.25.25 0 01.188.282l-.244 1.532a.25.25 0 00.286.286l1.532-.244a.25.25 0 01.282.189l.36 1.508a.25.25 0 00.374.155l1.322-.812a.25.25 0 01.333.067l.91 1.256a.25.25 0 00.405 0l.91-1.256a.25.25 0 01.334-.067l1.322.812a.25.25 0 00.374-.155l.36-1.508a.25.25 0 01.282-.19l1.532.245a.25.25 0 00.286-.286l-.244-1.532a.25.25 0 01.189-.282l1.508-.36a.25.25 0 00.155-.374l-.812-1.322a.25.25 0 01.067-.333l1.256-.91a.25.25 0 000-.405l-1.256-.91a.25.25 0 01-.067-.334l.812-1.322a.25.25 0 00-.155-.374l-1.508-.36a.25.25 0 01-.19-.282l.245-1.532a.25.25 0 00-.286-.286l-1.532.244a.25.25 0 01-.282-.189l-.36-1.508a.25.25 0 00-.374-.155l-1.322.812a.25.25 0 01-.333-.067L8.203.28zM8 2.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11z","clipRule":"evenodd"}}]})(props);
 };
 
 // THIS FILE IS AUTO GENERATED
 var GenIcon$5 = esm.GenIcon;
-var FiMinimize_1 = function FiMinimize (props) {
-  return GenIcon$5({"tag":"svg","attr":{"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":"2","strokeLinecap":"round","strokeLinejoin":"round"},"child":[{"tag":"path","attr":{"d":"M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"}}]})(props);
-};
-
-// THIS FILE IS AUTO GENERATED
-var GenIcon$4 = esm.GenIcon;
-var MdClose_1 = function MdClose (props) {
-  return GenIcon$4({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"}}]})(props);
-};
-
-// THIS FILE IS AUTO GENERATED
-var GenIcon$3 = esm.GenIcon;
-var IoMdArrowBack_1 = function IoMdArrowBack (props) {
-  return GenIcon$3({"tag":"svg","attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M427 234.625H167.296l119.702-119.702L256 85 85 256l171 171 29.922-29.924-118.626-119.701H427v-42.75z"}}]})(props);
-};
-
-var css_248z$a = ".styles-module_container__i2xy1 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\theight: 30px;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_showButton__TG0yv {\r\n\tposition: fixed;\r\n\tbottom: 20px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\tz-index: 100;\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\r\n\tbackground-color: var(--bgColor);\r\n}\r\n\r\n.styles-module_showButton__TG0yv:hover .styles-module_arrow__Ab9DG {\r\n\tfill: var(--primaryColor);\r\n\tleft: -60px;\r\n\ttransform: scale(3) translateY(-3px);\r\n\topacity: 0;\r\n}\r\n\r\n.styles-module_line__vh-Pe {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__Ab9DG {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.7s ease-out;\r\n\tpointer-events: none;\r\n\t/* animation: movingArrow 0.5s infinite linear; */\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -2px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: -11px;\r\n}\r\n\r\n.styles-module_minimizeButton__wcU-y {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 11px;\r\n}\r\n\r\n.styles-module_darkModeButton__sdB-D {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tleft: -11px;\r\n}\r\n";
-var styles$a = {"container":"styles-module_container__i2xy1","button":"styles-module_button__9sOag","showButton":"styles-module_showButton__TG0yv","arrow":"styles-module_arrow__Ab9DG","line":"styles-module_line__vh-Pe","hideButton":"styles-module_hideButton__ysi6M","minimizeButton":"styles-module_minimizeButton__wcU-y","darkModeButton":"styles-module_darkModeButton__sdB-D","movingArrow":"styles-module_movingArrow__FUSwM"};
-styleInject(css_248z$a);
-
-// THIS FILE IS AUTO GENERATED
-var GenIcon$2 = esm.GenIcon;
-var BsSun_1 = function BsSun (props) {
-  return GenIcon$2({"tag":"svg","attr":{"viewBox":"0 0 16 16","fill":"currentColor"},"child":[{"tag":"path","attr":{"d":"M3.5 8a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0z"}},{"tag":"path","attr":{"fillRule":"evenodd","d":"M8.202.28a.25.25 0 00-.404 0l-.91 1.255a.25.25 0 01-.334.067L5.232.79a.25.25 0 00-.374.155l-.36 1.508a.25.25 0 01-.282.19l-1.532-.245a.25.25 0 00-.286.286l.244 1.532a.25.25 0 01-.189.282l-1.509.36a.25.25 0 00-.154.374l.812 1.322a.25.25 0 01-.067.333l-1.256.91a.25.25 0 000 .405l1.256.91a.25.25 0 01.067.334L.79 10.768a.25.25 0 00.154.374l1.51.36a.25.25 0 01.188.282l-.244 1.532a.25.25 0 00.286.286l1.532-.244a.25.25 0 01.282.189l.36 1.508a.25.25 0 00.374.155l1.322-.812a.25.25 0 01.333.067l.91 1.256a.25.25 0 00.405 0l.91-1.256a.25.25 0 01.334-.067l1.322.812a.25.25 0 00.374-.155l.36-1.508a.25.25 0 01.282-.19l1.532.245a.25.25 0 00.286-.286l-.244-1.532a.25.25 0 01.189-.282l1.508-.36a.25.25 0 00.155-.374l-.812-1.322a.25.25 0 01.067-.333l1.256-.91a.25.25 0 000-.405l-1.256-.91a.25.25 0 01-.067-.334l.812-1.322a.25.25 0 00-.155-.374l-1.508-.36a.25.25 0 01-.19-.282l.245-1.532a.25.25 0 00-.286-.286l-1.532.244a.25.25 0 01-.282-.189l-.36-1.508a.25.25 0 00-.374-.155l-1.322.812a.25.25 0 01-.333-.067L8.203.28zM8 2.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11z","clipRule":"evenodd"}}]})(props);
-};
-
-// THIS FILE IS AUTO GENERATED
-var GenIcon$1 = esm.GenIcon;
 var BsMoon_1 = function BsMoon (props) {
-  return GenIcon$1({"tag":"svg","attr":{"viewBox":"0 0 16 16","fill":"currentColor"},"child":[{"tag":"path","attr":{"fillRule":"evenodd","d":"M14.53 10.53a7 7 0 01-9.058-9.058A7.003 7.003 0 008 15a7.002 7.002 0 006.53-4.47z","clipRule":"evenodd"}}]})(props);
+  return GenIcon$5({"tag":"svg","attr":{"viewBox":"0 0 16 16","fill":"currentColor"},"child":[{"tag":"path","attr":{"fillRule":"evenodd","d":"M14.53 10.53a7 7 0 01-9.058-9.058A7.003 7.003 0 008 15a7.002 7.002 0 006.53-4.47z","clipRule":"evenodd"}}]})(props);
 };
 
 const WindowControls = () => {
@@ -1768,31 +1768,31 @@ const WindowControls = () => {
         e.stopPropagation();
         dispatch(changeUIState({ isDark: !isDark }));
     };
-    return (React.createElement("div", { className: styles$a.container },
-        !isVisible && (React.createElement("div", { title: 'Show', className: styles$a.showButton, onPointerDown: handleShowReader, onTouchEnd: (e) => {
+    return (React.createElement("div", { className: styles$b.container },
+        !isVisible && (React.createElement("div", { title: 'Show', className: styles$b.showButton, onPointerDown: handleShowReader, onTouchEnd: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
             } },
-            React.createElement("div", { className: styles$a.line }),
-            React.createElement(IoMdArrowBack_1, { className: styles$a.arrow }))),
-        React.createElement("div", { title: `${isDark ? 'Light' : 'Dark'} Mode`, className: `${styles$a.button} ${styles$a.darkModeButton}`, onPointerDown: toggleDarkMode, onTouchEnd: (e) => {
+            React.createElement("div", { className: styles$b.line }),
+            React.createElement(IoMdArrowBack_1, { className: styles$b.arrow }))),
+        React.createElement("div", { title: `${isDark ? 'Light' : 'Dark'} Mode`, className: `${styles$b.button} ${styles$b.darkModeButton}`, onPointerDown: toggleDarkMode, onTouchEnd: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
             } }, isDark ? React.createElement(BsSun_1, null) : React.createElement(BsMoon_1, null)),
-        React.createElement("div", { title: 'Hide', className: `${styles$a.button} ${styles$a.hideButton}`, onPointerDown: handleHideReader, onTouchEnd: (e) => {
+        React.createElement("div", { title: 'Hide', className: `${styles$b.button} ${styles$b.hideButton}`, onPointerDown: handleHideReader, onTouchEnd: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
             } },
             React.createElement(MdClose_1, null)),
-        React.createElement("div", { title: isMinimized ? 'Maximize' : 'Minimize', className: `${styles$a.button} ${styles$a.minimizeButton}`, onPointerDown: toggleMinimizeReader, onTouchEnd: (e) => {
+        React.createElement("div", { title: isMinimized ? 'Maximize' : 'Minimize', className: `${styles$b.button} ${styles$b.minimizeButton}`, onPointerDown: toggleMinimizeReader, onTouchEnd: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
             } }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
 };
 
-var css_248z$9 = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\t/* margin: 25x 0px 5px 0px; */\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\t/* margin: 30px 0px 10px 0px; */\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 20px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: var(--textColor);\r\n\tmargin: 0 !important;\r\n\tline-height: normal;\r\n}\r\n";
-var styles$9 = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
-styleInject(css_248z$9);
+var css_248z$a = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\t/* margin: 25x 0px 5px 0px; */\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\t/* margin: 30px 0px 10px 0px; */\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 20px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: var(--textColor);\r\n\tmargin: 0 !important;\r\n\tline-height: normal;\r\n}\r\n";
+var styles$a = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
+styleInject(css_248z$a);
 
 const SeekBar = () => {
     const { reader } = useReader();
@@ -1803,10 +1803,10 @@ const SeekBar = () => {
         const value = +e.target.value;
         debouncedHandleManualSeek(value);
     };
-    return (React.createElement("div", { className: `${styles$9.container} ${isMinimized && styles$9.minimized}` },
-        React.createElement("h5", { className: styles$9.time }, Utils.formatMsToTime(elapsedTime)),
-        React.createElement("input", { className: styles$9.seekbar, type: "range", min: "0", max: numberOfWords - 1, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
-        React.createElement("h5", { style: { left: 'auto', right: '-15px' }, className: styles$9.time },
+    return (React.createElement("div", { className: `${styles$a.container} ${isMinimized && styles$a.minimized}` },
+        React.createElement("h5", { className: styles$a.time }, Utils.formatMsToTime(elapsedTime)),
+        React.createElement("input", { className: styles$a.seekbar, type: "range", min: "0", max: numberOfWords - 1, step: "1", value: currentWordIndex, onChange: handleManualSeek }),
+        React.createElement("h5", { style: { left: 'auto', right: '-15px' }, className: styles$a.time },
             Utils.formatMsToTime(duration),
             "*")));
 };
@@ -1847,9 +1847,9 @@ const useScrollToTop = () => {
     }, []);
 };
 
-var css_248z$8 = ".styles-module_container__dB4nt {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n\theight: 100%;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_optionsWrapper__JBONI {\r\n\theight: 100%;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q i {\r\n\tmargin: 3px;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_extraComponentWrapper__3xRJY {\r\n\tpadding: 0px 5px 0px 10px;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n";
-var styles$8 = {"container":"styles-module_container__dB4nt","optionsContainer":"styles-module_optionsContainer__miH3Q","optionsWrapper":"styles-module_optionsWrapper__JBONI","visible":"styles-module_visible__eJpaP","extraComponentWrapper":"styles-module_extraComponentWrapper__3xRJY"};
-styleInject(css_248z$8);
+var css_248z$9 = ".styles-module_container__dB4nt {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n\theight: 100%;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_optionsWrapper__JBONI {\r\n\theight: 100%;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q i {\r\n\tmargin: 3px;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_extraComponentWrapper__3xRJY {\r\n\tpadding: 0px 5px 0px 10px;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n";
+var styles$9 = {"container":"styles-module_container__dB4nt","optionsContainer":"styles-module_optionsContainer__miH3Q","optionsWrapper":"styles-module_optionsWrapper__JBONI","visible":"styles-module_visible__eJpaP","extraComponentWrapper":"styles-module_extraComponentWrapper__3xRJY"};
+styleInject(css_248z$9);
 
 const CustomSelect = (_a) => {
     var { options, value, title, onChange, Icon, ExtraComponent } = _a, props = __rest(_a, ["options", "value", "title", "onChange", "Icon", "ExtraComponent"]);
@@ -1871,32 +1871,32 @@ const CustomSelect = (_a) => {
         setLocalOption(value);
     };
     useOnClickOutside(ref, hide);
-    return (React.createElement("div", Object.assign({ className: styles$8.container }, props, { ref: ref }),
+    return (React.createElement("div", Object.assign({ className: styles$9.container }, props, { ref: ref }),
         React.createElement(Icon, { onPointerDown: (e) => {
                 e.stopPropagation();
                 show();
             }, option: currentOption }),
-        React.createElement("div", { className: `${styles$8.optionsContainer} ${showOptions && styles$8.visible}` },
-            React.createElement("div", { className: styles$8.optionsWrapper }, options.map((opt) => (React.createElement(Icon, { key: opt.value, onPointerDown: (e) => {
+        React.createElement("div", { className: `${styles$9.optionsContainer} ${showOptions && styles$9.visible}` },
+            React.createElement("div", { className: styles$9.optionsWrapper }, options.map((opt) => (React.createElement(Icon, { key: opt.value, onPointerDown: (e) => {
                     e.stopPropagation();
                     onOptionClick(opt.value);
                 }, onMouseEnter: () => changeLocalOption(opt), option: opt })))),
-            ExtraComponent && (React.createElement("div", { className: styles$8.extraComponentWrapper },
+            ExtraComponent && (React.createElement("div", { className: styles$9.extraComponentWrapper },
                 React.createElement(ExtraComponent, { option: localOption }))))));
 };
 
-var css_248z$7 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\theight: 50px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
-var styles$7 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-"};
+var css_248z$8 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\theight: 50px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
+var styles$8 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-"};
+styleInject(css_248z$8);
+
+var css_248z$7 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\twidth: 130px;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
+var styles$7 = {"container":"styles-module_container__bAbpe","icon":"styles-module_icon__J4xQk","overlayContainer":"styles-module_overlayContainer__iWVEa","visible":"styles-module_visible__Ci-XW"};
 styleInject(css_248z$7);
 
-var css_248z$6 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\tflex-direction: column;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\twidth: 130px;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
-var styles$6 = {"container":"styles-module_container__bAbpe","icon":"styles-module_icon__J4xQk","overlayContainer":"styles-module_overlayContainer__iWVEa","visible":"styles-module_visible__Ci-XW"};
-styleInject(css_248z$6);
-
 // THIS FILE IS AUTO GENERATED
-var GenIcon = esm.GenIcon;
+var GenIcon$4 = esm.GenIcon;
 var FcSettings_1 = function FcSettings (props) {
-  return GenIcon({"tag":"svg","attr":{"version":"1","viewBox":"0 0 48 48","enableBackground":"new 0 0 48 48"},"child":[{"tag":"path","attr":{"fill":"#607D8B","d":"M39.6,27.2c0.1-0.7,0.2-1.4,0.2-2.2s-0.1-1.5-0.2-2.2l4.5-3.2c0.4-0.3,0.6-0.9,0.3-1.4L40,10.8 c-0.3-0.5-0.8-0.7-1.3-0.4l-5,2.3c-1.2-0.9-2.4-1.6-3.8-2.2l-0.5-5.5c-0.1-0.5-0.5-0.9-1-0.9h-8.6c-0.5,0-1,0.4-1,0.9l-0.5,5.5 c-1.4,0.6-2.7,1.3-3.8,2.2l-5-2.3c-0.5-0.2-1.1,0-1.3,0.4l-4.3,7.4c-0.3,0.5-0.1,1.1,0.3,1.4l4.5,3.2c-0.1,0.7-0.2,1.4-0.2,2.2 s0.1,1.5,0.2,2.2L4,30.4c-0.4,0.3-0.6,0.9-0.3,1.4L8,39.2c0.3,0.5,0.8,0.7,1.3,0.4l5-2.3c1.2,0.9,2.4,1.6,3.8,2.2l0.5,5.5 c0.1,0.5,0.5,0.9,1,0.9h8.6c0.5,0,1-0.4,1-0.9l0.5-5.5c1.4-0.6,2.7-1.3,3.8-2.2l5,2.3c0.5,0.2,1.1,0,1.3-0.4l4.3-7.4 c0.3-0.5,0.1-1.1-0.3-1.4L39.6,27.2z M24,35c-5.5,0-10-4.5-10-10c0-5.5,4.5-10,10-10c5.5,0,10,4.5,10,10C34,30.5,29.5,35,24,35z"}},{"tag":"path","attr":{"fill":"#455A64","d":"M24,13c-6.6,0-12,5.4-12,12c0,6.6,5.4,12,12,12s12-5.4,12-12C36,18.4,30.6,13,24,13z M24,30 c-2.8,0-5-2.2-5-5c0-2.8,2.2-5,5-5s5,2.2,5,5C29,27.8,26.8,30,24,30z"}}]})(props);
+  return GenIcon$4({"tag":"svg","attr":{"version":"1","viewBox":"0 0 48 48","enableBackground":"new 0 0 48 48"},"child":[{"tag":"path","attr":{"fill":"#607D8B","d":"M39.6,27.2c0.1-0.7,0.2-1.4,0.2-2.2s-0.1-1.5-0.2-2.2l4.5-3.2c0.4-0.3,0.6-0.9,0.3-1.4L40,10.8 c-0.3-0.5-0.8-0.7-1.3-0.4l-5,2.3c-1.2-0.9-2.4-1.6-3.8-2.2l-0.5-5.5c-0.1-0.5-0.5-0.9-1-0.9h-8.6c-0.5,0-1,0.4-1,0.9l-0.5,5.5 c-1.4,0.6-2.7,1.3-3.8,2.2l-5-2.3c-0.5-0.2-1.1,0-1.3,0.4l-4.3,7.4c-0.3,0.5-0.1,1.1,0.3,1.4l4.5,3.2c-0.1,0.7-0.2,1.4-0.2,2.2 s0.1,1.5,0.2,2.2L4,30.4c-0.4,0.3-0.6,0.9-0.3,1.4L8,39.2c0.3,0.5,0.8,0.7,1.3,0.4l5-2.3c1.2,0.9,2.4,1.6,3.8,2.2l0.5,5.5 c0.1,0.5,0.5,0.9,1,0.9h8.6c0.5,0,1-0.4,1-0.9l0.5-5.5c1.4-0.6,2.7-1.3,3.8-2.2l5,2.3c0.5,0.2,1.1,0,1.3-0.4l4.3-7.4 c0.3-0.5,0.1-1.1-0.3-1.4L39.6,27.2z M24,35c-5.5,0-10-4.5-10-10c0-5.5,4.5-10,10-10c5.5,0,10,4.5,10,10C34,30.5,29.5,35,24,35z"}},{"tag":"path","attr":{"fill":"#455A64","d":"M24,13c-6.6,0-12,5.4-12,12c0,6.6,5.4,12,12,12s12-5.4,12-12C36,18.4,30.6,13,24,13z M24,30 c-2.8,0-5-2.2-5-5c0-2.8,2.2-5,5-5s5,2.2,5,5C29,27.8,26.8,30,24,30z"}}]})(props);
 };
 
 const useOptions = () => {
@@ -1976,47 +1976,47 @@ const Options = () => {
     };
     const options = useOptions();
     useOnClickOutside(ref, hideOptions);
-    return (React.createElement("div", { className: styles$6.container, ref: ref },
-        React.createElement(FcSettings_1, { className: styles$6.icon, onPointerDown: showOptions }),
-        React.createElement("div", { className: `${styles$6.overlayContainer} ${isOptionsVisible && styles$6.visible}`, onPointerDown: hideOptions }, options.map((o) => (React.createElement("label", { key: o.id, htmlFor: o.id, onPointerDown: (e) => e.stopPropagation() },
+    return (React.createElement("div", { className: styles$7.container, ref: ref },
+        React.createElement(FcSettings_1, { className: styles$7.icon, onPointerDown: showOptions }),
+        React.createElement("div", { className: `${styles$7.overlayContainer} ${isOptionsVisible && styles$7.visible}`, onPointerDown: hideOptions }, options.map((o) => (React.createElement("label", { key: o.id, htmlFor: o.id, onPointerDown: (e) => e.stopPropagation() },
             React.createElement("input", { id: o.id, type: "checkbox", checked: o.value, onChange: o.handler }),
             React.createElement("h5", null, o.label)))))));
 };
 
-var css_248z$5 = ".styles-module_icon__Z2LW9 {\r\n\tdisplay: inline-block;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\t/* border: 2px solid #111; */\r\n\tborder-radius: 4px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_icon__Z2LW9:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n";
-var styles$5 = {"icon":"styles-module_icon__Z2LW9"};
-styleInject(css_248z$5);
+var css_248z$6 = ".styles-module_icon__Z2LW9 {\r\n\tdisplay: inline-block;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\t/* border: 2px solid #111; */\r\n\tborder-radius: 4px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_icon__Z2LW9:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n";
+var styles$6 = {"icon":"styles-module_icon__Z2LW9"};
+styleInject(css_248z$6);
 
 /* React Components */
 const ColorIcon = (_a) => {
     var { children, option } = _a, props = __rest(_a, ["children", "option"]);
-    return (option && (React.createElement("i", Object.assign({ className: styles$5.icon, style: { backgroundColor: option.value } }, props), children)));
+    return (option && (React.createElement("i", Object.assign({ className: styles$6.icon, style: { backgroundColor: option.value } }, props), children)));
 };
 
-var css_248z$4 = ".styles-module_container__dGcW- {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n\tline-height: normal !important;\r\n\twhite-space: nowrap;\r\n}\r\n\r\n.styles-module_container__dGcW-:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_container__dGcW-::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_container__dGcW-:hover::after {\r\n\twidth: 100%;\r\n}\r\n";
-var styles$4 = {"container":"styles-module_container__dGcW-"};
-styleInject(css_248z$4);
+var css_248z$5 = ".styles-module_container__dGcW- {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n\tline-height: normal !important;\r\n\twhite-space: nowrap;\r\n}\r\n\r\n.styles-module_container__dGcW-:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_container__dGcW-::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_container__dGcW-:hover::after {\r\n\twidth: 100%;\r\n}\r\n";
+var styles$5 = {"container":"styles-module_container__dGcW-"};
+styleInject(css_248z$5);
 
 const UnderlinedTextIcon = (_a) => {
     var { children, option } = _a, props = __rest(_a, ["children", "option"]);
-    return (option && (React.createElement("div", Object.assign({ className: styles$4.container }, props),
+    return (option && (React.createElement("div", Object.assign({ className: styles$5.container }, props),
         option.name,
         children)));
 };
 
-var css_248z$3 = ".styles-module_container__k5Fas {\r\n\tposition: relative;\r\n\twidth: 35px;\r\n\theight: 35px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__9Eq-Q {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__iK7ja {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
-var styles$3 = {"container":"styles-module_container__k5Fas","label":"styles-module_label__9Eq-Q","ascii":"styles-module_ascii__iK7ja"};
-styleInject(css_248z$3);
+var css_248z$4 = ".styles-module_container__k5Fas {\r\n\tposition: relative;\r\n\twidth: 35px;\r\n\theight: 35px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__9Eq-Q {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__iK7ja {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
+var styles$4 = {"container":"styles-module_container__k5Fas","label":"styles-module_label__9Eq-Q","ascii":"styles-module_ascii__iK7ja"};
+styleInject(css_248z$4);
 
 /* React Components */
 const ColorPreview = ({ option }) => {
-    return (React.createElement("div", { className: styles$3.container, style: { backgroundColor: option.value } },
-        React.createElement("h5", { className: styles$3.label }, option.name)));
+    return (React.createElement("div", { className: styles$4.container, style: { backgroundColor: option.value } },
+        React.createElement("h5", { className: styles$4.label }, option.name)));
 };
 
-var css_248z$2 = ".styles-module_icon__zepm5 {\r\n\tposition: relative;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\tborder-radius: 2px;\r\n\tpadding: 2px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_icon__zepm5:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_label__y4R48 {\r\n\tposition: absolute;\r\n\tbottom: 0px;\r\n\tright: 2px;\r\n\tcolor: var(--bgColor);\r\n\t/* mix-blend-mode: exclusion; */\r\n\tfont-size: 8px;\r\n}\r\n";
-var styles$2 = {"icon":"styles-module_icon__zepm5","label":"styles-module_label__y4R48"};
-styleInject(css_248z$2);
+var css_248z$3 = ".styles-module_icon__zepm5 {\r\n\tposition: relative;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\tborder-radius: 2px;\r\n\tpadding: 2px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_icon__zepm5:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_label__y4R48 {\r\n\tposition: absolute;\r\n\tbottom: 0px;\r\n\tright: 2px;\r\n\tcolor: var(--bgColor);\r\n\t/* mix-blend-mode: exclusion; */\r\n\tfont-size: 8px;\r\n}\r\n";
+var styles$3 = {"icon":"styles-module_icon__zepm5","label":"styles-module_label__y4R48"};
+styleInject(css_248z$3);
 
 /* React Components */
 const BrushIcon = (_a) => {
@@ -2024,21 +2024,97 @@ const BrushIcon = (_a) => {
     const { state } = useStore();
     const { color1 } = state.highlightStyle;
     const URL = Utils.getBrushURL(option.value, color1);
-    return (option && (React.createElement("div", Object.assign({ className: styles$2.icon, style: { background: URL.css } }, props),
-        React.createElement("h5", { className: styles$2.label }, option.name),
+    return (option && (React.createElement("div", Object.assign({ className: styles$3.icon, style: { background: URL.css } }, props),
+        React.createElement("h5", { className: styles$3.label }, option.name),
         children)));
 };
 
-var css_248z$1 = ".styles-module_container__UeFFK {\r\n\tposition: relative;\r\n\twidth: 60px;\r\n\theight: 28px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__e3y03 {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__MLhac {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
-var styles$1 = {"container":"styles-module_container__UeFFK","label":"styles-module_label__e3y03","ascii":"styles-module_ascii__MLhac"};
-styleInject(css_248z$1);
+var css_248z$2 = ".styles-module_container__UeFFK {\r\n\tposition: relative;\r\n\twidth: 60px;\r\n\theight: 28px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__e3y03 {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__MLhac {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
+var styles$2 = {"container":"styles-module_container__UeFFK","label":"styles-module_label__e3y03","ascii":"styles-module_ascii__MLhac"};
+styleInject(css_248z$2);
 
 /* React Components */
 const BrushPreview = ({ option }) => {
     const { state } = useStore();
     const { color1 } = state.highlightStyle;
     const URL = Utils.getBrushURL(option.value, color1);
-    return (React.createElement("div", { className: styles$1.container, style: { background: URL.css } }));
+    return (React.createElement("div", { className: styles$2.container, style: { background: URL.css } }));
+};
+
+var css_248z$1 = ".styles-module_container__9-aGo {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_icon__BWG4b {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\tmargin-right: 5px;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__BWG4b path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__BWG4b:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 100%;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 2;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 25px 20px 5px 20px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\tfont-size: 0.9em;\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.8em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra a {\r\n\tcolor: var(--secondaryColor);\r\n\ttext-decoration: none;\r\n}\r\n\r\n.styles-module_visible__js5U4 {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_name__KgWLV {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tmargin-bottom: 10px;\r\n}\r\n\r\n.styles-module_name__KgWLV i {\r\n\tmargin-right: 10px;\r\n}\r\n\r\n.styles-module_infoWrapper__ZLhGa {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\talign-items: flex-start;\r\n\toverflow: hidden;\r\n}\r\n\r\n.styles-module_info__GKdTQ {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\tflex-direction: column;\r\n\talign-items: flex-start;\r\n\tflex-wrap: wrap;\r\n}\r\n\r\n.styles-module_info__GKdTQ a {\r\n\tmargin-left: 5px;\r\n}\r\n\r\n.styles-module_buttonsContainer__4OlR2 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_buttonsContainer__4OlR2 a {\r\n\tfont-size: 1.3em;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_buttonsContainer__4OlR2 a:hover {\r\n\tfont-size: 1.3em;\r\n\ttransform: scale(1.1);\r\n}\r\n";
+var styles$1 = {"container":"styles-module_container__9-aGo","icon":"styles-module_icon__BWG4b","overlayContainer":"styles-module_overlayContainer__-d-Ra","visible":"styles-module_visible__js5U4","name":"styles-module_name__KgWLV","infoWrapper":"styles-module_infoWrapper__ZLhGa","info":"styles-module_info__GKdTQ","buttonsContainer":"styles-module_buttonsContainer__4OlR2"};
+styleInject(css_248z$1);
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon$3 = esm.GenIcon;
+var ImInfo_1 = function ImInfo (props) {
+  return GenIcon$3({"tag":"svg","attr":{"version":"1.1","viewBox":"0 0 16 16"},"child":[{"tag":"path","attr":{"d":"M7 4.75c0-0.412 0.338-0.75 0.75-0.75h0.5c0.412 0 0.75 0.338 0.75 0.75v0.5c0 0.412-0.338 0.75-0.75 0.75h-0.5c-0.412 0-0.75-0.338-0.75-0.75v-0.5z"}},{"tag":"path","attr":{"d":"M10 12h-4v-1h1v-3h-1v-1h3v4h1z"}},{"tag":"path","attr":{"d":"M8 0c-4.418 0-8 3.582-8 8s3.582 8 8 8 8-3.582 8-8-3.582-8-8-8zM8 14.5c-3.59 0-6.5-2.91-6.5-6.5s2.91-6.5 6.5-6.5 6.5 2.91 6.5 6.5-2.91 6.5-6.5 6.5z"}}]})(props);
+};
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon$2 = esm.GenIcon;
+var FaNpm_1 = function FaNpm (props) {
+  return GenIcon$2({"tag":"svg","attr":{"viewBox":"0 0 576 512"},"child":[{"tag":"path","attr":{"d":"M288 288h-32v-64h32v64zm288-128v192H288v32H160v-32H0V160h576zm-416 32H32v128h64v-96h32v96h32V192zm160 0H192v160h64v-32h64V192zm224 0H352v128h64v-96h32v96h32v-96h32v96h32V192z"}}]})(props);
+};
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon$1 = esm.GenIcon;
+var FaGithubAlt_1 = function FaGithubAlt (props) {
+  return GenIcon$1({"tag":"svg","attr":{"viewBox":"0 0 480 512"},"child":[{"tag":"path","attr":{"d":"M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"}}]})(props);
+};
+
+// THIS FILE IS AUTO GENERATED
+var GenIcon = esm.GenIcon;
+var FaReadme_1 = function FaReadme (props) {
+  return GenIcon({"tag":"svg","attr":{"viewBox":"0 0 576 512"},"child":[{"tag":"path","attr":{"d":"M528.3 46.5H388.5c-48.1 0-89.9 33.3-100.4 80.3-10.6-47-52.3-80.3-100.4-80.3H48c-26.5 0-48 21.5-48 48v245.8c0 26.5 21.5 48 48 48h89.7c102.2 0 132.7 24.4 147.3 75 .7 2.8 5.2 2.8 6 0 14.7-50.6 45.2-75 147.3-75H528c26.5 0 48-21.5 48-48V94.6c0-26.4-21.3-47.9-47.7-48.1zM242 311.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5V289c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V251zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H78.2c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm259.3 121.7c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.9c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5V228c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5v22.9zm0-60.9c0 1.9-1.5 3.5-3.5 3.5H337.5c-1.9 0-3.5-1.5-3.5-3.5v-22.8c0-1.9 1.5-3.5 3.5-3.5h160.4c1.9 0 3.5 1.5 3.5 3.5V190z"}}]})(props);
+};
+
+var name = "react-text2speech";
+var version = "3.9.3";
+var author = "Cesare Polonara - https://www.cesarepolonara.com";
+var repository = {
+	url: "https://github.com/Kais3rP/react-text2speech",
+	type: "git"
+};
+var license = "MIT";
+
+const Info = () => {
+    const [isInfoVisible, setIsInfoVisible] = React.useState(false);
+    const ref = React.useRef(null);
+    const showInfo = () => {
+        setIsInfoVisible(true);
+    };
+    const hideInfo = () => {
+        setIsInfoVisible(false);
+    };
+    useOnClickOutside(ref, hideInfo);
+    const [_author, _website] = author.split(' - ');
+    return (React.createElement("div", { className: styles$1.container, ref: ref },
+        React.createElement(ImInfo_1, { className: styles$1.icon, onPointerDown: showInfo }),
+        React.createElement("div", { className: `${styles$1.overlayContainer} ${isInfoVisible && styles$1.visible}`, onPointerDown: hideInfo },
+            React.createElement("div", { className: styles$1.name },
+                React.createElement("i", null, "\uD83D\uDDE3\uFE0F"),
+                React.createElement("h4", null, name)),
+            React.createElement("div", { className: styles$1.infoWrapper },
+                React.createElement("div", { className: styles$1.info },
+                    React.createElement("h5", null,
+                        "Author:",
+                        React.createElement("a", { href: _website, target: "_blank", rel: "noreferrer", onPointerDown: (e) => e.stopPropagation() }, _author)),
+                    React.createElement("h5", null,
+                        "Version: ",
+                        version),
+                    React.createElement("h5", null,
+                        "License: ",
+                        license,
+                        " \u00A9 ",
+                        name)),
+                React.createElement("div", { className: styles$1.buttonsContainer },
+                    React.createElement("a", { href: repository.url, target: "_blank", rel: "noreferrer", onPointerDown: (e) => e.stopPropagation() },
+                        React.createElement(FaGithubAlt_1, null)),
+                    React.createElement("a", { href: "https://www.npmjs.com/package/react-text2speech", target: "_blank", rel: "noreferrer", onPointerDown: (e) => e.stopPropagation() },
+                        React.createElement(FaNpm_1, null)),
+                    React.createElement("a", { href: `${repository.url}#readme`, target: "_blank", rel: "noreferrer", onPointerDown: (e) => e.stopPropagation() },
+                        React.createElement(FaReadme_1, null)))))));
 };
 
 const rates = [
@@ -2131,15 +2207,16 @@ const SecondaryControls = () => {
         return updatedPalette;
     }, [highlightStyle]);
     const formattedVoices = React.useMemo(() => Utils.formatVoices(voices), [voices]);
-    return (React.createElement("div", { className: styles$7.container },
-        React.createElement("div", { className: styles$7.optionsWrapper1 },
+    return (React.createElement("div", { className: styles$8.container },
+        React.createElement("div", { className: styles$8.optionsWrapper1 },
             React.createElement(CustomSelect, { name: "rate", options: rates, onChange: handleRateChange, value: rate.toString(), defaultValue: "1", title: "Rate", Icon: UnderlinedTextIcon }),
             React.createElement(CustomSelect, { name: "language", options: languages, onChange: handleLanguageChange, value: language || '', defaultValue: "1", title: "Language", Icon: UnderlinedTextIcon }),
             React.createElement(CustomSelect, { name: "voice", options: formattedVoices, onChange: handleVoiceChange, value: voiceURI || '', defaultValue: "1", title: "Voice", Icon: UnderlinedTextIcon }),
             React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightColorChange, value: highlightStyle.color1, defaultValue: "lavander", title: "Palette", Icon: ColorIcon, ExtraComponent: ColorPreview }),
             React.createElement(CustomSelect, { name: "palette", options: colors, onChange: handleHighlightFontColorChange, value: highlightStyle.color2, defaultValue: "lavander", title: "Palette", Icon: ColorIcon, ExtraComponent: ColorPreview }),
             React.createElement(CustomSelect, { name: "brush-type", options: brushes, onChange: handleBrushChange, value: highlightStyle.brush, defaultValue: "lavander", title: "Palette", Icon: BrushIcon, ExtraComponent: BrushPreview })),
-        React.createElement("div", { className: styles$7.optionsWrapper2 },
+        React.createElement("div", { className: styles$8.optionsWrapper2 },
+            React.createElement(Info, null),
             React.createElement(Options, null))));
 };
 // "The Sea's Symphony"
@@ -2286,7 +2363,7 @@ const useUserColorScheme = () => {
     }, [dispatch]);
 };
 
-var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: min(100vw, 350px);\r\n\t/* height: 135px; */\r\n\tright: -350px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\ttransition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear;\r\n\tpadding: 0px 15px;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_container__xkMLR h5 {\r\n\tmargin-block-end: auto;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 5px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
+var css_248z = ".styles-module_container__xkMLR {\r\n\twidth: min(100vw, 350px);\r\n\t/* height: 135px; */\r\n\tright: -350px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\ttransition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear;\r\n\tpadding: 0px 15px;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_container__xkMLR h5,\r\n.styles-module_container__xkMLR h4,\r\n.styles-module_container__xkMLR h3,\r\n.styles-module_container__xkMLR h2,\r\n.styles-module_container__xkMLR h1 {\r\n\tmargin-block-end: auto;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 5px;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
 var styles = {"container":"styles-module_container__xkMLR","visible":"styles-module_visible__ZUiLT","minimized":"styles-module_minimized__W5TJy"};
 styleInject(css_248z);
 

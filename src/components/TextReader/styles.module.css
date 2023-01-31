@@ -23,7 +23,11 @@
 	box-sizing: border-box;
 }
 
-.container h5 {
+.container h5,
+.container h4,
+.container h3,
+.container h2,
+.container h1 {
 	margin-block-end: auto;
 	margin: 0;
 	padding: 0;

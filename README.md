@@ -152,6 +152,7 @@ Some edge cases like dots in the middle of word like "some.word" are going to be
 These are currently the issues and edge cases not yet covered:
 
 -   Punctuation marks directly after an HTML tag won't be taken into account as a chunk delimiter.
+-   Text inside `pre` or `code` tags is skipped.
 
 ## License
 

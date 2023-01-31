@@ -11,6 +11,7 @@ import ColorPreview from 'components/ColorPreview/ColorPreview';
 import BrushIcon from 'components/BrushIcon/BrushIcon';
 import BrushPreview from 'components/BrushPreview/BrushPreview';
 import { Utils } from 'lib';
+import Info from 'components/Info/Info';
 
 const rates: IOption[] = [
 	{ value: '0.5', name: '0.5x' },
@@ -186,15 +187,11 @@ const SecondaryControls: FC<ISecondaryControlsProps> = () => {
 					Icon={BrushIcon}
 					ExtraComponent={BrushPreview}
 				/>
-
-				{/* <ImInfo
-					style={{ marginLeft: '10px' }}
-					className={styles.icon}
-					onPointerDown={toggleSettings}
-				/> */}
 			</div>
 
 			<div className={styles.optionsWrapper2}>
+				{/* Info */}
+				<Info />
 				{/* Reader Options Button */}
 				<Options />
 			</div>
