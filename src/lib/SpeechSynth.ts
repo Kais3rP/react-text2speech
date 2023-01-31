@@ -421,7 +421,8 @@ export class SpeechSynth extends EventEmitter {
 
 	private resetHighlight() {
 		this.state.highlightedWords.forEach((n) => {
-			(n as HTMLElement).style.background = '';
+			(n as HTMLElement).style.backgroundImage = '';
+			(n as HTMLElement).style.backgroundColor = '';
 			(n as HTMLElement).style.color = '';
 			(n as HTMLElement).style.textDecoration = 'none';
 

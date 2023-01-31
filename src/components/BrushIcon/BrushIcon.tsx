@@ -19,7 +19,7 @@ export const BrushIcon: FC<IBrushIconProps> = ({
 		option && (
 			<div
 				className={styles.icon}
-				style={{ background: URL.css }}
+				style={{ backgroundImage: URL.css }}
 				{...props}
 			>
 				<h5 className={styles.label}>{option.name}</h5>

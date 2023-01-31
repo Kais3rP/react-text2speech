@@ -780,7 +780,7 @@ class DOMUtils {
             ) */
             .forEach((el) => {
             el.style.transition =
-                'backgroundColor 0.2s linear, color 0.2s linear';
+                'background-color 0.2s linear, color 0.2s linear';
             el.style.margin = '0px -0.3em';
             el.style.padding = '0.3em 0.3em';
             el.style.backgroundSize = 'cover';
@@ -1108,7 +1108,8 @@ class SpeechSynth extends EventEmitter {
     }
     resetHighlight() {
         this.state.highlightedWords.forEach((n) => {
-            n.style.background = '';
+            n.style.backgroundImage = '';
+            n.style.backgroundColor = '';
             n.style.color = '';
             n.style.textDecoration = 'none';
             this.state.highlightedWords = [];
@@ -1997,7 +1998,7 @@ const ColorPreview = ({ option }) => {
         React.createElement("h5", { className: styles$4.label }, option.name)));
 };
 
-var css_248z$3 = ".styles-module_icon__zepm5 {\r\n\tposition: relative;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\tborder-radius: 2px;\r\n\tpadding: 2px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_icon__zepm5:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_label__y4R48 {\r\n\tposition: absolute;\r\n\tbottom: 0px;\r\n\tright: 2px;\r\n\tcolor: var(--bgColor);\r\n\t/* mix-blend-mode: exclusion; */\r\n\tfont-size: 8px;\r\n}\r\n";
+var css_248z$3 = ".styles-module_icon__zepm5 {\r\n\tposition: relative;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\tborder-radius: 2px;\r\n\tpadding: 2px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n\tbackground-size: cover;\r\n\r\n}\r\n\r\n.styles-module_icon__zepm5:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_label__y4R48 {\r\n\tposition: absolute;\r\n\tbottom: 0px;\r\n\tright: 2px;\r\n\tcolor: var(--bgColor);\r\n\t/* mix-blend-mode: exclusion; */\r\n\tfont-size: 8px;\r\n}\r\n";
 var styles$3 = {"icon":"styles-module_icon__zepm5","label":"styles-module_label__y4R48"};
 styleInject(css_248z$3);
 
@@ -2007,12 +2008,12 @@ const BrushIcon = (_a) => {
     const { state } = useStore();
     const { color1 } = state.highlightStyle;
     const URL = Utils.getBrushURL(option.value, color1);
-    return (option && (React.createElement("div", Object.assign({ className: styles$3.icon, style: { background: URL.css } }, props),
+    return (option && (React.createElement("div", Object.assign({ className: styles$3.icon, style: { backgroundImage: URL.css } }, props),
         React.createElement("h5", { className: styles$3.label }, option.name),
         children)));
 };
 
-var css_248z$2 = ".styles-module_container__UeFFK {\r\n\tposition: relative;\r\n\twidth: 60px;\r\n\theight: 28px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__e3y03 {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__MLhac {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
+var css_248z$2 = ".styles-module_container__UeFFK {\r\n\tposition: relative;\r\n\twidth: 60px;\r\n\theight: 28px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n\tbackground-size: cover;\r\n}\r\n\r\n.styles-module_label__e3y03 {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__MLhac {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
 var styles$2 = {"container":"styles-module_container__UeFFK","label":"styles-module_label__e3y03","ascii":"styles-module_ascii__MLhac"};
 styleInject(css_248z$2);
 
@@ -2021,7 +2022,7 @@ const BrushPreview = ({ option }) => {
     const { state } = useStore();
     const { color1 } = state.highlightStyle;
     const URL = Utils.getBrushURL(option.value, color1);
-    return (React.createElement("div", { className: styles$2.container, style: { background: URL.css } }));
+    return (React.createElement("div", { className: styles$2.container, style: { backgroundImage: URL.css } }));
 };
 
 var css_248z$1 = ".styles-module_container__9-aGo {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_icon__BWG4b {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\tmargin-right: 5px;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__BWG4b path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__BWG4b:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 100%;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 2;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 25px 20px 5px 20px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\tfont-size: 0.9em;\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.8em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra a {\r\n\tcolor: var(--secondaryColor);\r\n\ttext-decoration: none;\r\n}\r\n\r\n.styles-module_visible__js5U4 {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_name__KgWLV {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tmargin-bottom: 10px;\r\n}\r\n\r\n.styles-module_name__KgWLV i {\r\n\tmargin-right: 10px;\r\n}\r\n\r\n.styles-module_infoWrapper__ZLhGa {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\talign-items: flex-start;\r\n\toverflow: hidden;\r\n}\r\n\r\n.styles-module_info__GKdTQ {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\tflex-direction: column;\r\n\talign-items: flex-start;\r\n\tflex-wrap: wrap;\r\n}\r\n\r\n.styles-module_info__GKdTQ a {\r\n\tmargin-left: 5px;\r\n}\r\n\r\n.styles-module_buttonsContainer__4OlR2 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_buttonsContainer__4OlR2 a {\r\n\tfont-size: 1.3em;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_buttonsContainer__4OlR2 a:hover {\r\n\tfont-size: 1.3em;\r\n\ttransform: scale(1.1);\r\n}\r\n";

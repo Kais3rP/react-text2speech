@@ -8,6 +8,8 @@
 	padding: 2px;
 	transition: all 0.1s ease-in;
 	box-shadow: 0px 0px 2px 1px var(--primaryColor);
+	background-size: cover;
+
 }
 
 .icon:hover {

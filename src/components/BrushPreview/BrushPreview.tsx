@@ -11,7 +11,7 @@ const BrushPreview: FC<IBrushPreviewProps> = ({ option }) => {
 	const { color1 } = state.highlightStyle;
 	const URL = Utils.getBrushURL(option.value, color1);
 	return (
-		<div className={styles.container} style={{ background: URL.css }}>
+		<div className={styles.container} style={{ backgroundImage: URL.css }}>
 			{/* <h5 className={styles.label}>{option.name}</h5> */}
 			{/* <h5 className={styles.ascii}>{option.value}</h5> */}
 		</div>
