@@ -56,7 +56,6 @@ export interface IState {
 	/* UI */
 	isLoading: boolean;
 	/* Highlight & Reading time */
-	tagIndex: number;
 	currentWord: string;
 	currentWordIndex: number;
 	currentWordProps: ICurrentWordProps;

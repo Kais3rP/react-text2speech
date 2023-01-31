@@ -1,4 +1,6 @@
 import EventEmitter from 'events';
+import { DOMUtils } from './DOMUtils';
+import { TextUtils } from './TextUtils';
 import {
 	IStyle,
 	ISettings,
@@ -15,6 +17,7 @@ export class SpeechSynth extends EventEmitter {
 	synth: SpeechSynthesis;
 	utterance: SpeechSynthesisUtterance;
 	timeoutRef: string | number | Timeout | undefined;
+	DOMUtils: DOMUtils;
 
 	events: Events;
 
@@ -57,6 +60,8 @@ export class SpeechSynth extends EventEmitter {
 		super();
 
 		this.textContainer = textContainer;
+
+		this.DOMUtils = new DOMUtils();
 
 		/* Instances */
 
@@ -160,6 +165,7 @@ export class SpeechSynth extends EventEmitter {
 
 		const stateSetter = (obj: any, key: string | symbol, value: any) => {
 			const result = Reflect.set(obj, key, value);
+
 			this.emit('state-change', this, key);
 			return result;
 		};
@@ -174,7 +180,6 @@ export class SpeechSynth extends EventEmitter {
 				/* UI */
 				isLoading: false,
 				/* Highlight & Reading time */
-				tagIndex: 0,
 				currentWord: '',
 				currentWordIndex: 0,
 				currentWordProps: { charIndex: 0, charLength: 0 },
@@ -224,54 +229,63 @@ export class SpeechSynth extends EventEmitter {
 		try {
 			await this.retrieveAndSetVoices();
 
-			this.addHTMLHighlightTags(this.textContainer);
+			this.DOMUtils.addHTMLHighlightTags(this.textContainer);
 
-			this.applyBasicStyleToWords(this.textContainer, '[data-id]');
+			DOMUtils.applyBasicStyleToWords(this.textContainer, '[data-id]');
 
 			/* Init state properties */
 
-			this.state.numberOfWords = this.retrieveNumberOfWords(
+			this.state.numberOfWords = DOMUtils.retrieveNumberOfWords(
 				this.textContainer,
 				'[data-id]'
 			);
 
-			this.state.wholeText = this.retrieveWholeText(
+			this.state.wholeText = DOMUtils.retrieveWholeText(
 				this.textContainer,
 				'[data-id]'
 			);
 
 			this.state.textRemaining = this.state.wholeText;
 
-			this.state.duration = this.getTextDuration(
+			this.state.duration = TextUtils.getTextDuration(
 				this.state.wholeText,
 				this.settings.rate as number
 			);
 
-			this.state.wholeTextArray = this.retrieveWholeTextArray(
+			this.state.wholeTextArray = DOMUtils.retrieveWholeTextArray(
 				this.textContainer,
 				'[data-id]'
 			) as string[];
 
-			this.state.chunksArray = this.retrieveChunks();
+			this.state.chunksArray = TextUtils.retrieveChunks(
+				this.state.wholeTextArray
+			);
 
-			this.state.isBrushAvailable = await this.isBrushAvailable();
+			this.state.isBrushAvailable = await Utils.isBrushAvailable(
+				this.style.brush,
+				this.style.color1
+			);
 			/* -------------------------------------------------------------------- */
 
 			/* Attach click event listener to words */
 
-			this.attachEventListenersToWords(this.textContainer, '[data-id]', {
-				type: 'click',
-				fn: (e) => {
-					const target: HTMLElement = e.target as HTMLElement;
-					const idx: number = +(target.dataset.id as string);
-					// console.log('Word click, seek to:', idx);
-					this.seekTo(idx);
-				},
-			});
+			DOMUtils.attachEventListenersToWords(
+				this.textContainer,
+				'[data-id]',
+				{
+					type: 'click',
+					fn: (e) => {
+						const target: HTMLElement = e.target as HTMLElement;
+						const idx: number = +(target.dataset.id as string);
+						// console.log('Word click, seek to:', idx);
+						this.seekTo(idx);
+					},
+				}
+			);
 
 			/* Add class custom event listeners */
 
-			this.addCustomEventListeners();
+			DOMUtils.addCustomEventListeners(this.events, this);
 
 			/* -------------------------------------------------------------------- */
 
@@ -325,10 +339,6 @@ export class SpeechSynth extends EventEmitter {
 			)
 				return this.emit('end', this);
 
-			/* Emit the seek event to keep the UI seekbar in sync with the currentWordIndex */
-
-			// this.emit('seek', this);
-
 			/* Handle the highlight options change dynamically */
 			/* 
 			If the isPreserveHighlighting option is disabled, 
@@ -355,213 +365,70 @@ export class SpeechSynth extends EventEmitter {
 	e.g. alignment of punctuation, spaces, etc...
 	*/
 
-	private addHTMLHighlightTags(node: Element) {
-		const nodes = [...node.childNodes];
-		nodes.forEach((el) => {
-			/* Exclude code tags and its content from parsing */
-			if (
-				el.nodeType === 1 &&
-				((el as HTMLElement).tagName === 'PRE' ||
-					(el as HTMLElement).tagName === 'CODE')
-			)
-				return;
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+	/*  Highlight Methods  */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
-			/* Recurse if the element is an HTMLElement */
+	private highlightText(wordIndex: number): void {
+		/* Do not highlight if the option is disabled */
+		if (!this.options.isHighlightTextOn) return;
 
-			if (el.nodeType === 1) this.addHTMLHighlightTags(el as Element);
+		// eslint-disable-next-line prettier/prettier
+		const wordToHighlight: HTMLElement | null =
+			this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
 
-			/* Begin text node parsing if node type is TextNode */
+		if (!wordToHighlight) return;
 
-			if (el.nodeType === 3) {
-				if (
-					Utils.isEmptyString(el.textContent as string) ||
-					Utils.isSpace(el.textContent as string) ||
-					Utils.isWhitespaceChar(el.textContent as string)
-				)
-					return;
-				const wrapper = document.createElement('span');
+		/* Update highlighted words array */
 
-				(el as Text).data
-					.split('')
-					.filter((char, i, arr) => {
-						/* Dismiss empty strings or non valid values */
+		this.state.highlightedWords.push(wordToHighlight);
 
-						if (!char) return false;
+		/* Calculate current word position */
 
-						/* Get rid of spaces between words and punctuation */
+		const position = wordToHighlight.getBoundingClientRect().x;
 
-						if (
-							Utils.isSpace(char) &&
-							Utils.isPunctuation(arr[i + 1])
-						)
-							return false;
+		/* Scroll to the right row position */
 
-						/* Get rid of multiple spaces to avoid inconsistencies */
+		if (position <= this.state.lastWordPosition)
+			DOMUtils.scrollTo(this.state.currentWordIndex);
 
-						if (Utils.isSpace(char) && Utils.isSpace(arr[i + 1]))
-							return false;
+		/* Reset the row highlight only if it's not in chunks mode.
+		   In chunks mode, it has to be managed during the chunks switch ( in the "onend" handler) */
 
-						return true;
-					})
+		if (
+			!this.options.isPreserveHighlighting &&
+			!this.options.isChunksModeOn
+		) {
+			this.resetHighlight();
+			this.state.highlightedWords = [wordToHighlight];
+		}
 
-					/* Separate special characters that will be read as single characters */
+		/* Update last word position */
 
-					.map((c, i, arr) => {
-						/* Replace whitespace characters with common spaces */
+		this.state.lastWordPosition = position;
 
-						if (Utils.isWhitespaceChar(c)) return ' ';
+		/* Apply highlight style */
 
-						/* Separate the special readable characters like @#^*° so they can be read accordingly */
+		this.applyStyleToWord(wordToHighlight);
+	}
 
-						if (Utils.isSpecialReadableCharacter(c))
-							return ` ${c} `;
+	private resetHighlight() {
+		this.state.highlightedWords.forEach((n) => {
+			(n as HTMLElement).style.background = '';
+			(n as HTMLElement).style.color = '';
+			(n as HTMLElement).style.textDecoration = 'none';
 
-						/* Handle dots in the middle of numbers e.g. 1.000 1.23 */
-
-						if (
-							Utils.isDot(c) &&
-							Utils.isNumber(arr[i - 1]) &&
-							Utils.isNumber(arr[i + 1])
-						)
-							return `${c}`;
-
-						/* Handle dots in the middle of words and numbers e.g. some.text e.g. abc33.bb32 , 
-						since in this case they are read as a character : "some dot text" "one dot zero zero zero" */
-
-						if (
-							Utils.isDot(c) &&
-							Utils.isWordWithNumbers(arr[i - 1]) &&
-							Utils.isWordWithNumbers(arr[i + 1])
-						)
-							return ` ${c} `;
-
-						/* Handle the punctation characters apart dots placed in the middle of a word e.g. test:test --> test: test */
-
-						if (
-							Utils.isPunctuationButDot(c) &&
-							Utils.isWord(arr[i - 1]) &&
-							Utils.isWord(arr[i + 1])
-						)
-							return `${c} `;
-
-						/* Handle multiple zeroes in a row, since they are read a single separated words */
-
-						return c;
-					})
-					.join('')
-					.split(' ')
-					.forEach((word, i, arr) => {
-						if (!word) return;
-
-						/* If it's a special unreadable character or a dot it does not add an highlight data-id since those characters won't  be read */
-
-						if (
-							// Utils.isPunctuation(word) ||
-							Utils.isSpecialUnreadableCharacter(word) ||
-							Utils.isWordInsideAngularBrackets(word)
-						) {
-							const newEl = document.createTextNode(word + ' ');
-							wrapper.appendChild(newEl);
-						} else {
-							/* In all other cases, which is, "plain words or slashes or any other readable character" we add the data-id attribute */
-
-							const newEl = document.createElement('span');
-
-							newEl.setAttribute(
-								'data-id',
-								(this.state.tagIndex++).toString()
-							);
-							newEl.setAttribute('data-type', 'WORD');
-
-							/* Do not add a space after the word if it's a special readable character or if the next word is not a plain word */
-							if (
-								Utils.isSpecialReadableCharacter(word) ||
-								Utils.isSpecialReadableCharacter(arr[i + 1]) ||
-								Utils.isDot(word) ||
-								Utils.isDot(arr[i + 1]) ||
-								Utils.isZero(word)
-							) {
-								newEl.textContent = word;
-							} else newEl.textContent = word + ' ';
-							/* Add a space after the words that are Text words */
-
-							wrapper.appendChild(newEl);
-						}
-					});
-				node.replaceChild(wrapper, el);
-			}
+			this.state.highlightedWords = [];
 		});
 	}
 
-	/*  Highlight  */
+	/* Chunk highlighting */
 
 	private highlightChunk(idx: number) {
 		const length =
 			this.state.currentWordIndex + this.state.chunksArray[idx].length;
 		for (let i = this.state.currentWordIndex; i < length; i++)
 			this.highlightText(i);
-	}
-
-	private retrieveChunks(): Chunk[] {
-		let currentPunctuationSymbol = '.';
-		const chunks: Chunk[] = [];
-		let previousEnd = 0;
-
-		/* 
-		Take into account that all the special readable characters will be counted as plain words hence we need to:
-		- use the "wholeTextArray" which holds all the text elements that were wrapped in a span tag with a data-id attribute,
-		  this ensures that it will contain all readable content, since only readable words/characters are given such a wrap tag in 
-		  "addHTMLHighlightTags" method.
-		  This further ensures to have a unique source of truth to keep in sync reading content and visual highlighting.
-		- join with spaces every single character wrapped with a data-id attribute tag to be able to further split on given breakpoints
-		- split in segments relative to periods that have words ending with a punctuation mark, to do so we use this regexp "/(?<=[a-zA-Z0-9])[.?!;]/"
-		  to make sure to select any punctuation mark that is preceeded by a word
-		  ( to avoid to consider punctuation in the middle of words as chunk edges, we use the wholeTextArray array
-			which already owns all characters that will be read, included dots in the middle of words e.g. text.text -> "text dot text" ).
-		- for each of the chunk extracted we build an object containg all the info on the chunk, start,end,length, index and text.
-		  The text is the content that will be passed to the speech synth 
-		- The chunk text has to be further manipulated since now as we manipulated the chunk the dots in the middle of the word won't be read as they are detached from the previous and next words.
-		  The strategy here is the same used in the "retrieveWholeText" method, which is: using the custom __join__ method
-		  tho use a space " " to join all the plain words and a no space "" to join the words that have a punctuation element next to them and dots element themselves */
-
-		this.state.wholeTextArray
-			.join(' ')
-			/* Alternative regexps:
-			1- /(?<![\s])[.?!;]+(?=[\s\n])/ This is safer since it just checks if there are spaces before and after the dot 
-			2- /(?<=[a-zA-Z0-9])[.?!;]/  This does not take into account dots placed after a special character like a parens e.g. (word). <-- That dot won't be matched
-			*/
-			.split(/(?<![\s])[.?!;]+(?=[\s\n])/)
-			.forEach((c, i) => {
-				if (Utils.isPunctuation(c)) currentPunctuationSymbol = c;
-				else {
-					const length = c
-						.trim()
-						.split(/[\s]/)
-						.filter((el) => el).length;
-					/*  */
-
-					const text = c.split(/\s+/).__join__((el, i, arr) => {
-						if (
-							Utils.isPunctuation(arr[i + 1] as string) ||
-							Utils.isDot(el)
-						) {
-							return '';
-						} else return ' ';
-					});
-
-					const result: Chunk = {
-						text: text + currentPunctuationSymbol,
-						length: length,
-						start: previousEnd,
-						end: previousEnd + length - 1,
-						idx: i,
-					};
-
-					previousEnd = previousEnd + length;
-					chunks.push(result);
-				}
-			});
-		return chunks;
 	}
 
 	private handleChunkHighlighting() {
@@ -582,18 +449,9 @@ export class SpeechSynth extends EventEmitter {
 		this.highlightChunk(this.state.currentChunkIndex);
 	}
 
-	private scrollTo(idx: number): void {
-		const el: HTMLElement | null = this.textContainer.querySelector(
-			`[data-id="${idx}"]`
-		);
-		if (el)
-			el.scrollIntoView({
-				behavior: 'smooth',
-				block: 'center',
-			});
-	}
-
-	/* Timer */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+	/* Timer handling methods */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private timeCount(e: SpeechSynthesisEvent | null, frequency: number) {
 		if (frequency % 10 !== 0)
@@ -615,7 +473,9 @@ export class SpeechSynth extends EventEmitter {
 		this.clearTimeCount();
 	}
 
-	/* Handle the boundary event */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+	/* Event Handlers */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private handleBoundary(e: SpeechSynthesisEvent) {
 		/* Disable boundary if it's in chunk mode */
@@ -639,7 +499,8 @@ export class SpeechSynth extends EventEmitter {
 		*/
 
 		if (
-			(Utils.isNumber(previousWord) || Utils.isValidDate(previousWord)) &&
+			(TextUtils.isNumber(previousWord) ||
+				TextUtils.isValidDate(previousWord)) &&
 			e.charIndex === this.state.currentWordProps.charIndex &&
 			e.charLength === this.state.currentWordProps.charLength
 		)
@@ -672,7 +533,9 @@ export class SpeechSynth extends EventEmitter {
 		this.emit('boundary', this, e);
 	}
 
-	/* VOICES ARE POPULATED ASYNCHRONOUSLY ON BROWSER LOAD */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+	/* Manage voices retrieval and setting - Voices retrieval is asynchronous since they are populated asynchronously on browser */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private filterVoices(
 		voices: SpeechSynthesisVoice[]
@@ -710,63 +573,9 @@ export class SpeechSynth extends EventEmitter {
 		this.updateVoices();
 	}
 
-	/* Highlight */
-
-	private highlightText(wordIndex: number): void {
-		/* Do not highlight if the option is disabled */
-		if (!this.options.isHighlightTextOn) return;
-
-		// eslint-disable-next-line prettier/prettier
-		const wordToHighlight: HTMLElement | null =
-			this.textContainer.querySelector(`[data-id="${wordIndex}"]`);
-
-		if (!wordToHighlight) return;
-
-		/* Update highlighted words array */
-
-		this.state.highlightedWords.push(wordToHighlight);
-
-		/* Calculate current word position */
-
-		const position = wordToHighlight.getBoundingClientRect().x;
-
-		/* Scroll to the right row position */
-
-		if (position <= this.state.lastWordPosition)
-			this.scrollTo(this.state.currentWordIndex);
-
-		/* Reset the row highlight only if it's not in chunks mode.
-		   In chunks mode, it has to be managed during the chunks switch ( in the "onend" handler) */
-
-		if (
-			!this.options.isPreserveHighlighting &&
-			!this.options.isChunksModeOn
-		) {
-			this.resetHighlight();
-			this.state.highlightedWords = [wordToHighlight];
-		}
-
-		/* Update last word position */
-
-		this.state.lastWordPosition = position;
-
-		/* Apply highlight style */
-
-		this.applyStyleToWord(wordToHighlight);
-	}
-
-	private async isBrushAvailable() {
-		const URL = Utils.getBrushURL(this.style.brush, this.style.color1).http;
-
-		try {
-			const res = await fetch(URL);
-			const data = await res.blob();
-			if (res.ok && /image/.test(data?.type)) return true;
-			else return false;
-		} catch (e) {
-			return false;
-		}
-	}
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+	/* Style methods */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private applyStyleToWord(el: HTMLElement) {
 		const URL = Utils.getBrushURL(this.style.brush, this.style.color1).css;
@@ -782,9 +591,13 @@ export class SpeechSynth extends EventEmitter {
 			: 'none';
 	}
 
-	/* Private handlers for proxy traps */
+	private applyStyleToHighlightedWords() {
+		this.state.highlightedWords.forEach((w) => this.applyStyleToWord(w));
+	}
 
-	/* Proxy trap handlers */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+	/* Private handlers for proxy traps */
+	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private changeChunkMode() {
 		this.clearTimeCount();
@@ -812,8 +625,6 @@ export class SpeechSynth extends EventEmitter {
 		this.restart('chunks-mode-change');
 	}
 
-	/* Settings trap handlers */
-
 	private changeVoice() {
 		const voice =
 			this.state.voices.find(
@@ -824,14 +635,12 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private changeRate() {
-		this.state.duration = this.getTextDuration(
+		this.state.duration = TextUtils.getTextDuration(
 			this.state.wholeText,
 			this.settings.rate
 		);
 
-		/* Recalculate time elapsed */
-
-		this.state.elapsedTime = this.getAverageTextElapsedTime(
+		this.state.elapsedTime = TextUtils.getAverageTextElapsedTime(
 			this.state.wholeTextArray,
 			this.state.currentWordIndex
 		)(this.settings.rate as number);
@@ -843,50 +652,16 @@ export class SpeechSynth extends EventEmitter {
 		this.updateVoices();
 	}
 
-	/* Style handlers */
-
-	private applyStyleToHighlightedWords() {
-		this.state.highlightedWords.forEach((w) => this.applyStyleToWord(w));
-	}
-
-	private resetHighlight() {
-		this.state.highlightedWords.forEach((n) => {
-			(n as HTMLElement).style.background = '';
-			(n as HTMLElement).style.color = '';
-			(n as HTMLElement).style.textDecoration = 'none';
-
-			this.state.highlightedWords = [];
-		});
-	}
-
-	private addCustomEventListeners() {
-		this.events.forEach((e) => {
-			if (e.handlers.length > 0) {
-				for (const handler of e.handlers) {
-					if (Utils.isFunction(handler))
-						this.on(e.type, handler.bind(this));
-				}
-			}
-		});
-	}
-
-	private attachEventListenersToWords(
-		node: Element,
-		selector: string,
-		{ type, fn }: { type: string; fn: (e: Event) => any }
-	) {
-		[...node.querySelectorAll(selector)].forEach((el) => {
-			el.addEventListener(type, fn);
-		});
-	}
-
 	private getRemainingText(): string {
 		const length = this.state.wholeTextArray.length;
 		/* Calculate and set the remaining text */
 		return this.state.wholeTextArray
 			.slice(this.state.currentWordIndex, length + 1)
 			.__join__((el, i, arr) => {
-				if (Utils.isDot(arr[i + 1] as string) || Utils.isDot(el)) {
+				if (
+					TextUtils.isDot(arr[i + 1] as string) ||
+					TextUtils.isDot(el)
+				) {
 					return '';
 				} else return ' ';
 			});
@@ -894,47 +669,6 @@ export class SpeechSynth extends EventEmitter {
 
 	private getCurrentChunkText() {
 		return this.state.chunksArray[this.state.currentChunkIndex]?.text;
-	}
-
-	private retrieveNumberOfWords(node: Element, selector: string) {
-		return [...node.querySelectorAll(selector)].length;
-	}
-
-	private retrieveWholeText(node: Element, selector: string) {
-		return [...node.querySelectorAll(selector)]
-			.map((el) => el.textContent)
-			.__join__((el, i, arr) => {
-				if (
-					Utils.isPunctuation(arr[i + 1] as string) ||
-					Utils.isDot(el)
-				) {
-					return '';
-				} else return ' ';
-			});
-	}
-
-	private retrieveWholeTextArray(node: Element, selector: string) {
-		return [...node.querySelectorAll(selector)].map((el) => el.textContent);
-	}
-
-	private applyBasicStyleToWords(node: Element, selector: string) {
-		[...node.querySelectorAll(selector)]
-			/* .filter(
-				(el) => el && !Utils.isPunctuation(el.textContent as string)
-			) */
-			.forEach((el) => {
-				(el as HTMLElement).style.transition =
-					'backgroundColor 0.2s linear, color 0.2s linear';
-			});
-	}
-
-	private getTextDuration(str: string, rate: number) {
-		return (str.length * 100 * 1) / rate;
-	}
-
-	private getAverageTextElapsedTime(textArray: string[], idx: number) {
-		const _text = textArray.slice(0, idx).join(' ');
-		return (rate: number) => this.getTextDuration(_text, rate);
 	}
 
 	private delayRestart(type: string, delay: number) {
@@ -985,8 +719,6 @@ export class SpeechSynth extends EventEmitter {
 
 			this.state.textRemaining = this.getRemainingText();
 
-			this.state.currentWordIndex = idx;
-
 			/* Update utterance instance with  the new text slice */
 
 			this.utterance.text = this.state.textRemaining;
@@ -1008,7 +740,7 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Recalculate time elapsed */
 
-		this.state.elapsedTime = this.getAverageTextElapsedTime(
+		this.state.elapsedTime = TextUtils.getAverageTextElapsedTime(
 			this.state.wholeTextArray,
 			this.state.currentWordIndex
 		)(this.settings.rate as number);
@@ -1134,7 +866,7 @@ export class SpeechSynth extends EventEmitter {
 
 		/* Scroll back to top word */
 
-		this.scrollTo(1);
+		DOMUtils.scrollTo(1);
 
 		this.emit('reset', this);
 	}

@@ -33,7 +33,6 @@ export const globalState: IGlobalState = {
 		/* UI */
 		isLoading: false,
 		/* Highlight & Reading time */
-		tagIndex: 0,
 		currentWord: '',
 		currentWordIndex: 0,
 		currentWordProps: { charIndex: 0, charLength: 0 },

@@ -41,7 +41,6 @@ export interface IState {
     voice: SpeechSynthesisVoice;
     voices: SpeechSynthesisVoice[];
     isLoading: boolean;
-    tagIndex: number;
     currentWord: string;
     currentWordIndex: number;
     currentWordProps: ICurrentWordProps;

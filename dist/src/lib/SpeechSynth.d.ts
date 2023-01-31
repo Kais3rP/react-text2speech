@@ -1,11 +1,13 @@
 /// <reference types="node" />
 import EventEmitter from 'events';
+import { DOMUtils } from './DOMUtils';
 import { IStyle, ISettings, Events, IOptions, IState, Params } from './types';
 export declare class SpeechSynth extends EventEmitter {
     textContainer: HTMLElement;
     synth: SpeechSynthesis;
     utterance: SpeechSynthesisUtterance;
     timeoutRef: string | number | Timeout | undefined;
+    DOMUtils: DOMUtils;
     events: Events;
     style: IStyle;
     settings: ISettings;
@@ -14,11 +16,10 @@ export declare class SpeechSynth extends EventEmitter {
     constructor(textContainer: HTMLElement, { language, color1, color2, onStateChange, onSettingsChange, onOptionsChange, onStyleChange, }?: Params);
     init(): Promise<SpeechSynth>;
     private initUtterance;
-    private addHTMLHighlightTags;
+    private highlightText;
+    private resetHighlight;
     private highlightChunk;
-    private retrieveChunks;
     private handleChunkHighlighting;
-    private scrollTo;
     private timeCount;
     private clearTimeCount;
     private resetTimeCount;
@@ -27,25 +28,14 @@ export declare class SpeechSynth extends EventEmitter {
     private getAllVoices;
     private updateVoices;
     private retrieveAndSetVoices;
-    private highlightText;
-    private isBrushAvailable;
     private applyStyleToWord;
+    private applyStyleToHighlightedWords;
     private changeChunkMode;
     private changeVoice;
     private changeRate;
     private changeLanguage;
-    private applyStyleToHighlightedWords;
-    private resetHighlight;
-    private addCustomEventListeners;
-    private attachEventListenersToWords;
     private getRemainingText;
     private getCurrentChunkText;
-    private retrieveNumberOfWords;
-    private retrieveWholeText;
-    private retrieveWholeTextArray;
-    private applyBasicStyleToWords;
-    private getTextDuration;
-    private getAverageTextElapsedTime;
     private delayRestart;
     private restart;
     seekTo(idx: number): void;

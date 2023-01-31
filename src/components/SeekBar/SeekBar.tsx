@@ -19,6 +19,7 @@ const SeekBar: FC<ISeekBarProps> = () => {
 	);
 
 	const handleManualSeek = (e) => {
+		if (!reader) return;
 		const value = +(e.target as HTMLInputElement).value;
 		debouncedHandleManualSeek(value);
 	};
