@@ -1,4 +1,5 @@
 .container {
+	opacity: 0;
 	width: min(100vw, 350px);
 	/* height: 135px; */
 	right: -350px;
@@ -15,7 +16,8 @@
 	background-color: var(--bgColor);
 	font-family: Arial, sans-serif !important;
 	box-sizing: border-box;
-	transition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear;
+	transition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear,
+		opacity 0.7s ease-out;
 	padding: 0px 15px;
 }
 
@@ -36,6 +38,7 @@
 
 .visible {
 	right: 5px;
+	opacity: 1;
 }
 
 .minimized {

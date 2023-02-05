@@ -11,6 +11,7 @@ export const useOptions = () => {
 			isHighlightTextOn,
 			isPreserveHighlighting,
 			isUnderlinedOn,
+			isBrushOn,
 		},
 	} = state;
 
@@ -41,33 +42,46 @@ export const useOptions = () => {
 			reader.options.isUnderlinedOn = target.checked;
 		};
 
+		const handleIsBrushOn: ChangeEventHandler = (e) => {
+			if (!reader) return;
+			const target = e.target as HTMLInputElement;
+			reader.options.isBrushOn = target.checked;
+		};
+
 		return [
 			{
 				id: 'highlight-option',
-				label: 'Enable Highlighting',
+				label: 'Highlight',
 				value: isHighlightTextOn,
 				handler: handleIsHighlightTextOn,
 			},
 			{
 				id: 'preserve-option',
-				label: 'Preserve Highlighting',
+				label: 'Preserve',
 				value: isPreserveHighlighting,
 				handler: handlePreserveHighlighting,
 			},
 			{
 				id: 'chunksmode-option',
-				label: 'Enable Chunks Mode',
+				label: 'Chunks',
 				value: isChunksModeOn,
 				handler: handleIsChunksModeOn,
 			},
 			{
 				id: 'underlined-option',
-				label: 'Enable Underline',
+				label: 'Underline',
 				value: isUnderlinedOn,
 				handler: handleIsUnderlinedOn,
 			},
+			{
+				id: 'brush-option',
+				label: 'Brush',
+				value: isBrushOn,
+				handler: handleIsBrushOn,
+			},
 		];
 	}, [
+		isBrushOn,
 		isChunksModeOn,
 		isHighlightTextOn,
 		isPreserveHighlighting,

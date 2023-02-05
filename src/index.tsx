@@ -1,6 +1,6 @@
 /* Providers */
 
-import TextReader from 'components/TextReader/TextReader';
+import Wrapper from 'components/Wrapper/Wrapper';
 import { MainPropsProvider, StoreProvider, ReaderProvider } from 'contexts';
 import { BindReader } from 'contexts/types';
 import React, { FC, useCallback, useState } from 'react';
@@ -30,7 +30,7 @@ const App: FC<IProps> = ({
 		>
 			<StoreProvider>
 				<ReaderProvider>
-					<TextReader />
+					<Wrapper />
 				</ReaderProvider>
 			</StoreProvider>
 		</MainPropsProvider>

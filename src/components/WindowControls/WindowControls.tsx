@@ -2,11 +2,7 @@ import React, { FC } from 'react';
 import { IWindowControlsProps } from './types';
 import { FiMaximize } from '@react-icons/all-files/fi/FiMaximize';
 import { FiMinimize } from '@react-icons/all-files/fi/FiMinimize';
-/* import { MdDarkMode } from '@react-icons/all-files/md/MdDarkMode';
-import { MdLightMode } from '@react-icons/all-files/md/MdLightMode'; */
-
 import { MdClose } from '@react-icons/all-files/md/MdClose';
-import { IoMdArrowBack } from '@react-icons/all-files/io/IoMdArrowBack';
 import { changeUIState } from 'store/actions';
 import styles from './styles.module.css';
 import { useStore } from 'contexts';
@@ -16,15 +12,10 @@ import { BsMoon } from '@react-icons/all-files/bs/BsMoon';
 const WindowControls: FC<IWindowControlsProps> = () => {
 	const {
 		state: {
-			UIState: { isMinimized, isVisible, isDark },
+			UIState: { isMinimized, isDark },
 		},
 		dispatch,
 	} = useStore();
-
-	const handleShowReader = (e) => {
-		e.stopPropagation();
-		dispatch(changeUIState({ isVisible: true }));
-	};
 
 	const handleHideReader = (e) => {
 		e.stopPropagation();
@@ -43,21 +34,6 @@ const WindowControls: FC<IWindowControlsProps> = () => {
 
 	return (
 		<div className={styles.container}>
-			{/* Show button overlay */}
-			{!isVisible && (
-				<div
-					title={'Show'}
-					className={styles.showButton}
-					onPointerDown={handleShowReader}
-					onTouchEnd={(e) => {
-						e.preventDefault();
-						e.stopPropagation();
-					}}
-				>
-					<div className={styles.line} />
-					<IoMdArrowBack className={styles.arrow} />
-				</div>
-			)}
 			{/* Dark mode button */}
 			<div
 				title={`${isDark ? 'Light' : 'Dark'} Mode`}

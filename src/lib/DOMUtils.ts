@@ -180,7 +180,7 @@ export class DOMUtils {
 				(el as HTMLElement).style.transition =
 					'background-color 0.2s linear, color 0.2s linear';
 				(el as HTMLElement).style.margin = '0px -0.3em';
-				(el as HTMLElement).style.padding = '0.3em 0.3em';
+				(el as HTMLElement).style.padding = '0.2em 0.3em';
 				(el as HTMLElement).style.backgroundSize = 'cover';
 			});
 	}

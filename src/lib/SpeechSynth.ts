@@ -103,10 +103,9 @@ export class SpeechSynth extends EventEmitter {
 					this.changeLanguage();
 					break;
 				default:
+					this.utterance[key] = value;
 			}
 
-			/* Re initialize the utterance */
-			this.initUtterance();
 			this.restart();
 			this.emit('settings-change', this);
 			return result;
@@ -137,6 +136,9 @@ export class SpeechSynth extends EventEmitter {
 				case 'isUnderlinedOn':
 					this.applyStyleToHighlightedWords();
 					break;
+				case 'isBrushOn':
+					this.applyStyleToHighlightedWords();
+					break;
 				case 'isHighlightTextOn':
 					if (value) {
 						if (this.options.isChunksModeOn)
@@ -155,6 +157,7 @@ export class SpeechSynth extends EventEmitter {
 				isChunksModeOn: Utils.isMobile(),
 				isPreserveHighlighting: true,
 				isUnderlinedOn: false,
+				isBrushOn: true,
 			},
 			{
 				set: optionsSetter,
@@ -329,6 +332,7 @@ export class SpeechSynth extends EventEmitter {
 		Use this to manage chunk highlighting and extra logic that concerns chunks management
 		*/
 		this.utterance.onend = (e) => {
+			console.log('End of chunk');
 			/* This prevents the execution of code if the end event is called in response to the reset method being called */
 
 			if (this.state.isReading === false && this.state.isPaused === false)
@@ -548,6 +552,7 @@ export class SpeechSynth extends EventEmitter {
 	private filterVoices(
 		voices: SpeechSynthesisVoice[]
 	): SpeechSynthesisVoice[] {
+		console.log(voices);
 		return voices.filter((voice) =>
 			voice.lang.startsWith(this.settings.language as string)
 		);
@@ -573,7 +578,7 @@ export class SpeechSynth extends EventEmitter {
 	private updateVoices() {
 		this.state.voices = this.filterVoices(this.state.allVoices);
 		this.state.voice = this.state.voices[0];
-		this.settings.voiceURI = this.state.voice.voiceURI;
+		this.settings.voiceURI = this.state.voice?.voiceURI || '';
 	}
 
 	private async retrieveAndSetVoices() {
@@ -588,10 +593,14 @@ export class SpeechSynth extends EventEmitter {
 	private applyStyleToWord(el: HTMLElement) {
 		const URL = Utils.getBrushURL(this.style.brush, this.style.color1).css;
 
-		el.style.backgroundImage = this.state.isBrushAvailable ? URL : 'none';
-		el.style.backgroundColor = this.state.isBrushAvailable
-			? 'transparent'
-			: this.style.color1;
+		el.style.backgroundImage =
+			this.state.isBrushAvailable && this.options.isBrushOn
+				? URL
+				: 'none';
+		el.style.backgroundColor =
+			this.state.isBrushAvailable && this.options.isBrushOn
+				? 'transparent'
+				: this.style.color1;
 
 		el.style.color = this.style.color2 as string;
 		el.style.textDecoration = this.options.isUnderlinedOn
@@ -652,7 +661,7 @@ export class SpeechSynth extends EventEmitter {
 			this.state.wholeTextArray,
 			this.state.currentWordIndex
 		)(this.settings.rate as number);
-
+		this.utterance.rate = this.settings.rate;
 		this.emit('time-tick', this, this.state.elapsedTime);
 	}
 
@@ -706,6 +715,7 @@ export class SpeechSynth extends EventEmitter {
 	/* Control methods */
 
 	seekTo(idx: number) {
+		console.log('Seek to', idx);
 		/* Reset timeouts  */
 
 		this.clearTimeCount();
@@ -773,6 +783,7 @@ export class SpeechSynth extends EventEmitter {
 
 		return new Promise((resolve) => {
 			this.utterance.onstart = (e) => {
+				console.log('On start');
 				/* Highlight the first chunk on the first start if it's chunks mode ON / mobile */
 				if (this.options.isChunksModeOn) this.highlightChunk(0);
 				this.state.isLoading = false;

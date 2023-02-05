@@ -20,6 +20,7 @@ export interface IOptions {
 	isPreserveHighlighting: boolean;
 	isChunksModeOn: boolean;
 	isUnderlinedOn: boolean;
+	isBrushOn: boolean;
 }
 
 export interface ISettings {

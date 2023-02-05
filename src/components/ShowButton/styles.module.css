@@ -1,0 +1,51 @@
+.showButton {
+	position: fixed;
+	bottom: 20px;
+	right: -19px;
+	border-radius: 50%;
+	border: 2px solid var(--primaryColor);
+	width: 40px;
+	height: 40px;
+	background-color: var(--secondaryColor);
+	cursor: pointer;
+	z-index: 100;
+	transition: all 0.2s ease-out;
+}
+
+.showButton:hover {
+	border: 2px solid var(--secondaryColor);
+	transform: scale(1.05);
+	box-shadow: 0px 0px 10px 2px var(--secondaryColor);
+	background-color: var(--bgColor);
+}
+
+.showButton:hover .arrow {
+	fill: var(--primaryColor);
+	left: -60px;
+	transform: scale(3) translateY(-3px);
+	opacity: 0;
+}
+
+.line {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	height: 38px;
+	width: 2px;
+	background-color: var(--primaryColor);
+}
+
+.arrow {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	left: -1px;
+	width: 20px;
+	height: 20px;
+	font-size: 340px;
+	fill: var(--bgColor);
+	transition: all 0.7s ease-out;
+	pointer-events: none;
+	/* animation: movingArrow 0.5s infinite linear; */
+}
