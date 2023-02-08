@@ -7,6 +7,7 @@ export declare class SpeechSynth extends EventEmitter {
     synth: SpeechSynthesis;
     utterance: SpeechSynthesisUtterance;
     timeoutRef: string | number | Timeout | undefined;
+    debouncedRestartTimeoutRef: string | number | Timeout | undefined;
     DOMUtils: DOMUtils;
     events: Events;
     style: IStyle;
@@ -37,13 +38,14 @@ export declare class SpeechSynth extends EventEmitter {
     private getRemainingText;
     private getCurrentChunkText;
     private getAndSetText;
-    private delayRestart;
+    private cancelUtterance;
+    private cancel;
+    private debouncedRestart;
     private restart;
     seekTo(idx: number): void;
     play(): Promise<null>;
     pause(): void;
     resume(): void;
-    cancel(): void;
     reset(): void;
     isReading(): boolean;
     isPaused(): boolean;

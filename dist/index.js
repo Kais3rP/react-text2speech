@@ -878,6 +878,7 @@ class SpeechSynth extends EventEmitter {
         this.utterance = new window.SpeechSynthesisUtterance();
         /* Timeouts */
         this.timeoutRef = undefined;
+        this.debouncedRestartTimeoutRef = undefined;
         /* Events */
         this.events = [
             { type: 'state-change', handlers: [onStateChange] },
@@ -908,8 +909,8 @@ class SpeechSynth extends EventEmitter {
                     this.utterance[key] = value;
             }
             /* Recalculate the remaining text on utterance settings change */
-            this.getAndSetText();
-            this.restart();
+            this.initUtterance();
+            this.debouncedRestart(200);
             this.emit('settings-change', this);
             return result;
         };
@@ -1070,8 +1071,8 @@ class SpeechSynth extends EventEmitter {
         Use this to manage chunk highlighting and extra logic that concerns chunks management
         */
         this.utterance.onend = (e) => {
-            console.log('End of chunk', e);
-            /* Since synth.cancel() method triggers the "end" event on Firefox and other browsers, this prevents chunks mode bugs while using these browsers */
+            /* Since synth.cancel() method triggers the "end" event on Firefox and other browsers, this prevents bugs while using these browsers.
+             */
             if (this.state.isUtteranceCanceled)
                 return;
             /* This prevents the execution of code if the end event is called in response to the reset method being called */
@@ -1220,7 +1221,6 @@ class SpeechSynth extends EventEmitter {
     /* Manage voices retrieval and setting - Voices retrieval is asynchronous since they are populated asynchronously on browser */
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     filterVoices(voices) {
-        console.log(voices);
         return voices.filter((voice) => voice.lang.startsWith(this.settings.language));
     }
     getAllVoices() {
@@ -1335,21 +1335,37 @@ class SpeechSynth extends EventEmitter {
         this.state.textRemaining = this.getRemainingText();
         this.utterance.text = this.state.textRemaining;
     }
-    delayRestart(delay) {
-        return setTimeout(() => {
-            this.cancel();
+    cancelUtterance() {
+        this.state.isUtteranceCanceled = true;
+        this.synth.cancel();
+        setTimeout(() => (this.state.isUtteranceCanceled = false), 1000);
+    }
+    cancel() {
+        this.synth.cancel();
+    }
+    debouncedRestart(delay) {
+        clearTimeout(this.debouncedRestartTimeoutRef);
+        this.debouncedRestartTimeoutRef = setTimeout(() => {
+            this.cancelUtterance();
             if (this.isReading())
                 this.play();
             if (this.isPaused()) {
-                this.play().then(() => this.pause());
+                this.play().then(() => {
+                    /* Asynchronous */
+                    this.pause();
+                });
+                /* Asynchronous polyfill for FIrefox, otherwise pause() doesn't work properly if fired immediately after "start" event is triggered */
+                setTimeout(() => this.pause(), 100);
+                /* Synchronous */
                 this.pause();
             }
-        }, 500);
+        }, delay);
     }
     restart() {
         this.cancel();
         if (this.isReading())
             this.play();
+        /* To make sure the pause event is called after the "start" event has fired, which is asynchronous, we call it both synchronously and asynchronously */
         if (this.isPaused()) {
             this.play().then(() => this.pause());
             this.pause();
@@ -1360,7 +1376,6 @@ class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     /* Control methods */
     seekTo(idx) {
-        console.log('Seek to', idx);
         /* Reset timeouts  */
         this.clearTimeCount();
         /* Sync the current chunk in both cases that the seeking is performed in chunk or non chunk mode */
@@ -1386,13 +1401,14 @@ class SpeechSynth extends EventEmitter {
         /* Recalculate time elapsed */
         this.state.elapsedTime = TextUtils.getAverageTextElapsedTime(this.state.wholeTextArray, this.state.currentWordIndex)(this.settings.rate);
         this.emit('time-tick', this, this.state.elapsedTime);
-        this.restart();
+        this.debouncedRestart(500);
     }
     /* ------------------------------------------------------------------------------------ */
     /* Public Methods to control the player state */
     /* ------------------------------------------------------------------------------------ */
     play() {
-        this.cancel(); // Makes sure the queue is empty when starting
+        /* Canceling the queue before calling synth.speak() prevenst subtle bugs on some browsers like FIrefox that trigger the "start" event only if the queue is empty  */
+        this.cancel();
         this.clearTimeCount(); // Makes sure to not trigger multiple timeouts
         this.synth.speak(this.utterance);
         this.state.isPaused = false;
@@ -1400,7 +1416,6 @@ class SpeechSynth extends EventEmitter {
         this.state.isLoading = true;
         return new Promise((resolve) => {
             this.utterance.onstart = (e) => {
-                console.log('On start');
                 /* Highlight the first chunk on the first start if it's chunks mode ON / mobile */
                 if (this.options.isChunksModeOn)
                     this.highlightChunk(0);
@@ -1428,11 +1443,6 @@ class SpeechSynth extends EventEmitter {
         this.emit('resume', this);
         /* Restart timer */
         this.timeCount(null, 20);
-    }
-    cancel() {
-        this.synth.cancel();
-        this.state.isUtteranceCanceled = true;
-        setTimeout(() => (this.state.isUtteranceCanceled = false), 1000);
     }
     reset() {
         this.cancel();
