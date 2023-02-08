@@ -74,6 +74,7 @@ export interface IState {
 	/* Controls  */
 	isPaused: boolean;
 	isReading: boolean;
+	isUtteranceCanceled: boolean;
 }
 
 export interface IStyle {

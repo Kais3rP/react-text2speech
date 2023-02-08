@@ -36,12 +36,14 @@ export declare class SpeechSynth extends EventEmitter {
     private changeLanguage;
     private getRemainingText;
     private getCurrentChunkText;
+    private getAndSetText;
     private delayRestart;
     private restart;
     seekTo(idx: number): void;
     play(): Promise<null>;
     pause(): void;
     resume(): void;
+    cancel(): void;
     reset(): void;
     isReading(): boolean;
     isPaused(): boolean;

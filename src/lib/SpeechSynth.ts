@@ -105,7 +105,8 @@ export class SpeechSynth extends EventEmitter {
 				default:
 					this.utterance[key] = value;
 			}
-
+			/* Recalculate the remaining text on utterance settings change */
+			this.getAndSetText();
 			this.restart();
 			this.emit('settings-change', this);
 			return result;
@@ -208,6 +209,7 @@ export class SpeechSynth extends EventEmitter {
 				/* Controls  */
 				isPaused: false,
 				isReading: false,
+				isUtteranceCanceled: false,
 			},
 			{
 				set: stateSetter,
@@ -332,7 +334,9 @@ export class SpeechSynth extends EventEmitter {
 		Use this to manage chunk highlighting and extra logic that concerns chunks management
 		*/
 		this.utterance.onend = (e) => {
-			console.log('End of chunk');
+			console.log('End of chunk', e);
+			/* Since synth.cancel() method triggers the "end" event on Firefox and other browsers, this prevents chunks mode bugs while using these browsers */
+			if (this.state.isUtteranceCanceled) return;
 			/* This prevents the execution of code if the end event is called in response to the reset method being called */
 
 			if (this.state.isReading === false && this.state.isPaused === false)
@@ -635,7 +639,7 @@ export class SpeechSynth extends EventEmitter {
 			this.utterance.text = this.getCurrentChunkText();
 			this.highlightChunk(this.state.currentChunkIndex);
 		} else {
-			this.utterance.text = this.getRemainingText();
+			this.getAndSetText();
 			this.resetHighlight();
 		}
 
@@ -688,9 +692,14 @@ export class SpeechSynth extends EventEmitter {
 		return this.state.chunksArray[this.state.currentChunkIndex]?.text;
 	}
 
+	private getAndSetText() {
+		this.state.textRemaining = this.getRemainingText();
+		this.utterance.text = this.state.textRemaining;
+	}
+
 	private delayRestart(delay: number) {
 		return setTimeout(() => {
-			this.synth.cancel();
+			this.cancel();
 			if (this.isReading()) this.play();
 			if (this.isPaused()) {
 				this.play().then(() => this.pause());
@@ -700,7 +709,7 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private restart() {
-		this.synth.cancel();
+		this.cancel();
 		if (this.isReading()) this.play();
 		if (this.isPaused()) {
 			this.play().then(() => this.pause());
@@ -735,11 +744,7 @@ export class SpeechSynth extends EventEmitter {
 
 			/* Set the new text slice */
 
-			this.state.textRemaining = this.getRemainingText();
-
-			/* Update utterance instance with  the new text slice */
-
-			this.utterance.text = this.state.textRemaining;
+			this.getAndSetText();
 
 			/* Highlight */
 
@@ -772,7 +777,7 @@ export class SpeechSynth extends EventEmitter {
 	/* ------------------------------------------------------------------------------------ */
 
 	play(): Promise<null> {
-		this.synth.cancel(); // Makes sure the queue is empty when starting
+		this.cancel(); // Makes sure the queue is empty when starting
 		this.clearTimeCount(); // Makes sure to not trigger multiple timeouts
 
 		this.synth.speak(this.utterance);
@@ -815,15 +820,23 @@ export class SpeechSynth extends EventEmitter {
 		this.timeCount(null, 20);
 	}
 
-	reset() {
+	cancel() {
 		this.synth.cancel();
+		this.state.isUtteranceCanceled = true;
+		setTimeout(() => (this.state.isUtteranceCanceled = false), 1000);
+	}
+
+	reset() {
+		this.cancel();
 		this.resetHighlight();
 
 		/* Reset timer */
 
 		this.resetTimeCount();
 
-		const propsToReset = {
+		/* State props */
+
+		const statePropsToReset = {
 			textRemaining: this.state.wholeText,
 			currentWordIndex: 0,
 			currentChunkIndex: 0,
@@ -831,9 +844,21 @@ export class SpeechSynth extends EventEmitter {
 			lastWordPosition: 0,
 			isPaused: false,
 			isReading: false,
+			isUtteranceCanceled: false,
 		};
-		for (const entry of Object.entries(propsToReset))
+		for (const entry of Object.entries(statePropsToReset))
 			this.state[entry[0]] = entry[1];
+
+		/* Settings props  */
+
+		const settingsPropsToReset = {
+			pitch: 1,
+			rate: 1,
+			volume: 0.5,
+		};
+
+		for (const entry of Object.entries(settingsPropsToReset))
+			this.settings[entry[0]] = entry[1];
 
 		/* Reset the utterance state ( needed to reset the text utterance ) */
 

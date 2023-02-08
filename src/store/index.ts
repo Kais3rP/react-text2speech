@@ -51,6 +51,7 @@ export const globalState: IGlobalState = {
 		/* Controls  */
 		isPaused: false,
 		isReading: false,
+		isUtteranceCanceled: false,
 	},
 };
 

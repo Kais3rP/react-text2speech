@@ -58,6 +58,7 @@ export interface IState {
     isBrushAvailable: boolean;
     isPaused: boolean;
     isReading: boolean;
+    isUtteranceCanceled: boolean;
 }
 export interface IStyle {
     color1: string;
