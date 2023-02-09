@@ -721,7 +721,13 @@ export class SpeechSynth extends EventEmitter {
 					this.pause();
 				});
 				/* Asynchronous polyfill for FIrefox, otherwise pause() doesn't work properly if fired immediately after "start" event is triggered */
+				setTimeout(() => this.pause(), 10);
+				setTimeout(() => this.pause(), 20);
+				setTimeout(() => this.pause(), 30);
+				setTimeout(() => this.pause(), 40);
+				setTimeout(() => this.pause(), 50);
 				setTimeout(() => this.pause(), 100);
+				setTimeout(() => this.pause(), 500);
 				/* Synchronous */
 				this.pause();
 			}

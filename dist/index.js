@@ -1355,7 +1355,13 @@ class SpeechSynth extends EventEmitter {
                     this.pause();
                 });
                 /* Asynchronous polyfill for FIrefox, otherwise pause() doesn't work properly if fired immediately after "start" event is triggered */
+                setTimeout(() => this.pause(), 10);
+                setTimeout(() => this.pause(), 20);
+                setTimeout(() => this.pause(), 30);
+                setTimeout(() => this.pause(), 40);
+                setTimeout(() => this.pause(), 50);
                 setTimeout(() => this.pause(), 100);
+                setTimeout(() => this.pause(), 500);
                 /* Synchronous */
                 this.pause();
             }
@@ -2124,7 +2130,7 @@ var FaReadme_1 = function FaReadme (props) {
 };
 
 var name = "react-text2speech";
-var version = "3.9.5";
+var version = "3.9.6";
 var author = "Cesare Polonara - https://www.cesarepolonara.com";
 var repository = {
 	url: "https://github.com/Kais3rP/react-text2speech",
