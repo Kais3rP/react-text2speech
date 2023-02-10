@@ -8,6 +8,7 @@ import {
 	changeState,
 	changeHighlightStyle,
 	changeUIState,
+	updateError,
 } from 'store/actions';
 
 /* Produce the binder to pass the state and the state handlers to the Consumer Component */
@@ -73,28 +74,26 @@ export const useInitializeReader = () => {
 	const { dispatch } = useStore();
 
 	useEffect(() => {
-		if (!reader || !reader?.deviceInfo.isBrowserSupported)
-			return console.log(Errors.browserNotSupported);
+		/* if (!reader || !reader?.deviceInfo.isBrowserSupported)
+			return console.log(Errors.browserNotSupported); */
 		/* Reset browser active speech synth queue on refresh or new load */
 
-		window.speechSynthesis.cancel();
+		window.speechSynthesis?.cancel();
 		reader
 			?.init()
 			.then((reader) => {
+				console.log('Initializing reader');
 				/* Synchronize UI state with reader initial state */
 				dispatch(changeState(reader.state));
 				dispatch(changeSettings(reader.settings));
 				dispatch(changeOptions(reader.options));
 				dispatch(changeHighlightStyle(reader.style));
-				// dispatch(changeDeviceInfo(reader.deviceInfo));
 			})
 			.catch((e) => {
-				switch (e) {
-					case Errors.browserNotSupported:
-						alert(e);
-				}
+				console.log('Init Error', e);
+				dispatch(updateError({ message: e.message, object: e }));
 			});
-		return () => window.speechSynthesis.cancel();
+		return () => window.speechSynthesis?.cancel();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [reader]);

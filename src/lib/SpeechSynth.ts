@@ -235,7 +235,6 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	public async init(): Promise<SpeechSynth> {
-		console.log(this.deviceInfo);
 		/* Exit if the browser is not supported */
 		if (!this.deviceInfo.isBrowserSupported)
 			throw new Error(Errors.browserNotSupported);
@@ -247,14 +246,14 @@ export class SpeechSynth extends EventEmitter {
 		// eslint-disable-next-line no-extend-native
 		String.prototype.__split__ = TextUtils.__split__;
 
-		/* Init WEB Speech API instances */
-
-		this.synth = window.speechSynthesis;
-		this.utterance = new window.SpeechSynthesisUtterance();
-
-		/* Get voices */
-
 		try {
+			/* Init WEB Speech API instances */
+
+			this.synth = window.speechSynthesis;
+			this.utterance = new window.SpeechSynthesisUtterance();
+
+			/* Get voices */
+
 			await this.retrieveAndSetVoices();
 
 			this.DOMUtils.addHTMLHighlightTags(this.textContainer);
@@ -315,14 +314,14 @@ export class SpeechSynth extends EventEmitter {
 			DOMUtils.addCustomEventListeners(this.events, this);
 
 			/* -------------------------------------------------------------------- */
-
+			console.log('Before init utterance');
 			/* Init utterance settings */
 
 			this.initUtterance();
 
 			return this;
 		} catch (e) {
-			throw new Error(Errors.initializeError + ' ' + e);
+			throw new Error(`${Errors.initializeError}, Reason: ${e}`);
 		}
 	}
 
@@ -331,6 +330,7 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
+		console.log('Voice', this.state.voice);
 		this.utterance.text = this.options.isChunksModeOn
 			? this.getCurrentChunkText()
 			: this.getRemainingText();
@@ -509,6 +509,7 @@ export class SpeechSynth extends EventEmitter {
 	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private handleBoundary(e: SpeechSynthesisEvent) {
+		console.log('Boundary event');
 		/* Disable boundary if it's in chunk mode */
 		if (this.options.isChunksModeOn) return;
 
@@ -550,7 +551,7 @@ export class SpeechSynth extends EventEmitter {
 
 		this.state.currentWordIndex += 1;
 
-		/* Synchronize the chunk index */
+		/* Synchronize the chunk index if the current word has a chunk delimiter character in it ( punctuation ) */
 
 		if (
 			/[.?!;]+/.test(
@@ -579,11 +580,21 @@ export class SpeechSynth extends EventEmitter {
 	private getAllVoices(): Promise<SpeechSynthesisVoice[]> {
 		return new Promise((resolve, reject) => {
 			let id: Interval | null = null;
+			let counter = 0;
 			try {
 				id = setInterval(() => {
+					console.log('Interval', this.synth.getVoices());
+					counter += 10;
 					if (this.synth.getVoices().length !== 0) {
-						resolve(this.synth.getVoices());
+						console.log('Getting voices', this.synth.getVoices());
 						clearInterval(id as Interval);
+						resolve(this.synth.getVoices());
+					}
+					if (counter >= 1000) {
+						// timeout after 10s)
+						console.log('Timeout reached');
+						clearInterval(id as Interval);
+						reject(Errors.voicesRetrieveTimeoutError);
 					}
 				}, 10);
 			} catch (e) {
@@ -600,8 +611,13 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private async retrieveAndSetVoices() {
-		this.state.allVoices = await this.getAllVoices();
-		this.updateVoices();
+		try {
+			this.state.allVoices = await this.getAllVoices();
+			this.updateVoices();
+		} catch (e) {
+			// eslint-disable-next-line no-throw-literal
+			throw e as Error;
+		}
 	}
 
 	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
@@ -712,6 +728,9 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	private cancelUtterance() {
+		/* This flag is required in order to prevent the "onend" handler to execute the default behaviour when the "end" event is fired
+		   after synth.cancel() is called during utterance restart
+		*/
 		this.state.isUtteranceCanceled = true;
 		this.synth.cancel();
 		setTimeout(() => (this.state.isUtteranceCanceled = false), 1000);

@@ -6,6 +6,7 @@ export const globalState: IGlobalState = {
 		isVisible: false,
 		isDark: false,
 	},
+	error: null,
 	settings: {
 		rate: 1,
 		voiceURI: '',
@@ -73,6 +74,12 @@ export const rootReducer = (state: IGlobalState, action: ActionType) => {
 			return {
 				...state,
 				highlightStyle: { ...state.highlightStyle, ...payload },
+			};
+		}
+		case 'UPDATE_ERROR': {
+			return {
+				...state,
+				error: payload,
 			};
 		}
 		default:

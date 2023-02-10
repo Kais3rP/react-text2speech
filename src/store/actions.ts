@@ -1,5 +1,5 @@
 import { ISettings, IOptions, IStyle, IState } from 'lib/types';
-import { IUIState } from './types';
+import { IError, IUIState } from './types';
 
 export const createAction = (type: string, payload?: any): ActionType => ({
 	type,
@@ -22,3 +22,6 @@ export const changeState = (payload: Partial<IState>) =>
 
 export const changeHighlightStyle = (payload: Partial<IStyle>) =>
 	createAction('CHANGE_HIGHLIGHT_STYLE', payload);
+
+export const updateError = (payload: IError) =>
+	createAction('UPDATE_ERROR', payload);

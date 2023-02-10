@@ -10,30 +10,18 @@ import {
 	useSetCSSVariables,
 	useUserColorScheme,
 } from './hooks';
-import { useReader, useStore } from 'contexts';
+import { useStore } from 'contexts';
 import styles from './styles.module.css';
 import { useScrollToTop } from 'hooks';
-import { Errors } from 'lib/Errors';
-
-const NoBrowserSupport: FC = () => {
-	return (
-		<div className={styles.overlay}>
-			<h5 className={styles.error}>{Errors.browserNotSupported}</h5>
-		</div>
-	);
-};
+import { ErrorOverlay } from 'components/ErrorOverlay/ErrorOverlay';
 
 const TextReader: FC<ITextReaderProps> = () => {
 	const {
 		state: {
 			UIState: { isMinimized, isVisible },
+			error,
 		},
 	} = useStore();
-	const {
-		reader: {
-			deviceInfo: { isBrowserSupported, isSafari },
-		},
-	} = useReader();
 
 	useScrollToTop();
 
@@ -45,6 +33,8 @@ const TextReader: FC<ITextReaderProps> = () => {
 
 	useInitializeReader();
 
+	console.log('Error', error);
+
 	return (
 		<div
 			className={`${styles.container} ${isVisible && styles.visible} ${
@@ -52,7 +42,7 @@ const TextReader: FC<ITextReaderProps> = () => {
 			}`}
 		>
 			{/* Display overlays */}
-			{!isBrowserSupported && <NoBrowserSupport />}
+			{error && <ErrorOverlay error={error} />}
 			{/* Manage window behaviour */}
 			<WindowControls />
 			{/* Seekable bar */}

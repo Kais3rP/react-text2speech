@@ -8,11 +8,16 @@ export interface IUIState {
     isVisible: boolean;
     isDark: boolean;
 }
+export interface IError {
+    message: string;
+    object: Error;
+}
 export interface IGlobalState {
     UIState: IUIState;
     settings: ISettings;
     options: IOptions;
     highlightStyle: IStyle;
     state: IState;
+    error: IError | null;
 }
 //# sourceMappingURL=types.d.ts.map

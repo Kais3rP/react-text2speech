@@ -130,14 +130,9 @@ export class Utils {
 
 	static async isBrushAvailable(brush: string, color: string) {
 		const URL = Utils.getBrushURL(brush, color).http;
-
-		try {
-			const res = await fetch(URL);
-			const data = await res.blob();
-			if (res.ok && /image/.test(data?.type)) return true;
-			else return false;
-		} catch (e) {
-			return false;
-		}
+		const res = await fetch(URL);
+		const data = await res.blob();
+		if (res.ok && /image/.test(data?.type)) return true;
+		else return false;
 	}
 }
