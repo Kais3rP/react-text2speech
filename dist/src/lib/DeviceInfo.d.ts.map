@@ -1,0 +1,1 @@
+{"version":3,"file":"DeviceInfo.d.ts","sourceRoot":"","sources":["../../../src/lib/DeviceInfo.ts"],"names":[],"mappings":"AAAA,qBAAa,WAAW;IACvB,QAAQ,EAAE,OAAO,CAAC;IAClB,QAAQ,EAAE,OAAO,CAAC;IAClB,kBAAkB,EAAE,OAAO,CAAC;CAC5B;AAED,qBAAa,UAAW,SAAQ,WAAW;;IAQ1C,MAAM,CAAC,QAAQ;IAqBf,MAAM,CAAC,QAAQ;IAOf,MAAM,CAAC,kBAAkB;CAczB"}

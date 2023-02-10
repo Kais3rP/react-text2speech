@@ -1,5 +1,6 @@
 /// <reference types="node" />
 import EventEmitter from 'events';
+import { DeviceInfo } from './DeviceInfo';
 import { DOMUtils } from './DOMUtils';
 import { IStyle, ISettings, Events, IOptions, IState, Params } from './types';
 export declare class SpeechSynth extends EventEmitter {
@@ -9,6 +10,7 @@ export declare class SpeechSynth extends EventEmitter {
     timeoutRef: string | number | Timeout | undefined;
     debouncedRestartTimeoutRef: string | number | Timeout | undefined;
     DOMUtils: DOMUtils;
+    deviceInfo: DeviceInfo;
     events: Events;
     style: IStyle;
     settings: ISettings;

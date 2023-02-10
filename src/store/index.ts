@@ -26,8 +26,6 @@ export const globalState: IGlobalState = {
 		brush: 'brush-1',
 	},
 	state: {
-		isMobile: false,
-		isSafari: false,
 		/* Internal properties */
 		allVoices: [] as SpeechSynthesisVoice[],
 		voice: {} as SpeechSynthesisVoice,

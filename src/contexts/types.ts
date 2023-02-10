@@ -24,7 +24,7 @@ export interface IStoreContext {
 }
 
 export interface IReaderContext {
-	reader: SpeechSynth | null;
+	reader: SpeechSynth;
 }
 
 export interface IMainPropsContext {

@@ -331,6 +331,49 @@ function __awaiter(thisArg, _arguments, P, generator) {
     });
 }
 
+class IDeviceInfo {
+}
+class DeviceInfo extends IDeviceInfo {
+    constructor() {
+        super();
+        this.isMobile = DeviceInfo.isMobile();
+        this.isSafari = DeviceInfo.isSafari();
+        this.isBrowserSupported = DeviceInfo.isBrowserSupported();
+    }
+    static isMobile() {
+        if (!navigator || !window)
+            return false;
+        /* Dev mode */
+        //	return true;
+        // check the user agent string
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+            return true;
+        // check the platform string
+        if (/iPad|iPhone|iPod/.test(navigator.platform))
+            return true;
+        // check the screen size and pixel density
+        if (window.innerWidth < 768 || window.devicePixelRatio > 1)
+            return true;
+        return false;
+    }
+    static isSafari() {
+        return (navigator.userAgent.indexOf('Safari') > -1 &&
+            navigator.userAgent.indexOf('Chrome') === -1);
+    }
+    static isBrowserSupported() {
+        try {
+            /* Test if the browser supports speech synthesis */
+            if (window.speechSynthesis === undefined ||
+                window.SpeechSynthesisUtterance === undefined)
+                return false;
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+}
+
 class TextUtils {
     /* Regex Utils */
     static isSlashTextContent(str) {
@@ -562,22 +605,6 @@ TextUtils.__join__ = function (fn) {
 };
 
 class Utils {
-    static isMobile() {
-        if (!navigator || !window)
-            return false;
-        /* Dev mode */
-        //	return true;
-        // check the user agent string
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-            return true;
-        // check the platform string
-        if (/iPad|iPhone|iPod/.test(navigator.platform))
-            return true;
-        // check the screen size and pixel density
-        if (window.innerWidth < 768 || window.devicePixelRatio > 1)
-            return true;
-        return false;
-    }
     /* Type Checks */
     static isFunction(fn) {
         return fn && typeof fn === 'function';
@@ -705,9 +732,6 @@ class Utils {
                 return false;
             }
         });
-    }
-    static isSafari() {
-        return true;
     }
 }
 
@@ -884,6 +908,11 @@ class DOMUtils {
     }
 }
 
+class Errors {
+}
+Errors.browserNotSupported = 'Your browser does not support Speech Synthesis, please switch to a more modern browser.';
+Errors.initializeError = 'Something went wrong during initialization';
+
 class SpeechSynth extends EventEmitter {
     /*
     The constructor only required @Param is the TextContainer HTMLElement,
@@ -909,10 +938,9 @@ class SpeechSynth extends EventEmitter {
     }) {
         super();
         this.textContainer = textContainer;
-        this.DOMUtils = new DOMUtils();
         /* Instances */
-        this.synth = window.speechSynthesis;
-        this.utterance = new window.SpeechSynthesisUtterance();
+        this.deviceInfo = new DeviceInfo();
+        this.DOMUtils = new DOMUtils();
         /* Timeouts */
         this.timeoutRef = undefined;
         this.debouncedRestartTimeoutRef = undefined;
@@ -989,7 +1017,7 @@ class SpeechSynth extends EventEmitter {
         };
         this.options = new Proxy({
             isHighlightTextOn: true,
-            isChunksModeOn: Utils.isMobile() || Utils.isSafari(),
+            isChunksModeOn: this.deviceInfo.isMobile,
             isPreserveHighlighting: true,
             isUnderlinedOn: false,
             isBrushOn: true,
@@ -1009,8 +1037,6 @@ class SpeechSynth extends EventEmitter {
             return result;
         };
         this.state = new Proxy({
-            isMobile: Utils.isMobile(),
-            isSafari: Utils.isSafari(),
             /* Internal properties */
             allVoices: [],
             voices: [],
@@ -1051,12 +1077,19 @@ class SpeechSynth extends EventEmitter {
     }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(this.deviceInfo);
+            /* Exit if the browser is not supported */
+            if (!this.deviceInfo.isBrowserSupported)
+                throw new Error(Errors.browserNotSupported);
             /* Add custom methods to primitives */
             // eslint-disable-next-line no-extend-native
             Array.prototype.__join__ = TextUtils.__join__;
             // @ts-ignore
             // eslint-disable-next-line no-extend-native
             String.prototype.__split__ = TextUtils.__split__;
+            /* Init WEB Speech API instances */
+            this.synth = window.speechSynthesis;
+            this.utterance = new window.SpeechSynthesisUtterance();
             /* Get voices */
             try {
                 yield this.retrieveAndSetVoices();
@@ -1088,8 +1121,7 @@ class SpeechSynth extends EventEmitter {
                 return this;
             }
             catch (e) {
-                console.log('Init error', e);
-                return this;
+                throw new Error(Errors.initializeError + ' ' + e);
             }
         });
     }
@@ -1558,8 +1590,6 @@ const globalState = {
         brush: 'brush-1',
     },
     state: {
-        isMobile: false,
-        isSafari: false,
         /* Internal properties */
         allVoices: [],
         voice: {},
@@ -2007,7 +2037,7 @@ const useOptions = () => {
             reader.options.isHighlightTextOn = target.checked;
         };
         const handleIsChunksModeOn = (e) => {
-            if ((reader === null || reader === void 0 ? void 0 : reader.state.isMobile) || !reader)
+            if ((reader === null || reader === void 0 ? void 0 : reader.deviceInfo.isMobile) || !reader)
                 return; // Disable this option for mobile devices
             const target = e.target;
             reader.options.isChunksModeOn = target.checked;
@@ -2401,6 +2431,8 @@ const useInitializeReader = () => {
     const { reader } = useReader();
     const { dispatch } = useStore();
     React.useEffect(() => {
+        if (!reader || !(reader === null || reader === void 0 ? void 0 : reader.deviceInfo.isBrowserSupported))
+            return console.log(Errors.browserNotSupported);
         /* Reset browser active speech synth queue on refresh or new load */
         window.speechSynthesis.cancel();
         reader === null || reader === void 0 ? void 0 : reader.init().then((reader) => {
@@ -2409,10 +2441,16 @@ const useInitializeReader = () => {
             dispatch(changeSettings(reader.settings));
             dispatch(changeOptions(reader.options));
             dispatch(changeHighlightStyle(reader.style));
-        }).catch((e) => console.log(e));
+            // dispatch(changeDeviceInfo(reader.deviceInfo));
+        }).catch((e) => {
+            switch (e) {
+                case Errors.browserNotSupported:
+                    alert(e);
+            }
+        });
         return () => window.speechSynthesis.cancel();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [reader]);
 };
 /* Set the theme passed by props as CSS root variables ( calculate the inverted theme for dark/light mode ) */
 const useSetCSSVariables = () => {
@@ -2463,18 +2501,24 @@ const useUserColorScheme = () => {
     }, [dispatch]);
 };
 
-var css_248z = ".styles-module_container__xkMLR {\n\topacity: 0;\n\twidth: min(100vw, 350px);\n\t/* height: 135px; */\n\tright: -350px;\n\tfont-size: 16px;\n\tposition: fixed;\n\tz-index: 1000;\n\tbottom: 2px;\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: center;\n\tjustify-content: center;\n\tborder-radius: 5px;\n\tbox-shadow: 0px 0px 10px 2px #aaa;\n\tbackground-color: var(--bgColor);\n\tfont-family: Arial, sans-serif !important;\n\tbox-sizing: border-box;\n\ttransition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear,\n\t\topacity 0.7s ease-out;\n\tpadding: 0px 15px;\n}\n\n.styles-module_container__xkMLR * {\n\tbox-sizing: border-box;\n}\n\n.styles-module_container__xkMLR h5,\n.styles-module_container__xkMLR h4,\n.styles-module_container__xkMLR h3,\n.styles-module_container__xkMLR h2,\n.styles-module_container__xkMLR h1 {\n\tmargin-block-end: auto;\n\tmargin: 0;\n\tpadding: 0;\n\tdisplay: flex;\n}\n\n.styles-module_visible__ZUiLT {\n\tright: 5px;\n\topacity: 1;\n}\n\n.styles-module_minimized__W5TJy {\n\twidth: 150px;\n\theight: 100px;\n}\n";
-var styles = {"container":"styles-module_container__xkMLR","visible":"styles-module_visible__ZUiLT","minimized":"styles-module_minimized__W5TJy"};
+var css_248z = ".styles-module_container__xkMLR {\n\topacity: 0;\n\twidth: min(100vw, 350px);\n\t/* height: 135px; */\n\tright: -350px;\n\tfont-size: 16px;\n\tposition: fixed;\n\tz-index: 1000;\n\tbottom: 2px;\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: center;\n\tjustify-content: center;\n\tborder-radius: 5px;\n\tbox-shadow: 0px 0px 10px 2px #aaa;\n\tbackground-color: var(--bgColor);\n\tfont-family: Arial, sans-serif !important;\n\tbox-sizing: border-box;\n\ttransition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear,\n\t\topacity 0.7s ease-out;\n\tpadding: 0px 15px;\n}\n\n.styles-module_container__xkMLR * {\n\tbox-sizing: border-box;\n}\n\n.styles-module_container__xkMLR h5,\n.styles-module_container__xkMLR h4,\n.styles-module_container__xkMLR h3,\n.styles-module_container__xkMLR h2,\n.styles-module_container__xkMLR h1 {\n\tmargin-block-end: auto;\n\tmargin: 0;\n\tpadding: 0;\n\tdisplay: flex;\n}\n\n.styles-module_visible__ZUiLT {\n\tright: 5px;\n\topacity: 1;\n}\n\n.styles-module_minimized__W5TJy {\n\twidth: 150px;\n\theight: 100px;\n}\n\n.styles-module_overlay__yuhcy {\n\twidth: 100%;\n\theight: 100%;\n\tposition: absolute;\n\ttop: 0;\n\tleft: 0;\n\tz-index: 3;\n\tbackground-color: rgba(242, 236, 236, 0.7);\n\tbackdrop-filter: blur(2px);\n\tfont-size: 0.7em;\n\tcolor: #000;\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\ttext-align: center;\n}\n\n.styles-module_error__kxB-- {\n\t/* background-color: rgba(242, 236, 236, 1);\n\tpadding: 20px;\n\tbackdrop-filter: blur(10px); */\n}\n";
+var styles = {"container":"styles-module_container__xkMLR","visible":"styles-module_visible__ZUiLT","minimized":"styles-module_minimized__W5TJy","overlay":"styles-module_overlay__yuhcy","error":"styles-module_error__kxB--"};
 styleInject(css_248z);
 
+const NoBrowserSupport = () => {
+    return (React.createElement("div", { className: styles.overlay },
+        React.createElement("h5", { className: styles.error }, Errors.browserNotSupported)));
+};
 const TextReader = () => {
     const { state: { UIState: { isMinimized, isVisible }, }, } = useStore();
+    const { reader: { deviceInfo: { isBrowserSupported, isSafari }, }, } = useReader();
     useScrollToTop();
     useSetCSSVariables();
     useUserColorScheme();
     useBindTextReader();
     useInitializeReader();
     return (React.createElement("div", { className: `${styles.container} ${isVisible && styles.visible} ${isMinimized && styles.minimized}` },
+        !isBrowserSupported && React.createElement(NoBrowserSupport, null),
         React.createElement(WindowControls, null),
         React.createElement(SeekBar, null),
         React.createElement(MainControls, null),

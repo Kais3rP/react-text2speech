@@ -1,5 +1,7 @@
 import EventEmitter from 'events';
+import { DeviceInfo } from './DeviceInfo';
 import { DOMUtils } from './DOMUtils';
+import { Errors } from './Errors';
 import { TextUtils } from './TextUtils';
 import {
 	IStyle,
@@ -20,6 +22,7 @@ export class SpeechSynth extends EventEmitter {
 	debouncedRestartTimeoutRef: string | number | Timeout | undefined;
 
 	DOMUtils: DOMUtils;
+	deviceInfo: DeviceInfo;
 
 	events: Events;
 
@@ -63,12 +66,10 @@ export class SpeechSynth extends EventEmitter {
 
 		this.textContainer = textContainer;
 
-		this.DOMUtils = new DOMUtils();
-
 		/* Instances */
 
-		this.synth = window.speechSynthesis;
-		this.utterance = new window.SpeechSynthesisUtterance();
+		this.deviceInfo = new DeviceInfo();
+		this.DOMUtils = new DOMUtils();
 
 		/* Timeouts */
 
@@ -158,7 +159,7 @@ export class SpeechSynth extends EventEmitter {
 		this.options = new Proxy(
 			{
 				isHighlightTextOn: true,
-				isChunksModeOn: Utils.isMobile() || Utils.isSafari(),
+				isChunksModeOn: this.deviceInfo.isMobile,
 				isPreserveHighlighting: true,
 				isUnderlinedOn: false,
 				isBrushOn: true,
@@ -187,8 +188,6 @@ export class SpeechSynth extends EventEmitter {
 
 		this.state = new Proxy(
 			{
-				isMobile: Utils.isMobile(),
-				isSafari: Utils.isSafari(),
 				/* Internal properties */
 				allVoices: [] as SpeechSynthesisVoice[],
 				voices: [] as SpeechSynthesisVoice[],
@@ -236,6 +235,10 @@ export class SpeechSynth extends EventEmitter {
 	}
 
 	public async init(): Promise<SpeechSynth> {
+		console.log(this.deviceInfo);
+		/* Exit if the browser is not supported */
+		if (!this.deviceInfo.isBrowserSupported)
+			throw new Error(Errors.browserNotSupported);
 		/* Add custom methods to primitives */
 
 		// eslint-disable-next-line no-extend-native
@@ -243,6 +246,11 @@ export class SpeechSynth extends EventEmitter {
 		// @ts-ignore
 		// eslint-disable-next-line no-extend-native
 		String.prototype.__split__ = TextUtils.__split__;
+
+		/* Init WEB Speech API instances */
+
+		this.synth = window.speechSynthesis;
+		this.utterance = new window.SpeechSynthesisUtterance();
 
 		/* Get voices */
 
@@ -314,8 +322,7 @@ export class SpeechSynth extends EventEmitter {
 
 			return this;
 		} catch (e) {
-			console.log('Init error', e);
-			return this;
+			throw new Error(Errors.initializeError + ' ' + e);
 		}
 	}
 

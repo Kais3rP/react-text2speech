@@ -1,5 +1,6 @@
 import { useReader, useStore, useMainProps } from 'contexts';
 import { Utils } from 'lib';
+import { Errors } from 'lib/Errors';
 import { useMemo, useLayoutEffect, useEffect } from 'react';
 import {
 	changeOptions,
@@ -72,6 +73,8 @@ export const useInitializeReader = () => {
 	const { dispatch } = useStore();
 
 	useEffect(() => {
+		if (!reader || !reader?.deviceInfo.isBrowserSupported)
+			return console.log(Errors.browserNotSupported);
 		/* Reset browser active speech synth queue on refresh or new load */
 
 		window.speechSynthesis.cancel();
@@ -83,12 +86,18 @@ export const useInitializeReader = () => {
 				dispatch(changeSettings(reader.settings));
 				dispatch(changeOptions(reader.options));
 				dispatch(changeHighlightStyle(reader.style));
+				// dispatch(changeDeviceInfo(reader.deviceInfo));
 			})
-			.catch((e) => console.log(e));
+			.catch((e) => {
+				switch (e) {
+					case Errors.browserNotSupported:
+						alert(e);
+				}
+			});
 		return () => window.speechSynthesis.cancel();
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [reader]);
 };
 
 /* Set the theme passed by props as CSS root variables ( calculate the inverted theme for dark/light mode ) */

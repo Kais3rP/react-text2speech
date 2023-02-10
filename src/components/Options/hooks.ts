@@ -31,7 +31,7 @@ export const useOptions = () => {
 		};
 
 		const handleIsChunksModeOn: ChangeEventHandler = (e) => {
-			if (reader?.state.isMobile || !reader) return; // Disable this option for mobile devices
+			if (reader?.deviceInfo.isMobile || !reader) return; // Disable this option for mobile devices
 			const target = e.target as HTMLInputElement;
 			reader.options.isChunksModeOn = target.checked;
 		};

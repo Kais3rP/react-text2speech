@@ -1,5 +1,4 @@
 export declare class Utils {
-    static isMobile(): boolean;
     static isFunction(fn: any): any;
     static formatMsToTime(n: number): string;
     static debounce(fn: (...arg: any[]) => any, delay: number): (...args: any[]) => void;
@@ -19,6 +18,5 @@ export declare class Utils {
         css: string;
     };
     static isBrushAvailable(brush: string, color: string): Promise<boolean>;
-    static isSafari(): boolean;
 }
 //# sourceMappingURL=Utils.d.ts.map

@@ -17,7 +17,7 @@ export interface IStoreContext {
     dispatch: Dispatch<ActionType>;
 }
 export interface IReaderContext {
-    reader: SpeechSynth | null;
+    reader: SpeechSynth;
 }
 export interface IMainPropsContext {
     options: {

@@ -49,8 +49,6 @@ export type Chunk = {
 };
 
 export interface IState {
-	isMobile: boolean;
-	isSafari: boolean;
 	/* Internal properties */
 	allVoices: SpeechSynthesisVoice[];
 	voice: SpeechSynthesisVoice;
