@@ -27,8 +27,10 @@ export declare class TextUtils {
     static isSpecialCharacter(str: string): boolean;
     static isHTMLEntity(str: string): boolean;
     static isValidDate(str: string): boolean;
-    static retrieveChunks(textArray: string[]): Chunk[];
+    static retrieveChunks(text: string): Chunk[];
     static getTextDuration(str: string, rate: number): number;
     static getAverageTextElapsedTime(textArray: string[], idx: number): (rate: number) => number;
+    static __split__(separator: string | RegExp, pre: string | RegExp, post: string | RegExp): string[];
+    static __join__: (fn: (el: string, i: number, arr: any[]) => string) => string;
 }
 //# sourceMappingURL=TextUtils.d.ts.map

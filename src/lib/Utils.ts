@@ -162,17 +162,7 @@ export class Utils {
 		}
 	}
 
-	static __join__ = function (
-		fn: (el: any, i: number, arr: any[]) => string
-	) {
-		let str = ``;
-		let i = 0;
-
-		for (const el of this) {
-			const separator = fn(el, i, this);
-			str = str + el.toString() + separator;
-			i++;
-		}
-		return str;
-	};
+	static isSafari() {
+		return true;
+	}
 }

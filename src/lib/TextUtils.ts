@@ -132,12 +132,12 @@ export class TextUtils {
 		return new Date(str) > 0;
 	}
 
-	static retrieveChunks(textArray: string[]): Chunk[] {
+	static retrieveChunks(text: string): Chunk[] {
 		let currentPunctuationSymbol = '.';
 		const chunks: Chunk[] = [];
 		let previousEnd = 0;
 
-		/* 
+		/* 1
 		Take into account that all the special readable characters will be counted as plain words hence we need to:
 		- use the "wholeTextArray" which holds all the text elements that were wrapped in a span tag with a data-id attribute,
 		  this ensures that it will contain all readable content, since only readable words/characters are given such a wrap tag in 
@@ -153,44 +153,51 @@ export class TextUtils {
 		- The chunk text has to be further manipulated since now as we manipulated the chunk the dots in the middle of the word won't be read as they are detached from the previous and next words.
 		  The strategy here is the same used in the "retrieveWholeText" method, which is: using the custom __join__ method
 		  tho use a space " " to join all the plain words and a no space "" to join the words that have a punctuation element next to them and dots element themselves */
-
-		textArray
-			.join(' ')
-			/* Alternative regexps:
+		/* 		
+		Alternative regexps:
 			1- /(?<![\s])[.?!;]+(?=[\s\n])/ This is safer since it just checks if there are spaces before and after the dot 
 			2- /(?<=[a-zA-Z0-9])[.?!;]/  This does not take into account dots placed after a special character like a parens e.g. (word). <-- That dot won't be matched
 			*/
-			.split(/(?<![\s])[.?!;]+(?=[\s\n])/)
-			.forEach((c, i) => {
-				if (TextUtils.isPunctuation(c)) currentPunctuationSymbol = c;
-				else {
-					const length = c
-						.trim()
-						.split(/[\s]/)
-						.filter((el) => el).length;
-					/*  */
 
-					const text = c.split(/\s+/).__join__((el, i, arr) => {
-						if (
-							TextUtils.isPunctuation(arr[i + 1] as string) ||
-							TextUtils.isDot(el)
-						) {
-							return '';
-						} else return ' ';
-					});
+		/* 
+		Since Safari does not handle lookbehind I needed to implement a custom split() method. Using this until Safari won't add support for lookbehind.
+		The __split__ method take 3 params, the first one is the separator, the second and the third ones are respectively the char to lookbehind and the one to lookahead, they are tested
+		against any single char of the string passed.
+		*/
 
-					const result: Chunk = {
-						text: text + currentPunctuationSymbol,
-						length: length,
-						start: previousEnd,
-						end: previousEnd + length - 1,
-						idx: i,
-					};
+		// @ts-ignore
+		const textArray = text.__split__(/[.!?;]/, /[^\s]/, /[\s\n]+/);
 
-					previousEnd = previousEnd + length;
-					chunks.push(result);
-				}
-			});
+		textArray.forEach((c, i) => {
+			if (TextUtils.isPunctuation(c)) currentPunctuationSymbol = c;
+			else {
+				const length = c
+					.trim()
+					.split(/[\s]/)
+					.filter((el) => el).length;
+				/*  */
+
+				const text = c.split(/\s+/).__join__((el, i, arr) => {
+					if (
+						TextUtils.isPunctuation(arr[i + 1] as string) ||
+						TextUtils.isDot(el)
+					) {
+						return '';
+					} else return ' ';
+				});
+
+				const result: Chunk = {
+					text: text + currentPunctuationSymbol,
+					length: length,
+					start: previousEnd,
+					end: previousEnd + length - 1,
+					idx: i,
+				};
+
+				previousEnd = previousEnd + length;
+				chunks.push(result);
+			}
+		});
 		return chunks;
 	}
 
@@ -202,4 +209,58 @@ export class TextUtils {
 		const _text = textArray.slice(0, idx).join(' ');
 		return (rate: number) => TextUtils.getTextDuration(_text, rate);
 	}
+
+	/* Prototype extension of primitives */
+
+	static __split__(
+		separator: string | RegExp,
+		pre: string | RegExp,
+		post: string | RegExp
+	) {
+		if (typeof separator !== 'string' && !(separator instanceof RegExp))
+			throw new Error(
+				'The separator must be a string or a Regular Expression'
+			);
+		const words: string[] = [];
+		let currentWord: string = '';
+		const _separator =
+			separator instanceof RegExp ? separator : new RegExp(separator);
+		let prevChar = '';
+		let postChar = '';
+		const _pre = pre instanceof RegExp ? pre : new RegExp(pre);
+		const _post = post instanceof RegExp ? post : new RegExp(post);
+
+		for (const [i, c] of Object.entries(this)) {
+			postChar = this[+i + 1];
+			if (
+				_separator.test(c) &&
+				_pre.test(prevChar) &&
+				_post.test(postChar)
+			) {
+				words.push(currentWord);
+				currentWord = '';
+			} else {
+				currentWord += c;
+			}
+			prevChar = c;
+		}
+		if (currentWord.length > 0) {
+			words.push(currentWord);
+		}
+		return words;
+	}
+
+	static __join__ = function (
+		fn: (el: string, i: number, arr: any[]) => string
+	) {
+		let str = ``;
+		let i = 0;
+
+		for (const el of this) {
+			const separator = fn(el, i, this);
+			str = str + el.toString() + separator;
+			i++;
+		}
+		return str;
+	};
 }

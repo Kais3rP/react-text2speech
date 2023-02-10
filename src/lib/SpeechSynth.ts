@@ -158,7 +158,7 @@ export class SpeechSynth extends EventEmitter {
 		this.options = new Proxy(
 			{
 				isHighlightTextOn: true,
-				isChunksModeOn: Utils.isMobile(),
+				isChunksModeOn: Utils.isMobile() || Utils.isSafari(),
 				isPreserveHighlighting: true,
 				isUnderlinedOn: false,
 				isBrushOn: true,
@@ -188,6 +188,7 @@ export class SpeechSynth extends EventEmitter {
 		this.state = new Proxy(
 			{
 				isMobile: Utils.isMobile(),
+				isSafari: Utils.isSafari(),
 				/* Internal properties */
 				allVoices: [] as SpeechSynthesisVoice[],
 				voices: [] as SpeechSynthesisVoice[],
@@ -238,7 +239,10 @@ export class SpeechSynth extends EventEmitter {
 		/* Add custom methods to primitives */
 
 		// eslint-disable-next-line no-extend-native
-		Array.prototype.__join__ = Utils.__join__;
+		Array.prototype.__join__ = TextUtils.__join__;
+		// @ts-ignore
+		// eslint-disable-next-line no-extend-native
+		String.prototype.__split__ = TextUtils.__split__;
 
 		/* Get voices */
 
@@ -274,7 +278,7 @@ export class SpeechSynth extends EventEmitter {
 			) as string[];
 
 			this.state.chunksArray = TextUtils.retrieveChunks(
-				this.state.wholeTextArray
+				this.state.wholeText
 			);
 
 			this.state.isBrushAvailable = await Utils.isBrushAvailable(

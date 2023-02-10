@@ -19,6 +19,6 @@ export declare class Utils {
         css: string;
     };
     static isBrushAvailable(brush: string, color: string): Promise<boolean>;
-    static __join__: (fn: (el: any, i: number, arr: any[]) => string) => string;
+    static isSafari(): boolean;
 }
 //# sourceMappingURL=Utils.d.ts.map

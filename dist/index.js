@@ -286,7 +286,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z$e = ".styles-module_showButton__kw1jn {\r\n\tposition: fixed;\r\n\tbottom: 20px;\r\n\tright: -19px;\r\n\tborder-radius: 50%;\r\n\tborder: 2px solid var(--primaryColor);\r\n\twidth: 40px;\r\n\theight: 40px;\r\n\tbackground-color: var(--secondaryColor);\r\n\tcursor: pointer;\r\n\tz-index: 100;\r\n\ttransition: all 0.2s ease-out;\r\n}\r\n\r\n.styles-module_showButton__kw1jn:hover {\r\n\tborder: 2px solid var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\r\n\tbackground-color: var(--bgColor);\r\n}\r\n\r\n.styles-module_showButton__kw1jn:hover .styles-module_arrow__8nMp9 {\r\n\tfill: var(--primaryColor);\r\n\tleft: -60px;\r\n\ttransform: scale(3) translateY(-3px);\r\n\topacity: 0;\r\n}\r\n\r\n.styles-module_line__RX9UN {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\theight: 38px;\r\n\twidth: 2px;\r\n\tbackground-color: var(--primaryColor);\r\n}\r\n\r\n.styles-module_arrow__8nMp9 {\r\n\tposition: absolute;\r\n\ttop: 50%;\r\n\ttransform: translateY(-50%);\r\n\tleft: -1px;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tfont-size: 340px;\r\n\tfill: var(--bgColor);\r\n\ttransition: all 0.7s ease-out;\r\n\tpointer-events: none;\r\n\t/* animation: movingArrow 0.5s infinite linear; */\r\n}\r\n";
+var css_248z$e = ".styles-module_showButton__kw1jn {\n\tposition: fixed;\n\tbottom: 20px;\n\tright: -19px;\n\tborder-radius: 50%;\n\tborder: 2px solid var(--primaryColor);\n\twidth: 40px;\n\theight: 40px;\n\tbackground-color: var(--secondaryColor);\n\tcursor: pointer;\n\tz-index: 100;\n\ttransition: all 0.2s ease-out;\n}\n\n.styles-module_showButton__kw1jn:hover {\n\tborder: 2px solid var(--secondaryColor);\n\ttransform: scale(1.05);\n\tbox-shadow: 0px 0px 10px 2px var(--secondaryColor);\n\tbackground-color: var(--bgColor);\n}\n\n.styles-module_showButton__kw1jn:hover .styles-module_arrow__8nMp9 {\n\tfill: var(--primaryColor);\n\tleft: -60px;\n\ttransform: scale(3) translateY(-3px);\n\topacity: 0;\n}\n\n.styles-module_line__RX9UN {\n\tposition: absolute;\n\ttop: 0;\n\tleft: 50%;\n\ttransform: translateX(-50%);\n\theight: 38px;\n\twidth: 2px;\n\tbackground-color: var(--primaryColor);\n}\n\n.styles-module_arrow__8nMp9 {\n\tposition: absolute;\n\ttop: 50%;\n\ttransform: translateY(-50%);\n\tleft: -1px;\n\twidth: 20px;\n\theight: 20px;\n\tfont-size: 340px;\n\tfill: var(--bgColor);\n\ttransition: all 0.7s ease-out;\n\tpointer-events: none;\n\t/* animation: movingArrow 0.5s infinite linear; */\n}\n";
 var styles$e = {"showButton":"styles-module_showButton__kw1jn","arrow":"styles-module_arrow__8nMp9","line":"styles-module_line__RX9UN"};
 styleInject(css_248z$e);
 
@@ -451,11 +451,11 @@ class TextUtils {
         // @ts-expect-error
         return new Date(str) > 0;
     }
-    static retrieveChunks(textArray) {
+    static retrieveChunks(text) {
         let currentPunctuationSymbol = '.';
         const chunks = [];
         let previousEnd = 0;
-        /*
+        /* 1
         Take into account that all the special readable characters will be counted as plain words hence we need to:
         - use the "wholeTextArray" which holds all the text elements that were wrapped in a span tag with a data-id attribute,
           this ensures that it will contain all readable content, since only readable words/characters are given such a wrap tag in
@@ -471,14 +471,19 @@ class TextUtils {
         - The chunk text has to be further manipulated since now as we manipulated the chunk the dots in the middle of the word won't be read as they are detached from the previous and next words.
           The strategy here is the same used in the "retrieveWholeText" method, which is: using the custom __join__ method
           tho use a space " " to join all the plain words and a no space "" to join the words that have a punctuation element next to them and dots element themselves */
-        textArray
-            .join(' ')
-            /* Alternative regexps:
+        /*
+        Alternative regexps:
             1- /(?<![\s])[.?!;]+(?=[\s\n])/ This is safer since it just checks if there are spaces before and after the dot
             2- /(?<=[a-zA-Z0-9])[.?!;]/  This does not take into account dots placed after a special character like a parens e.g. (word). <-- That dot won't be matched
             */
-            .split(/(?<![\s])[.?!;]+(?=[\s\n])/)
-            .forEach((c, i) => {
+        /*
+        Since Safari does not handle lookbehind I needed to implement a custom split() method. Using this until Safari won't add support for lookbehind.
+        The __split__ method take 3 params, the first one is the separator, the second and the third ones are respectively the char to lookbehind and the one to lookahead, they are tested
+        against any single char of the string passed.
+        */
+        // @ts-ignore
+        const textArray = text.__split__(/[.!?;]/, /[^\s]/, /[\s\n]+/);
+        textArray.forEach((c, i) => {
             if (TextUtils.isPunctuation(c))
                 currentPunctuationSymbol = c;
             else {
@@ -515,7 +520,46 @@ class TextUtils {
         const _text = textArray.slice(0, idx).join(' ');
         return (rate) => TextUtils.getTextDuration(_text, rate);
     }
+    /* Prototype extension of primitives */
+    static __split__(separator, pre, post) {
+        if (typeof separator !== 'string' && !(separator instanceof RegExp))
+            throw new Error('The separator must be a string or a Regular Expression');
+        const words = [];
+        let currentWord = '';
+        const _separator = separator instanceof RegExp ? separator : new RegExp(separator);
+        let prevChar = '';
+        let postChar = '';
+        const _pre = pre instanceof RegExp ? pre : new RegExp(pre);
+        const _post = post instanceof RegExp ? post : new RegExp(post);
+        for (const [i, c] of Object.entries(this)) {
+            postChar = this[+i + 1];
+            if (_separator.test(c) &&
+                _pre.test(prevChar) &&
+                _post.test(postChar)) {
+                words.push(currentWord);
+                currentWord = '';
+            }
+            else {
+                currentWord += c;
+            }
+            prevChar = c;
+        }
+        if (currentWord.length > 0) {
+            words.push(currentWord);
+        }
+        return words;
+    }
 }
+TextUtils.__join__ = function (fn) {
+    let str = ``;
+    let i = 0;
+    for (const el of this) {
+        const separator = fn(el, i, this);
+        str = str + el.toString() + separator;
+        i++;
+    }
+    return str;
+};
 
 class Utils {
     static isMobile() {
@@ -662,17 +706,10 @@ class Utils {
             }
         });
     }
-}
-Utils.__join__ = function (fn) {
-    let str = ``;
-    let i = 0;
-    for (const el of this) {
-        const separator = fn(el, i, this);
-        str = str + el.toString() + separator;
-        i++;
+    static isSafari() {
+        return true;
     }
-    return str;
-};
+}
 
 class DOMUtils {
     constructor() {
@@ -952,7 +989,7 @@ class SpeechSynth extends EventEmitter {
         };
         this.options = new Proxy({
             isHighlightTextOn: true,
-            isChunksModeOn: Utils.isMobile(),
+            isChunksModeOn: Utils.isMobile() || Utils.isSafari(),
             isPreserveHighlighting: true,
             isUnderlinedOn: false,
             isBrushOn: true,
@@ -973,6 +1010,7 @@ class SpeechSynth extends EventEmitter {
         };
         this.state = new Proxy({
             isMobile: Utils.isMobile(),
+            isSafari: Utils.isSafari(),
             /* Internal properties */
             allVoices: [],
             voices: [],
@@ -1015,7 +1053,10 @@ class SpeechSynth extends EventEmitter {
         return __awaiter(this, void 0, void 0, function* () {
             /* Add custom methods to primitives */
             // eslint-disable-next-line no-extend-native
-            Array.prototype.__join__ = Utils.__join__;
+            Array.prototype.__join__ = TextUtils.__join__;
+            // @ts-ignore
+            // eslint-disable-next-line no-extend-native
+            String.prototype.__split__ = TextUtils.__split__;
             /* Get voices */
             try {
                 yield this.retrieveAndSetVoices();
@@ -1027,7 +1068,7 @@ class SpeechSynth extends EventEmitter {
                 this.state.textRemaining = this.state.wholeText;
                 this.state.duration = TextUtils.getTextDuration(this.state.wholeText, this.settings.rate);
                 this.state.wholeTextArray = DOMUtils.retrieveWholeTextArray(this.textContainer, '[data-id]');
-                this.state.chunksArray = TextUtils.retrieveChunks(this.state.wholeTextArray);
+                this.state.chunksArray = TextUtils.retrieveChunks(this.state.wholeText);
                 this.state.isBrushAvailable = yield Utils.isBrushAvailable(this.style.brush, this.style.color1);
                 /* -------------------------------------------------------------------- */
                 /* Attach click event listener to words */
@@ -1518,6 +1559,7 @@ const globalState = {
     },
     state: {
         isMobile: false,
+        isSafari: false,
         /* Internal properties */
         allVoices: [],
         voice: {},
@@ -1658,7 +1700,7 @@ var BiReset_1 = function BiReset (props) {
   return GenIcon$c({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M12,16c1.671,0,3-1.331,3-3s-1.329-3-3-3s-3,1.331-3,3S10.329,16,12,16z"}},{"tag":"path","attr":{"d":"M20.817,11.186c-0.12-0.583-0.297-1.151-0.525-1.688c-0.225-0.532-0.504-1.046-0.83-1.531 c-0.324-0.479-0.693-0.926-1.098-1.329c-0.404-0.406-0.853-0.776-1.332-1.101c-0.483-0.326-0.998-0.604-1.528-0.829 c-0.538-0.229-1.106-0.405-1.691-0.526c-0.6-0.123-1.219-0.182-1.838-0.18V2L8,5l3.975,3V6.002C12.459,6,12.943,6.046,13.41,6.142 c0.454,0.094,0.896,0.231,1.314,0.409c0.413,0.174,0.813,0.392,1.188,0.644c0.373,0.252,0.722,0.54,1.038,0.857 c0.315,0.314,0.604,0.663,0.854,1.035c0.254,0.376,0.471,0.776,0.646,1.191c0.178,0.417,0.314,0.859,0.408,1.311 C18.952,12.048,19,12.523,19,13s-0.048,0.952-0.142,1.41c-0.094,0.454-0.23,0.896-0.408,1.315 c-0.175,0.413-0.392,0.813-0.644,1.188c-0.253,0.373-0.542,0.722-0.858,1.039c-0.315,0.316-0.663,0.603-1.036,0.854 c-0.372,0.251-0.771,0.468-1.189,0.645c-0.417,0.177-0.858,0.314-1.311,0.408c-0.92,0.188-1.906,0.188-2.822,0 c-0.454-0.094-0.896-0.231-1.314-0.409c-0.416-0.176-0.815-0.393-1.189-0.645c-0.371-0.25-0.719-0.538-1.035-0.854 c-0.315-0.316-0.604-0.665-0.855-1.036c-0.254-0.376-0.471-0.776-0.646-1.19c-0.178-0.418-0.314-0.86-0.408-1.312 C5.048,13.952,5,13.477,5,13H3c0,0.611,0.062,1.221,0.183,1.814c0.12,0.582,0.297,1.15,0.525,1.689 c0.225,0.532,0.504,1.046,0.831,1.531c0.323,0.477,0.692,0.924,1.097,1.329c0.406,0.407,0.854,0.777,1.331,1.099 c0.479,0.325,0.994,0.604,1.529,0.83c0.538,0.229,1.106,0.405,1.691,0.526C10.779,21.938,11.389,22,12,22s1.221-0.062,1.814-0.183 c0.583-0.121,1.151-0.297,1.688-0.525c0.537-0.227,1.052-0.506,1.53-0.83c0.478-0.322,0.926-0.692,1.331-1.099 c0.405-0.405,0.774-0.853,1.1-1.332c0.325-0.483,0.604-0.998,0.829-1.528c0.229-0.54,0.405-1.108,0.525-1.692 C20.938,14.221,21,13.611,21,13S20.938,11.779,20.817,11.186z"}}]})(props);
 };
 
-var css_248z$d = ".styles-module_container__2RHmB {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\tz-index: 1;\r\n\tmargin: 10px 0px 0px 0px;\r\n}\r\n\r\n.styles-module_minimized__qd4bl {\r\n\tborder-bottom: 1px;\r\n\tpadding: 2px 0px 2px 0px;\r\n}\r\n\r\n.styles-module_notMinimized__vhRsj {\r\n\tpadding-top: 2px;\r\n}\r\n\r\n.styles-module_button__l6T6c {\r\n\tborder-radius: 50%;\r\n\tmargin: 2px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tfont-weight: normal !important;\r\n\tcursor: pointer;\r\n\tborder: 4px solid var(--secondaryColor);\r\n\ttransition: all 0.2s;\r\n\tfont-size: 1.5em;\r\n}\r\n\r\n.styles-module_button__l6T6c:hover {\r\n\tborder: 3px solid var(--primaryColor);\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_loading__-h2hU {\r\n\tpointer-events: none;\r\n}\r\n\r\n.styles-module_notLoading__GJ8Ir {\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_reset__hvUvm {\r\n\tposition: absolute;\r\n\ttop: 12px;\r\n\tright: 0px;\r\n\tfont-weight: bold;\r\n\tcursor: pointer;\r\n\ttransition: 0.2s ease-in;\r\n\tfont-size: 0.9em;\r\n\tcolor: var(--primaryColor);\r\n}\r\n\r\n.styles-module_reset__hvUvm:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_controlsContainer__nBn7j {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_sliderContainer__1XPS- {\r\n\tposition: absolute;\r\n\ttop: 5px;\r\n\tleft: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 70px;\r\n}\r\n\r\n.styles-module_volumeContainer__UORe9 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n\theight: 20px;\r\n}\r\n\r\n.styles-module_pitchContainer__cBB1f {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n\theight: 20px;\r\n}\r\n";
+var css_248z$d = ".styles-module_container__2RHmB {\n\twidth: 100%;\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\tposition: relative;\n\tz-index: 1;\n\tmargin: 10px 0px 0px 0px;\n}\n\n.styles-module_minimized__qd4bl {\n\tborder-bottom: 1px;\n\tpadding: 2px 0px 2px 0px;\n}\n\n.styles-module_notMinimized__vhRsj {\n\tpadding-top: 2px;\n}\n\n.styles-module_button__l6T6c {\n\tborder-radius: 50%;\n\tmargin: 2px;\n\tbackground-color: var(--bgColor);\n\tcolor: var(--primaryColor);\n\tfont-weight: normal !important;\n\tcursor: pointer;\n\tborder: 4px solid var(--secondaryColor);\n\ttransition: all 0.2s;\n\tfont-size: 1.5em;\n}\n\n.styles-module_button__l6T6c:hover {\n\tborder: 3px solid var(--primaryColor);\n\tcolor: var(--secondaryColor);\n}\n\n.styles-module_loading__-h2hU {\n\tpointer-events: none;\n}\n\n.styles-module_notLoading__GJ8Ir {\n\tpointer-events: all;\n}\n\n.styles-module_reset__hvUvm {\n\tposition: absolute;\n\ttop: 12px;\n\tright: 0px;\n\tfont-weight: bold;\n\tcursor: pointer;\n\ttransition: 0.2s ease-in;\n\tfont-size: 0.9em;\n\tcolor: var(--primaryColor);\n}\n\n.styles-module_reset__hvUvm:hover {\n\tcolor: var(--secondaryColor);\n}\n\n.styles-module_controlsContainer__nBn7j {\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\twidth: 100%;\n}\n\n.styles-module_sliderContainer__1XPS- {\n\tposition: absolute;\n\ttop: 5px;\n\tleft: 2px;\n\tdisplay: flex;\n\tflex-direction: column;\n\tjustify-content: center;\n\talign-items: center;\n\twidth: 70px;\n}\n\n.styles-module_volumeContainer__UORe9 {\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\twidth: 100%;\n\theight: 20px;\n}\n\n.styles-module_pitchContainer__cBB1f {\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\twidth: 100%;\n\theight: 20px;\n}\n";
 var styles$d = {"container":"styles-module_container__2RHmB","minimized":"styles-module_minimized__qd4bl","notMinimized":"styles-module_notMinimized__vhRsj","button":"styles-module_button__l6T6c","loading":"styles-module_loading__-h2hU","notLoading":"styles-module_notLoading__GJ8Ir","reset":"styles-module_reset__hvUvm","controlsContainer":"styles-module_controlsContainer__nBn7j","sliderContainer":"styles-module_sliderContainer__1XPS-","volumeContainer":"styles-module_volumeContainer__UORe9","pitchContainer":"styles-module_pitchContainer__cBB1f"};
 styleInject(css_248z$d);
 
@@ -1674,7 +1716,7 @@ var BsMusicNote_1 = function BsMusicNote (props) {
   return GenIcon$a({"tag":"svg","attr":{"viewBox":"0 0 16 16","fill":"currentColor"},"child":[{"tag":"path","attr":{"d":"M9 13c0 1.105-1.12 2-2.5 2S4 14.105 4 13s1.12-2 2.5-2 2.5.895 2.5 2z"}},{"tag":"path","attr":{"fillRule":"evenodd","d":"M9 3v10H8V3h1z","clipRule":"evenodd"}},{"tag":"path","attr":{"d":"M8 2.82a1 1 0 01.804-.98l3-.6A1 1 0 0113 2.22V4L8 5V2.82z"}}]})(props);
 };
 
-var css_248z$c = ".styles-module_container__rkaUB {\r\n\tposition: relative;\r\n\tdisplay: flex;\r\n\talign-items: center;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB input {\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_container__rkaUB label {\r\n\tposition: absolute;\r\n\ttop: 0;\r\n\tfont-size: 0.7rem;\r\n\tright: 0%;\r\n}\r\n\r\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\r\n\ttop: -1rem;\r\n\tcolor: var(--color-extra1);\r\n}\r\n\r\n.styles-module_slider__Lf7kP {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n}\r\n\r\n.styles-module_slider__Lf7kP:hover {\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_slider__Lf7kP::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 10px; /* Set a specific slider handle width */\r\n\theight: 10px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n::-moz-range-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\r\n}\r\n\r\n::-moz-range-thumb:active {\r\n}\r\n\r\n.styles-module_icon__b92n5 {\r\n\tfont-size: 0.8rem;\r\n\t/* margin-right: 3px; */\r\n}\r\n\r\n.styles-module_icon__b92n5 * {\r\n\tstroke: var(--primaryColor);\r\n\tcolor: var(--primaryColor);\r\n}\r\n";
+var css_248z$c = ".styles-module_container__rkaUB {\n\tposition: relative;\n\tdisplay: flex;\n\talign-items: center;\n\twidth: 100%;\n}\n\n.styles-module_container__rkaUB input {\n\twidth: 100%;\n}\n\n.styles-module_container__rkaUB label {\n\tposition: absolute;\n\ttop: 0;\n\tfont-size: 0.7rem;\n\tright: 0%;\n}\n\n.styles-module_container__rkaUB label.styles-module_value__eh3ZO {\n\ttop: -1rem;\n\tcolor: var(--color-extra1);\n}\n\n.styles-module_slider__Lf7kP {\n\twidth: 100%;\n\tappearance: none;\n\theight: 2px;\n\tbackground: var(--primaryColor);\n\toutline: none;\n\topacity: 0.7;\n\ttransition: opacity 0.2s;\n}\n\n.styles-module_slider__Lf7kP:hover {\n\topacity: 1;\n}\n\n.styles-module_slider__Lf7kP::-webkit-slider-thumb {\n\tappearance: none;\n\twidth: 10px; /* Set a specific slider handle width */\n\theight: 10px; /* Slider handle height */\n\tbackground: var(--bgColor);\n\tcursor: pointer; /* Cursor on hover */\n\tborder: 2px solid var(--primaryColor);\n\tborder-radius: 50%;\n\tz-index: 1;\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\n\ttransition: transform 0.1s ease-out;\n}\n.styles-module_slider__Lf7kP::-moz-range-thumb {\n\tappearance: none;\n\twidth: 10px; /* Set a specific slider handle width */\n\theight: 10px; /* Slider handle height */\n\tbackground: var(--bgColor);\n\tcursor: pointer; /* Cursor on hover */\n\tborder: 2px solid var(--primaryColor);\n\tborder-radius: 50%;\n\tz-index: 1;\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\n\ttransition: transform 0.4s ease-out;\n}\n\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:hover {\n\ttransform: scale(1.1);\n\tbox-shadow: 0 2px 10px var(--bgColor);\n}\n\n::-moz-range-thumb:hover {\n\ttransform: scale(1.1);\n\tbox-shadow: 0 2px 10px var(--bgColor);\n}\n\n.styles-module_slider__Lf7kP::-webkit-slider-thumb:active {\n}\n\n::-moz-range-thumb:active {\n}\n\n.styles-module_icon__b92n5 {\n\tfont-size: 0.8rem;\n\t/* margin-right: 3px; */\n}\n\n.styles-module_icon__b92n5 * {\n\tstroke: var(--primaryColor);\n\tcolor: var(--primaryColor);\n}\n";
 var styles$c = {"container":"styles-module_container__rkaUB","value":"styles-module_value__eh3ZO","slider":"styles-module_slider__Lf7kP","icon":"styles-module_icon__b92n5"};
 styleInject(css_248z$c);
 
@@ -1789,7 +1831,7 @@ var MdClose_1 = function MdClose (props) {
   return GenIcon$7({"tag":"svg","attr":{"viewBox":"0 0 24 24"},"child":[{"tag":"path","attr":{"d":"M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"}}]})(props);
 };
 
-var css_248z$b = ".styles-module_container__i2xy1 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: relative;\r\n\theight: 30px;\r\n\twidth: 100%;\r\n}\r\n\r\n.styles-module_button__9sOag {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tz-index: 100;\r\n\tfont-size: 1em !important;\r\n\twidth: 20px;\r\n\theight: 20px;\r\n\tborder-radius: 3px;\r\n\tborder: 2px solid var(--primaryColor);\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--textColor);\r\n\tfont-weight: bold !important;\r\n\tcursor: pointer;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_button__9sOag:hover {\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--secondaryColor);\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n@keyframes styles-module_movingArrow__FUSwM {\r\n\t0% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t25% {\r\n\t\tleft: -2px;\r\n\t}\r\n\r\n\t50% {\r\n\t\tleft: -1px;\r\n\t}\r\n\r\n\t75% {\r\n\t\tleft: 0px;\r\n\t}\r\n\r\n\t100% {\r\n\t\tleft: -1px;\r\n\t}\r\n}\r\n\r\n.styles-module_hideButton__ysi6M {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: -11px;\r\n}\r\n\r\n.styles-module_minimizeButton__wcU-y {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tright: 11px;\r\n}\r\n\r\n.styles-module_darkModeButton__sdB-D {\r\n\tposition: absolute;\r\n\ttop: 2px;\r\n\tleft: -11px;\r\n}\r\n";
+var css_248z$b = ".styles-module_container__i2xy1 {\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\tposition: relative;\n\theight: 30px;\n\twidth: 100%;\n}\n\n.styles-module_button__9sOag {\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\tz-index: 100;\n\tfont-size: 1em !important;\n\twidth: 20px;\n\theight: 20px;\n\tborder-radius: 3px;\n\tborder: 2px solid var(--primaryColor);\n\tbackground-color: var(--bgColor);\n\tcolor: var(--textColor);\n\tfont-weight: bold !important;\n\tcursor: pointer;\n\ttransition: all 0.1s linear;\n}\n\n.styles-module_button__9sOag:hover {\n\tbackground-color: var(--bgColor);\n\tcolor: var(--secondaryColor);\n\ttransform: scale(1.05);\n}\n\n@keyframes styles-module_movingArrow__FUSwM {\n\t0% {\n\t\tleft: -1px;\n\t}\n\n\t25% {\n\t\tleft: -2px;\n\t}\n\n\t50% {\n\t\tleft: -1px;\n\t}\n\n\t75% {\n\t\tleft: 0px;\n\t}\n\n\t100% {\n\t\tleft: -1px;\n\t}\n}\n\n.styles-module_hideButton__ysi6M {\n\tposition: absolute;\n\ttop: 2px;\n\tright: -11px;\n}\n\n.styles-module_minimizeButton__wcU-y {\n\tposition: absolute;\n\ttop: 2px;\n\tright: 11px;\n}\n\n.styles-module_darkModeButton__sdB-D {\n\tposition: absolute;\n\ttop: 2px;\n\tleft: -11px;\n}\n";
 var styles$b = {"container":"styles-module_container__i2xy1","button":"styles-module_button__9sOag","hideButton":"styles-module_hideButton__ysi6M","minimizeButton":"styles-module_minimizeButton__wcU-y","darkModeButton":"styles-module_darkModeButton__sdB-D","movingArrow":"styles-module_movingArrow__FUSwM"};
 styleInject(css_248z$b);
 
@@ -1835,7 +1877,7 @@ const WindowControls = () => {
             } }, isMinimized ? React.createElement(FiMaximize_1, null) : React.createElement(FiMinimize_1, null))));
 };
 
-var css_248z$a = ".styles-module_container__0pmKL {\r\n\twidth: 100%;\r\n\ttext-align: center;\r\n\tposition: relative;\r\n\tz-index: 2;\r\n\t/* margin: 25x 0px 5px 0px; */\r\n}\r\n\r\n.styles-module_minimized__YNN-c {\r\n\twidth: 90%;\r\n\t/* margin: 30px 0px 10px 0px; */\r\n}\r\n\r\n.styles-module_seekbar__vpQeo {\r\n\twidth: 100%;\r\n\tappearance: none;\r\n\theight: 2px;\r\n\tbackground: var(--primaryColor);\r\n\toutline: none;\r\n\topacity: 0.7;\r\n\ttransition: opacity 0.2s;\r\n\tpadding: 0 !important;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: grab; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.1s ease-out;\r\n}\r\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\r\n\tappearance: none;\r\n\twidth: 14px; /* Set a specific slider handle width */\r\n\theight: 14px; /* Slider handle height */\r\n\tbackground: var(--bgColor);\r\n\tcursor: pointer; /* Cursor on hover */\r\n\tborder: 2px solid var(--primaryColor);\r\n\tborder-radius: 50%;\r\n\tz-index: 1;\r\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\r\n\ttransition: transform 0.4s ease-out;\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\r\n\ttransform: scale(1.1);\r\n\tbox-shadow: 0 2px 10px var(--bgColor);\r\n}\r\n\r\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\r\n\tcursor: grabbing;\r\n}\r\n\r\n.styles-module_time__HfKnv {\r\n\twidth: 50px;\r\n\tfont-size: 0.7em !important;\r\n\tfont-weight: normal !important;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tposition: absolute;\r\n\ttop: 20px;\r\n\tleft: -15px;\r\n\tz-index: 100 !important;\r\n\tcolor: var(--textColor);\r\n\tmargin: 0 !important;\r\n\tline-height: normal;\r\n}\r\n";
+var css_248z$a = ".styles-module_container__0pmKL {\n\twidth: 100%;\n\ttext-align: center;\n\tposition: relative;\n\tz-index: 2;\n\t/* margin: 25x 0px 5px 0px; */\n}\n\n.styles-module_minimized__YNN-c {\n\twidth: 90%;\n\t/* margin: 30px 0px 10px 0px; */\n}\n\n.styles-module_seekbar__vpQeo {\n\twidth: 100%;\n\tappearance: none;\n\theight: 2px;\n\tbackground: var(--primaryColor);\n\toutline: none;\n\topacity: 0.7;\n\ttransition: opacity 0.2s;\n\tpadding: 0 !important;\n}\n\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb {\n\tappearance: none;\n\twidth: 14px; /* Set a specific slider handle width */\n\theight: 14px; /* Slider handle height */\n\tbackground: var(--bgColor);\n\tcursor: grab; /* Cursor on hover */\n\tborder: 2px solid var(--primaryColor);\n\tborder-radius: 50%;\n\tz-index: 1;\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\n\ttransition: transform 0.1s ease-out;\n}\n.styles-module_seekbar__vpQeo::-moz-range-thumb {\n\tappearance: none;\n\twidth: 14px; /* Set a specific slider handle width */\n\theight: 14px; /* Slider handle height */\n\tbackground: var(--bgColor);\n\tcursor: pointer; /* Cursor on hover */\n\tborder: 2px solid var(--primaryColor);\n\tborder-radius: 50%;\n\tz-index: 1;\n\tbox-shadow: 0 2px 5px var(--secondaryColor);\n\ttransition: transform 0.4s ease-out;\n}\n\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:hover {\n\ttransform: scale(1.1);\n\tbox-shadow: 0 2px 10px var(--bgColor);\n}\n\n.styles-module_seekbar__vpQeo::-webkit-slider-thumb:active {\n\tcursor: grabbing;\n}\n\n.styles-module_time__HfKnv {\n\twidth: 50px;\n\tfont-size: 0.7em !important;\n\tfont-weight: normal !important;\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\tposition: absolute;\n\ttop: 20px;\n\tleft: -15px;\n\tz-index: 100 !important;\n\tcolor: var(--textColor);\n\tmargin: 0 !important;\n\tline-height: normal;\n}\n";
 var styles$a = {"container":"styles-module_container__0pmKL","minimized":"styles-module_minimized__YNN-c","seekbar":"styles-module_seekbar__vpQeo","time":"styles-module_time__HfKnv"};
 styleInject(css_248z$a);
 
@@ -1894,7 +1936,7 @@ const useScrollToTop = () => {
     }, []);
 };
 
-var css_248z$9 = ".styles-module_container__dB4nt {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n\theight: 100%;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q {\r\n\tposition: absolute;\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_optionsWrapper__JBONI {\r\n\theight: 100%;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_optionsContainer__miH3Q i {\r\n\tmargin: 3px;\r\n}\r\n\r\n.styles-module_visible__eJpaP {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_extraComponentWrapper__3xRJY {\r\n\tpadding: 0px 5px 0px 10px;\r\n\tdisplay: flex;\r\n\tflex-wrap: wrap;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n}\r\n";
+var css_248z$9 = ".styles-module_container__dB4nt {\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\twidth: auto;\n\theight: 100%;\n}\n\n.styles-module_optionsContainer__miH3Q {\n\tposition: absolute;\n\topacity: 0;\n\tpointer-events: none;\n\twidth: 100%;\n\theight: 40px;\n\tbottom: 0px;\n\tright: 0;\n\tbackground-color: var(--bgColor);\n\tcolor: var(--primaryColor);\n\tz-index: 100;\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n}\n\n.styles-module_optionsWrapper__JBONI {\n\theight: 100%;\n\tdisplay: flex;\n\tflex-wrap: wrap;\n\tjustify-content: center;\n\talign-items: center;\n\toverflow-y: auto;\n}\n\n.styles-module_optionsContainer__miH3Q i {\n\tmargin: 3px;\n}\n\n.styles-module_visible__eJpaP {\n\topacity: 1;\n\tpointer-events: all;\n}\n\n.styles-module_extraComponentWrapper__3xRJY {\n\tpadding: 0px 5px 0px 10px;\n\tdisplay: flex;\n\tflex-wrap: wrap;\n\tjustify-content: center;\n\talign-items: center;\n}\n";
 var styles$9 = {"container":"styles-module_container__dB4nt","optionsContainer":"styles-module_optionsContainer__miH3Q","optionsWrapper":"styles-module_optionsWrapper__JBONI","visible":"styles-module_visible__eJpaP","extraComponentWrapper":"styles-module_extraComponentWrapper__3xRJY"};
 styleInject(css_248z$9);
 
@@ -1932,11 +1974,11 @@ const CustomSelect = (_a) => {
                 React.createElement(ExtraComponent, { option: localOption }))))));
 };
 
-var css_248z$8 = ".styles-module_container__69qRW {\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\twidth: 100%;\r\n\theight: 50px;\r\n}\r\n\r\n.styles-module_optionsWrapper1__OJ-aO {\r\n\tdisplay: flex;\r\n\tjustify-content: flex-start;\r\n\talign-items: flex-end;\r\n}\r\n.styles-module_optionsWrapper2__5V17- {\r\n\twidth: 200px;\r\n\tdisplay: flex;\r\n\tjustify-content: flex-end;\r\n\talign-items: center;\r\n}\r\n";
+var css_248z$8 = ".styles-module_container__69qRW {\n\tdisplay: flex;\n\tjustify-content: space-between;\n\twidth: 100%;\n\theight: 50px;\n}\n\n.styles-module_optionsWrapper1__OJ-aO {\n\tdisplay: flex;\n\tjustify-content: flex-start;\n\talign-items: flex-end;\n}\n.styles-module_optionsWrapper2__5V17- {\n\twidth: 200px;\n\tdisplay: flex;\n\tjustify-content: flex-end;\n\talign-items: center;\n}\n";
 var styles$8 = {"container":"styles-module_container__69qRW","optionsWrapper1":"styles-module_optionsWrapper1__OJ-aO","optionsWrapper2":"styles-module_optionsWrapper2__5V17-"};
 styleInject(css_248z$8);
 
-var css_248z$7 = ".styles-module_container__bAbpe {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_icon__J4xQk {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__J4xQk path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__J4xQk:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 40px;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 100;\r\n\tdisplay: flex;\r\n\tjustify-content: start;\r\n\talign-items: start;\r\n\tflex-wrap: wrap;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 0px 0px 0px 10px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\twidth: 33%;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa input {\r\n\tcursor: pointer;\r\n}\r\n\r\n.styles-module_overlayContainer__iWVEa h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.6em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_visible__Ci-XW {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n";
+var css_248z$7 = ".styles-module_container__bAbpe {\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\twidth: auto;\n}\n\n.styles-module_icon__J4xQk {\n\tfont-size: 1.1em;\n\tpadding: 0px;\n\tcursor: pointer;\n\ttransition: all 0.4s ease-out;\n}\n\n.styles-module_icon__J4xQk path {\n\tfill: var(--primaryColor);\n}\n.styles-module_icon__J4xQk:hover path {\n\tfill: var(--secondaryColor);\n}\n\n.styles-module_overlayContainer__iWVEa {\n\topacity: 0;\n\tpointer-events: none;\n\tposition: absolute;\n\twidth: 100%;\n\theight: 40px;\n\tbottom: 0px;\n\tright: 0px;\n\tbackground-color: var(--bgColor);\n\tcolor: var(--primaryColor);\n\tz-index: 100;\n\tdisplay: flex;\n\tjustify-content: start;\n\talign-items: start;\n\tflex-wrap: wrap;\n\ttransition: all 0.2s linear;\n\tpadding: 0px 0px 0px 10px;\n\toverflow-x: hidden;\n\toverflow-y: auto;\n}\n\n.styles-module_overlayContainer__iWVEa label {\n\tpadding: 0px;\n\tmargin: 0px;\n\tdisplay: flex;\n\twidth: 33%;\n}\n\n.styles-module_overlayContainer__iWVEa input {\n\tcursor: pointer;\n}\n\n.styles-module_overlayContainer__iWVEa h5 {\n\tpadding: 0px;\n\tmargin: 0px;\n\tfont-size: 0.6em;\n\tmargin-left: 1px;\n\tfont-weight: normal !important;\n\tline-height: 20px !important;\n}\n\n.styles-module_visible__Ci-XW {\n\topacity: 1;\n\tpointer-events: all;\n}\n";
 var styles$7 = {"container":"styles-module_container__bAbpe","icon":"styles-module_icon__J4xQk","overlayContainer":"styles-module_overlayContainer__iWVEa","visible":"styles-module_visible__Ci-XW"};
 styleInject(css_248z$7);
 
@@ -2043,7 +2085,7 @@ const Options = () => {
             React.createElement("h5", null, o.label)))))));
 };
 
-var css_248z$6 = ".styles-module_icon__Z2LW9 {\r\n\tdisplay: inline-block;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\t/* border: 2px solid #111; */\r\n\tborder-radius: 4px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_icon__Z2LW9:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n";
+var css_248z$6 = ".styles-module_icon__Z2LW9 {\n\tdisplay: inline-block;\n\twidth: 16px;\n\theight: 16px;\n\tmargin: 0px 5px 0px 5px;\n\tcursor: pointer;\n\t/* border: 2px solid #111; */\n\tborder-radius: 4px;\n\ttransition: all 0.1s ease-in;\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\n}\n\n.styles-module_icon__Z2LW9:hover {\n\ttransform: scale(1.05);\n}\n";
 var styles$6 = {"icon":"styles-module_icon__Z2LW9"};
 styleInject(css_248z$6);
 
@@ -2053,7 +2095,7 @@ const ColorIcon = (_a) => {
     return (option && (React.createElement("i", Object.assign({ className: styles$6.icon, style: { backgroundColor: option.value } }, props), children)));
 };
 
-var css_248z$5 = ".styles-module_container__dGcW- {\r\n\tposition: relative;\r\n\tfont-size: 0.7em;\r\n\tfont-weight: bold;\r\n\tcolor: var(--primaryColor);\r\n\tcursor: pointer;\r\n\ttransition: all 0.5s linear;\r\n\tborder: none;\r\n\tbackground: none;\r\n\tpadding: 1px 6px !important;\r\n\tline-height: normal !important;\r\n\twhite-space: nowrap;\r\n}\r\n\r\n.styles-module_container__dGcW-:hover {\r\n\tcolor: var(--secondaryColor);\r\n}\r\n.styles-module_container__dGcW-::after {\r\n\tcontent: '';\r\n\tposition: absolute;\r\n\tleft: 0;\r\n\tbottom: -2px;\r\n\twidth: 0px;\r\n\theight: 1.2px;\r\n\tbackground-color: var(--primaryColor);\r\n\ttransition: all 0.2s ease-in;\r\n}\r\n.styles-module_container__dGcW-:hover::after {\r\n\twidth: 100%;\r\n}\r\n";
+var css_248z$5 = ".styles-module_container__dGcW- {\n\tposition: relative;\n\tfont-size: 0.7em;\n\tfont-weight: bold;\n\tcolor: var(--primaryColor);\n\tcursor: pointer;\n\ttransition: all 0.5s linear;\n\tborder: none;\n\tbackground: none;\n\tpadding: 1px 6px !important;\n\tline-height: normal !important;\n\twhite-space: nowrap;\n}\n\n.styles-module_container__dGcW-:hover {\n\tcolor: var(--secondaryColor);\n}\n.styles-module_container__dGcW-::after {\n\tcontent: '';\n\tposition: absolute;\n\tleft: 0;\n\tbottom: -2px;\n\twidth: 0px;\n\theight: 1.2px;\n\tbackground-color: var(--primaryColor);\n\ttransition: all 0.2s ease-in;\n}\n.styles-module_container__dGcW-:hover::after {\n\twidth: 100%;\n}\n";
 var styles$5 = {"container":"styles-module_container__dGcW-"};
 styleInject(css_248z$5);
 
@@ -2064,7 +2106,7 @@ const UnderlinedTextIcon = (_a) => {
         children)));
 };
 
-var css_248z$4 = ".styles-module_container__k5Fas {\r\n\tposition: relative;\r\n\twidth: 35px;\r\n\theight: 35px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n}\r\n\r\n.styles-module_label__9Eq-Q {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__iK7ja {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
+var css_248z$4 = ".styles-module_container__k5Fas {\n\tposition: relative;\n\twidth: 35px;\n\theight: 35px;\n\toverflow: hidden;\n\tborder-radius: 5px;\n\ttransition: all 0.2s ease-in-out;\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\n}\n\n.styles-module_label__9Eq-Q {\n\twidth: 35px;\n\ttext-align: center;\n\tposition: absolute;\n\ttop: 10px;\n\tleft: 50%;\n\ttransform: translateX(-50%);\n\tfont-size: 8px;\n\tmargin: 0;\n\tpadding: 0;\n\tcolor: #fff;\n\ttext-overflow: ellipsis;\n\tmix-blend-mode: exclusion;\n\toverflow: hidden;\n\twhite-space: pre-wrap;\n\tfont-weight: normal;\n}\n\n.styles-module_ascii__iK7ja {\n\tposition: absolute;\n\tbottom: 2px;\n\tleft: 50%;\n\ttransform: translateX(-50%);\n\tfont-size: 6px;\n\tmargin: 0;\n\tpadding: 0;\n\tcolor: #fff;\n\tmix-blend-mode: difference;\n}\n";
 var styles$4 = {"container":"styles-module_container__k5Fas","label":"styles-module_label__9Eq-Q","ascii":"styles-module_ascii__iK7ja"};
 styleInject(css_248z$4);
 
@@ -2074,7 +2116,7 @@ const ColorPreview = ({ option }) => {
         React.createElement("h5", { className: styles$4.label }, option.name)));
 };
 
-var css_248z$3 = ".styles-module_icon__zepm5 {\r\n\tposition: relative;\r\n\twidth: 16px;\r\n\theight: 16px;\r\n\tmargin: 0px 5px 0px 5px;\r\n\tcursor: pointer;\r\n\tborder-radius: 2px;\r\n\tpadding: 2px;\r\n\ttransition: all 0.1s ease-in;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n\tbackground-size: cover;\r\n\r\n}\r\n\r\n.styles-module_icon__zepm5:hover {\r\n\ttransform: scale(1.05);\r\n}\r\n\r\n.styles-module_label__y4R48 {\r\n\tposition: absolute;\r\n\tbottom: 0px;\r\n\tright: 2px;\r\n\tcolor: var(--bgColor);\r\n\t/* mix-blend-mode: exclusion; */\r\n\tfont-size: 8px;\r\n}\r\n";
+var css_248z$3 = ".styles-module_icon__zepm5 {\n\tposition: relative;\n\twidth: 16px;\n\theight: 16px;\n\tmargin: 0px 5px 0px 5px;\n\tcursor: pointer;\n\tborder-radius: 2px;\n\tpadding: 2px;\n\ttransition: all 0.1s ease-in;\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\n\tbackground-size: cover;\n\n}\n\n.styles-module_icon__zepm5:hover {\n\ttransform: scale(1.05);\n}\n\n.styles-module_label__y4R48 {\n\tposition: absolute;\n\tbottom: 0px;\n\tright: 2px;\n\tcolor: var(--bgColor);\n\t/* mix-blend-mode: exclusion; */\n\tfont-size: 8px;\n}\n";
 var styles$3 = {"icon":"styles-module_icon__zepm5","label":"styles-module_label__y4R48"};
 styleInject(css_248z$3);
 
@@ -2089,7 +2131,7 @@ const BrushIcon = (_a) => {
         children)));
 };
 
-var css_248z$2 = ".styles-module_container__UeFFK {\r\n\tposition: relative;\r\n\twidth: 60px;\r\n\theight: 28px;\r\n\toverflow: hidden;\r\n\tborder-radius: 5px;\r\n\ttransition: all 0.2s ease-in-out;\r\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\r\n\tbackground-size: cover;\r\n}\r\n\r\n.styles-module_label__e3y03 {\r\n\twidth: 35px;\r\n\ttext-align: center;\r\n\tposition: absolute;\r\n\ttop: 10px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 8px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\ttext-overflow: ellipsis;\r\n\tmix-blend-mode: exclusion;\r\n\toverflow: hidden;\r\n\twhite-space: pre-wrap;\r\n\tfont-weight: normal;\r\n}\r\n\r\n.styles-module_ascii__MLhac {\r\n\tposition: absolute;\r\n\tbottom: 2px;\r\n\tleft: 50%;\r\n\ttransform: translateX(-50%);\r\n\tfont-size: 6px;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tcolor: #fff;\r\n\tmix-blend-mode: difference;\r\n}\r\n";
+var css_248z$2 = ".styles-module_container__UeFFK {\n\tposition: relative;\n\twidth: 60px;\n\theight: 28px;\n\toverflow: hidden;\n\tborder-radius: 5px;\n\ttransition: all 0.2s ease-in-out;\n\tbox-shadow: 0px 0px 2px 1px var(--primaryColor);\n\tbackground-size: cover;\n}\n\n.styles-module_label__e3y03 {\n\twidth: 35px;\n\ttext-align: center;\n\tposition: absolute;\n\ttop: 10px;\n\tleft: 50%;\n\ttransform: translateX(-50%);\n\tfont-size: 8px;\n\tmargin: 0;\n\tpadding: 0;\n\tcolor: #fff;\n\ttext-overflow: ellipsis;\n\tmix-blend-mode: exclusion;\n\toverflow: hidden;\n\twhite-space: pre-wrap;\n\tfont-weight: normal;\n}\n\n.styles-module_ascii__MLhac {\n\tposition: absolute;\n\tbottom: 2px;\n\tleft: 50%;\n\ttransform: translateX(-50%);\n\tfont-size: 6px;\n\tmargin: 0;\n\tpadding: 0;\n\tcolor: #fff;\n\tmix-blend-mode: difference;\n}\n";
 var styles$2 = {"container":"styles-module_container__UeFFK","label":"styles-module_label__e3y03","ascii":"styles-module_ascii__MLhac"};
 styleInject(css_248z$2);
 
@@ -2101,7 +2143,7 @@ const BrushPreview = ({ option }) => {
     return (React.createElement("div", { className: styles$2.container, style: { backgroundImage: URL.css } }));
 };
 
-var css_248z$1 = ".styles-module_container__9-aGo {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\twidth: auto;\r\n}\r\n\r\n.styles-module_icon__BWG4b {\r\n\tfont-size: 1.1em;\r\n\tpadding: 0px;\r\n\tcursor: pointer;\r\n\tmargin-right: 5px;\r\n\ttransition: all 0.4s ease-out;\r\n}\r\n\r\n.styles-module_icon__BWG4b path {\r\n\tfill: var(--primaryColor);\r\n}\r\n.styles-module_icon__BWG4b:hover path {\r\n\tfill: var(--secondaryColor);\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra {\r\n\topacity: 0;\r\n\tpointer-events: none;\r\n\tposition: absolute;\r\n\twidth: 100%;\r\n\theight: 100%;\r\n\tbottom: 0px;\r\n\tright: 0px;\r\n\tbackground-color: var(--bgColor);\r\n\tcolor: var(--primaryColor);\r\n\tz-index: 2;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\ttransition: all 0.2s linear;\r\n\tpadding: 25px 20px 5px 20px;\r\n\toverflow-x: hidden;\r\n\toverflow-y: auto;\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra label {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tdisplay: flex;\r\n\tfont-size: 0.9em;\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra h5 {\r\n\tpadding: 0px;\r\n\tmargin: 0px;\r\n\tfont-size: 0.8em;\r\n\tmargin-left: 1px;\r\n\tfont-weight: normal !important;\r\n\tline-height: 20px !important;\r\n}\r\n\r\n.styles-module_overlayContainer__-d-Ra a {\r\n\tcolor: var(--secondaryColor);\r\n\ttext-decoration: none;\r\n}\r\n\r\n.styles-module_visible__js5U4 {\r\n\topacity: 1;\r\n\tpointer-events: all;\r\n}\r\n\r\n.styles-module_name__KgWLV {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\talign-items: center;\r\n\tmargin-bottom: 10px;\r\n}\r\n\r\n.styles-module_name__KgWLV i {\r\n\tmargin-right: 10px;\r\n}\r\n\r\n.styles-module_infoWrapper__ZLhGa {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: space-between;\r\n\talign-items: flex-start;\r\n\toverflow: hidden;\r\n}\r\n\r\n.styles-module_info__GKdTQ {\r\n\twidth: 100%;\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\tflex-direction: column;\r\n\talign-items: flex-start;\r\n\tflex-wrap: wrap;\r\n}\r\n\r\n.styles-module_info__GKdTQ a {\r\n\tmargin-left: 5px;\r\n}\r\n\r\n.styles-module_buttonsContainer__4OlR2 {\r\n\tdisplay: flex;\r\n\tjustify-content: center;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n}\r\n\r\n.styles-module_buttonsContainer__4OlR2 a {\r\n\tfont-size: 1.3em;\r\n\ttransition: all 0.1s linear;\r\n}\r\n\r\n.styles-module_buttonsContainer__4OlR2 a:hover {\r\n\tfont-size: 1.3em;\r\n\ttransform: scale(1.1);\r\n}\r\n";
+var css_248z$1 = ".styles-module_container__9-aGo {\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\twidth: auto;\n}\n\n.styles-module_icon__BWG4b {\n\tfont-size: 1.1em;\n\tpadding: 0px;\n\tcursor: pointer;\n\tmargin-right: 5px;\n\ttransition: all 0.4s ease-out;\n}\n\n.styles-module_icon__BWG4b path {\n\tfill: var(--primaryColor);\n}\n.styles-module_icon__BWG4b:hover path {\n\tfill: var(--secondaryColor);\n}\n\n.styles-module_overlayContainer__-d-Ra {\n\topacity: 0;\n\tpointer-events: none;\n\tposition: absolute;\n\twidth: 100%;\n\theight: 100%;\n\tbottom: 0px;\n\tright: 0px;\n\tbackground-color: var(--bgColor);\n\tcolor: var(--primaryColor);\n\tz-index: 2;\n\tdisplay: flex;\n\tflex-direction: column;\n\tjustify-content: center;\n\talign-items: center;\n\ttransition: all 0.2s linear;\n\tpadding: 25px 20px 5px 20px;\n\toverflow-x: hidden;\n\toverflow-y: auto;\n}\n\n.styles-module_overlayContainer__-d-Ra label {\n\tpadding: 0px;\n\tmargin: 0px;\n\tdisplay: flex;\n\tfont-size: 0.9em;\n}\n\n.styles-module_overlayContainer__-d-Ra h5 {\n\tpadding: 0px;\n\tmargin: 0px;\n\tfont-size: 0.8em;\n\tmargin-left: 1px;\n\tfont-weight: normal !important;\n\tline-height: 20px !important;\n}\n\n.styles-module_overlayContainer__-d-Ra a {\n\tcolor: var(--secondaryColor);\n\ttext-decoration: none;\n}\n\n.styles-module_visible__js5U4 {\n\topacity: 1;\n\tpointer-events: all;\n}\n\n.styles-module_name__KgWLV {\n\twidth: 100%;\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\tmargin-bottom: 10px;\n}\n\n.styles-module_name__KgWLV i {\n\tmargin-right: 10px;\n}\n\n.styles-module_infoWrapper__ZLhGa {\n\twidth: 100%;\n\tdisplay: flex;\n\tjustify-content: space-between;\n\talign-items: flex-start;\n\toverflow: hidden;\n}\n\n.styles-module_info__GKdTQ {\n\twidth: 100%;\n\tdisplay: flex;\n\tjustify-content: center;\n\tflex-direction: column;\n\talign-items: flex-start;\n\tflex-wrap: wrap;\n}\n\n.styles-module_info__GKdTQ a {\n\tmargin-left: 5px;\n}\n\n.styles-module_buttonsContainer__4OlR2 {\n\tdisplay: flex;\n\tjustify-content: center;\n\tflex-direction: column;\n\talign-items: center;\n}\n\n.styles-module_buttonsContainer__4OlR2 a {\n\tfont-size: 1.3em;\n\ttransition: all 0.1s linear;\n}\n\n.styles-module_buttonsContainer__4OlR2 a:hover {\n\tfont-size: 1.3em;\n\ttransform: scale(1.1);\n}\n";
 var styles$1 = {"container":"styles-module_container__9-aGo","icon":"styles-module_icon__BWG4b","overlayContainer":"styles-module_overlayContainer__-d-Ra","visible":"styles-module_visible__js5U4","name":"styles-module_name__KgWLV","infoWrapper":"styles-module_infoWrapper__ZLhGa","info":"styles-module_info__GKdTQ","buttonsContainer":"styles-module_buttonsContainer__4OlR2"};
 styleInject(css_248z$1);
 
@@ -2421,7 +2463,7 @@ const useUserColorScheme = () => {
     }, [dispatch]);
 };
 
-var css_248z = ".styles-module_container__xkMLR {\r\n\topacity: 0;\r\n\twidth: min(100vw, 350px);\r\n\t/* height: 135px; */\r\n\tright: -350px;\r\n\tfont-size: 16px;\r\n\tposition: fixed;\r\n\tz-index: 1000;\r\n\tbottom: 2px;\r\n\tdisplay: flex;\r\n\tflex-direction: column;\r\n\talign-items: center;\r\n\tjustify-content: center;\r\n\tborder-radius: 5px;\r\n\tbox-shadow: 0px 0px 10px 2px #aaa;\r\n\tbackground-color: var(--bgColor);\r\n\tfont-family: Arial, sans-serif !important;\r\n\tbox-sizing: border-box;\r\n\ttransition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear,\r\n\t\topacity 0.7s ease-out;\r\n\tpadding: 0px 15px;\r\n}\r\n\r\n.styles-module_container__xkMLR * {\r\n\tbox-sizing: border-box;\r\n}\r\n\r\n.styles-module_container__xkMLR h5,\r\n.styles-module_container__xkMLR h4,\r\n.styles-module_container__xkMLR h3,\r\n.styles-module_container__xkMLR h2,\r\n.styles-module_container__xkMLR h1 {\r\n\tmargin-block-end: auto;\r\n\tmargin: 0;\r\n\tpadding: 0;\r\n\tdisplay: flex;\r\n}\r\n\r\n.styles-module_visible__ZUiLT {\r\n\tright: 5px;\r\n\topacity: 1;\r\n}\r\n\r\n.styles-module_minimized__W5TJy {\r\n\twidth: 150px;\r\n\theight: 100px;\r\n}\r\n";
+var css_248z = ".styles-module_container__xkMLR {\n\topacity: 0;\n\twidth: min(100vw, 350px);\n\t/* height: 135px; */\n\tright: -350px;\n\tfont-size: 16px;\n\tposition: fixed;\n\tz-index: 1000;\n\tbottom: 2px;\n\tdisplay: flex;\n\tflex-direction: column;\n\talign-items: center;\n\tjustify-content: center;\n\tborder-radius: 5px;\n\tbox-shadow: 0px 0px 10px 2px #aaa;\n\tbackground-color: var(--bgColor);\n\tfont-family: Arial, sans-serif !important;\n\tbox-sizing: border-box;\n\ttransition: right 0.1s ease-out, width 0.05s linear, height 0.05s linear,\n\t\topacity 0.7s ease-out;\n\tpadding: 0px 15px;\n}\n\n.styles-module_container__xkMLR * {\n\tbox-sizing: border-box;\n}\n\n.styles-module_container__xkMLR h5,\n.styles-module_container__xkMLR h4,\n.styles-module_container__xkMLR h3,\n.styles-module_container__xkMLR h2,\n.styles-module_container__xkMLR h1 {\n\tmargin-block-end: auto;\n\tmargin: 0;\n\tpadding: 0;\n\tdisplay: flex;\n}\n\n.styles-module_visible__ZUiLT {\n\tright: 5px;\n\topacity: 1;\n}\n\n.styles-module_minimized__W5TJy {\n\twidth: 150px;\n\theight: 100px;\n}\n";
 var styles = {"container":"styles-module_container__xkMLR","visible":"styles-module_visible__ZUiLT","minimized":"styles-module_minimized__W5TJy"};
 styleInject(css_248z);
 

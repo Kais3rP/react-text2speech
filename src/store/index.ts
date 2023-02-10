@@ -27,6 +27,7 @@ export const globalState: IGlobalState = {
 	},
 	state: {
 		isMobile: false,
+		isSafari: false,
 		/* Internal properties */
 		allVoices: [] as SpeechSynthesisVoice[],
 		voice: {} as SpeechSynthesisVoice,
