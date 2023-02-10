@@ -11,13 +11,13 @@ export const ColorIcon: FC<IColorIconProps> = ({
 }) => {
 	return (
 		option && (
-			<i
+			<span
 				className={styles.icon}
 				style={{ backgroundColor: option.value }}
 				{...props}
 			>
 				{children}
-			</i>
+			</span>
 		)
 	);
 };

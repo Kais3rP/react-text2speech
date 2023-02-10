@@ -49,9 +49,11 @@ yarn add react-text2speech
 
 Check the `example` folder for a comprehensive example of how to import and use the React Component in your application.
 
-1. Import the Component and hook that exports some methods and state variables that lets you control the reader also from your Application:
-   `import TextReader, { useTextReader } from 'react-text2speech';`
-2. The hook returns a set of state variables and some handlers which are used internally by the Reader Component and a "bindReader" method which has to be passed to the Textreader as a prop in order to be able to bind your Application state to the Reader state:
+1. Import the Component and hook that exports some methods and state variables that lets you control the reader:
+
+`import TextReader, { useTextReader } from 'react-text2speech';`
+
+2. The hook returns a set of state variables and some handlers which are also used internally by the **TextReader** Component and a **bindReader** method which has to be passed to the **Textreader** as a prop in order to be able to bind your Application state to the Reader state:
 
 ```javascript
 const { bindReader, handlers, state } = useTextReader();
@@ -118,9 +120,6 @@ Since in React the DOM refs receive the reference to the DOM element after the f
 	)
 ```
 
-As you can see in this example we use some of the handlers exposed by the `useTextReader` hook to control the reader directly with a `button` and some of the *state variables* to control our UI.
-It's important to remember to pass the `bindReader` function to the *reader* if we want to control it with custom controls.
-
 If you are using **NextJS** and you have issues importing it properly try this way:
 
 ```javascript
@@ -146,7 +145,7 @@ Since this module exports both a default and a named export, and NextJS doesn't 
 
 ## Browser Support
 
-Browser support is tightly dependant from the official browser implementation of `SpeechSynthesis` API, **Chrome** and **Edge**, Chromium Based browsers, are the most reliable, **Firefox** has some issues on `Linux/Mac` during the voices retrieval: [https://bugzilla.mozilla.org/show_bug.cgi?id=1432719](https://bugzilla.mozilla.org/show_bug.cgi?id=1432719) and in the management of the `utterance events, hence there have been some polyfills implemented to improve the consistency of behaviour on **Firefox**.
+Browser support is tightly dependant from the official browser implementation of `SpeechSynthesis` API, **Chrome** and **Edge**, Chromium Based browsers, are the most reliable, **Firefox** has some issues on `Linux/Mac` during the voices retrieval: [https://bugzilla.mozilla.org/show_bug.cgi?id=1432719](https://bugzilla.mozilla.org/show_bug.cgi?id=1432719) and in the management of the `utterance events`, hence there have been some polyfills implemented to improve the consistency of behaviour on **Firefox**.
 **Safari** still does not support lookbehind assertions so it forced to use some workarounds to perform text parsing to extract chunks. It still has several bugs triggered by seeking and utterance edit actions that have to be addressed.
 **Opera** does not support `SpeechSynthesis` API.
 **Chrome Android** supports the player, but only in chunks mode (fixed to enabled on mobile devices), since the 'boundary` event is not implemented in mobile browsers.

@@ -2136,7 +2136,7 @@ styleInject(css_248z$7);
 /* React Components */
 const ColorIcon = (_a) => {
     var { children, option } = _a, props = __rest(_a, ["children", "option"]);
-    return (option && (React.createElement("i", Object.assign({ className: styles$7.icon, style: { backgroundColor: option.value } }, props), children)));
+    return (option && (React.createElement("span", Object.assign({ className: styles$7.icon, style: { backgroundColor: option.value } }, props), children)));
 };
 
 var css_248z$6 = ".styles-module_container__dGcW- {\n\tposition: relative;\n\tfont-size: 0.7em;\n\tfont-weight: bold;\n\tcolor: var(--primaryColor);\n\tcursor: pointer;\n\ttransition: all 0.5s linear;\n\tborder: none;\n\tbackground: none;\n\tpadding: 1px 6px !important;\n\tline-height: normal !important;\n\twhite-space: nowrap;\n}\n\n.styles-module_container__dGcW-:hover {\n\tcolor: var(--secondaryColor);\n}\n.styles-module_container__dGcW-::after {\n\tcontent: '';\n\tposition: absolute;\n\tleft: 0;\n\tbottom: -2px;\n\twidth: 0px;\n\theight: 1.2px;\n\tbackground-color: var(--primaryColor);\n\ttransition: all 0.2s ease-in;\n}\n.styles-module_container__dGcW-:hover::after {\n\twidth: 100%;\n}\n";
@@ -2216,7 +2216,7 @@ var FaReadme_1 = function FaReadme (props) {
 };
 
 var name = "react-text2speech";
-var version = "3.9.7";
+var version = "3.9.8";
 var author = "Cesare Polonara - https://www.cesarepolonara.com";
 var repository = {
 	url: "https://github.com/Kais3rP/react-text2speech",
