@@ -40,22 +40,18 @@ export const ReaderProvider: FC<IReaderProviderProps> = ({ children }) => {
 			color1: styleOptions?.highlightColor1 || '#DEE',
 			color2: styleOptions.highlightColor2 || '#9DE',
 			onStateChange: (reader: SpeechSynth, key) => {
-				// console.log('State change', key);
 				/* Avoid unnecessary rerenders, update elapsedTime only each second */
 				if (key === 'elapsedTime' && reader.state[key] % 1000 === 0)
 					dispatch(changeState({ [key]: reader.state[key] }));
 				else dispatch(changeState({ [key]: reader.state[key] }));
 			},
 			onSettingsChange: (reader: SpeechSynth) => {
-				// console.log('Settings change');
 				dispatch(changeSettings(reader.settings));
 			},
 			onOptionsChange: (reader: SpeechSynth) => {
-				// console.log('Options change', reader.options);
 				dispatch(changeOptions(reader.options));
 			},
 			onStyleChange: (reader: SpeechSynth) => {
-				// console.log('Style change');
 				dispatch(changeHighlightStyle(reader.style));
 			},
 		})

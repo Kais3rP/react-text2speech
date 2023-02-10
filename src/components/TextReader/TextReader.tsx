@@ -33,8 +33,6 @@ const TextReader: FC<ITextReaderProps> = () => {
 
 	useInitializeReader();
 
-	console.log('Error', error);
-
 	return (
 		<div
 			className={`${styles.container} ${isVisible && styles.visible} ${

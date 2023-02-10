@@ -314,7 +314,6 @@ export class SpeechSynth extends EventEmitter {
 			DOMUtils.addCustomEventListeners(this.events, this);
 
 			/* -------------------------------------------------------------------- */
-			console.log('Before init utterance');
 			/* Init utterance settings */
 
 			this.initUtterance();
@@ -330,7 +329,6 @@ export class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private initUtterance() {
-		console.log('Voice', this.state.voice);
 		this.utterance.text = this.options.isChunksModeOn
 			? this.getCurrentChunkText()
 			: this.getRemainingText();
@@ -509,7 +507,6 @@ export class SpeechSynth extends EventEmitter {
 	/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 	private handleBoundary(e: SpeechSynthesisEvent) {
-		console.log('Boundary event');
 		/* Disable boundary if it's in chunk mode */
 		if (this.options.isChunksModeOn) return;
 
@@ -583,16 +580,13 @@ export class SpeechSynth extends EventEmitter {
 			let counter = 0;
 			try {
 				id = setInterval(() => {
-					console.log('Interval', this.synth.getVoices());
 					counter += 10;
 					if (this.synth.getVoices().length !== 0) {
-						console.log('Getting voices', this.synth.getVoices());
 						clearInterval(id as Interval);
 						resolve(this.synth.getVoices());
 					}
 					if (counter >= 1000) {
-						// timeout after 10s)
-						console.log('Timeout reached');
+						// timeout after 1s)
 						clearInterval(id as Interval);
 						reject(Errors.voicesRetrieveTimeoutError);
 					}

@@ -1114,7 +1114,6 @@ class SpeechSynth extends EventEmitter {
                 /* Add class custom event listeners */
                 DOMUtils.addCustomEventListeners(this.events, this);
                 /* -------------------------------------------------------------------- */
-                console.log('Before init utterance');
                 /* Init utterance settings */
                 this.initUtterance();
                 return this;
@@ -1128,7 +1127,6 @@ class SpeechSynth extends EventEmitter {
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ PRIVATE METHODS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     initUtterance() {
-        console.log('Voice', this.state.voice);
         this.utterance.text = this.options.isChunksModeOn
             ? this.getCurrentChunkText()
             : this.getRemainingText();
@@ -1255,7 +1253,6 @@ class SpeechSynth extends EventEmitter {
     /* Event Handlers */
     /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
     handleBoundary(e) {
-        console.log('Boundary event');
         /* Disable boundary if it's in chunk mode */
         if (this.options.isChunksModeOn)
             return;
@@ -1303,16 +1300,13 @@ class SpeechSynth extends EventEmitter {
             let counter = 0;
             try {
                 id = setInterval(() => {
-                    console.log('Interval', this.synth.getVoices());
                     counter += 10;
                     if (this.synth.getVoices().length !== 0) {
-                        console.log('Getting voices', this.synth.getVoices());
                         clearInterval(id);
                         resolve(this.synth.getVoices());
                     }
                     if (counter >= 1000) {
-                        // timeout after 10s)
-                        console.log('Timeout reached');
+                        // timeout after 1s)
                         clearInterval(id);
                         reject(Errors.voicesRetrieveTimeoutError);
                     }
@@ -1686,20 +1680,16 @@ const ReaderProvider = ({ children }) => {
     const { dispatch } = useStore();
     const { textContainer, options, styleOptions } = useMainProps();
     const readerRef = React.useRef(new SpeechSynth(textContainer, Object.assign(Object.assign({}, options), { color1: (styleOptions === null || styleOptions === void 0 ? void 0 : styleOptions.highlightColor1) || '#DEE', color2: styleOptions.highlightColor2 || '#9DE', onStateChange: (reader, key) => {
-            // console.log('State change', key);
             /* Avoid unnecessary rerenders, update elapsedTime only each second */
             if (key === 'elapsedTime' && reader.state[key] % 1000 === 0)
                 dispatch(changeState({ [key]: reader.state[key] }));
             else
                 dispatch(changeState({ [key]: reader.state[key] }));
         }, onSettingsChange: (reader) => {
-            // console.log('Settings change');
             dispatch(changeSettings(reader.settings));
         }, onOptionsChange: (reader) => {
-            // console.log('Options change', reader.options);
             dispatch(changeOptions(reader.options));
         }, onStyleChange: (reader) => {
-            // console.log('Style change');
             dispatch(changeHighlightStyle(reader.style));
         } })));
     return (React.createElement(ReaderContext.Provider, { value: { reader: readerRef.current } }, children));
@@ -2226,7 +2216,7 @@ var FaReadme_1 = function FaReadme (props) {
 };
 
 var name = "react-text2speech";
-var version = "3.9.6";
+var version = "3.9.7";
 var author = "Cesare Polonara - https://www.cesarepolonara.com";
 var repository = {
 	url: "https://github.com/Kais3rP/react-text2speech",
@@ -2544,7 +2534,6 @@ const TextReader = () => {
     useUserColorScheme();
     useBindTextReader();
     useInitializeReader();
-    console.log('Error', error);
     return (React.createElement("div", { className: `${styles$1.container} ${isVisible && styles$1.visible} ${isMinimized && styles$1.minimized}` },
         error && React.createElement(ErrorOverlay, { error: error }),
         React.createElement(WindowControls, null),

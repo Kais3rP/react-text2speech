@@ -144,6 +144,15 @@ Since this module exports both a default and a named export, and NextJS doesn't 
 
 **Remember to set the language accordingly to the language of the text that it's going to be read, it's enough you type the first locale letters e.g. "en", "de", "fr", etc... **
 
+## Browser Support
+
+Browser support is tightly dependant from the official browser implementation of `SpeechSynthesis` API, **Chrome** and **Edge**, Chromium Based browsers, are the most reliable, **Firefox** has some issues on `Linux/Mac` during the voices retrieval: [https://bugzilla.mozilla.org/show_bug.cgi?id=1432719](https://bugzilla.mozilla.org/show_bug.cgi?id=1432719) and in the management of the `utterance events, hence there have been some polyfills implemented to improve the consistency of behaviour on **Firefox**.
+**Safari** still does not support lookbehind assertions so it forced to use some workarounds to perform text parsing to extract chunks. It still has several bugs triggered by seeking and utterance edit actions that have to be addressed.
+**Opera** does not support `SpeechSynthesis` API.
+**Chrome Android** supports the player, but only in chunks mode (fixed to enabled on mobile devices), since the 'boundary` event is not implemented in mobile browsers.
+
+
+
 ## Edge Cases
 
 There are some edge cases not yet covered and hardly coverable with extreme precision since the speech synth handles some special characters like "/" or "." and "," in numbers ( 1.000 , 1,000 ) in different ways depending on the language choosen, some locales use "." for decimals, others use ",".
