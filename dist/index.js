@@ -2445,20 +2445,16 @@ const useInitializeReader = () => {
     const { reader } = useReader();
     const { dispatch } = useStore();
     React.useEffect(() => {
-        /* if (!reader || !reader?.deviceInfo.isBrowserSupported)
-            return console.log(Errors.browserNotSupported); */
         /* Reset browser active speech synth queue on refresh or new load */
         var _a;
         (_a = window.speechSynthesis) === null || _a === void 0 ? void 0 : _a.cancel();
         reader === null || reader === void 0 ? void 0 : reader.init().then((reader) => {
-            console.log('Initializing reader');
             /* Synchronize UI state with reader initial state */
             dispatch(changeState(reader.state));
             dispatch(changeSettings(reader.settings));
             dispatch(changeOptions(reader.options));
             dispatch(changeHighlightStyle(reader.style));
         }).catch((e) => {
-            console.log('Init Error', e);
             dispatch(updateError({ message: e.message, object: e }));
         });
         return () => { var _a; return (_a = window.speechSynthesis) === null || _a === void 0 ? void 0 : _a.cancel(); };

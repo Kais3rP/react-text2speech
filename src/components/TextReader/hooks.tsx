@@ -1,6 +1,5 @@
 import { useReader, useStore, useMainProps } from 'contexts';
 import { Utils } from 'lib';
-import { Errors } from 'lib/Errors';
 import { useMemo, useLayoutEffect, useEffect } from 'react';
 import {
 	changeOptions,
@@ -74,15 +73,12 @@ export const useInitializeReader = () => {
 	const { dispatch } = useStore();
 
 	useEffect(() => {
-		/* if (!reader || !reader?.deviceInfo.isBrowserSupported)
-			return console.log(Errors.browserNotSupported); */
 		/* Reset browser active speech synth queue on refresh or new load */
 
 		window.speechSynthesis?.cancel();
 		reader
 			?.init()
 			.then((reader) => {
-				console.log('Initializing reader');
 				/* Synchronize UI state with reader initial state */
 				dispatch(changeState(reader.state));
 				dispatch(changeSettings(reader.settings));
@@ -90,7 +86,6 @@ export const useInitializeReader = () => {
 				dispatch(changeHighlightStyle(reader.style));
 			})
 			.catch((e) => {
-				console.log('Init Error', e);
 				dispatch(updateError({ message: e.message, object: e }));
 			});
 		return () => window.speechSynthesis?.cancel();
