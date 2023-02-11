@@ -9,7 +9,7 @@ Try it [here](https://kais3rp.github.io/react-text2speech/)
 
 ## Introduction
 
-A React Component that leverages WEB Speech API to implement a multi featured text reader/ text highlighter.
+A React Component that leverages WEB Speech API to implement a multi featured text reader/ text highlighter - Just 236kB of weight.
 
 ## Features:
 

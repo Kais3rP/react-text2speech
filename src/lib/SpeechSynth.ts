@@ -585,8 +585,8 @@ export class SpeechSynth extends EventEmitter {
 						clearInterval(id as Interval);
 						resolve(this.synth.getVoices());
 					}
-					if (counter >= 1000) {
-						// timeout after 1s)
+					if (counter >= 5000) {
+						// timeout after 5s)
 						clearInterval(id as Interval);
 						reject(Errors.voicesRetrieveTimeoutError);
 					}
