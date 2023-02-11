@@ -16,7 +16,7 @@ export const useBindTextReader = () => {
 	const { reader } = useReader();
 	const { state, dispatch } = useStore();
 	const { isMinimized, isVisible, isDark } = state.UIState;
-	const { isReading, isLoading, elapsedTime } = state.state;
+	const { isReading, isLoading, elapsedTime, duration } = state.state;
 	const { bindReader } = useMainProps();
 
 	const handlers = useMemo(
@@ -50,6 +50,7 @@ export const useBindTextReader = () => {
 			isReading,
 			isLoading,
 			elapsedTime,
+			duration,
 			isDark,
 		};
 		bindReader(exposedState, handlers);
@@ -62,6 +63,7 @@ export const useBindTextReader = () => {
 		isReading,
 		isVisible,
 		elapsedTime,
+		duration,
 		isDark,
 	]);
 };
