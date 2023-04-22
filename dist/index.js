@@ -1305,8 +1305,8 @@ class SpeechSynth extends EventEmitter {
                         clearInterval(id);
                         resolve(this.synth.getVoices());
                     }
-                    if (counter >= 1000) {
-                        // timeout after 1s)
+                    if (counter >= 5000) {
+                        // timeout after 5s)
                         clearInterval(id);
                         reject(Errors.voicesRetrieveTimeoutError);
                     }
@@ -2216,7 +2216,7 @@ var FaReadme_1 = function FaReadme (props) {
 };
 
 var name = "react-text2speech";
-var version = "3.9.8";
+var version = "3.9.9";
 var author = "Cesare Polonara - https://www.cesarepolonara.com";
 var repository = {
 	url: "https://github.com/Kais3rP/react-text2speech",

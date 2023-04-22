@@ -161,12 +161,15 @@ export class TextUtils {
 
 		/* 
 		Since Safari does not handle lookbehind I needed to implement a custom split() method. Using this until Safari won't add support for lookbehind.
-		The __split__ method take 3 params, the first one is the separator, the second and the third ones are respectively the char to lookbehind and the one to lookahead, they are tested
+		The __split__ method takes 3 params, the first one is the separator, the second and the third ones are respectively the char to lookbehind and the one to lookahead, they are tested
 		against any single char of the string passed.
 		*/
 
 		// @ts-ignore
 		const textArray = text.__split__(/[.!?;]/, /[^\s]/, /[\s\n]+/);
+
+		/* Breaking on punctuation followed by a space is problematic since some words might use the dot even if not being a period break point ( e.g. , Mr., etc... )
+   Consider using new line as chunk delimiter */
 
 		textArray.forEach((c, i) => {
 			if (TextUtils.isPunctuation(c)) currentPunctuationSymbol = c;
